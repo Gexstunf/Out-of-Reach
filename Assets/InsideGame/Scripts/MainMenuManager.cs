@@ -1,29 +1,34 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using TMPro;
 
 public class MainMenuManager : MonoBehaviourPunCallbacks
 {
     [Header("Panels")]
-    public GameObject panelMain;
-    public GameObject panelHost;
-    public GameObject panelJoin;
-    public GameObject panelSettings;
+    public GameObject mainPanel;
+    public GameObject hostPanel;
+    public GameObject joinPanel;
+    public GameObject settingsPanel;
 
-    [Header("Inputs")]
-    public InputField hostRoomNameInput;
-    public InputField hostPasswordInput;
+    [Header("Input Fields")]
+    public TMP_InputField roomNameInput_Host;
+    public TMP_InputField passwordInput_Host;
+    public TMP_InputField roomNameInput_Join;
+    public TMP_InputField passwordInput_Join;
+    public TMP_InputField playerNameInput;
 
-    public InputField joinRoomNameInput;
-    public InputField joinPasswordInput;
-
-    public InputField playerNameInput;
+    private Dictionary<string, string> roomPasswords = new Dictionary<string, string>();
 
     private void Start()
     {
-        PhotonNetwork.ConnectUsingSettings(); // Conecta a Photon automáticamente
+        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.ConnectUsingSettings();
+        ShowPanel(mainPanel);
+
         if (PlayerPrefs.HasKey("PlayerName"))
         {
             PhotonNetwork.NickName = PlayerPrefs.GetString("PlayerName");
@@ -31,84 +36,92 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         }
     }
 
-    #region Panel Navigation
-    public void OpenPanel(string panelName)
+    // Muestra el panel deseado y oculta los otros
+    private void ShowPanel(GameObject panelToShow)
     {
-        panelMain.SetActive(false);
-        panelHost.SetActive(false);
-        panelJoin.SetActive(false);
-        panelSettings.SetActive(false);
+        mainPanel.SetActive(false);
+        hostPanel.SetActive(false);
+        joinPanel.SetActive(false);
+        settingsPanel.SetActive(false);
 
-        switch (panelName)
-        {
-            case "Main": panelMain.SetActive(true); break;
-            case "Host": panelHost.SetActive(true); break;
-            case "Join": panelJoin.SetActive(true); break;
-            case "Settings": panelSettings.SetActive(true); break;
-        }
+        panelToShow.SetActive(true);
     }
 
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
-    #endregion
+    // ===== Botones de navegación =====
+    public void ShowHostPanel() => ShowPanel(hostPanel);
+    public void ShowJoinPanel() => ShowPanel(joinPanel);
+    public void ShowSettingsPanel() => ShowPanel(settingsPanel);
+    public void ShowMainPanel() => ShowPanel(mainPanel);
 
-    #region Hosting & Joining
-    public void CreateRoom()
+    // ===== Crear sala =====
+    public void OnClickCreateRoom()
     {
-        string roomName = hostRoomNameInput.text;
-        string password = hostPasswordInput.text;
+        string roomName = roomNameInput_Host.text;
+        string password = passwordInput_Host.text;
 
         if (string.IsNullOrEmpty(roomName)) return;
 
-        RoomOptions options = new RoomOptions();
-        options.MaxPlayers = 4;
-        options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable()
-        {
-            { "password", password }
-        };
-        options.CustomRoomPropertiesForLobby = new string[] { "password" };
+        RoomOptions options = new RoomOptions { MaxPlayers = 4 };
+        roomPasswords[roomName] = password;
 
         PhotonNetwork.CreateRoom(roomName, options);
     }
 
-    public void JoinRoom()
+    // ===== Unirse a sala =====
+    public void OnClickJoinRoom()
     {
-        string roomName = joinRoomNameInput.text;
-        string inputPassword = joinPasswordInput.text;
+        string roomName = roomNameInput_Join.text;
+        string password = passwordInput_Join.text;
+
+        if (string.IsNullOrEmpty(roomName)) return;
+
+        if (roomPasswords.ContainsKey(roomName) && roomPasswords[roomName] != password)
+        {
+            Debug.Log("Contraseña incorrecta");
+            return;
+        }
 
         PhotonNetwork.JoinRoom(roomName);
     }
 
-    public override void OnJoinedRoom()
+    // ===== Guardar nombre =====
+    public void OnClickChangeName()
     {
-        // Vas a la escena de espera donde todos están listos
-        SceneManager.LoadScene("LobbyScene");
+        string playerName = playerNameInput.text;
+
+        if (!string.IsNullOrEmpty(playerName))
+        {
+            PhotonNetwork.NickName = playerName;
+            PlayerPrefs.SetString("PlayerName", playerName);
+        }
+
+        ShowMainPanel();
     }
 
-    public override void OnJoinRoomFailed(short returnCode, string message)
+    // ===== Salir del juego =====
+    public void OnClickQuitGame()
     {
-        Debug.Log("No se pudo unir a la sala: " + message);
+        Application.Quit();
+    }
+
+    // ===== CALLBACKS DE PHOTON =====
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("Jugador unido a la sala.");
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("RoomLobby");
+        }
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        Debug.Log("No se pudo crear la sala: " + message);
+        Debug.Log($"Fallo al crear la sala: {message}");
     }
 
-    public override void OnRoomListUpdate(System.Collections.Generic.List<RoomInfo> roomList)
+    public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        // Si querés mostrar una lista de salas visibles, lo hacés acá
+        Debug.Log($"Fallo al unirse a la sala: {message}");
     }
-
-    #endregion
-
-    #region Player Name
-    public void SetPlayerName()
-    {
-        PhotonNetwork.NickName = playerNameInput.text;
-        PlayerPrefs.SetString("PlayerName", PhotonNetwork.NickName);
-    }
-    #endregion
 }
