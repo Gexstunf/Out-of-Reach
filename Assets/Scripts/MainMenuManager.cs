@@ -13,6 +13,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     public GameObject hostPanel;
     public GameObject joinPanel;
     public GameObject settingsPanel;
+    
 
     [Header("Input Fields")]
     public TMP_InputField roomNameInput_Host;
@@ -25,7 +26,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        Debug.Log("Iniciando conexión con Photon...");
+        Debug.Log("Iniciando conexion con Photon...");
         PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.ConnectUsingSettings();
         ShowPanel(mainPanel);
@@ -64,7 +65,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
 
         if (string.IsNullOrEmpty(roomName))
         {
-            Debug.LogWarning("Nombre de sala vacío.");
+            Debug.LogWarning("Nombre de sala vacio.");
             return;
         }
 
@@ -84,13 +85,13 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
 
         if (string.IsNullOrEmpty(roomName))
         {
-            Debug.LogWarning("Nombre de sala vacío.");
+            Debug.LogWarning("Nombre de sala vacï¿½o.");
             return;
         }
 
         if (roomPasswords.ContainsKey(roomName) && roomPasswords[roomName] != password)
         {
-            Debug.LogWarning("Contraseña incorrecta.");
+            Debug.LogWarning("Contraseï¿½a incorrecta.");
             return;
         }
 
@@ -102,12 +103,15 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     {
         string playerName = playerNameInput.text;
 
-        if (!string.IsNullOrEmpty(playerName))
+        if (string.IsNullOrEmpty(playerName))
         {
-            PhotonNetwork.NickName = playerName;
-            PlayerPrefs.SetString("PlayerName", playerName);
-            Debug.Log("Nombre cambiado a: " + playerName);
+            Debug.LogWarning("Nombre de jugador vacio.");
+            return;
         }
+        
+        PhotonNetwork.NickName = playerName;
+        PlayerPrefs.SetString("PlayerName", playerName);
+        Debug.Log("Nombre cambiado a: " + playerName);
 
         ShowMainPanel();
     }
@@ -137,12 +141,12 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        Debug.LogError($"Fallo al crear la sala: {message} (Código: {returnCode})");
+        Debug.LogError($"Fallo al crear la sala: {message} (Cï¿½digo: {returnCode})");
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        Debug.LogError($"Fallo al unirse a la sala: {message} (Código: {returnCode})");
+        Debug.LogError($"Fallo al unirse a la sala: {message} (Cï¿½digo: {returnCode})");
     }
 
     public override void OnConnectedToMaster()

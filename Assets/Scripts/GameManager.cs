@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
 
             // Si hay menos jugadores que puntos, usar el punto correspondiente
-            // Si hay más, tomar aleatorio pero evitando superposición
+            // Si hay mas, tomar aleatorio pero evitando superposicion
             Transform spawnPoint;
             if (playerIndex < spawnPoints.Length)
             {
