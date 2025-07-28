@@ -1,16 +1,23 @@
+using System;
 using UnityEngine;
 
-public class BaseStateScript : MonoBehaviour
+namespace Characters.PlayerController.Scripts.StateMachine
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public abstract class BaseStateScript<EState> where EState : Enum
     {
+        public BaseStateScript(EState key)
+        {
+            StateKey = key;
+        }
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        public EState StateKey { get; private set; }
         
+        public abstract void EnterState();
+        public abstract void ExitState();
+        public abstract void UpdateState();
+        public abstract EState GetNextState();
+        public abstract void OnTriggerStay(Collider other);
+        public abstract void OnTriggerExit(Collider other);
+        public abstract void OnTriggerEnter(Collider other);
     }
 }
