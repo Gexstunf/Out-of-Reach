@@ -8,8 +8,7 @@ namespace Characters.PlayerController.Scripts.StateMachine
     {
         protected Dictionary<EState, BaseStateScript<EState>> States = new Dictionary<EState, BaseStateScript<EState>>();
         protected BaseStateScript<EState> CurrentState;
-
-    
+        
         private bool _isTransitioningToState = false;
     
         private void Start()
@@ -20,22 +19,22 @@ namespace Characters.PlayerController.Scripts.StateMachine
         private void Update()
         {
             EState nexStateKey = CurrentState.GetNextState();
-            if (!_isTransitioningToState && nexStateKey.Equals(CurrentState.StateKey))
-            {
+            if (!_isTransitioningToState && nexStateKey.Equals(CurrentState.StateKey)) {
                 CurrentState.UpdateState();
             }
-            else
-            {
-                _isTransitioningToState = true;
-                TransitionToState(CurrentState.StateKey);
+            else {
+                Debug.Log("Transitioning, current state was: " + CurrentState.StateKey + " new state: " + nexStateKey);
+                TransitionToState(nexStateKey);
             }
         }
 
         public void TransitionToState(EState stateKey)
         {
+            _isTransitioningToState = true;
             CurrentState.ExitState();
             CurrentState = States[stateKey];
             CurrentState.EnterState();
+            _isTransitioningToState = false;
         }
         private void OnTriggerEnter(Collider other)
         {

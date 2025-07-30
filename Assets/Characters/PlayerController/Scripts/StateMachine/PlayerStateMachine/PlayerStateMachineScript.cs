@@ -1,6 +1,9 @@
 using System;
+using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.ConcreteStates;
 using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.Serialization;
 
 namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
 {
@@ -9,6 +12,8 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
 
         [Header("Player State References")] 
         [SerializeField] private Rigidbody _rb;
+        [SerializeField] private PlayerInputScript _inputScript;
+        [SerializeField] private PlayerControllerScript _playerControllerScript;
         [SerializeField] private CapsuleCollider _collider;
         
         
@@ -23,9 +28,12 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
             Idle,
         }
         
-        private void Awake()
-        {
-            _context = new PlayerStateContextScript(_rb, _collider);
+        private void Awake() {
+            _collider = GetComponent<CapsuleCollider>();
+            _playerControllerScript = GetComponent<PlayerControllerScript>();
+
+            _context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript);
+            ValidateReferences();
             InitializeStates();
         }
 
@@ -37,6 +45,12 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
             States.Add(EPlayerStates.Idle, new IdleStateScript(_context, EPlayerStates.Idle));
             
             CurrentState = States[EPlayerStates.Idle];
+        }
+
+        private void ValidateReferences() {
+            Assert.IsNotNull(_rb, "Rigidbody is not assigned!");
+            Assert.IsNotNull(_collider, "Collider is not assigned!");
+            Assert.IsNotNull(_inputScript, "Player-input-script is not assigned!");
         }
     }
 }

@@ -6,22 +6,40 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
     {
         
         public JumpingStateScript(PlayerStateContextScript context, PlayerStateMachineScript.EPlayerStates estate) : 
-            base(context, estate)
-        {
-            PlayerStateContextScript Context = context;
+            base(context, estate) 
+        { }
+
+        public override void EnterState() {
+            Debug.Log("Entering Jumping State");
+            Context.Rb.linearDamping = 0f;
+            Context.Input.enabled = false;
         }
-        
-        public override void EnterState()
-        { }
 
-        public override void ExitState()
-        { }
+        public override void ExitState() {
+            Debug.Log("Exiting Jumping State");
+            Context.PlayerController.ResetVariables();;
+            Context.Input.enabled = true;
+        }
 
-        public override void UpdateState()
-        { }
+        public override void UpdateState() {
+            //Vector3 oppositeForce = -Context.PlayerController.CurrentForce;
+            //Context.Rb.AddForce(oppositeForce);
+        }
 
         public override PlayerStateMachineScript.EPlayerStates GetNextState()
         {
+            bool isJumping = Context.IsJumping();
+            bool isGrounded = Context.PlayerController.isGrounded;
+
+            if (isGrounded) {
+                return PlayerStateMachineScript.EPlayerStates.Walking;
+            }
+            
+            if (!isJumping) {
+                Debug.Log("Bro is no longer jumping");
+                return PlayerStateMachineScript.EPlayerStates.Falling;
+            }
+            
             return StateKey;
         }
 

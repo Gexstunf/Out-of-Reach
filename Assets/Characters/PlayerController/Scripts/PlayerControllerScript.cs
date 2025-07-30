@@ -14,19 +14,31 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private RotatorScript _rotator;
         [SerializeField] private CameraControllerScript _cameraController;
+        public CapsuleCollider playerCollider;
 
         [Header("Movement Settings")] 
         public float moveForce = 30f;
         public float runForce = 10f;
         public float playerDrag = 5f;
+        
+        [Header("Jump Settings")]
         public float jumpForce = 10f;
+        public float forwardJumpForce = 5f;
+        
+        [Header("General settings")]
+        public LayerMask groundLayer;
 
         [Header("Look Settings")]
         [SerializeField] private float _lookSenseH = 10f;
         [SerializeField] private float _lookSenseV = 10f;
         [SerializeField] private float _lookLimitV = 10f;
+
+        [Header("Visualize Variables")] 
+        public bool isGrounded = true;
+        public Vector3 CurrentForce { get; private set; } 
         
-        private PlayerInputScript _locomotionScript;
+        
+        private PlayerInputScript _inputScript;
         private Rigidbody _rb;
         
         #endregion
@@ -34,7 +46,7 @@ namespace Characters.PlayerController.Scripts
         #region Startup logic
         private void Awake()
         {
-            _locomotionScript = GetComponent<PlayerInputScript>();
+            _inputScript = GetComponent<PlayerInputScript>();
             _rb = GetComponent<Rigidbody>();
             _rotator = gameObject.AddComponent<RotatorScript>();
             _cameraController = gameObject.AddComponent<CameraControllerScript>();
@@ -54,13 +66,15 @@ namespace Characters.PlayerController.Scripts
         private void Update()
         {
             HandleJumping(jumpForce);
+            HandleGroundState();
         }
 
         private void FixedUpdate()
         {
+            // this is where physics should occurr
             Vector3 movementDir = CalculateMovementDirection();
             Vector3 force = CalculateNewForce(movementDir);
-            
+            CurrentForce = force;
             _rb.AddForce(force);
         }
         
@@ -69,14 +83,14 @@ namespace Characters.PlayerController.Scripts
         #region Late-update logic
         private void LateUpdate()
         {
-            Vector2 lookInput = _locomotionScript.LookInput;
+            Vector2 lookInput = _inputScript.LookInput;
             _rotator.RotateTransform(lookInput);
             _cameraController.UpdateCameraRotation(lookInput, _playerCamera);
         }
         
         #endregion
         
-        #region Movement
+        #region Movement / state logic
         private Vector3 CalculateMovementDirection()
         {
             Vector3 forwardCamTransform = _playerCamera.transform.forward;
@@ -85,8 +99,8 @@ namespace Characters.PlayerController.Scripts
             Vector3 cameraForwardXZ = new Vector3(forwardCamTransform.x, 0f, forwardCamTransform.z).normalized;
             Vector3 cameraRightXZ = new Vector3(rightCamTransform.x, 0f, rightCamTransform.z).normalized;
 
-            Vector3 movementDirection = cameraRightXZ * _locomotionScript.MoveInput.x +
-                                        cameraForwardXZ * _locomotionScript.MoveInput.y;
+            Vector3 movementDirection = cameraRightXZ * _inputScript.MoveInput.x +
+                                        cameraForwardXZ * _inputScript.MoveInput.y;
             return movementDirection;
         }
 
@@ -101,23 +115,57 @@ namespace Characters.PlayerController.Scripts
 
         private void HandleJumping(float force)
         {
-            bool jumped = _locomotionScript.JumpPressed;
+            bool jumped = _inputScript.JumpPressed;
             
-            if (jumped)
+            if (jumped && isGrounded)
             {
                 _rb.AddForce(Vector3.up * force, ForceMode.Impulse);
-                _rb.linearDamping = 0f;
+                _rb.AddForce(_rb.transform.forward * forwardJumpForce, ForceMode.Impulse);
+                isGrounded = false;
             }
+        }
+
+        private void HandleGroundState() {
+            isGrounded = IsGroundedWhileGrounded();
         }
         
         #endregion
         
         #region Helper funcs
 
-        private void ResetVariables()
+        public void ResetVariables()
         {
             _rb.linearDamping = playerDrag;
         }
+
+        private bool IsGroundedWhileGrounded() {
+            float sphereRadius = 0.3f;
+            float offset = 0.1f; // slightly below feet
+            Vector3 spherePosition = transform.position + Vector3.down * (playerCollider.height / 2f - sphereRadius + offset);
+
+            return Physics.CheckSphere(spherePosition, sphereRadius, groundLayer, QueryTriggerInteraction.Ignore);
+        }
+
+        private bool IsGroundedWhileAirborne()
+        {
+            Vector3 origin = transform.position + Vector3.up * 0.1f;
+            float sphereRadius = 0.3f;
+            float maxDistance = 0.3f; 
+            return Physics.SphereCast(origin, sphereRadius, Vector3.down, out _, maxDistance, groundLayer, QueryTriggerInteraction.Ignore);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Vector3 origin = transform.position + Vector3.up * 0.1f;
+            float sphereRadius = 0.3f;
+            float maxDistance = 0.3f;
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(origin, sphereRadius); // start
+            Gizmos.DrawLine(origin, origin + Vector3.down * maxDistance); // direction
+            Gizmos.DrawWireSphere(origin + Vector3.down * maxDistance, sphereRadius); // end
+        }
+        
         #endregion
     
     }

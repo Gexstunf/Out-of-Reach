@@ -7,21 +7,32 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
         
         public FallingStateScript(PlayerStateContextScript context, PlayerStateMachineScript.EPlayerStates estate) : 
             base(context, estate)
-        {
-            PlayerStateContextScript Context = context;
+        { }
+
+        public override void EnterState() {
+            Debug.Log("Entering Falling state");
+            Context.Input.enabled = false;
+            Context.Rb.linearDamping = 0f;
         }
-        
-        public override void EnterState()
-        { }
 
-        public override void ExitState()
-        { }
+        public override void ExitState() {
+            Debug.Log("Exiting Falling state");
+            Context.PlayerController.ResetVariables();
+            Context.Input.enabled = true;
+        }
 
-        public override void UpdateState()
-        { }
+        public override void UpdateState() {
+            //Vector3 oppositeForce = -Context.PlayerController.CurrentForce;
+            //Context.Rb.AddForce(oppositeForce);
+        }
 
-        public override PlayerStateMachineScript.EPlayerStates GetNextState()
-        {
+        public override PlayerStateMachineScript.EPlayerStates GetNextState() {
+            bool isGrounded = Context.PlayerController.isGrounded;
+            
+            if (isGrounded) {
+                Debug.Log("Now grounded!!!");
+                return PlayerStateMachineScript.EPlayerStates.Walking;
+            }
             return StateKey;
         }
 

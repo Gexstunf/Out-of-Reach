@@ -26,6 +26,14 @@ namespace Characters.PlayerController.Scripts.Input
         }
         
         #endregion
+        
+        #region Enable logic 
+        private void OnEnable() {
+            _playerLocomotionScript.Player.Enable();
+            _playerLocomotionScript.Player.SetCallbacks(this);
+        }
+
+        #endregion
 
         #region Late Update
 
