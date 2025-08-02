@@ -52,5 +52,13 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
             Assert.IsNotNull(_collider, "Collider is not assigned!");
             Assert.IsNotNull(_inputScript, "Player-input-script is not assigned!");
         }
+        
+        public EPlayerStates StateKey => CurrentState.StateKey;
+        
+        public bool IsFalling => CurrentState.StateKey == EPlayerStates.Falling;
+        public bool IsJumping => CurrentState.StateKey == EPlayerStates.Jumping;
+        public bool IsRunning => CurrentState.StateKey == EPlayerStates.Running;
+        public bool IsWalking => CurrentState.StateKey == EPlayerStates.Walking;
+        public bool IsIdle => CurrentState.StateKey == EPlayerStates.Idle;
     }
 }
