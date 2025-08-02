@@ -1,6 +1,7 @@
-using System;
+     using System;
 using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.ConcreteStates;
+using Characters.SystemAdaptations.Utils;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Serialization;
@@ -16,8 +17,7 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
         [SerializeField] private PlayerControllerScript _playerControllerScript;
         [SerializeField] private CapsuleCollider _collider;
         
-        
-        private PlayerStateContextScript _context;
+        public PlayerStateContextScript Context { get; private set; }
         
         public enum EPlayerStates
         {
@@ -32,17 +32,17 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
             _collider = GetComponent<CapsuleCollider>();
             _playerControllerScript = GetComponent<PlayerControllerScript>();
 
-            _context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript);
+            Context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript);
             ValidateReferences();
             InitializeStates();
         }
 
         private void InitializeStates()
         {
-            States.Add(EPlayerStates.Falling, new FallingStateScript(_context, EPlayerStates.Falling));
-            States.Add(EPlayerStates.Jumping, new JumpingStateScript(_context, EPlayerStates.Jumping));
-            States.Add(EPlayerStates.Walking, new WalkingStateScript(_context, EPlayerStates.Walking));
-            States.Add(EPlayerStates.Idle, new IdleStateScript(_context, EPlayerStates.Idle));
+            States.Add(EPlayerStates.Falling, new FallingStateScript(Context, EPlayerStates.Falling));
+            States.Add(EPlayerStates.Jumping, new JumpingStateScript(Context, EPlayerStates.Jumping));
+            States.Add(EPlayerStates.Walking, new WalkingStateScript(Context, EPlayerStates.Walking));
+            States.Add(EPlayerStates.Idle, new IdleStateScript(Context, EPlayerStates.Idle));
             
             CurrentState = States[EPlayerStates.Idle];
         }
@@ -52,6 +52,8 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
             Assert.IsNotNull(_collider, "Collider is not assigned!");
             Assert.IsNotNull(_inputScript, "Player-input-script is not assigned!");
         }
+
+
         
         public EPlayerStates StateKey => CurrentState.StateKey;
         

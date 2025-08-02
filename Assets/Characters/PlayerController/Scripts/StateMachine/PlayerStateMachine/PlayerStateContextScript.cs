@@ -1,15 +1,22 @@
 
 using Characters.PlayerController.Scripts.Input;
+using Characters.SystemAdaptations.Utils;
 using UnityEngine;
 
 namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
 {
-    public class PlayerStateContextScript
+    public class PlayerStateContextScript : IVitalStates 
     {
         [SerializeField] Rigidbody _rigidbody;
         [SerializeField] CapsuleCollider _collider;
         [SerializeField] PlayerInputScript _inputScript;
         [SerializeField] PlayerControllerScript _playerController;
+        
+        [Header("Vitals States")]
+        public bool IsUnconscious { get; private set; }
+        public bool IsTired { get; private set; }
+        public bool IsHeavy { get; private set; }
+        public bool IsStarved { get; private set; }
         
         private float _movementThreshold = 0.1f;
 
@@ -35,6 +42,13 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
                 return true;
             }
             return false;
+        }
+
+        public void SetVitalStates(VitalsStructScript vitals) {
+            IsUnconscious = vitals.IsUnconscious;
+            IsTired = vitals.IsTired;
+            IsHeavy = vitals.IsHeavy;
+            IsStarved = vitals.IsStarved;
         }
 
         public bool IsJumping() {
