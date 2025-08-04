@@ -9,14 +9,9 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
         { }
 
 
-        public override void SetupVital() {
-            
-        }
-        
-        public override void UpdateVital() {
-            Debug.Log("1");
-        }
-        public override void UpdateModifiers() {}
+        public override void SetupVital() { }
+        public override void UpdateVital() { }
+        public override void UpdateModifiers() { }
     }
 }
 

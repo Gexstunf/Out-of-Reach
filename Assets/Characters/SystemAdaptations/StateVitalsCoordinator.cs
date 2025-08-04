@@ -5,7 +5,7 @@ using Characters.SystemAdaptations.Utils;
 using UnityEngine;
 
 namespace Characters.SystemAdaptations {
-    public class StateVitalsCoordinator : MonoBehaviour
+    public class StateVitalsCoordinator : MonoBehaviour, IVitalStates
     {
         public PlayerStateMachineScript playerStateMachine;
         public PlayerLifeSupportScript playerLifeSupport;
@@ -22,7 +22,8 @@ namespace Characters.SystemAdaptations {
                     isJumping: false,
                     isWalking: false,
                     isClimbing: false,
-                    isIdle: false
+                    isIdle: false,
+                    isMoving: false
                 );
             
             _vitalsStruct = new VitalsStructScript(
@@ -45,14 +46,19 @@ namespace Characters.SystemAdaptations {
             _movementStruct.IsJumping = playerStateMachine.IsJumping;
             _movementStruct.IsWalking = playerStateMachine.IsWalking;
             _movementStruct.IsIdle = playerStateMachine.IsIdle;
+            _movementStruct.IsMoving = playerStateMachine.IsMoving;
         }
         
         private void HandleVitals() {
             // _vitalsStruct.IsUnconscious = playerLifeSupport.IsUnconscious;
-            // _vitalsStruct.IsTired = playerLifeSupport.IsTired;
+            _vitalsStruct.IsTired = playerLifeSupport.IsTired;
             // _vitalsStruct.IsStarved = playerLifeSupport.IsStarved;
             // __vitalsStruct.IsHeavy = playerLifeSupport.IsHeavy;
         }
-        
+
+        public bool IsUnconscious => _vitalsStruct.IsUnconscious;
+        public bool IsTired => _vitalsStruct.IsTired;
+        public bool IsHeavy => _vitalsStruct.IsHeavy;
+        public bool IsStarved => _vitalsStruct.IsStarved;
     }
 }

@@ -26,6 +26,7 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
             Running,
             Walking,
             Idle,
+            Climbing,
         }
         
         private void Awake() {
@@ -57,10 +58,15 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
         
         public EPlayerStates StateKey => CurrentState.StateKey;
         
-        public bool IsFalling => CurrentState.StateKey == EPlayerStates.Falling;
-        public bool IsJumping => CurrentState.StateKey == EPlayerStates.Jumping;
-        public bool IsRunning => CurrentState.StateKey == EPlayerStates.Running;
-        public bool IsWalking => CurrentState.StateKey == EPlayerStates.Walking;
-        public bool IsIdle => CurrentState.StateKey == EPlayerStates.Idle;
+        public bool IsFalling => StateKey == EPlayerStates.Falling;
+        public bool IsJumping => StateKey == EPlayerStates.Jumping;
+        public bool IsRunning => StateKey == EPlayerStates.Running;
+        public bool IsWalking => StateKey == EPlayerStates.Walking;
+        public bool IsIdle => StateKey == EPlayerStates.Idle;
+        
+        public bool IsMoving => StateKey == EPlayerStates.Running ||
+                                StateKey == EPlayerStates.Walking ||
+                                StateKey == EPlayerStates.Climbing || 
+                                StateKey == EPlayerStates.Falling;
     }
 }

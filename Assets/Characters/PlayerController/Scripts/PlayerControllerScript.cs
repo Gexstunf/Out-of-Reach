@@ -14,7 +14,9 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private RotatorScript _rotator;
         [SerializeField] private CameraControllerScript _cameraController;
-        public CapsuleCollider playerCollider;
+        [SerializeField] private PlayerInputScript _inputScript;
+        [SerializeField] private Rigidbody _rb;
+        [SerializeField] public CapsuleCollider playerCollider;
 
         [Header("Movement Settings")] 
         public float moveForce = 30f;
@@ -36,10 +38,6 @@ namespace Characters.PlayerController.Scripts
         [Header("Visualize Variables")] 
         public bool isGrounded = true;
         public Vector3 CurrentForce { get; private set; } 
-        
-        
-        private PlayerInputScript _inputScript;
-        private Rigidbody _rb;
         
         #endregion
         

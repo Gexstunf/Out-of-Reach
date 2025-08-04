@@ -1,6 +1,7 @@
 
 using System;
 using Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals;
+using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using Characters.SystemAdaptations.Utils;
 using UnityEngine;
@@ -12,8 +13,8 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         
         [Header("References")]
         [SerializeField] private Rigidbody _rb;
-        [SerializeField] private PlayerStateMachineScript _stateMachine;
         [SerializeField] private UIManagerScript _uiManager;
+        [SerializeField] private PlayerInputScript _playerInputScript;
         
         [Header("Life support settings")]
         [SerializeField] private float _maxHealth = 100f;
@@ -31,7 +32,8 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         
         private void Awake() {
             _rb = GetComponent<Rigidbody>();
-            Context = new PlayerLifeSupportContextScript(_stateMachine, _rb, _maxHealth, _maxStamina, _uiManager);
+            
+            Context = new PlayerLifeSupportContextScript(_rb, _maxHealth, _maxStamina, _uiManager, _playerInputScript);
             
             ValidateReferences();
             InitializeVitals();
@@ -47,18 +49,18 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
 
         private void ValidateReferences() {
             Assert.IsNotNull(_rb, "Rigidbody is not assigned.");
-            Assert.IsNotNull(_stateMachine, "StateMachine is not assigned.");
+            Assert.IsNotNull(_uiManager, "UIManager is not assigned.");
         }
 
-        private BaseVitalScript<EVitals> WeightScript => Vitals[EVitals.Weight];
-        private BaseVitalScript<EVitals> StaminaScript => Vitals[EVitals.Stamina];
+        private WeightVitalScript WeightScript => (WeightVitalScript)Vitals[EVitals.Stamina];
+        private StaminaVitalScript StaminaScript => (StaminaVitalScript)Vitals[EVitals.Stamina];
         private BaseVitalScript<EVitals> HungerScript => Vitals[EVitals.Hunger];
         private BaseVitalScript<EVitals> HealthScript => Vitals[EVitals.Health];
 
 
         // public bool IsUnconscious => HealthScript.var;
         // public bool IsHeavy => WeightScript.var;
-        // public bool IsTired => StaminaScript.var;
+        public bool IsTired => StaminaScript.IsTired;
         // public bool IsStarved => HungerScript.var;
         
     }

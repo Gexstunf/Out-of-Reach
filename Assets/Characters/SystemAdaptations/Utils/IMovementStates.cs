@@ -6,5 +6,7 @@ namespace Characters.SystemAdaptations.Utils {
         bool IsRunning { get; }
         bool IsClimbing { get; }
         bool IsIdle { get; }
+        
+        bool IsMoving { get; }
     }
 }
