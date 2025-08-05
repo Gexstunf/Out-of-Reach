@@ -59,6 +59,28 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         public float StaminaRegenRate => 2f;
         public float StaminaRegenDelay => 4f;
         
+        public float HealthRegenRate => 2f;
+        public float HealthRegenDelay => 4f;
+        
         public float JumpStaminaUse => 10f;
+
+        public bool IsTired { get; private set; }
+        public bool IsHeavy { get; private set; }
+        public bool IsStarved { get; private set; }
+        public bool IsUnconscious { get; private set; }
+
+
+        public void SetTired(bool value) {
+            IsTired = value;
+        }
+        public void SetHeavy(bool value) {
+            IsHeavy = value;
+        }
+        public void SetStarved(bool value) {
+            IsStarved = value;
+        }
+        public void SetUnconscious(bool value) {
+            IsUnconscious = value;
+        }
     }
 }

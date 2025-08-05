@@ -54,14 +54,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
 
         private WeightVitalScript WeightScript => (WeightVitalScript)Vitals[EVitals.Stamina];
         private StaminaVitalScript StaminaScript => (StaminaVitalScript)Vitals[EVitals.Stamina];
-        private BaseVitalScript<EVitals> HungerScript => Vitals[EVitals.Hunger];
-        private BaseVitalScript<EVitals> HealthScript => Vitals[EVitals.Health];
-
-
-        // public bool IsUnconscious => HealthScript.var;
-        // public bool IsHeavy => WeightScript.var;
-        public bool IsTired => StaminaScript.IsTired;
-        // public bool IsStarved => HungerScript.var;
-        
+        private HungerVitalScript HungerScript => (HungerVitalScript)Vitals[EVitals.Hunger];
+        private HealthVitalScript HealthScript => (HealthVitalScript)Vitals[EVitals.Health];
     }
 }

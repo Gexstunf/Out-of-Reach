@@ -13,12 +13,14 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
             Debug.Log("Entering Jumping State");
             Context.Rb.linearDamping = 0f;
             Context.Input.enabled = false;
+            Context.Coordinator.OnTiredChanged += Context.HandleTiredChange;
         }
 
         public override void ExitState() {
             Debug.Log("Exiting Jumping State");
             Context.PlayerController.ResetVariables();;
             Context.Input.enabled = true;
+            Context.Coordinator.OnTiredChanged -= Context.HandleTiredChange;
         }
 
         public override void UpdateState() {
@@ -36,7 +38,6 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
             }
             
             if (!isJumping) {
-                Debug.Log("Bro is no longer jumping");
                 return PlayerStateMachineScript.EPlayerStates.Falling;
             }
             
@@ -51,5 +52,6 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
 
         public override void OnTriggerEnter(Collider other)
         { }
+        
     }
 }

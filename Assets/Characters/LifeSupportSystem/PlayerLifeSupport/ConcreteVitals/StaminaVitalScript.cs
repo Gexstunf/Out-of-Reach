@@ -1,6 +1,7 @@
 
 
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -30,7 +31,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
 
         
         private float _stamina;
-        public bool IsTired { get; private set; }
+        public bool HasStamina { get; private set; }
         
 
         #region Modifier vars
@@ -46,6 +47,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
         public override void SetupVital() {
             // setting up the base variables
             _stamina = Context.MaxStamina;
+            HasStamina = true;
             _baseStaminaRegenDelay = Context.StaminaRegenDelay;
             _baseStaminaRegenRate = Context.StaminaRegenRate;
             _baseStaminaUseRate = Context.StaminaUseRate;
@@ -73,11 +75,14 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
                 _currentStaminaUseRate = _baseStaminaUseRate + _climbingModifier;
             }
             
-            if (IsTired) {
-                
+            if (HasStamina) {
+                Context.SetTired(false);
             }
-
+            else {
+                Context.SetTired(true);
+            }
         }
+        
         public override void UpdateVital() {
             
             HandleWhenMovement(); // this handles the stamina logic when moving
@@ -111,19 +116,20 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
             // if no stamina, make the regen delay greater
             if (_stamina <= 0f) {
                 _currentStaminaRegenDelay += Time.deltaTime;
-                IsTired = true;
+                HasStamina = false;
                 return;
             }
             
             // ensure regen delay is normal and subtract stamina
             _currentStaminaRegenDelay = _baseStaminaRegenDelay;
-            IsTired = false;
+            HasStamina = true;
             _stamina -= rate * Time.deltaTime;
         }
         private void RegenStamina(float rate) {
             if (_stamina < Context.MaxStamina) {
                 _stamina += rate * Time.deltaTime;
             }
+            HasStamina = true;
             Context.ClampVital(ref _stamina, Context.MaxStamina);
         }
         private bool HandleJump() {
@@ -137,7 +143,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
             // the rest checks if stopped jumping, to restart the jump logic
             if (Context.IsJumping) {
                 return true;
-            } 
+            }
             
             _hasJumped = false;
             return false;

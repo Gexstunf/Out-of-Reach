@@ -13,11 +13,13 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
         public override void EnterState()
         {
             Debug.Log("Entering idle state");
+            Context.Coordinator.OnTiredChanged += Context.HandleTiredChange;
         }
 
         public override void ExitState()
         {
             Debug.Log("Exiting idle state");
+            Context.Coordinator.OnTiredChanged -= Context.HandleTiredChange;
         }
 
         public override void UpdateState()

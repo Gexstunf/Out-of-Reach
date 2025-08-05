@@ -11,17 +11,16 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
 
         public override void EnterState() {
             Debug.Log("Entering Walking State");
+            Context.Coordinator.OnTiredChanged += Context.HandleTiredChange;
         }
 
         public override void ExitState() {
             Debug.Log("Exiting Walking State");
+            Context.Coordinator.OnTiredChanged -= Context.HandleTiredChange;
         }
 
         public override void UpdateState() {
-            _counter += Time.deltaTime;
-            if (_counter % 2f == 0f) {
-                Debug.Log("Updating Walking State");
-            }
+            
         }
 
         public override PlayerStateMachineScript.EPlayerStates GetNextState()

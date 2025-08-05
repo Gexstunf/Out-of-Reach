@@ -1,6 +1,7 @@
      using System;
 using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.ConcreteStates;
+using Characters.SystemAdaptations;
 using Characters.SystemAdaptations.Utils;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -16,7 +17,7 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
         [SerializeField] private PlayerInputScript _inputScript;
         [SerializeField] private PlayerControllerScript _playerControllerScript;
         [SerializeField] private CapsuleCollider _collider;
-        
+        [SerializeField] private StateVitalsCoordinator _coordinator;
         public PlayerStateContextScript Context { get; private set; }
         
         public enum EPlayerStates
@@ -32,8 +33,9 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
         private void Awake() {
             _collider = GetComponent<CapsuleCollider>();
             _playerControllerScript = GetComponent<PlayerControllerScript>();
+            _coordinator = GetComponent<StateVitalsCoordinator>();
 
-            Context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript);
+            Context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript, _coordinator);
             ValidateReferences();
             InitializeStates();
         }

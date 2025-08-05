@@ -1,5 +1,6 @@
 using System;
 using Characters.PlayerController.Scripts.Input;
+using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using Characters.Utils;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -17,6 +18,9 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private PlayerInputScript _inputScript;
         [SerializeField] private Rigidbody _rb;
         [SerializeField] public CapsuleCollider playerCollider;
+        
+        [Header("State machine")]
+        [SerializeField] private PlayerStateMachineScript _playerStateMachine;
 
         [Header("Movement Settings")] 
         public float moveForce = 30f;
@@ -114,12 +118,14 @@ namespace Characters.PlayerController.Scripts
         private void HandleJumping(float force)
         {
             bool jumped = _inputScript.JumpPressed;
+            bool canJump = !_playerStateMachine.Context.IsTired;
             
-            if (jumped && isGrounded)
+            if (jumped && isGrounded && canJump)
             {
                 _rb.AddForce(Vector3.up * force, ForceMode.Impulse);
                 _rb.AddForce(_rb.transform.forward * forwardJumpForce, ForceMode.Impulse);
                 isGrounded = false;
+                Debug.Log("Jumped");
             }
         }
 
