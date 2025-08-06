@@ -4,7 +4,6 @@ using UnityEngine;
 namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.ConcreteStates
 {
     public class IdleStateScript : PlayerStateScript {
-        private float _counter = 0f;
         
         public IdleStateScript(PlayerStateContextScript context, PlayerStateMachineScript.EPlayerStates estate) : 
             base(context, estate)
@@ -14,20 +13,18 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
         {
             Debug.Log("Entering idle state");
             Context.Coordinator.OnTiredChanged += Context.HandleTiredChange;
+            Context.Coordinator.OnUnconsciousChanged += Context.HandleUnconsciousChange;
         }
 
         public override void ExitState()
         {
-            Debug.Log("Exiting idle state");
+            //Debug.Log("Exiting idle state");
             Context.Coordinator.OnTiredChanged -= Context.HandleTiredChange;
+            Context.Coordinator.OnUnconsciousChanged -= Context.HandleUnconsciousChange;
         }
 
         public override void UpdateState()
         {
-            _counter += Time.deltaTime;
-            if (_counter % 2f == 0f) {
-                Debug.Log("Updating Idling State");
-            }
         }
 
         public override PlayerStateMachineScript.EPlayerStates GetNextState() {

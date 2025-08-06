@@ -2,6 +2,7 @@ using Characters.PlayerController.Scripts;
 using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using Characters.SystemAdaptations.Utils;
+using UI.Scripts.TestingUI;
 using UnityEngine;
 
 namespace Characters.LifeSupportSystem.PlayerLifeSupport {
@@ -19,6 +20,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         public bool IsWalking { get; private set; }
         public bool IsJumping { get; private set; }
         public bool IsRunning { get; private set; }
+        public bool IsFalling { get; private set;}
         public bool IsClimbing { get; private set; }
         public bool IsIdle { get; private set; }
         
@@ -41,9 +43,10 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
             IsRunning = states.IsRunning;
             IsIdle = states.IsIdle;
             IsMoving = states.IsMoving;
+            IsFalling = states.IsFalling;
         }
 
-        public bool IsStaminaRequired() => IsRunning || IsClimbing || IsJumping || IsWalking;
+        public bool IsStaminaRequired() => IsRunning || IsClimbing || IsJumping;
         public void ClampVital(ref float value, float max) => value = Mathf.Clamp(value, 0, max);
         public Rigidbody Rb => _rb;
         public UIManagerScript UIManager => _uiManager;

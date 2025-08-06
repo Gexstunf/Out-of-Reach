@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
 {
-    public class PlayerStateContextScript {
+    public class PlayerStateContextScript: IVitalStates {
         [SerializeField] Rigidbody _rigidbody;
         [SerializeField] CapsuleCollider _collider;
         [SerializeField] PlayerInputScript _inputScript;
@@ -14,10 +14,10 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
         [SerializeField] StateVitalsCoordinator _coordinator;
 
         [Header("Vitals States")] 
-        //public bool IsUnconscious { get; private set; }
+        public bool IsUnconscious { get; private set; }
         public bool IsTired { get; private set; }
-        //public bool IsHeavy { get; private set; }
-        //public bool IsStarved { get; private set; }
+        public bool IsHeavy { get; private set; }
+        public bool IsStarved { get; private set; }
 
         private float _movementThreshold = 0.1f;
 
@@ -56,6 +56,12 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
         public void HandleTiredChange(bool isTired) {
             IsTired = isTired;
             Debug.Log("Changing tired state to: " + isTired);
+        }
+
+        public void HandleUnconsciousChange(bool isUnconscious) {
+            IsUnconscious = isUnconscious;
+            _inputScript.enabled = !isUnconscious;
+            Debug.Log("Changing unconscious state to: " + isUnconscious);
         }
     }
 }

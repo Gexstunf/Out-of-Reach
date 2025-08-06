@@ -4,6 +4,7 @@ using Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals;
 using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using Characters.SystemAdaptations.Utils;
+using UI.Scripts.TestingUI;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Assert = NUnit.Framework.Assert;

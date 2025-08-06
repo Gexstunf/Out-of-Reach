@@ -17,7 +17,7 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
         }
 
         public override void ExitState() {
-            Debug.Log("Exiting Jumping State");
+            //Debug.Log("Exiting Jumping State");
             Context.PlayerController.ResetVariables();;
             Context.Input.enabled = true;
             Context.Coordinator.OnTiredChanged -= Context.HandleTiredChange;

@@ -34,7 +34,8 @@ namespace Characters.SystemAdaptations {
                     isWalking: false,
                     isClimbing: false,
                     isIdle: false,
-                    isMoving: false
+                    isMoving: false,
+                    isFalling: false
                 );
             
             _vitalsStruct = new VitalsStructScript(
@@ -58,6 +59,7 @@ namespace Characters.SystemAdaptations {
             _movementStruct.IsWalking = playerStateMachineScript.IsWalking;
             _movementStruct.IsIdle = playerStateMachineScript.IsIdle;
             _movementStruct.IsMoving = playerStateMachineScript.IsMoving;
+            _movementStruct.IsFalling = playerStateMachineScript.IsFalling;
         }
         
         private void HandleVitals() {
@@ -80,7 +82,7 @@ namespace Characters.SystemAdaptations {
                 OnHeavyChanged?.Invoke(_context.IsTired);
             }
             
-            if (_vitalsStruct.IsUnconscious != _context.IsTired) {
+            if (_vitalsStruct.IsUnconscious != _context.IsUnconscious) {
                 OnUnconsciousChanged?.Invoke(_context.IsUnconscious);
             }
             

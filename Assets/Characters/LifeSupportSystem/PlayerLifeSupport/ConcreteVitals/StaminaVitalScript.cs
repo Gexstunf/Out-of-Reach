@@ -1,9 +1,7 @@
 
 
-using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
-using UnityEditor.Rendering.LookDev;
+using Characters.LifeSupportSystem.PlayerLifeSupport.Utils;
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
     public class StaminaVitalScript : PlayerVitalScript {
@@ -12,26 +10,17 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
             base(context, vital)
         { }
         
+        private VitalUtils VitalUtil { get; set; }
+        
         // base/setup variables  and optional values
-        private float _baseStaminaRegenDelay = 5f;
-        private float _baseStaminaRegenRate = 2f;
-        private float _baseStaminaUseRate = 5f;
-        private float _jumpStaminaUse = 15f;
         private bool _hasJumped = false;
-
-        // dynamic delays
-        private float _currentStaminaRegenDelay;
         
         // dynamic rates
         private float _currentStaminaUseRate;
         private float _currentStaminaRegenRate;
         
-        // counters
-        private float _regenCounter = 0f;
-
-        
         private float _stamina;
-        public bool HasStamina { get; private set; }
+        public bool HasStamina => _stamina > 0f;
         
 
         #region Modifier vars
@@ -46,102 +35,83 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
         
         public override void SetupVital() {
             // setting up the base variables
+            VitalUtil = new VitalUtils(Context.StaminaRegenRate, Context.StaminaRegenDelay, 
+                Context.StaminaUseRate, 2f, Context.JumpStaminaUse, Context.MaxStamina);
+            
             _stamina = Context.MaxStamina;
-            HasStamina = true;
-            _baseStaminaRegenDelay = Context.StaminaRegenDelay;
-            _baseStaminaRegenRate = Context.StaminaRegenRate;
-            _baseStaminaUseRate = Context.StaminaUseRate;
-            _jumpStaminaUse = Context.JumpStaminaUse; 
-            
-            
-            // using the base values
-            _currentStaminaRegenDelay = _baseStaminaRegenDelay;
-            _currentStaminaUseRate = _baseStaminaUseRate;
-            _currentStaminaRegenRate = _baseStaminaRegenRate;
+            _currentStaminaUseRate = VitalUtil.BaseUseRate;
+            _currentStaminaRegenRate = VitalUtil.BaseRegenRate;
         }
         public override void UpdateModifiers() {
             //update stamina use rate based on the state
-            _currentStaminaUseRate = _baseStaminaUseRate;
+            _currentStaminaUseRate = VitalUtil.BaseUseRate;
             
-            if (Context.IsJumping) {
-                _currentStaminaUseRate = _baseStaminaUseRate + _jumpingModifier;
-            }
-
-            if (Context.IsRunning) {
-                _currentStaminaUseRate = _baseStaminaUseRate + _runningModifier;
-            }
+            if (Context.IsJumping) _currentStaminaUseRate = VitalUtil.BaseUseRate + _jumpingModifier;
             
-            if (Context.IsClimbing) {
-                _currentStaminaUseRate = _baseStaminaUseRate + _climbingModifier;
-            }
+            if (Context.IsRunning) _currentStaminaUseRate = VitalUtil.BaseUseRate + _runningModifier;
             
-            if (HasStamina) {
-                Context.SetTired(false);
-            }
-            else {
-                Context.SetTired(true);
-            }
+            if (Context.IsClimbing) _currentStaminaUseRate = VitalUtil.BaseUseRate + _climbingModifier;
+            
+            var storedUseRate = _currentStaminaRegenRate;
+            if (Context.IsTired) _currentStaminaRegenRate = storedUseRate + _tiredModifier;
+            
+            if (HasStamina) Context.SetTired(!HasStamina);
         }
         
         public override void UpdateVital() {
+            Context.UIManager.DisplayStamina(_stamina);
+
+            if (HandleJump()) { // this handles jump stamina logic
+                return;
+            }
             
-            HandleWhenMovement(); // this handles the stamina logic when moving
-            
-            if (_regenCounter < 0f) {
+            UseStamina(_currentStaminaUseRate);
+
+            if (VitalUtil.RegenTimer < 0f) {
                 RegenStamina(_currentStaminaRegenRate);
             }
             
-            DecreaseCounters();
-            Context.UIManager.DisplayStamina(_stamina);
+            VitalUtil.DecreaseRegenTimer();
         }
         
         #endregion
         
         
         #region Logic
-        
-        private void HandleWhenMovement() {
-            // checks if the movement should use stamina (checks if current state is a moving one)
+        private void UseStamina(float rate) {
+            
             if (!Context.IsStaminaRequired()) return;
             
-            if (HandleJump()) { // this handles jump stamina logic
-                return;
-            }
-            
-            UseStamina(_currentStaminaUseRate);
-            Context.ClampVital(ref _stamina, Context.MaxStamina);
-            _regenCounter = _currentStaminaRegenDelay;
-        }
-        private void UseStamina(float rate) {
             // if no stamina, make the regen delay greater
             if (_stamina <= 0f) {
-                _currentStaminaRegenDelay += Time.deltaTime;
-                HasStamina = false;
+                VitalUtil.IncreaseRegenTimer();
                 return;
             }
             
             // ensure regen delay is normal and subtract stamina
-            _currentStaminaRegenDelay = _baseStaminaRegenDelay;
-            HasStamina = true;
             _stamina -= rate * Time.deltaTime;
+            VitalUtil.ClampVital(ref _stamina);
+            VitalUtil.SetRegenTimer(VitalUtil.BaseRegenDelay); // reset timer
         }
+        
         private void RegenStamina(float rate) {
-            if (_stamina < Context.MaxStamina) {
+            if (_stamina < VitalUtil.BaseMaxVital) {
                 _stamina += rate * Time.deltaTime;
+                Context.SetTired(false);
             }
-            HasStamina = true;
-            Context.ClampVital(ref _stamina, Context.MaxStamina);
+            VitalUtil.ClampVital(ref _stamina);
         }
         private bool HandleJump() {
             // only use stamina when you start a new jump (press jump), not <while> jumping
             if (Context.IsJumping && !_hasJumped) {
-                _stamina -= _jumpStaminaUse;
+                _stamina -= VitalUtil.BaseUseCost;
                 _hasJumped = true;
-                Context.ClampVital(ref _stamina, Context.MaxStamina);
+                VitalUtil.ClampVital(ref _stamina);
                 return true;
             } 
             // the rest checks if stopped jumping, to restart the jump logic
             if (Context.IsJumping) {
+                VitalUtil.SetRegenTimer(VitalUtil.BaseRegenDelay); // reset timer
                 return true;
             }
             
@@ -150,10 +120,6 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
         }
         
         #endregion
-        
-        private void DecreaseCounters() {
-            _regenCounter -= Time.deltaTime;
-        }
     }
 }
 

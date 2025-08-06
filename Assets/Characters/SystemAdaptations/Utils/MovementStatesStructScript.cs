@@ -11,13 +11,16 @@ namespace Characters.SystemAdaptations.Utils {
         public bool IsIdle { get; set; }
         public bool IsMoving { get; set; }
         
-        public MovementStatesStructScript(bool isWalking, bool isRunning, bool isJumping, bool isClimbing, bool isIdle, bool isMoving) {
+        public bool IsFalling { get; set; }
+        
+        public MovementStatesStructScript(bool isWalking, bool isRunning, bool isJumping, bool isClimbing, bool isIdle, bool isMoving, bool isFalling) {
             IsWalking = isWalking;
             IsRunning = isRunning;
             IsJumping = isJumping;
             IsClimbing = isClimbing;
             IsIdle = isIdle;
             IsMoving = isMoving;
+            IsFalling = isFalling;
         }
     }
 }

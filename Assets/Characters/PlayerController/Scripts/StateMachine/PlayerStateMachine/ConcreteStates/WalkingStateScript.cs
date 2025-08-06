@@ -3,7 +3,6 @@ using UnityEngine;
 namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.ConcreteStates
 {
     public class WalkingStateScript : PlayerStateScript {
-        private float _counter = 0f;
         
         public WalkingStateScript(PlayerStateContextScript context, PlayerStateMachineScript.EPlayerStates estate) : 
             base(context, estate) 
@@ -12,11 +11,13 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
         public override void EnterState() {
             Debug.Log("Entering Walking State");
             Context.Coordinator.OnTiredChanged += Context.HandleTiredChange;
+            Context.Coordinator.OnUnconsciousChanged += Context.HandleUnconsciousChange;
         }
 
         public override void ExitState() {
-            Debug.Log("Exiting Walking State");
+            //Debug.Log("Exiting Walking State");
             Context.Coordinator.OnTiredChanged -= Context.HandleTiredChange;
+            Context.Coordinator.OnUnconsciousChanged -= Context.HandleUnconsciousChange;
         }
 
         public override void UpdateState() {
@@ -33,11 +34,11 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
                 return isJumping ? PlayerStateMachineScript.EPlayerStates.Jumping :
                     PlayerStateMachineScript.EPlayerStates.Falling;
             }
-            
+
             if (!isMoving) {
                 return PlayerStateMachineScript.EPlayerStates.Idle;
             }
-            
+
             return StateKey;
         }
 
