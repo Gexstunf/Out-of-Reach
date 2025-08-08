@@ -13,8 +13,8 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         [SerializeField] private PlayerInputScript _playerInputScript;
         [SerializeField] private readonly float _maxHealth;
         [SerializeField] private readonly float _maxStamina;
-        [SerializeField] private readonly float _currentHealth;
-        [SerializeField] private readonly float _currentStamina;
+        [SerializeField] private float _currentHealth;
+        [SerializeField] private float _currentStamina;
 
         [Header("Movement states")] 
         public bool IsWalking { get; private set; }
@@ -47,7 +47,6 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         }
 
         public bool IsStaminaRequired() => IsRunning || IsClimbing || IsJumping;
-        public void ClampVital(ref float value, float max) => value = Mathf.Clamp(value, 0, max);
         public Rigidbody Rb => _rb;
         public UIManagerScript UIManager => _uiManager;
         public PlayerInputScript PlayerInputScript => _playerInputScript;
@@ -84,6 +83,14 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         }
         public void SetUnconscious(bool value) {
             IsUnconscious = value;
+        }
+
+
+        public void SetHealth(float value) {
+            _currentHealth = value;
+        }
+        public void SetStamina(float value) {
+            _currentStamina = value;
         }
     }
 }

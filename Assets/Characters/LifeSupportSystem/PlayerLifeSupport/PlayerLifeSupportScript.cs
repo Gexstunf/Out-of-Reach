@@ -1,12 +1,7 @@
-
-using System;
 using Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals;
 using Characters.PlayerController.Scripts.Input;
-using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
-using Characters.SystemAdaptations.Utils;
 using UI.Scripts.TestingUI;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Assert = NUnit.Framework.Assert;
 
 namespace Characters.LifeSupportSystem.PlayerLifeSupport {
@@ -52,10 +47,5 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
             Assert.IsNotNull(_rb, "Rigidbody is not assigned.");
             Assert.IsNotNull(_uiManager, "UIManager is not assigned.");
         }
-
-        private WeightVitalScript WeightScript => (WeightVitalScript)Vitals[EVitals.Stamina];
-        private StaminaVitalScript StaminaScript => (StaminaVitalScript)Vitals[EVitals.Stamina];
-        private HungerVitalScript HungerScript => (HungerVitalScript)Vitals[EVitals.Hunger];
-        private HealthVitalScript HealthScript => (HealthVitalScript)Vitals[EVitals.Health];
     }
 }

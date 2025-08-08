@@ -51,6 +51,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
             }
             
             VitalUtil.DecreaseRegenTimer();
+            Context.SetHealth(_health);
             Context.UIManager.DisplayHealth(_health);
         }
 

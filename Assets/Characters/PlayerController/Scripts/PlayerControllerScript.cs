@@ -1,6 +1,7 @@
 using System;
 using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
+using Characters.StateMachine.PlayerStateMachine;
 using Characters.Utils;
 using UnityEngine;
 using UnityEngine.Serialization;

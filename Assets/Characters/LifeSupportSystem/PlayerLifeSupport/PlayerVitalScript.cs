@@ -1,5 +1,7 @@
 
 
+using UnityEngine;
+
 namespace Characters.LifeSupportSystem.PlayerLifeSupport {
     
     public abstract class PlayerVitalScript : BaseVitalScript<PlayerLifeSupportScript.EVitals>
@@ -9,5 +11,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         public PlayerVitalScript(PlayerLifeSupportContextScript context, PlayerLifeSupportScript.EVitals vital) : base(vital) {
             Context = context;
         }
+        
+        public void ClampVital(ref float value, float max) => value = Mathf.Clamp(value, 0, max);
     }
 }

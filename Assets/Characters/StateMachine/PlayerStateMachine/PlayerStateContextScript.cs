@@ -1,29 +1,32 @@
-
+using Characters.PlayerController.Scripts;
 using Characters.PlayerController.Scripts.Input;
 using Characters.SystemAdaptations;
 using Characters.SystemAdaptations.Utils;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
-namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
-{
-    public class PlayerStateContextScript: IVitalStates {
+namespace Characters.StateMachine.PlayerStateMachine {
+    public class PlayerStateContextScript : IVitalStates {
+
         [SerializeField] Rigidbody _rigidbody;
         [SerializeField] CapsuleCollider _collider;
         [SerializeField] PlayerInputScript _inputScript;
         [SerializeField] PlayerControllerScript _playerController;
         [SerializeField] StateVitalsCoordinator _coordinator;
 
-        [Header("Vitals States")] 
-        public bool IsUnconscious { get; private set; }
+        [Header("Vitals States")] public bool IsUnconscious { get; private set; }
         public bool IsTired { get; private set; }
         public bool IsHeavy { get; private set; }
         public bool IsStarved { get; private set; }
+
+
 
         private float _movementThreshold = 0.1f;
 
         public PlayerStateContextScript(Rigidbody rigidbody, CapsuleCollider collider,
             PlayerInputScript inputScript, PlayerControllerScript playerController,
-            StateVitalsCoordinator coordinator) {
+            StateVitalsCoordinator coordinator
+        ) {
             _rigidbody = rigidbody;
             _collider = collider;
             _inputScript = inputScript;
@@ -37,35 +40,11 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
         public PlayerControllerScript PlayerController => _playerController;
         public StateVitalsCoordinator Coordinator => _coordinator;
 
-        public bool IsMovingLaterally() {
-            Vector3 rawVelocity = _rigidbody.linearVelocity;
-            Vector2 velocity2d = new Vector2(rawVelocity.x, rawVelocity.z);
-
-            if (velocity2d.magnitude > _movementThreshold) {
-                return true;
-            }
-            return false;
-        }
-        
-
-        public bool IsJumping() {
-            return _rigidbody.linearVelocity.y > 0f;
-        }
-
-        public bool IsRunning() {
-            return _inputScript.RunningPressed;
-        }
-
-        public PlayerStateMachineScript.EPlayerStates HandleJumpState() {
-            bool jumping = IsJumping();
-            return jumping ? PlayerStateMachineScript.EPlayerStates.Jumping :
-                PlayerStateMachineScript.EPlayerStates.Falling;
-        }
-         public void HandleTiredChange(bool isTired) {
+        public void HandleTiredChange(bool isTired) {
             IsTired = isTired;
             Debug.Log("Changing tired state to: " + isTired);
         }
-
+        
         public void HandleUnconsciousChange(bool isUnconscious) {
             IsUnconscious = isUnconscious;
             _inputScript.enabled = !isUnconscious;

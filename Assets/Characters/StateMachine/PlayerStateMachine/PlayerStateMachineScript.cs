@@ -1,13 +1,13 @@
-     using System;
+using Characters.PlayerController.Scripts;
 using Characters.PlayerController.Scripts.Input;
-using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.ConcreteStates;
+using Characters.PlayerController.Scripts.StateMachine;
+using Characters.StateMachine.PlayerStateMachine.ConcreteStates;
+using Characters.StateMachine.PlayerStateMachine.z;
 using Characters.SystemAdaptations;
-using Characters.SystemAdaptations.Utils;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.Serialization;
 
-namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
+namespace Characters.StateMachine.PlayerStateMachine
 {
     [RequireComponent(typeof(PlayerInputScript))]
     [RequireComponent(typeof(StateVitalsCoordinator))]
@@ -20,6 +20,7 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
         [SerializeField] private PlayerControllerScript _playerControllerScript;
         [SerializeField] private CapsuleCollider _collider;
         [SerializeField] private StateVitalsCoordinator _coordinator;
+        
         public PlayerStateContextScript Context { get; private set; }
         
         public enum EPlayerStates
@@ -43,7 +44,15 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
             ValidateReferences();
             InitializeStates();
         }
-
+        
+        private void ValidateReferences() {
+            Assert.IsNotNull(_rb, "Rigidbody is not assigned!");
+            Assert.IsNotNull(_collider, "Collider is not assigned!");
+            Assert.IsNotNull(_inputScript, "Player-input-script is not assigned!");
+            Assert.IsNotNull(_playerControllerScript, "Player-controller-script is not assigned!");
+            Assert.IsNotNull(_coordinator, "Coordinator is not assigned!");
+        }
+        
         private void InitializeStates()
         {
             States.Add(EPlayerStates.Falling, new FallingStateScript(Context, EPlayerStates.Falling));
@@ -54,19 +63,10 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
             
             CurrentState = States[EPlayerStates.Idle];
         }
-
-        private void ValidateReferences() {
-            Assert.IsNotNull(_rb, "Rigidbody is not assigned!");
-            Assert.IsNotNull(_collider, "Collider is not assigned!");
-            Assert.IsNotNull(_inputScript, "Player-input-script is not assigned!");
-            Assert.IsNotNull(_playerControllerScript, "Player-controller-script is not assigned!");
-            Assert.IsNotNull(_coordinator, "Coordinator is not assigned!");
-        }
-
-
         
         public EPlayerStates StateKey => CurrentState.StateKey;
         
+        # region  Exposed vars
         public bool IsFalling => StateKey == EPlayerStates.Falling;
         public bool IsJumping => StateKey == EPlayerStates.Jumping;
         public bool IsRunning => StateKey == EPlayerStates.Running;
@@ -77,5 +77,7 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
                                 StateKey == EPlayerStates.Walking ||
                                 StateKey == EPlayerStates.Climbing || 
                                 StateKey == EPlayerStates.Falling;
+        
+        # endregion
     }
 }

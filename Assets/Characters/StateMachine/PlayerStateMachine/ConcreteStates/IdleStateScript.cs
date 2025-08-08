@@ -1,10 +1,11 @@
-using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.ConcreteStates.Utils;
+using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using UnityEngine;
 
-namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.ConcreteStates
+namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
 {
     public class IdleStateScript : PlayerStateScript {
         
+        // IMPORTANT: PLAYER STATE SCRIPT, HELPS WITH CHOOSING LOGIC FOR STATES
         public IdleStateScript(PlayerStateContextScript context, PlayerStateMachineScript.EPlayerStates estate) : 
             base(context, estate)
         { }
@@ -28,12 +29,12 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
         }
 
         public override PlayerStateMachineScript.EPlayerStates GetNextState() {
-            bool isMoving = Context.IsMovingLaterally();
-            bool isRunning = Context.IsRunning();
+            bool isMoving = IsMovingLaterally();
+            bool isRunning = IsRunning();
             bool isGrounded = Context.PlayerController.isGrounded;
             
             if (!isGrounded) {
-                var state = Context.HandleJumpState();
+                var state = HandleJumpState();
                 return state;
             }
             

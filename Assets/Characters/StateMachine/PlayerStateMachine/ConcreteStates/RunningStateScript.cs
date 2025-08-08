@@ -1,9 +1,9 @@
-
-
+using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using UnityEngine;
 
-namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.ConcreteStates {
+namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates {
     public class RunningStateScript : PlayerStateScript {
+        // IMPORTANT: PLAYER STATE SCRIPT, HELPS WITH CHOOSING LOGIC FOR STATES
         public RunningStateScript(PlayerStateContextScript context, PlayerStateMachineScript.EPlayerStates state) : base(context, state) 
         { }
 
@@ -21,12 +21,12 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
         }
 
         public override PlayerStateMachineScript.EPlayerStates GetNextState() { 
-            bool isMoving = Context.IsMovingLaterally();
-            bool isRunning = Context.IsRunning();
+            bool isMoving = IsMovingLaterally();
+            bool isRunning = IsRunning();
             bool isGrounded = Context.PlayerController.isGrounded;
             
             if (!isGrounded) {
-                var state = Context.HandleJumpState();
+                var state = HandleJumpState();
                 return state;
             }
 

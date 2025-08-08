@@ -73,6 +73,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
             }
             
             VitalUtil.DecreaseRegenTimer();
+            Context.SetStamina(_stamina);
         }
         
         #endregion

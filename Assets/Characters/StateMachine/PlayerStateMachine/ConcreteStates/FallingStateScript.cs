@@ -1,6 +1,7 @@
+using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using UnityEngine;
 
-namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.ConcreteStates
+namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
 {
     public class FallingStateScript : PlayerStateScript
     {

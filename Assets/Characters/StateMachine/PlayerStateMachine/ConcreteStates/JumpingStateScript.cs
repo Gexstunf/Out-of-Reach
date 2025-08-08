@@ -1,7 +1,9 @@
+using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using UnityEngine;
 
-namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.ConcreteStates
+namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
 {
+    // IMPORTANT: PLAYER STATE SCRIPT, HELPS WITH CHOOSING LOGIC FOR STATES
     public class JumpingStateScript : PlayerStateScript
     {
         
@@ -30,7 +32,7 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
 
         public override PlayerStateMachineScript.EPlayerStates GetNextState()
         {
-            bool isJumping = Context.IsJumping();
+            bool isJumping = IsJumping();
             bool isGrounded = Context.PlayerController.isGrounded;
 
             if (isGrounded) {
