@@ -10,6 +10,7 @@ using UnityEngine.Assertions;
 using Assert = NUnit.Framework.Assert;
 
 namespace Characters.LifeSupportSystem.PlayerLifeSupport {
+    [RequireComponent(typeof(PlayerInputScript))]
     public class PlayerLifeSupportScript : LifeSupportManagerScript<PlayerLifeSupportScript.EVitals> {
         
         [Header("References")]
@@ -33,7 +34,6 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         
         private void Awake() {
             _rb = GetComponent<Rigidbody>();
-            
             Context = new PlayerLifeSupportContextScript(_rb, _maxHealth, _maxStamina, _uiManager, _playerInputScript);
             
             ValidateReferences();

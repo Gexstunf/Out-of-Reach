@@ -27,19 +27,19 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
         public override PlayerStateMachineScript.EPlayerStates GetNextState()
         {
             bool isMoving = Context.IsMovingLaterally();
+            bool isRunning = Context.IsRunning();
             bool isGrounded = Context.PlayerController.isGrounded;
 
             if (!isGrounded) {
-                bool isJumping = Context.IsJumping();
-                return isJumping ? PlayerStateMachineScript.EPlayerStates.Jumping :
-                    PlayerStateMachineScript.EPlayerStates.Falling;
+                var state = Context.HandleJumpState();
+                return state;
             }
 
             if (!isMoving) {
                 return PlayerStateMachineScript.EPlayerStates.Idle;
             }
 
-            return StateKey;
+            return isRunning && !Context.IsTired ? PlayerStateMachineScript.EPlayerStates.Running : StateKey;
         }
 
         public override void OnTriggerStay(Collider other)

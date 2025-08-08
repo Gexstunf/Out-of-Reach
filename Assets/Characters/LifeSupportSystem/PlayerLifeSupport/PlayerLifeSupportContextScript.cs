@@ -60,7 +60,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
 
         public float StaminaUseRate => 5f;
         public float StaminaRegenRate => 2f;
-        public float StaminaRegenDelay => 4f;
+        public float StaminaRegenDelay => 5f;
         
         public float HealthRegenRate => 2f;
         public float HealthRegenDelay => 4f;

@@ -9,6 +9,8 @@ using UnityEngine.Serialization;
 
 namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
 {
+    [RequireComponent(typeof(PlayerInputScript))]
+    [RequireComponent(typeof(StateVitalsCoordinator))]
     public class PlayerStateMachineScript : StateManagerScript<PlayerStateMachineScript.EPlayerStates>
     {
 
@@ -34,6 +36,8 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
             _collider = GetComponent<CapsuleCollider>();
             _playerControllerScript = GetComponent<PlayerControllerScript>();
             _coordinator = GetComponent<StateVitalsCoordinator>();
+            _inputScript = GetComponent<PlayerInputScript>();
+            _rb = GetComponent<Rigidbody>();
 
             Context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript, _coordinator);
             ValidateReferences();
@@ -46,6 +50,7 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
             States.Add(EPlayerStates.Jumping, new JumpingStateScript(Context, EPlayerStates.Jumping));
             States.Add(EPlayerStates.Walking, new WalkingStateScript(Context, EPlayerStates.Walking));
             States.Add(EPlayerStates.Idle, new IdleStateScript(Context, EPlayerStates.Idle));
+            States.Add(EPlayerStates.Running, new RunningStateScript(Context, EPlayerStates.Running));
             
             CurrentState = States[EPlayerStates.Idle];
         }
@@ -54,6 +59,8 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
             Assert.IsNotNull(_rb, "Rigidbody is not assigned!");
             Assert.IsNotNull(_collider, "Collider is not assigned!");
             Assert.IsNotNull(_inputScript, "Player-input-script is not assigned!");
+            Assert.IsNotNull(_playerControllerScript, "Player-controller-script is not assigned!");
+            Assert.IsNotNull(_coordinator, "Coordinator is not assigned!");
         }
 
 

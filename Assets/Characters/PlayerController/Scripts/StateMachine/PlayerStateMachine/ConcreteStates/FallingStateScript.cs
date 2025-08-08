@@ -35,6 +35,7 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
                 Debug.Log("Now grounded!!!");
                 return PlayerStateMachineScript.EPlayerStates.Walking;
             }
+            
             return StateKey;
         }
 

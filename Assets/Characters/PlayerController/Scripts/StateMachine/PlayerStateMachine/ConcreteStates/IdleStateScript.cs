@@ -29,18 +29,17 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine.Co
 
         public override PlayerStateMachineScript.EPlayerStates GetNextState() {
             bool isMoving = Context.IsMovingLaterally();
+            bool isRunning = Context.IsRunning();
             bool isGrounded = Context.PlayerController.isGrounded;
             
             if (!isGrounded) {
-                bool isJumping = Context.IsJumping();
-                Debug.Log("Jumping: " + isJumping);
-                
-                return isJumping ? PlayerStateMachineScript.EPlayerStates.Jumping :
-                        PlayerStateMachineScript.EPlayerStates.Falling;
+                var state = Context.HandleJumpState();
+                return state;
             }
             
             if (isMoving) {
-                return PlayerStateMachineScript.EPlayerStates.Walking;
+                return isRunning ? PlayerStateMachineScript.EPlayerStates.Running : 
+                        PlayerStateMachineScript.EPlayerStates.Walking;
             }
             
             return StateKey;

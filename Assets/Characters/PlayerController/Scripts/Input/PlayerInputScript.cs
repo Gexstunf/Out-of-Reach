@@ -7,11 +7,14 @@ namespace Characters.PlayerController.Scripts.Input
     public class PlayerInputScript : MonoBehaviour, PlayerLocomotionScript.IPlayerActions
     {
         private PlayerLocomotionScript _playerLocomotionScript;
+        private readonly bool _toggleSprint = false;
         
         #region Exposed Variables
         public Vector2 MoveInput { get; private set; }
         public Vector2 LookInput { get; private set; }
         public bool JumpPressed { get; private set; }
+        
+        public bool RunningPressed { get; private set; }
         
         #endregion
         
@@ -99,9 +102,13 @@ namespace Characters.PlayerController.Scripts.Input
             throw new System.NotImplementedException();
         }
 
-        public void OnSprint(InputAction.CallbackContext context)
-        {
-            throw new System.NotImplementedException();
+        public void OnSprint(InputAction.CallbackContext context) {
+            if (context.performed) {
+                RunningPressed = true;
+                Debug.Log("Sprint press");
+            } else if (context.canceled) {
+                RunningPressed = false;
+            }
         }
         
         #endregion

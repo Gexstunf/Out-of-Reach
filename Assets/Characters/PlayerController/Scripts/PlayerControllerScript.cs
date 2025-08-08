@@ -17,14 +17,14 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private CameraControllerScript _cameraController;
         [SerializeField] private PlayerInputScript _inputScript;
         [SerializeField] private Rigidbody _rb;
-        [SerializeField] public CapsuleCollider playerCollider;
+        [SerializeField] public CapsuleCollider _playerCollider;
         
         [Header("State machine")]
         [SerializeField] private PlayerStateMachineScript _playerStateMachine;
 
         [Header("Movement Settings")] 
         public float moveForce = 30f;
-        public float runForce = 10f;
+        public float runForce = 60f;
         public float playerDrag = 5f;
         
         [Header("Jump Settings")]
@@ -41,8 +41,11 @@ namespace Characters.PlayerController.Scripts
 
         [Header("Visualize Variables")] 
         public bool isGrounded = true;
-        public Vector3 CurrentForce { get; private set; } 
+        public Vector3 CurrentForce { get; private set; }
+        public float Gravity;
         
+        private float _groundCheckOffset;
+
         #endregion
         
         #region Startup logic
@@ -50,8 +53,13 @@ namespace Characters.PlayerController.Scripts
         {
             _inputScript = GetComponent<PlayerInputScript>();
             _rb = GetComponent<Rigidbody>();
+            _playerCollider = GetComponent<CapsuleCollider>();
+            _playerStateMachine = GetComponent<PlayerStateMachineScript>();
+            
             _rotator = gameObject.AddComponent<RotatorScript>();
             _cameraController = gameObject.AddComponent<CameraControllerScript>();
+
+            Gravity = Physics.gravity.y;
         }
 
         private void Start()
@@ -59,6 +67,8 @@ namespace Characters.PlayerController.Scripts
             _rb.linearDamping = playerDrag;
             _rotator.Init(_lookSenseH, _lookSenseV, _lookLimitV);
             _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
+
+            _groundCheckOffset = _playerCollider.radius + 0.1f;
         }
         
         #endregion
@@ -92,7 +102,7 @@ namespace Characters.PlayerController.Scripts
         
         #endregion
         
-        #region Movement / state logic
+        #region Movement & ground state logic
         private Vector3 CalculateMovementDirection()
         {
             Vector3 forwardCamTransform = _playerCamera.transform.forward;
@@ -106,21 +116,18 @@ namespace Characters.PlayerController.Scripts
             return movementDirection;
         }
 
-        private Vector3 CalculateNewForce(Vector3 movementDirection)
-        {
-            Vector3 force = movementDirection * moveForce;
-            // Vector3 currentDrag = force.normalized * drag;
-            // Vector3 newForce = force.magnitude > playerDrag ? (force - currentDrag) : Vector3.zero;
-            
+        private Vector3 CalculateNewForce(Vector3 movementDirection) {
+            float currentForce = _playerStateMachine.IsRunning ? runForce : moveForce;
+            Vector3 force = movementDirection * currentForce;
             return force ;
         }
 
         private void HandleJumping(float force)
         {
             bool jumped = _inputScript.JumpPressed;
-            bool canJump = !_playerStateMachine.Context.IsTired;
+            bool tired = _playerStateMachine.Context.IsTired;
             
-            if (jumped && isGrounded && canJump)
+            if (jumped && isGrounded && !tired)
             {
                 _rb.AddForce(Vector3.up * force, ForceMode.Impulse);
                 _rb.AddForce(_rb.transform.forward * forwardJumpForce, ForceMode.Impulse);
@@ -130,6 +137,7 @@ namespace Characters.PlayerController.Scripts
         }
 
         private void HandleGroundState() {
+            // maybe more logic
             isGrounded = IsGroundedWhileGrounded();
         }
         
@@ -143,34 +151,63 @@ namespace Characters.PlayerController.Scripts
         }
 
         private bool IsGroundedWhileGrounded() {
-            float sphereRadius = 0.3f;
-            float offset = 0.1f; // slightly below feet
-            Vector3 spherePosition = transform.position + Vector3.down * (playerCollider.height / 2f - sphereRadius + offset);
-
-            return Physics.CheckSphere(spherePosition, sphereRadius, groundLayer, QueryTriggerInteraction.Ignore);
+            float sphereRadius = _playerCollider.radius;
+            Vector3 spherePosition = transform.position + Vector3.down * (_playerCollider.height / 2f - sphereRadius + _groundCheckOffset);
+            bool hit = Physics.CheckSphere(spherePosition, sphereRadius, groundLayer, QueryTriggerInteraction.Ignore);
+            return hit;
         }
 
         private bool IsGroundedWhileAirborne()
         {
             Vector3 origin = transform.position + Vector3.up * 0.1f;
-            float sphereRadius = 0.3f;
+            float sphereRadius = _playerCollider.radius;
             float maxDistance = 0.3f; 
-            return Physics.SphereCast(origin, sphereRadius, Vector3.down, out _, maxDistance, groundLayer, QueryTriggerInteraction.Ignore);
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            Vector3 origin = transform.position + Vector3.up * 0.1f;
-            float sphereRadius = 0.3f;
-            float maxDistance = 0.3f;
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(origin, sphereRadius); // start
-            Gizmos.DrawLine(origin, origin + Vector3.down * maxDistance); // direction
-            Gizmos.DrawWireSphere(origin + Vector3.down * maxDistance, sphereRadius); // end
+            bool hit = Physics.SphereCast(origin, sphereRadius, Vector3.down, out _, maxDistance, groundLayer, QueryTriggerInteraction.Ignore);
+            return hit;
         }
         
         #endregion
+
+        #region Gizmo draw
+
+        private void OnDrawGizmosSelected()
+                {
+                    if (_playerCollider == null) return;
+        
+                    // Draw the original capsule collider (yellow)
+                    Gizmos.color = Color.yellow;
+                    float radius = _playerCollider.radius;
+                    float height = _playerCollider.height;
+                    Vector3 center = _playerCollider.center;
+        
+                    Vector3 top = transform.position + center + Vector3.up * (height / 2 - radius);
+                    Vector3 bottom = transform.position + center + Vector3.down * (height / 2 - radius);
+        
+                    // Draw spheres at the ends
+                    Gizmos.DrawWireSphere(top, radius);
+                    Gizmos.DrawWireSphere(bottom, radius);
+        
+                    // Draw lines connecting spheres (body of capsule)
+                    Gizmos.DrawLine(top + Vector3.forward * radius, bottom + Vector3.forward * radius);
+                    Gizmos.DrawLine(top + Vector3.back * radius, bottom + Vector3.back * radius);
+                    Gizmos.DrawLine(top + Vector3.left * radius, bottom + Vector3.left * radius);
+                    Gizmos.DrawLine(top + Vector3.right * radius, bottom + Vector3.right * radius);
+        
+                    // Draw the ground check sphere (green if grounded, red if not)
+                    Vector3 spherePosition = transform.position + Vector3.down * (height / 2f - radius + _groundCheckOffset);
+                    bool grounded = IsGroundedWhileGrounded();
+            
+                    Gizmos.color = grounded ? Color.green : Color.red;
+                    Gizmos.DrawWireSphere(spherePosition, radius);
+            
+                    // Draw a line from the bottom of the collider to the check sphere
+                    Gizmos.color = Color.cyan;
+                    Gizmos.DrawLine(bottom, spherePosition);
+                }
+
+        #endregion
+        
+        
     
     }
 }

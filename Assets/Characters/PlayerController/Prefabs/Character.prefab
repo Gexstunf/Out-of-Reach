@@ -43,9 +43,11 @@ GameObject:
   - component: {fileID: 8566744281919131191}
   - component: {fileID: 1939314533335361967}
   - component: {fileID: 7222919724319267390}
+  - component: {fileID: 651917907056315309}
   - component: {fileID: 3290322489271152468}
-  - component: {fileID: 178698626750906543}
   - component: {fileID: 8047505159171444615}
+  - component: {fileID: 2031797758582322408}
+  - component: {fileID: 1063237526129234227}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -102,7 +104,7 @@ Rigidbody:
   m_GameObject: {fileID: 4449942597797591771}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 5
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -120,6 +122,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &651917907056315309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4449942597797591771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dea98ac4d0a2bb45b7fea3ebe8d8a5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3290322489271152468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,30 +149,23 @@ MonoBehaviour:
   _playerCamera: {fileID: 1121588729925133080}
   _rotator: {fileID: 0}
   _cameraController: {fileID: 0}
+  _inputScript: {fileID: 651917907056315309}
+  _rb: {fileID: 7222919724319267390}
   playerCollider: {fileID: 1939314533335361967}
+  _playerStateMachine: {fileID: 8047505159171444615}
   moveForce: 30
-  runForce: 10
+  runForce: 50
   playerDrag: 5
-  jumpForce: 8.5
+  jumpForce: 6.5
+  forwardJumpForce: 4
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  _lookSenseH: 0.9
-  _lookSenseV: 0.9
-  _lookLimitV: 89
+  _lookSenseH: 0.3
+  _lookSenseV: 0.3
+  _lookLimitV: 70
   isGrounded: 1
---- !u!114 &178698626750906543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4449942597797591771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ee42bf905c4d4496941176532600091, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  Gravity: 0
 --- !u!114 &8047505159171444615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,9 +179,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 7222919724319267390}
-  _inputScript: {fileID: 178698626750906543}
-  _playerControllerScript: {fileID: 0}
-  _collider: {fileID: 0}
+  _inputScript: {fileID: 651917907056315309}
+  _playerControllerScript: {fileID: 3290322489271152468}
+  _collider: {fileID: 1939314533335361967}
+  _coordinator: {fileID: 0}
+--- !u!114 &2031797758582322408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4449942597797591771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17676bdd2e3d4189836ca6c9b67e2057, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rb: {fileID: 7222919724319267390}
+  _uiManager: {fileID: 0}
+  _playerInputScript: {fileID: 651917907056315309}
+  _maxHealth: 100
+  _maxStamina: 100
+--- !u!114 &1063237526129234227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4449942597797591771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 548193a6232a8c54dac7f767db8567be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerStateMachineScript: {fileID: 8047505159171444615}
+  playerLifeSupportScript: {fileID: 2031797758582322408}
 --- !u!1 &6670043487640002970
 GameObject:
   m_ObjectHideFlags: 0

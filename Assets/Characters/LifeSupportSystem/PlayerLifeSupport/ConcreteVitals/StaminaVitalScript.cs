@@ -27,7 +27,6 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
         private readonly float _climbingModifier = 4f;
         private readonly float _runningModifier = 2f;
         private readonly float _jumpingModifier = 5f;
-        private readonly float _tiredModifier = 3f;
         #endregion
         
         
@@ -52,10 +51,12 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
             
             if (Context.IsClimbing) _currentStaminaUseRate = VitalUtil.BaseUseRate + _climbingModifier;
             
-            var storedUseRate = _currentStaminaRegenRate;
-            if (Context.IsTired) _currentStaminaRegenRate = storedUseRate + _tiredModifier;
-            
-            if (HasStamina) Context.SetTired(!HasStamina);
+            if (!HasStamina) {
+                Context.SetTired(true);
+            }
+            else {
+                Context.SetTired(false);
+            };
         }
         
         public override void UpdateVital() {
@@ -90,8 +91,8 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
             
             // ensure regen delay is normal and subtract stamina
             _stamina -= rate * Time.deltaTime;
-            VitalUtil.ClampVital(ref _stamina);
             VitalUtil.SetRegenTimer(VitalUtil.BaseRegenDelay); // reset timer
+            VitalUtil.ClampVital(ref _stamina);
         }
         
         private void RegenStamina(float rate) {

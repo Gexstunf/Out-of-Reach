@@ -51,9 +51,17 @@ namespace Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine
         public bool IsJumping() {
             return _rigidbody.linearVelocity.y > 0f;
         }
-        
-        
-        public void HandleTiredChange(bool isTired) {
+
+        public bool IsRunning() {
+            return _inputScript.RunningPressed;
+        }
+
+        public PlayerStateMachineScript.EPlayerStates HandleJumpState() {
+            bool jumping = IsJumping();
+            return jumping ? PlayerStateMachineScript.EPlayerStates.Jumping :
+                PlayerStateMachineScript.EPlayerStates.Falling;
+        }
+         public void HandleTiredChange(bool isTired) {
             IsTired = isTired;
             Debug.Log("Changing tired state to: " + isTired);
         }
