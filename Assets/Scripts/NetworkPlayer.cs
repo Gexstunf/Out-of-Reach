@@ -16,10 +16,7 @@ public class NetworkPlayer : MonoBehaviourPun
     {
         if (photonView.IsMine)
         {
-            // Movimiento simple para testear
-            float h = Input.GetAxis("Horizontal");
-            float v = Input.GetAxis("Vertical");
-            transform.Translate(new Vector3(h, 0, v) * Time.deltaTime * 5f);
+            
         }
     }
 }
