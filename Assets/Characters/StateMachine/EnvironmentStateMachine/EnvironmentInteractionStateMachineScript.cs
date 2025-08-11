@@ -1,3 +1,6 @@
+using System;
+using Characters.PlayerController.Scripts;
+using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine;
 using Characters.StateMachine.EnvironmentStateMachine.ConcreteStates;
 using Characters.StateMachine.PlayerStateMachine;
@@ -11,12 +14,14 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             Rise,
             Touch
         }
-        
-        public EnvironmentInteractionContextScript Context { get; private set; }
+
+        private EnvironmentInteractionContextScript _context;
         
         [Header("References")]
         [SerializeField] private PlayerStateMachineScript _playerStateMachine;
+        [SerializeField] private PlayerInputScript _inputScript;
         [SerializeField] private CapsuleCollider _rootCollider;
+        [SerializeField] private Camera _camera;
         
         
         [Header("Environment interaction settings")]
@@ -24,22 +29,28 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         [SerializeField] private TwoBoneIKConstraint _rightIkConstraint;
         [SerializeField] private MultiRotationConstraint _leftMultiRotationConstraint;
         [SerializeField] private MultiRotationConstraint _rightMultiRotationConstraint;
-        
+        [SerializeField] private LayerMask _groundLayer;
         private void Awake() {
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
             _rootCollider = GetComponent<CapsuleCollider>();
+            _inputScript = GetComponent<PlayerInputScript>();
             
-            Context = new EnvironmentInteractionContextScript(_leftIkConstraint, _rightIkConstraint, 
-                _leftMultiRotationConstraint, _rightMultiRotationConstraint, transform.root);
+            _context = new EnvironmentInteractionContextScript(_leftIkConstraint, _rightIkConstraint, 
+                _leftMultiRotationConstraint, _rightMultiRotationConstraint, transform.root, _inputScript, _camera, _groundLayer);
                 
             ValidateConstraints();
             InitializeStates();
-            ConstructTerrainDetectorCollider();
-        }
+            //ConstructTerrainDetectorCollider();
 
+            _context.SetCurrentStep(EnvironmentInteractionContextScript.EStep.Right);            
+            _context.SetTargetOffset(_leftIkConstraint.data.target.localPosition, _rightIkConstraint.data.target.localPosition);
+        }
+        
         private void InitializeStates() {
-            States.Add(EEnvironmentActions.Rise, new RiseStateScript(Context, EEnvironmentActions.Rise));
-            States.Add(EEnvironmentActions.Touch, new TouchStateScript(Context, EEnvironmentActions.Touch));
+            States.Add(EEnvironmentActions.Touch, new TouchStateScript(_context, EEnvironmentActions.Touch));
+            States.Add(EEnvironmentActions.Rise, new RiseStateScript(_context, EEnvironmentActions.Rise));
+
+            CurrentState = States[EEnvironmentActions.Touch];
         }
         
         private void ValidateConstraints() {
@@ -56,6 +67,13 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             boxCollider.size = new Vector3(legSpan + 0.4f, legSpan, legSpan + 0.4f);
             boxCollider.center = new Vector3(_rootCollider.center.x, _rootCollider.center.y - (legSpan/2f + 0.7f), _rootCollider.center.z);
             boxCollider.isTrigger = true;
+        }
+
+        private void OnDrawGizmosSelected() {
+            Gizmos.color = Color.red;
+            if (_context != null && _context.ClosestPointOnColliderFromLegShoulderTransform != null) {
+                Gizmos.DrawSphere(_context.ClosestPointOnColliderFromLegShoulderTransform, 0.3f);
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Characters.StateMachine.PlayerStateMachine.z
         { }
 
         public override void EnterState() {
-            Debug.Log("Entering Walking State");
+            //Debug.Log("Entering Walking State");
             Context.Coordinator.OnTiredChanged += Context.HandleTiredChange;
             Context.Coordinator.OnUnconsciousChanged += Context.HandleUnconsciousChange;
         }

@@ -8,7 +8,7 @@ namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates {
         { }
 
         public override void EnterState() {
-            Debug.Log("Entering running state");
+            //Debug.Log("Entering running state");
             Context.Coordinator.OnTiredChanged += Context.HandleTiredChange;
         }
 

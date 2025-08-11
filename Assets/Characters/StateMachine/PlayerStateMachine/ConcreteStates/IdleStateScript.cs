@@ -12,7 +12,7 @@ namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
 
         public override void EnterState()
         {
-            Debug.Log("Entering idle state");
+            //Debug.Log("Entering idle state");
             Context.Coordinator.OnTiredChanged += Context.HandleTiredChange;
             Context.Coordinator.OnUnconsciousChanged += Context.HandleUnconsciousChange;
         }

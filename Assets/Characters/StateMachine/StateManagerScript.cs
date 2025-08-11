@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Characters.StateMachine.EnvironmentStateMachine;
+using Characters.StateMachine.EnvironmentStateMachine.ConcreteStates;
 using UnityEngine;
 
 namespace Characters.PlayerController.Scripts.StateMachine

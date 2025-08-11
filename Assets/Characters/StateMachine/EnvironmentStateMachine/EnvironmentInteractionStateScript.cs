@@ -1,4 +1,5 @@
 using Characters.PlayerController.Scripts.StateMachine;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 namespace Characters.StateMachine.EnvironmentStateMachine {
@@ -10,22 +11,46 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         {
             Context = context;
         }
+        
+        protected float StepThreshold { get; private set; }
     
         public Vector3 GetClosestPoint(Collider intersectingCollider, Vector3 positionToCheck) {
             return intersectingCollider.ClosestPoint(positionToCheck);
         }
 
         protected void StartIkTargetPositionTracking(Collider intersectingCollider) {
-            Vector3 closestPointFromRoot = GetClosestPoint(intersectingCollider, Context.RootTransform.position);
-            Context.SetCurrentSide(closestPointFromRoot);
+            if (intersectingCollider.gameObject.layer != LayerMask.NameToLayer("Terrain")) return;
+            if (Context.CurrentInteractionCollider != null) return;
         }
         
         protected void UpdateIkTargetPositionTracking(Collider intersectingCollider) {
-            
         }
         
         protected void ResetIkTargetPositionTracking(Collider intersectingCollider) {
-            
+            if (intersectingCollider == Context.CurrentInteractionCollider) {
+                Context.CurrentInteractionCollider = null;
+            };
+        }
+
+        protected void SetStepThreshold(float threshold) {
+            StepThreshold = threshold;
+        }
+
+        protected EnvironmentInteractionContextScript.EStep GetOppositeStep(EnvironmentInteractionContextScript.EStep step) 
+        {
+            return step == EnvironmentInteractionContextScript.EStep.Left ? EnvironmentInteractionContextScript.EStep.Right : EnvironmentInteractionContextScript.EStep.Left;
+        }
+        
+        public Vector3 GetPivotedTarget(Transform origin, Vector2 movement, float distance) {
+            Vector3 localMove = new Vector3(movement.x, 0f, movement.y);
+
+            if (localMove.sqrMagnitude > 1f)
+                localMove.Normalize();
+
+            localMove *= distance;
+
+            Vector3 worldMove = origin.rotation * localMove;
+            return origin.position + worldMove;
         }
     }
 }

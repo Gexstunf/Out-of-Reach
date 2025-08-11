@@ -11,7 +11,7 @@ namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
         { }
 
         public override void EnterState() {
-            Debug.Log("Entering Falling state");
+            //Debug.Log("Entering Falling state");
             Context.Input.enabled = false;
             Context.Rb.linearDamping = 0f;
             Context.Coordinator.OnUnconsciousChanged += Context.HandleUnconsciousChange;

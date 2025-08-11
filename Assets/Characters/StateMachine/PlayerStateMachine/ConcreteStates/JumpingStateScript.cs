@@ -12,7 +12,7 @@ namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
         { }
 
         public override void EnterState() {
-            Debug.Log("Entering Jumping State");
+            //Debug.Log("Entering Jumping State");
             Context.Rb.linearDamping = 0f;
             Context.Input.enabled = false;
             Context.Coordinator.OnTiredChanged += Context.HandleTiredChange;
