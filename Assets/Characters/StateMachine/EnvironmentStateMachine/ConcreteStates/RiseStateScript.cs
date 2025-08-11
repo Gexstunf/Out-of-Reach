@@ -6,27 +6,30 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             base(context, estate) 
         { }
 
-        private float _stepHeight = 0.5f;
-        private float _riseTime = 0.15f;
+        private float _stepHeight = 0.6f;
+        private float _riseTime = 0.1f;
         private float _timer;
         private Vector3 groundPos;
         public override void EnterState()
         {
             Debug.Log("RISE State");
             _timer = 0f;
-            
+            Vector2 input = Context.InputScript.MoveInput;
+
             if (Context.CurrentStep == EnvironmentInteractionContextScript.EStep.Left) {
-                Vector3 newPos = Context.LeftTargetOffsetPosition;
-                newPos.y += _stepHeight;
-                Context.SetIkTargetLocalPosition(newPos);
+                Vector3 pivotedTarget = Context.LeftTargetOffsetPosition; // GetPivotedTarget(Context.CurrentIkTargetTransform, input, _stepHeight);
+                pivotedTarget.y += _stepHeight;
+                pivotedTarget.z += _stepHeight;
+                Context.SetIkTargetLocalPosition(pivotedTarget);
             }
             else {
-                Vector3 newPos = Context.RightTargetOffsetPosition;
-                newPos.y += _stepHeight;
-                Context.SetIkTargetLocalPosition(newPos);
+                Vector3 pivotedTarget = Context.RightTargetOffsetPosition; //GetPivotedTarget(Context.CurrentIkTargetTransform, input, _stepHeight);
+                pivotedTarget.y += _stepHeight;
+                pivotedTarget.z += _stepHeight;
+                Context.SetIkTargetLocalPosition(pivotedTarget);
             }
         }
-
+        
         public override void UpdateState()
         {
             _timer += Time.deltaTime;
@@ -35,16 +38,6 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
         public override void ExitState()
         {
             Debug.Log("EXIT RISE State");
-            if (Physics.Raycast(
-                    Context.CurrentIkConstraint.data.root.position,
-                    Vector3.down,
-                    out RaycastHit hit,
-                    maxDistance: 6f,
-                    Context.GroundLayer)) 
-            {
-                groundPos = hit.point;
-                Context.SetIkTargetWorldPosition(groundPos);
-            }
         }
 
 

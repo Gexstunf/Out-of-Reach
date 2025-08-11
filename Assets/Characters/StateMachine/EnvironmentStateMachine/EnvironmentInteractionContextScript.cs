@@ -43,10 +43,17 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         
         public Collider CurrentInteractionCollider { get; set; }
         
+        public TwoBoneIKConstraint PreviousIkConstraint { get; private set; }
         public TwoBoneIKConstraint CurrentIkConstraint { get; private set; }
+        
+        public MultiRotationConstraint PreviousMultiRotationConstraint { get; private set; }
         public MultiRotationConstraint CurrentMultiRotationConstraint { get; private set; }
+        
+        public EStep PreviousStep { get; private set; }
         public EStep CurrentStep {get; private set;}
         
+        
+        public Transform PreviousIkTargetTransform {get; private set;}
         public Transform CurrentIkTargetTransform { get; private set; }
         public Transform CurrentLegShoulderTransform { get; private set; }
         public Transform RootTransform => _rootTransform;
@@ -62,21 +69,42 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
 
         public void SetCurrentStep(EStep step) {
             CurrentStep = step;
+            PreviousStep = GetOppositeStep(CurrentStep);
+            
             if (step == EStep.Left) {
+                
+                PreviousIkConstraint = _rightIkConstraint;
                 CurrentIkConstraint = _leftIkConstraint;
+                
+                PreviousMultiRotationConstraint = _rightMultiRotationConstraint;
                 CurrentMultiRotationConstraint = _leftMultiRotationConstraint;
             }
             else {
+
+                PreviousIkConstraint = _leftIkConstraint;
                 CurrentIkConstraint = _rightIkConstraint;
+                
+                PreviousMultiRotationConstraint = _leftMultiRotationConstraint;
                 CurrentMultiRotationConstraint = _rightMultiRotationConstraint;
             }
-            
+            // no need for previous in this one
             CurrentLegShoulderTransform = CurrentIkConstraint.data.root.transform;
+            
+            PreviousIkTargetTransform = PreviousIkConstraint.data.target.transform;
             CurrentIkTargetTransform = CurrentIkConstraint.data.target.transform;
+        }
+        
+        public EStep GetOppositeStep(EStep step) 
+        {
+            return step == EStep.Left ? EStep.Right : EStep.Left;
         }
 
         public void SetIkTargetLocalPosition(Vector3 position) {
             CurrentIkTargetTransform.localPosition = position;
+        }
+
+        public void SetIkPreviousTargetWorldPosition(Vector3 position) {
+            PreviousIkTargetTransform.position = position;
         }
 
         public void SetIkTargetWorldPosition(Vector3 position) {

@@ -6,33 +6,32 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
         public TouchStateScript(EnvironmentInteractionContextScript context, EnvironmentInteractionStateMachineScript.EEnvironmentActions estate) 
             : base(context, estate) { }
 
-        private Vector3 groundPos;
-        private Vector3 startPos;
+        private Vector3 _currentFootGroundPos;
+        private Vector3 _previousFootGroundPos;
+        private Vector3 _startPos;
+
+        private int stepCount = 0;
+        
+        private Transform _previousIkTargetTransform;
         public override void EnterState() {
             Debug.Log("TOUCH State");
-            Context.SetCurrentStep(GetOppositeStep(Context.CurrentStep));
-            SetStepThreshold(0.5f);
-            startPos = Context.RootTransform.position;
-            
-            if (Physics.Raycast(
-                    Context.CurrentIkConstraint.data.root.position,
-                    Vector3.down,
-                    out RaycastHit hit,
-                    maxDistance: 6f,
-                    Context.GroundLayer)) 
-            {
-                groundPos = hit.point;
-                Context.SetIkTargetWorldPosition(groundPos);
-            }
-        }
+            _startPos = Context.RootTransform.position;
+            SetStepThreshold(0.75f);
 
+            _previousFootGroundPos = GetGroundPos();
+            Context.SetCurrentStep(Context.GetOppositeStep(Context.CurrentStep));
+            _currentFootGroundPos = GetGroundPos();
+            
+        }
 
         public override void ExitState() {
             Debug.Log("EXIT TOUCH State");
+            _previousIkTargetTransform = Context.CurrentIkTargetTransform;
         }
 
         public override void UpdateState() {
-            
+            Context.SetIkTargetWorldPosition(_currentFootGroundPos);
+            Context.SetIkPreviousTargetWorldPosition(_previousFootGroundPos);
         }
 
         public override EnvironmentInteractionStateMachineScript.EEnvironmentActions GetNextState() {
@@ -53,10 +52,8 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             //ResetIkTargetPositionTracking(other);
         }
         
-        
-        private bool MovementThresholdReached()
-        {
-            Vector3 rootDelta = Context.RootTransform.position - startPos;
+        private bool MovementThresholdReached() {
+            Vector3 rootDelta = Context.RootTransform.position - _startPos;
             float planarDistance = new Vector2(rootDelta.x, rootDelta.z).magnitude;
             return planarDistance >= StepThreshold;
         }

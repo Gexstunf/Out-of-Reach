@@ -35,13 +35,8 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         protected void SetStepThreshold(float threshold) {
             StepThreshold = threshold;
         }
-
-        protected EnvironmentInteractionContextScript.EStep GetOppositeStep(EnvironmentInteractionContextScript.EStep step) 
-        {
-            return step == EnvironmentInteractionContextScript.EStep.Left ? EnvironmentInteractionContextScript.EStep.Right : EnvironmentInteractionContextScript.EStep.Left;
-        }
         
-        public Vector3 GetPivotedTarget(Transform origin, Vector2 movement, float distance) {
+        protected Vector3 GetPivotedTarget(Transform origin, Vector2 movement, float distance) {
             Vector3 localMove = new Vector3(movement.x, 0f, movement.y);
 
             if (localMove.sqrMagnitude > 1f)
@@ -50,7 +45,25 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             localMove *= distance;
 
             Vector3 worldMove = origin.rotation * localMove;
-            return origin.position + worldMove;
+            return worldMove;
+        }
+        
+        protected Vector3 GetGroundPos() {
+            Vector3 pos = Vector3.zero;
+            if (Physics.Raycast(
+                    Context.CurrentIkTargetTransform.position,
+                    Vector3.down,
+                    out RaycastHit hit,
+                    maxDistance: 3f,
+                    Context.GroundLayer)) 
+            {
+                pos = hit.point;
+            }
+            else {
+                Debug.Log("Raycast failed!");
+                return Context.CurrentIkTargetTransform.position;
+            }
+            return pos;
         }
     }
 }
