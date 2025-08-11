@@ -2,6 +2,7 @@
 
 
 using Characters.PlayerController.Scripts.Input;
+using Characters.StateMachine.PlayerStateMachine;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -15,7 +16,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         
         public EnvironmentInteractionContextScript( TwoBoneIKConstraint leftIkConstraint, TwoBoneIKConstraint rightIkConstraint,
             MultiRotationConstraint leftMultiRotationConstraint, MultiRotationConstraint rightMultiRotationConstraint,
-            Transform rootTransform, PlayerInputScript inputScript, Camera playerCamera, LayerMask groundLayer) 
+            Transform rootTransform, PlayerInputScript inputScript, Camera playerCamera, LayerMask groundLayer, PlayerStateMachineScript stateMachine) 
         {
             _leftIkConstraint = leftIkConstraint;
             _rightIkConstraint = rightIkConstraint;
@@ -25,6 +26,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             _inputScript = inputScript;
             _playerCamera = playerCamera;
             _groundLayerMask = groundLayer;
+            _playerStateMachine = stateMachine;
         }
 
         [SerializeField] private LayerMask _groundLayerMask;
@@ -35,11 +37,14 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         [SerializeField] private MultiRotationConstraint _rightMultiRotationConstraint;
         [SerializeField] private PlayerInputScript _inputScript;
         [SerializeField] private Camera _playerCamera;
+        [SerializeField] private PlayerStateMachineScript _playerStateMachine;
         
         public TwoBoneIKConstraint LeftIkConstraint => _leftIkConstraint;
         public TwoBoneIKConstraint RightIkConstraint => _rightIkConstraint;
         public MultiRotationConstraint LeftMultiRotationConstraint => _leftMultiRotationConstraint;
         public MultiRotationConstraint RightMultiRotationConstraint => _rightMultiRotationConstraint;
+        
+        public PlayerStateMachineScript StateMachine => _playerStateMachine;
         
         public Collider CurrentInteractionCollider { get; set; }
         
@@ -59,9 +64,11 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         public Transform RootTransform => _rootTransform;
         public Vector3 RightTargetOffsetPosition { get; private set; }
         public Vector3 LeftTargetOffsetPosition { get; private set; }
+        public float SideTargetOffset = 0.3f;
 
 
         public Vector3 ClosestPointOnColliderFromLegShoulderTransform { get; set; }
+        public float MaxGroundCheckDistance => 6f;
         
         public PlayerInputScript InputScript => _inputScript;
         public Camera Camera => _playerCamera;

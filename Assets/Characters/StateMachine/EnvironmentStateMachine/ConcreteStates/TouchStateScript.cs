@@ -8,17 +8,25 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
 
         private Vector3 _currentFootGroundPos;
         private Vector3 _previousFootGroundPos;
+        private Vector3 _previousFootAirPos;
         private Vector3 _startPos;
 
-        private int stepCount = 0;
+        private float _turnDegrees;
+        private float _startDegrees;
+        private float _timer;
+        private float _downTime = 0.15f;
         
         private Transform _previousIkTargetTransform;
         public override void EnterState() {
             Debug.Log("TOUCH State");
             _startPos = Context.RootTransform.position;
+            _startDegrees = Context.RootTransform.eulerAngles.y;
+            _timer = 0f;
             SetStepThreshold(0.75f);
-
+            
+            _previousFootAirPos = Context.CurrentIkConstraint.data.target.position;
             _previousFootGroundPos = GetGroundPos();
+            //_previousFootGroundPos = ApplySideOffset(_previousFootGroundPos);
             Context.SetCurrentStep(Context.GetOppositeStep(Context.CurrentStep));
             _currentFootGroundPos = GetGroundPos();
             
@@ -30,11 +38,26 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
         }
 
         public override void UpdateState() {
+            _timer += Time.deltaTime;
+            _turnDegrees = Context.RootTransform.rotation.eulerAngles.y;
+            
             Context.SetIkTargetWorldPosition(_currentFootGroundPos);
-            Context.SetIkPreviousTargetWorldPosition(_previousFootGroundPos);
+            float t = Mathf.Clamp01(_timer / _downTime);
+            
+            Vector3 newPreviousPos = Vector3.Lerp(_previousFootAirPos, _previousFootGroundPos, t);
+            Context.SetIkPreviousTargetWorldPosition(newPreviousPos);
         }
 
         public override EnvironmentInteractionStateMachineScript.EEnvironmentActions GetNextState() {
+            
+            if (Context.StateMachine.IsIdle) {
+                float turnDiff = Mathf.DeltaAngle(_startDegrees, _turnDegrees); // handles wrap-around at 360
+                if (Mathf.Abs(turnDiff) >= 20f) {
+                    Context.SetCurrentStep(Context.GetOppositeStep(Context.CurrentStep));
+                    return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Rise;
+                }
+            }
+            
             if (MovementThresholdReached()) {
                 return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Rise;
             }

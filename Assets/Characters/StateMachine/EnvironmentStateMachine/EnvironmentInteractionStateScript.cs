@@ -54,7 +54,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
                     Context.CurrentIkTargetTransform.position,
                     Vector3.down,
                     out RaycastHit hit,
-                    maxDistance: 3f,
+                    maxDistance: Context.MaxGroundCheckDistance,
                     Context.GroundLayer)) 
             {
                 pos = hit.point;
@@ -64,6 +64,15 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
                 return Context.CurrentIkTargetTransform.position;
             }
             return pos;
+        }
+
+        protected Vector3 ApplySideOffset(Vector3 position) {
+            if (Context.CurrentStep == EnvironmentInteractionContextScript.EStep.Left) {
+                position.x -= Context.SideTargetOffset;
+                return position;
+            }
+            position.x += Context.SideTargetOffset;
+            return position;
         }
     }
 }

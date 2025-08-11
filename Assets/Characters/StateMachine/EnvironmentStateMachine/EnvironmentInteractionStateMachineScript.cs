@@ -36,7 +36,8 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             _inputScript = GetComponent<PlayerInputScript>();
             
             _context = new EnvironmentInteractionContextScript(_leftIkConstraint, _rightIkConstraint, 
-                _leftMultiRotationConstraint, _rightMultiRotationConstraint, transform.root, _inputScript, _camera, _groundLayer);
+                _leftMultiRotationConstraint, _rightMultiRotationConstraint, transform.root, _inputScript, _camera, 
+                _groundLayer, _playerStateMachine);
                 
             ValidateConstraints();
             InitializeStates();
