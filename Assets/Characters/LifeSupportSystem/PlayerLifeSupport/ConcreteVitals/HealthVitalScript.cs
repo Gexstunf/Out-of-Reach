@@ -14,8 +14,11 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
         private float _health;
         public VitalUtils VitalUtil { get; private set; }
 
-        private float _healthDamageMultiplier = 10f;
+        private float _healthDamageMultiplier = 1.15f;
         private float _currentHealthRegenDelay = 0f;
+
+        private Vector3 _position;
+        private Vector3 _fallPosition;
         
         public override void SetupVital() {
             VitalUtil = new VitalUtils(Context.HealthRegenRate, Context.HealthRegenDelay, 
@@ -23,15 +26,19 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
             
             _health = VitalUtil.BaseMaxVital;
             _currentHealthRegenDelay = VitalUtil.BaseRegenDelay;
+            _position = Context.Rb.position;
         }
 
         public override void UpdateModifiers() {
             // if falling, track the fall time
             if (Context.IsFalling) {
                 VitalUtil.IncreaseTimer();
+                _fallPosition = Context.Rb.position;
             } 
             else if (VitalUtil.Timer < VitalUtil.MinimumTime) { // if not, check if it is not the minimum and reset the counter
                 VitalUtil.SetTimer(0f);
+                _position = Context.Rb.position;
+                _fallPosition = _position;
             }
             
             if (IsUnconscious) Context.SetUnconscious(IsUnconscious);
@@ -44,9 +51,14 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
             }
 
             if (!Context.IsFalling && VitalUtil.Timer > VitalUtil.MinimumTime) {
-                DamageLife(VitalUtil.Timer * _healthDamageMultiplier);
+                Vector3 difference = _position - _fallPosition;
+                
+                DamageLife( _healthDamageMultiplier * difference.y);
                 VitalUtil.SetTimer(0f);
                 VitalUtil.SetRegenTimer(_currentHealthRegenDelay);
+
+                _position = Context.Rb.position;
+                _fallPosition = _position;
                 Debug.Log("Applied damage!");
             }
             

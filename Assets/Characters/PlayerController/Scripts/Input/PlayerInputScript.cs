@@ -47,6 +47,14 @@ namespace Characters.PlayerController.Scripts.Input
 
         #endregion
 
+        public void ResetMovementInput() {
+            MoveInput = Vector2.zero;
+        }
+
+        public void ClampCameraLookInput() {
+            LookInput = LookInput.normalized;
+        }
+
         #region Disable logic
         private void OnDisable()
         {
