@@ -1526,6 +1526,9 @@ MonoBehaviour:
   _rightIkConstraint: {fileID: 564367378}
   _leftMultiRotationConstraint: {fileID: 1690777931}
   _rightMultiRotationConstraint: {fileID: 564367379}
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!114 &2063655953 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7896628412224098328, guid: 16d3da4ab08eb46229115c51ba2264af, type: 3}

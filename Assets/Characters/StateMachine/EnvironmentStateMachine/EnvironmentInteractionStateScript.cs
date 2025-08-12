@@ -66,13 +66,12 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             return pos;
         }
 
-        protected Vector3 ApplySideOffset(Vector3 position) {
-            if (Context.CurrentStep == EnvironmentInteractionContextScript.EStep.Left) {
-                position.x -= Context.SideTargetOffset;
-                return position;
-            }
-            position.x += Context.SideTargetOffset;
-            return position;
+        protected Vector3 ApplySideOffset(Vector3 position)
+        {
+            Vector3 rightDir = Context.RootTransform.right;
+            float directionSign = (Context.CurrentStep == EnvironmentInteractionContextScript.EStep.Left) ? -1f : 1f;
+            return position + rightDir * (Context.SideTargetOffset * directionSign);
         }
+
     }
 }
