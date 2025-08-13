@@ -60,7 +60,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
                 pos = hit.point;
             }
             else {
-                Debug.Log("Raycast failed!");
+                Debug.Log("No raycast hit");
                 return Context.CurrentIkTargetTransform.position;
             }
             return pos;

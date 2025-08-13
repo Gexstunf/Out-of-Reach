@@ -30,15 +30,17 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         [SerializeField] private MultiRotationConstraint _leftMultiRotationConstraint;
         [SerializeField] private MultiRotationConstraint _rightMultiRotationConstraint;
         [SerializeField] private LayerMask _groundLayer;
+        [SerializeField] private Rigidbody _rigidBody;
         private void Awake() {
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
             _rootCollider = GetComponent<CapsuleCollider>();
             _inputScript = GetComponent<PlayerInputScript>();
+            _rigidBody = GetComponent<Rigidbody>();
+
+            _context = new EnvironmentInteractionContextScript(_leftIkConstraint, _rightIkConstraint,
+                _leftMultiRotationConstraint, _rightMultiRotationConstraint, transform.root, _inputScript, _camera,
+                _groundLayer, _playerStateMachine, _rigidBody);
             
-            _context = new EnvironmentInteractionContextScript(_leftIkConstraint, _rightIkConstraint, 
-                _leftMultiRotationConstraint, _rightMultiRotationConstraint, transform.root, _inputScript, _camera, 
-                _groundLayer, _playerStateMachine);
-                
             ValidateConstraints();
             InitializeStates();
             //ConstructTerrainDetectorCollider();
@@ -59,6 +61,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             Assert.IsNotNull(_rightIkConstraint, "Right IK constraint is not assigned!");
             Assert.IsNotNull(_leftMultiRotationConstraint, "Left Multi rotation constraint is not assigned!");
             Assert.IsNotNull(_rightMultiRotationConstraint, "Right Multi rotation constraint is not assigned!");
+            Assert.IsNotNull(_groundLayer, "Ground layer is not assigned!");
         }
         
         private void ConstructTerrainDetectorCollider() {

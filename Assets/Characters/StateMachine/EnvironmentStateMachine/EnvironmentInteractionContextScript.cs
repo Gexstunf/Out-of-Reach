@@ -16,13 +16,15 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         
         public EnvironmentInteractionContextScript( TwoBoneIKConstraint leftIkConstraint, TwoBoneIKConstraint rightIkConstraint,
             MultiRotationConstraint leftMultiRotationConstraint, MultiRotationConstraint rightMultiRotationConstraint,
-            Transform rootTransform, PlayerInputScript inputScript, Camera playerCamera, LayerMask groundLayer, PlayerStateMachineScript stateMachine) 
+            Transform rootTransform, PlayerInputScript inputScript, Camera playerCamera, LayerMask groundLayer, PlayerStateMachineScript stateMachine,
+            Rigidbody rigidBody) 
         {
             _leftIkConstraint = leftIkConstraint;
             _rightIkConstraint = rightIkConstraint;
             _leftMultiRotationConstraint = leftMultiRotationConstraint;
             _rightMultiRotationConstraint = rightMultiRotationConstraint;
             _rootTransform = rootTransform;
+            _rigidBody = rigidBody;
             _inputScript = inputScript;
             _playerCamera = playerCamera;
             _groundLayerMask = groundLayer;
@@ -38,6 +40,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         [SerializeField] private PlayerInputScript _inputScript;
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private PlayerStateMachineScript _playerStateMachine;
+        [SerializeField] private Rigidbody _rigidBody;
         
         public TwoBoneIKConstraint LeftIkConstraint => _leftIkConstraint;
         public TwoBoneIKConstraint RightIkConstraint => _rightIkConstraint;
@@ -73,6 +76,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         public PlayerInputScript InputScript => _inputScript;
         public Camera Camera => _playerCamera;
         public LayerMask GroundLayer => _groundLayerMask;
+        public Rigidbody Rigidbody => _rigidBody;
 
         public void SetCurrentStep(EStep step) {
             CurrentStep = step;

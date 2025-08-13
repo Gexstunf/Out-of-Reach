@@ -73,6 +73,10 @@ namespace Characters.StateMachine.PlayerStateMachine
         public bool IsWalking => StateKey == EPlayerStates.Walking;
         public bool IsIdle => StateKey == EPlayerStates.Idle;
         
+        public bool IsGrounded => StateKey == EPlayerStates.Running || 
+                                  StateKey == EPlayerStates.Walking ||
+                                  StateKey == EPlayerStates.Idle;
+        
         public bool IsMoving => StateKey == EPlayerStates.Running ||
                                 StateKey == EPlayerStates.Walking ||
                                 StateKey == EPlayerStates.Climbing || 

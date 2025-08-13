@@ -15,54 +15,53 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
         private float _startDegrees;
         private float _timer;
         private float _downTime = 0.15f;
+        private float _stepThreshold = 0.35f;
+        private float _scaleFactor = 0.1f;
 
         private float _lastTurnSign = 0f;
         private int _stepTurnCounter = 0;
         
         private Transform _previousIkTargetTransform;
+
         public override void EnterState() {
-            Debug.Log("TOUCH State");
-            _startPos = Context.RootTransform.position;
-            _startDegrees = Context.RootTransform.eulerAngles.y;
-            _turnDegrees = _startDegrees;
-            _timer = 0f;
+            Debug.Log("Enter T State");
             
-            SetStepThreshold(0.5f);
+            Vector3 speed = Context.Rigidbody.linearVelocity;
             
-            _previousFootAirPos = Context.CurrentIkConstraint.data.target.position;
-            _previousFootGroundPos = GetGroundPos();
-            _previousFootGroundPos = ApplySideOffset(_previousFootGroundPos);
-            Context.SetCurrentStep(Context.GetOppositeStep(Context.CurrentStep));
-            _currentFootGroundPos = GetGroundPos();
-            
+            ResetVariables();
+            SetDynamicThreshold(speed);
+            SetFootPositions();
         }
 
         public override void ExitState() {
-            Debug.Log("EXIT TOUCH State");
+            Debug.Log("Exit T State");
             _previousIkTargetTransform = Context.CurrentIkTargetTransform;
         }
 
         public override void UpdateState() {
-            _timer += Time.deltaTime;
-            _turnDegrees = Context.RootTransform.rotation.eulerAngles.y;
+            if (Context.StateMachine.IsGrounded) {
+                _timer += Time.deltaTime;
+                _turnDegrees = Context.RootTransform.rotation.eulerAngles.y;
             
-            Context.SetIkTargetWorldPosition(_currentFootGroundPos);
+                Context.SetIkTargetWorldPosition(_currentFootGroundPos);
             
-            float t = Mathf.Clamp01(_timer / _downTime);
-            Vector3 newPreviousPos = Vector3.Lerp(_previousFootAirPos, _previousFootGroundPos, t);
-            Context.SetIkPreviousTargetWorldPosition(newPreviousPos);
+                float t = Mathf.Clamp01(_timer / _downTime);
+                Vector3 newPreviousPos = Vector3.Lerp(_previousFootAirPos, _previousFootGroundPos, t);
+                Context.SetIkPreviousTargetWorldPosition(newPreviousPos);
+            }
         }
 
         public override EnvironmentInteractionStateMachineScript.EEnvironmentActions GetNextState() {
+            if (Context.StateMachine.IsGrounded) {
+                if (Context.StateMachine.IsIdle) {
+                    if (RotationThresholdReached()) {
+                        return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Rise;
+                    }
+                }
             
-            if (Context.StateMachine.IsIdle) {
-                if (RotationThresholdReached()) {
+                if (MovementThresholdReached()) {
                     return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Rise;
                 }
-            }
-            
-            if (MovementThresholdReached()) {
-                return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Rise;
             }
             return StateKey;
         }
@@ -85,9 +84,8 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
 
         private bool RotationThresholdReached() {
             float turnDiff = Mathf.DeltaAngle(_startDegrees, _turnDegrees);
-            float absDiff = Mathf.Abs(turnDiff);
 
-            if (absDiff < 50f)
+            if (Mathf.Abs(turnDiff) < 50f)
                 return false;
 
             float turnSign = Mathf.Sign(turnDiff);
@@ -107,6 +105,26 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             Context.SetCurrentStep(useDominant ? dominantFoot : Context.GetOppositeStep(dominantFoot));
 
             return true;
+        }
+
+        private void ResetVariables() {
+            _startPos = Context.RootTransform.position;
+            _startDegrees = Context.RootTransform.eulerAngles.y;
+            _turnDegrees = _startDegrees;
+            _timer = 0f;
+            _previousFootAirPos = Context.CurrentIkConstraint.data.target.position;
+        }
+
+        private void SetFootPositions() {
+            _previousFootGroundPos = GetGroundPos();
+            _previousFootGroundPos = ApplySideOffset(_previousFootGroundPos);
+            Context.SetCurrentStep(Context.GetOppositeStep(Context.CurrentStep));
+            _currentFootGroundPos = GetGroundPos();
+        }
+
+        private void SetDynamicThreshold(Vector3 speed) {
+            float planeSpeed = new Vector2(speed.x, speed.z).magnitude;
+            SetStepThreshold(_stepThreshold + (planeSpeed * _scaleFactor));
         }
     }
 }
