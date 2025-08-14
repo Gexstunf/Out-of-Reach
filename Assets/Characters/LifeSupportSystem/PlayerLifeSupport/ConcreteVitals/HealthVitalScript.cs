@@ -40,7 +40,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
         public override void UpdateVital() {
             
             if (VitalUtil.RegenTimer < 0f) {
-                RegenerateLife(VitalUtil.BaseRegenRate);
+                //RegenerateLife(VitalUtil.BaseRegenRate);
             }
 
             if (!Context.IsFalling && VitalUtil.Timer > VitalUtil.MinimumTime) {
