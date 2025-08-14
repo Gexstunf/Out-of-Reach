@@ -6,8 +6,8 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             base(context, estate) 
         { }
 
-        private readonly float _stepHeight = 0.6f;
-        private readonly float _riseTime = 0.15f;
+        private readonly float _stepHeight = 0.5f;
+        private readonly float _riseTime = 0.2f;
 
         private float _timer;
         private float _forwardOffset; 
@@ -20,7 +20,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             Debug.Log("Enter R State");
 
             _timer = 0f;
-            _forwardOffset = 0.4f;
+            _forwardOffset = 0.25f;
             _startPos = Context.CurrentIkConstraint.data.target.localPosition;
             Vector2 moveInput = Context.InputScript.MoveInput;
 

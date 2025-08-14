@@ -59,7 +59,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
                     }
                 }
             
-                if (MovementThresholdReached()) {
+                if (MovementThresholdReached() && _timer > _downTime) {
                     return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Rise;
                 }
             }
