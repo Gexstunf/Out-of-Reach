@@ -49,6 +49,8 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
                 Vector3 newPreviousPos = Vector3.Lerp(_previousFootAirPos, _previousFootGroundPos, t);
                 Context.SetIkPreviousTargetWorldPosition(newPreviousPos);
             }
+
+            Context.IKDriver.crouch01 = Context.StateMachine.IsIdle ? 1f : 0f;
         }
 
         public override EnvironmentInteractionStateMachineScript.EEnvironmentActions GetNextState() {
@@ -59,7 +61,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
                     }
                 }
             
-                if (MovementThresholdReached() && _timer > _downTime) {
+                if (MovementThresholdReached(_startPos) && _timer > _downTime) {
                     return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Rise;
                 }
             }
@@ -76,11 +78,6 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             //ResetIkTargetPositionTracking(other);
         }
         
-        private bool MovementThresholdReached() {
-            Vector3 rootDelta = Context.RootTransform.position - _startPos;
-            float planarDistance = new Vector2(rootDelta.x, rootDelta.z).magnitude;
-            return planarDistance >= StepThreshold;
-        }
 
         private bool RotationThresholdReached() {
             float turnDiff = Mathf.DeltaAngle(_startDegrees, _turnDegrees);

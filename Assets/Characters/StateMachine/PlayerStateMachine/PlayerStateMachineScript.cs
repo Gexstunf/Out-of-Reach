@@ -20,6 +20,7 @@ namespace Characters.StateMachine.PlayerStateMachine
         [SerializeField] private PlayerControllerScript _playerControllerScript;
         [SerializeField] private CapsuleCollider _collider;
         [SerializeField] private StateVitalsCoordinator _coordinator;
+        [SerializeField] private InverseKinematicsDriverScript _inverseKinematicsDriver;
         
         public PlayerStateContextScript Context { get; private set; }
         

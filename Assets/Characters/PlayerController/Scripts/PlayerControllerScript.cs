@@ -44,7 +44,7 @@ namespace Characters.PlayerController.Scripts
         [Header("Visualize Variables")] 
         public bool isGrounded = true;
         public Vector3 CurrentForce { get; private set; }
-        public float Gravity;
+        public float gravity;
         
         private float _groundCheckOffset;
 
@@ -61,15 +61,15 @@ namespace Characters.PlayerController.Scripts
             _rotator = gameObject.AddComponent<RotatorScript>();
             _cameraController = gameObject.AddComponent<CameraControllerScript>();
 
-            Gravity = Physics.gravity.y;
+            gravity = Physics.gravity.y;
         }
 
         private void Start()
         {
             _rb.linearDamping = playerDrag;
+            
             _rotator.Init(_lookSenseH, _lookSenseV, _lookLimitV);
             _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
-
             _groundCheckOffset = _playerCollider.radius + 0.1f;
         }
         
@@ -77,11 +77,11 @@ namespace Characters.PlayerController.Scripts
 
         #region Update logic
 
-        private void Update()
-        {
+        private void Update() {
+
             HandleJumping(jumpForce);
             HandleGroundState();
-        }
+        } 
 
         private void FixedUpdate()
         {
@@ -162,15 +162,6 @@ namespace Characters.PlayerController.Scripts
                 groundLayer
             );
 
-            return hit;
-        }
-
-        private bool IsGroundedWhileAirborne()
-        {
-            Vector3 origin = transform.position + Vector3.up * 0.1f;
-            float sphereRadius = _playerCollider.radius;
-            float maxDistance = 0.3f; 
-            bool hit = Physics.SphereCast(origin, sphereRadius, Vector3.down, out _, maxDistance, groundLayer, QueryTriggerInteraction.Ignore);
             return hit;
         }
         

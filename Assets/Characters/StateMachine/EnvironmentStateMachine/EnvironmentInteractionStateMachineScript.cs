@@ -22,6 +22,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         [SerializeField] private PlayerInputScript _inputScript;
         [SerializeField] private CapsuleCollider _rootCollider;
         [SerializeField] private Camera _camera;
+        [SerializeField] private InverseKinematicsDriverScript _ikDriver;
         
         
         [Header("Environment interaction settings")]
@@ -39,7 +40,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
 
             _context = new EnvironmentInteractionContextScript(_leftIkConstraint, _rightIkConstraint,
                 _leftMultiRotationConstraint, _rightMultiRotationConstraint, transform.root, _inputScript, _camera,
-                _groundLayer, _playerStateMachine, _rigidBody);
+                _groundLayer, _playerStateMachine, _rigidBody, _ikDriver);
             
             ValidateConstraints();
             InitializeStates();
@@ -64,14 +65,6 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             Assert.IsNotNull(_groundLayer, "Ground layer is not assigned!");
         }
         
-        private void ConstructTerrainDetectorCollider() {
-            float legSpan = _rootCollider.height / 2;
-
-            BoxCollider boxCollider = gameObject.AddComponent<BoxCollider>();
-            boxCollider.size = new Vector3(legSpan + 0.4f, legSpan, legSpan + 0.4f);
-            boxCollider.center = new Vector3(_rootCollider.center.x, _rootCollider.center.y - (legSpan/2f + 0.7f), _rootCollider.center.z);
-            boxCollider.isTrigger = true;
-        }
 
         private void OnDrawGizmosSelected() {
             Gizmos.color = Color.red;

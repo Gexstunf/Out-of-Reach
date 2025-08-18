@@ -1,6 +1,7 @@
 
 
 
+using Characters.PlayerController.Scripts;
 using Characters.PlayerController.Scripts.Input;
 using Characters.StateMachine.PlayerStateMachine;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         public EnvironmentInteractionContextScript( TwoBoneIKConstraint leftIkConstraint, TwoBoneIKConstraint rightIkConstraint,
             MultiRotationConstraint leftMultiRotationConstraint, MultiRotationConstraint rightMultiRotationConstraint,
             Transform rootTransform, PlayerInputScript inputScript, Camera playerCamera, LayerMask groundLayer, PlayerStateMachineScript stateMachine,
-            Rigidbody rigidBody) 
+            Rigidbody rigidBody, InverseKinematicsDriverScript ikDriver) 
         {
             _leftIkConstraint = leftIkConstraint;
             _rightIkConstraint = rightIkConstraint;
@@ -29,6 +30,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             _playerCamera = playerCamera;
             _groundLayerMask = groundLayer;
             _playerStateMachine = stateMachine;
+            _ikDriver = ikDriver;
         }
 
         [SerializeField] private LayerMask _groundLayerMask;
@@ -41,11 +43,15 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private PlayerStateMachineScript _playerStateMachine;
         [SerializeField] private Rigidbody _rigidBody;
+        [SerializeField] InverseKinematicsDriverScript _ikDriver;
+
         
         public TwoBoneIKConstraint LeftIkConstraint => _leftIkConstraint;
         public TwoBoneIKConstraint RightIkConstraint => _rightIkConstraint;
         public MultiRotationConstraint LeftMultiRotationConstraint => _leftMultiRotationConstraint;
         public MultiRotationConstraint RightMultiRotationConstraint => _rightMultiRotationConstraint;
+        
+        public InverseKinematicsDriverScript IKDriver => _ikDriver;
         
         public PlayerStateMachineScript StateMachine => _playerStateMachine;
         

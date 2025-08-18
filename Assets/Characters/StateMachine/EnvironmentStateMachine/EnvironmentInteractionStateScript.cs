@@ -36,18 +36,6 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             StepThreshold = threshold;
         }
         
-        protected Vector3 GetPivotedTarget(Transform origin, Vector2 movement, float distance) {
-            Vector3 localMove = new Vector3(movement.x, 0f, movement.y);
-
-            if (localMove.sqrMagnitude > 1f)
-                localMove.Normalize();
-
-            localMove *= distance;
-
-            Vector3 worldMove = origin.rotation * localMove;
-            return worldMove;
-        }
-        
         protected Vector3 GetGroundPos() {
             Vector3 pos = Vector3.zero;
             if (Physics.Raycast(
@@ -61,7 +49,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             }
             else {
                 Debug.Log("No raycast hit");
-                return Context.CurrentIkTargetTransform.position;
+                return  Context.CurrentIkTargetTransform.position;
             }
             return pos;
         }
@@ -72,6 +60,11 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             float directionSign = (Context.CurrentStep == EnvironmentInteractionContextScript.EStep.Left) ? -1f : 1f;
             return position + rightDir * (Context.SideTargetOffset * directionSign);
         }
-
+        
+        protected bool MovementThresholdReached(Vector3 startPos) {
+            Vector3 rootDelta = Context.RootTransform.position - startPos;
+            float planarDistance = new Vector2(rootDelta.x, rootDelta.z).magnitude;
+            return planarDistance >= StepThreshold;
+        }
     }
 }
