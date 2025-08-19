@@ -5,7 +5,11 @@ using UnityEngine.Animations.Rigging;
 namespace Characters.PlayerController.Scripts {
     public class InverseKinematicsDriverScript : MonoBehaviour
     {
-        [Header("Bones & Targets")]
+        [Header("Arms Settings")]
+        public Transform leftArmTargetTransform;
+        public Transform rightArmTargetTransform;
+
+        [Header("Hips Settings")]
         public Transform hips;                 
         public Transform hipsParent;      
         [Tooltip("Source of OverrideTransform on the hips")]
@@ -19,11 +23,16 @@ namespace Characters.PlayerController.Scripts {
     
         private Vector3 _animatedHipsLocal;
         private Vector3 _baseHipsLocal;
+        
+        private Vector3 _baseLeftArmOffset;
+        private Vector3 _baseRightArmOffset;
 
         private void Start() {
             _baseHipsLocal = hips.localPosition;
+            _baseLeftArmOffset = leftArmTargetTransform.localPosition;
+            _baseRightArmOffset = rightArmTargetTransform.localPosition;
         }
-
+ 
         void Reset()
         {
             if (hips != null) hipsParent = hips.parent;
@@ -31,10 +40,9 @@ namespace Characters.PlayerController.Scripts {
 
         void LateUpdate()
         {
-            if (!hips || !hipsParent || !hipsOffsetTarget) return;
+            if (!ValidateReferences()) return;
 
             _animatedHipsLocal = hips.localPosition;
-
             float desiredDrop = crouch01 * crouchHeight;
             Vector3 targetLocal = _baseHipsLocal + new Vector3(0f, -desiredDrop, 0f);
 
@@ -48,6 +56,11 @@ namespace Characters.PlayerController.Scripts {
             Vector3 currentLocal = hipsParent.InverseTransformPoint(hipsOffsetTarget.position);
             Vector3 newLocal = Vector3.Lerp(currentLocal, targetLocal, Time.deltaTime * smooth);
             hipsOffsetTarget.position = hipsParent.TransformPoint(newLocal);
+        }
+
+        private bool ValidateReferences() {
+            if (!hips || !hipsParent || !hipsOffsetTarget) return false;
+            return true;
         }
     }
 }
