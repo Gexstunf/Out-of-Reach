@@ -9,8 +9,8 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
     public class PlayerLifeSupportScript : LifeSupportManagerScript<PlayerLifeSupportScript.EVitals> {
         
         [Header("References")]
+        [SerializeField] private PlayerUIManager _uiManager;
         [SerializeField] private Rigidbody _rb;
-        [SerializeField] private UIManagerScript _uiManager;
         [SerializeField] private PlayerInputScript _playerInputScript;
         
         [Header("Life support settings")]

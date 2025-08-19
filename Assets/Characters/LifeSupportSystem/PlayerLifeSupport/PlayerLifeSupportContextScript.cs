@@ -9,7 +9,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
     public class PlayerLifeSupportContextScript : IMovementStates
     {
         [SerializeField] private readonly Rigidbody _rb;
-        [SerializeField] private UIManagerScript _uiManager;
+        [SerializeField] private PlayerUIManager _uiManager;
         [SerializeField] private PlayerInputScript _playerInputScript;
         [SerializeField] private readonly float _maxHealth;
         [SerializeField] private readonly float _maxStamina;
@@ -27,7 +27,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         public bool IsMoving { get; private set; }
         
         public PlayerLifeSupportContextScript(Rigidbody rb, float maxHealth, float maxStamina, 
-            UIManagerScript uiManager, PlayerInputScript playerInputScript) 
+            PlayerUIManager uiManager, PlayerInputScript playerInputScript) 
         {
             _rb = rb;
             _maxHealth = maxHealth;
@@ -48,7 +48,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
 
         public bool IsStaminaRequired() => IsRunning || IsClimbing || IsJumping;
         public Rigidbody Rb => _rb;
-        public UIManagerScript UIManager => _uiManager;
+        public PlayerUIManager UIManager => _uiManager;
         public PlayerInputScript PlayerInputScript => _playerInputScript;
         
         public float MaxHealth => _maxHealth;
