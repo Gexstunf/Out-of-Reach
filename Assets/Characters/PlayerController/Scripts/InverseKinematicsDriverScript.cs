@@ -8,6 +8,7 @@ namespace Characters.PlayerController.Scripts {
         [Header("Arms Settings")]
         public Transform leftArmTargetTransform;
         public Transform rightArmTargetTransform;
+        public Rig armsRig;
 
         [Header("Hips Settings")]
         public Transform hips;                 
@@ -45,7 +46,10 @@ namespace Characters.PlayerController.Scripts {
             _animatedHipsLocal = hips.localPosition;
             float desiredDrop = crouch01 * crouchHeight;
             Vector3 targetLocal = _baseHipsLocal + new Vector3(0f, -desiredDrop, 0f);
-
+            Vector3 targetLArmLocal = _baseLeftArmOffset + new Vector3(0f, -desiredDrop, 0f);
+            Vector3 targetRArmLocal = _baseRightArmOffset + new Vector3(0f, -desiredDrop, 0f);
+            
+            MoveArmsLocally(targetLArmLocal, targetRArmLocal);
             MoveHipsLocally(targetLocal);
             
             float targetW = (crouch01 > 0f) ? 1f : 0f;
@@ -56,6 +60,17 @@ namespace Characters.PlayerController.Scripts {
             Vector3 currentLocal = hipsParent.InverseTransformPoint(hipsOffsetTarget.position);
             Vector3 newLocal = Vector3.Lerp(currentLocal, targetLocal, Time.deltaTime * smooth);
             hipsOffsetTarget.position = hipsParent.TransformPoint(newLocal);
+        }
+        
+        private void MoveArmsLocally(Vector3 targetLocalLeft, Vector3 targetLocalRight) {
+            Vector3 currentLocalRight = rightArmTargetTransform.localPosition;
+            Vector3 currentLocalLeft = leftArmTargetTransform.localPosition;
+            
+            Vector3 newLocalRight = Vector3.Lerp(currentLocalRight, targetLocalRight, Time.deltaTime * smooth);
+            Vector3 newLocalLeft = Vector3.Lerp(currentLocalLeft, targetLocalLeft, Time.deltaTime * smooth);
+
+            rightArmTargetTransform.localPosition = newLocalRight;
+            leftArmTargetTransform.localPosition = newLocalLeft;
         }
 
         private bool ValidateReferences() {
