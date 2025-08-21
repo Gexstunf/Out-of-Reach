@@ -33,7 +33,7 @@ namespace Characters.PlayerController.Scripts {
             _baseLeftArmOffset = leftArmTargetTransform.localPosition;
             _baseRightArmOffset = rightArmTargetTransform.localPosition;
         }
- 
+        
         void Reset()
         {
             if (hips != null) hipsParent = hips.parent;

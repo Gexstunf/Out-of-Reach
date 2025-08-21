@@ -19,8 +19,7 @@ namespace Characters.StateMachine.PlayerStateMachine {
         public bool IsHeavy { get; private set; }
         public bool IsStarved { get; private set; }
 
-
-
+        
         private float _movementThreshold = 0.1f;
 
         public PlayerStateContextScript(Rigidbody rigidbody, CapsuleCollider collider,
@@ -39,6 +38,7 @@ namespace Characters.StateMachine.PlayerStateMachine {
         public PlayerInputScript Input => _inputScript;
         public PlayerControllerScript PlayerController => _playerController;
         public StateVitalsCoordinator Coordinator => _coordinator;
+        public float MovementThreshold => _movementThreshold;
 
         public void HandleTiredChange(bool isTired) {
             IsTired = isTired;

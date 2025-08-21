@@ -36,8 +36,10 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             StepThreshold = threshold;
         }
         
-        protected Vector3 GetGroundPos() {
+        protected Vector3 GetGroundPos(Vector3 currentPos) {
+            float sqrMaxDifference = Context.MaxStepDifference * Context.MaxStepDifference;
             Vector3 pos = Vector3.zero;
+            
             if (Physics.Raycast(
                     Context.CurrentIkTargetTransform.position,
                     Vector3.down,
@@ -49,8 +51,15 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             }
             else {
                 Debug.Log("No raycast hit");
-                return  Context.CurrentIkTargetTransform.position;
+                pos = Context.CurrentIkTargetTransform.position;
             }
+            
+            if ((currentPos - pos).sqrMagnitude > sqrMaxDifference)
+            {
+                Debug.Log("They are too different!");
+                pos = Context.CurrentTargetOffsetPosition;
+            }
+            
             return pos;
         }
 

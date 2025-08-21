@@ -73,8 +73,10 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         public Transform RootTransform => _rootTransform;
         public Vector3 RightTargetOffsetPosition { get; private set; }
         public Vector3 LeftTargetOffsetPosition { get; private set; }
-        public float SideTargetOffset = 0.3f;
+        public Vector3 CurrentTargetOffsetPosition { get; private set; }
 
+        public float SideTargetOffset = 0.3f;
+        public float MaxStepDifference = 3f;
 
         public Vector3 ClosestPointOnColliderFromLegShoulderTransform { get; set; }
         public float MaxGroundCheckDistance => 6f;
@@ -95,6 +97,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
                 
                 PreviousMultiRotationConstraint = _rightMultiRotationConstraint;
                 CurrentMultiRotationConstraint = _leftMultiRotationConstraint;
+                CurrentTargetOffsetPosition = LeftTargetOffsetPosition;
             }
             else {
 
@@ -103,6 +106,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
                 
                 PreviousMultiRotationConstraint = _leftMultiRotationConstraint;
                 CurrentMultiRotationConstraint = _rightMultiRotationConstraint;
+                CurrentTargetOffsetPosition = RightTargetOffsetPosition;
             }
             // no need for previous in this one
             CurrentLegShoulderTransform = CurrentIkConstraint.data.root.transform;

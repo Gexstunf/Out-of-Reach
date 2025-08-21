@@ -113,15 +113,15 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
         }
 
         private void SetFootPositions() {
-            _previousFootGroundPos = GetGroundPos();
+            _previousFootGroundPos = GetGroundPos(_previousFootGroundPos);
             _previousFootGroundPos = ApplySideOffset(_previousFootGroundPos);
             Context.SetCurrentStep(Context.GetOppositeStep(Context.CurrentStep));
-            _currentFootGroundPos = GetGroundPos();
+            _currentFootGroundPos = GetGroundPos(_currentFootGroundPos);
         }
 
         private void SetDynamicThreshold(Vector3 speed) {
             float planeSpeed = new Vector2(speed.x, speed.z).magnitude;
             SetStepThreshold(_stepThreshold + (planeSpeed * _scaleFactor));
         }
-    }
+    }  
 }
