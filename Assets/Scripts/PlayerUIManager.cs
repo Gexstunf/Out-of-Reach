@@ -19,27 +19,46 @@ public class PlayerUIManager : MonoBehaviourPun
 
     private List<Image> healthTicks = new List<Image>();
 
-    public void DisplayStamina(float amount)
-    {
-        if (!photonView.IsMine) return; 
-
-        staminaBar.fillAmount = Mathf.Clamp01(amount / maxStamina);
-    }
-
     void Awake()
     {
-        // Inicializar ticks
+        if (!photonView.IsMine) return; // Solo inicializar UI para el jugador local
+
+        // Buscar automáticamente StaminaBar y HealthContainer dentro del prefab del jugador
+        if (staminaBar == null)
+        {
+            staminaBar = transform.Find("Canvas/StaminaBar")?.GetComponent<Image>();
+            if (staminaBar == null) Debug.LogError("StaminaBar no encontrada dentro del prefab del jugador");
+        }
+
+        if (healthContainer == null)
+        {
+            healthContainer = transform.Find("Canvas/HealthContainer");
+            if (healthContainer == null) Debug.LogError("HealthContainer no encontrado dentro del prefab del jugador");
+        }
+
+        // Guardar todos los ticks de vida
+        healthTicks.Clear();
         foreach (Transform child in healthContainer)
         {
             Image img = child.GetComponent<Image>();
             if (img != null)
                 healthTicks.Add(img);
         }
+
+        // Mostrar valores iniciales
+        DisplayHealth(maxHealth);
+        DisplayStamina(maxStamina);
+    }
+
+    public void DisplayStamina(float amount)
+    {
+        if (staminaBar == null) return;
+        staminaBar.fillAmount = Mathf.Clamp01(amount / maxStamina);
     }
 
     public void DisplayHealth(float amount)
     {
-        if (!photonView.IsMine) return;
+        if (healthTicks.Count == 0) return;
 
         int ticksOn = Mathf.CeilToInt(amount / healthPerTick);
 
@@ -47,6 +66,7 @@ public class PlayerUIManager : MonoBehaviourPun
         {
             if (i < ticksOn)
             {
+                // Colores según la cantidad de ticks
                 if (ticksOn <= 3)
                     healthTicks[i].sprite = tickRed;
                 else if (ticksOn <= 7)
@@ -54,13 +74,15 @@ public class PlayerUIManager : MonoBehaviourPun
                 else
                     healthTicks[i].sprite = tickOn;
 
-                Color c = healthTicks[i].color;
+                // Visible
+                var c = healthTicks[i].color;
                 c.a = 1f;
                 healthTicks[i].color = c;
             }
             else
             {
-                Color c = healthTicks[i].color;
+                // Invisible
+                var c = healthTicks[i].color;
                 c.a = 0f;
                 healthTicks[i].color = c;
             }
