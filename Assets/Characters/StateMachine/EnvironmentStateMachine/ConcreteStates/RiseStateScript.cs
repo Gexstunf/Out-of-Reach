@@ -52,6 +52,8 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
 
         public override EnvironmentInteractionStateMachineScript.EEnvironmentActions GetNextState()
         {
+            if (!Context.StateMachine.IsGrounded) ResetVariables();
+            
             if (_timer > _riseTime) return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Touch;
             return StateKey;
         }
@@ -74,6 +76,12 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             float maxForward = 0.8f; 
             Vector3 clampedTarget = _currentTargetOffsetPosition + moveDir * Mathf.Clamp(_forwardOffset, -maxForward, maxForward);
             _riseTarget = clampedTarget;
+        }
+
+        private void ResetVariables() {
+            _startPos = Context.CurrentIkConstraint.data.target.localPosition;
+            _timer = 0f;
+            _forwardOffset = 0f;
         }
     }
 }

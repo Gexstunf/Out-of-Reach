@@ -30,8 +30,11 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         [SerializeField] private TwoBoneIKConstraint _rightIkConstraint;
         [SerializeField] private MultiRotationConstraint _leftMultiRotationConstraint;
         [SerializeField] private MultiRotationConstraint _rightMultiRotationConstraint;
+        [SerializeField] private Transform _leftParent;
+        [SerializeField] private Transform _rightParent;
         [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private Rigidbody _rigidBody;
+
         private void Awake() {
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
             _rootCollider = GetComponent<CapsuleCollider>();
@@ -40,7 +43,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
 
             _context = new EnvironmentInteractionContextScript(_leftIkConstraint, _rightIkConstraint,
                 _leftMultiRotationConstraint, _rightMultiRotationConstraint, transform.root, _inputScript, _camera,
-                _groundLayer, _playerStateMachine, _rigidBody, _ikDriver);
+                _groundLayer, _playerStateMachine, _rigidBody, _ikDriver, _leftParent, _rightParent);
             
             ValidateConstraints();
             InitializeStates();

@@ -38,7 +38,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         
         protected Vector3 GetGroundPos(Vector3 currentPos) {
             float sqrMaxDifference = Context.MaxStepDifference * Context.MaxStepDifference;
-            Vector3 pos = Vector3.zero;
+            Vector3 targetPos = Vector3.zero;
             
             if (Physics.Raycast(
                     Context.CurrentIkTargetTransform.position,
@@ -47,20 +47,20 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
                     maxDistance: Context.MaxGroundCheckDistance,
                     Context.GroundLayer)) 
             {
-                pos = hit.point;
+                targetPos = hit.point;
             }
             else {
                 Debug.Log("No raycast hit");
-                pos = Context.CurrentIkTargetTransform.position;
+                targetPos = Context.CurrentIkTargetTransform.position;
             }
             
-            if ((currentPos - pos).sqrMagnitude > sqrMaxDifference)
+            if ((currentPos - targetPos).sqrMagnitude > sqrMaxDifference)
             {
                 Debug.Log("They are too different!");
-                pos = Context.CurrentTargetOffsetPosition;
+                targetPos = Context.CurrentIkTargetTransform.position;
             }
             
-            return pos;
+            return targetPos;
         }
 
         protected Vector3 ApplySideOffset(Vector3 position)
