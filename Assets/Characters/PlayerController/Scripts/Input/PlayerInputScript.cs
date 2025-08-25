@@ -12,6 +12,8 @@ namespace Characters.PlayerController.Scripts.Input
         #region Exposed Variables
         public Vector2 MoveInput { get; private set; }
         public Vector2 LookInput { get; private set; }
+        
+        public int ItemSlot { get; private set; }
         public bool JumpPressed { get; private set; }
         
         public bool RunningPressed { get; private set; }
@@ -110,7 +112,15 @@ namespace Characters.PlayerController.Scripts.Input
                 RunningPressed = false;
             }
         }
-        
+
+        public void OnInventory(InputAction.CallbackContext context) {
+            int slot = context.ReadValue<int>();
+
+            if (context.performed && ItemSlot != slot) {
+                ItemSlot = slot;
+            }
+        }
+
         #endregion
     }
 }
