@@ -39,18 +39,17 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
         }
 
         public override void UpdateState() {
-            if (Context.StateMachine.IsGrounded) {
                 _timer += Time.deltaTime;
                 _turnDegrees = Context.RootTransform.rotation.eulerAngles.y;
             
-                Context.SetIkTargetWorldPosition(_currentFootGroundPos);
             
                 float t = Mathf.Clamp01(_timer / _downTime);
                 Vector3 newPreviousPos = Vector3.Lerp(_previousFootAirPos, _previousFootGroundPos, t);
-                Context.SetIkPreviousTargetWorldPosition(newPreviousPos);
-            }
 
-            Context.IKDriver.crouch01 = Context.StateMachine.IsIdle ? 1f : 0f;
+                if (Context.StateMachine.IsGrounded) { // only update the positions if grounded
+                    Context.SetIkTargetWorldPosition(_currentFootGroundPos);
+                    Context.SetIkPreviousTargetWorldPosition(newPreviousPos);
+                }
         }
 
         public override EnvironmentInteractionStateMachineScript.EEnvironmentActions GetNextState() {
@@ -110,6 +109,15 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             _turnDegrees = _startDegrees;
             _timer = 0f;
             _previousFootAirPos = Context.CurrentIkConstraint.data.target.position;
+        }
+
+        private void RestartStepSequence() {
+            _startPos = Context.RootTransform.position;
+            _startDegrees = Context.RootTransform.eulerAngles.y;
+            _turnDegrees = _startDegrees;
+            _timer = 0f;
+            _previousFootGroundPos = Context.PreviousIkConstraint.data.target.position;
+            _currentFootGroundPos = Context.CurrentIkConstraint.data.target.position;
         }
 
         private void SetFootPositions() {

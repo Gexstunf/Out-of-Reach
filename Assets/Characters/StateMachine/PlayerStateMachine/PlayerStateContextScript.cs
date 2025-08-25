@@ -1,5 +1,6 @@
 using Characters.PlayerController.Scripts;
 using Characters.PlayerController.Scripts.Input;
+using Characters.StateMachine.EnvironmentStateMachine;
 using Characters.SystemAdaptations;
 using Characters.SystemAdaptations.Utils;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace Characters.StateMachine.PlayerStateMachine {
         [SerializeField] PlayerInputScript _inputScript;
         [SerializeField] PlayerControllerScript _playerController;
         [SerializeField] StateVitalsCoordinator _coordinator;
+        [SerializeField] EnvironmentInteractionStateMachineScript _envInteractionStateMachine;
 
         [Header("Vitals States")] public bool IsUnconscious { get; private set; }
         public bool IsTired { get; private set; }
@@ -24,13 +26,14 @@ namespace Characters.StateMachine.PlayerStateMachine {
 
         public PlayerStateContextScript(Rigidbody rigidbody, CapsuleCollider collider,
             PlayerInputScript inputScript, PlayerControllerScript playerController,
-            StateVitalsCoordinator coordinator
+            StateVitalsCoordinator coordinator, EnvironmentInteractionStateMachineScript envStateMachine
         ) {
             _rigidbody = rigidbody;
             _collider = collider;
             _inputScript = inputScript;
             _playerController = playerController;
             _coordinator = coordinator;
+            _envInteractionStateMachine = envStateMachine;
         }
 
         public Rigidbody Rb => _rigidbody;
@@ -38,6 +41,7 @@ namespace Characters.StateMachine.PlayerStateMachine {
         public PlayerInputScript Input => _inputScript;
         public PlayerControllerScript PlayerController => _playerController;
         public StateVitalsCoordinator Coordinator => _coordinator;
+        public EnvironmentInteractionStateMachineScript EnvironmentInteractionStateMachine => _envInteractionStateMachine;
         public float MovementThreshold => _movementThreshold;
 
         public void HandleTiredChange(bool isTired) {

@@ -54,11 +54,11 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
                 targetPos = Context.CurrentIkTargetTransform.position;
             }
             
-            if ((currentPos - targetPos).sqrMagnitude > sqrMaxDifference)
+            /*if ((currentPos - targetPos).sqrMagnitude > sqrMaxDifference)
             {
                 Debug.Log("They are too different!");
                 targetPos = Context.CurrentIkTargetTransform.position;
-            }
+            }*/
             
             return targetPos;
         }

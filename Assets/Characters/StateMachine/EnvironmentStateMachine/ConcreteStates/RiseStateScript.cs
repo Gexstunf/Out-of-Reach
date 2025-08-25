@@ -37,11 +37,13 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
         
         public override void UpdateState()
         {
+
             _timer += Time.deltaTime;
             float t = Mathf.Clamp01(_timer / _riseTime);
 
             Vector3 currentPos = Vector3.Lerp(_startPos, _riseTarget, t);
-            Context.SetIkTargetLocalPosition(currentPos);
+            // only update if grounded
+            if (Context.StateMachine.IsGrounded) Context.SetIkTargetLocalPosition(currentPos);
         }
 
         public override void ExitState()
@@ -52,8 +54,6 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
 
         public override EnvironmentInteractionStateMachineScript.EEnvironmentActions GetNextState()
         {
-            if (!Context.StateMachine.IsGrounded) ResetVariables();
-            
             if (_timer > _riseTime) return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Touch;
             return StateKey;
         }

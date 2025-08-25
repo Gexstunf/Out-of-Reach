@@ -1,6 +1,7 @@
 using Characters.PlayerController.Scripts;
 using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine;
+using Characters.StateMachine.EnvironmentStateMachine;
 using Characters.StateMachine.PlayerStateMachine.ConcreteStates;
 using Characters.StateMachine.PlayerStateMachine.z;
 using Characters.SystemAdaptations;
@@ -21,6 +22,7 @@ namespace Characters.StateMachine.PlayerStateMachine
         [SerializeField] private CapsuleCollider _collider;
         [SerializeField] private StateVitalsCoordinator _coordinator;
         [SerializeField] private InverseKinematicsDriverScript _inverseKinematicsDriver;
+        [SerializeField] private EnvironmentInteractionStateMachineScript _enviromentInteractionStateMachine;
         
         public PlayerStateContextScript Context { get; private set; }
         
@@ -40,8 +42,9 @@ namespace Characters.StateMachine.PlayerStateMachine
             _coordinator = GetComponent<StateVitalsCoordinator>();
             _inputScript = GetComponent<PlayerInputScript>();
             _rb = GetComponent<Rigidbody>();
+            _enviromentInteractionStateMachine = GetComponent<EnvironmentInteractionStateMachineScript>();
 
-            Context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript, _coordinator);
+            Context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript, _coordinator, _enviromentInteractionStateMachine);
             ValidateReferences();
             InitializeStates();
         }
