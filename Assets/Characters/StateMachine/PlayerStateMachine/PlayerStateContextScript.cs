@@ -3,6 +3,7 @@ using Characters.PlayerController.Scripts.Input;
 using Characters.StateMachine.EnvironmentStateMachine;
 using Characters.SystemAdaptations;
 using Characters.SystemAdaptations.Utils;
+using Characters.Utils;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -15,6 +16,8 @@ namespace Characters.StateMachine.PlayerStateMachine {
         [SerializeField] PlayerControllerScript _playerController;
         [SerializeField] StateVitalsCoordinator _coordinator;
         [SerializeField] EnvironmentInteractionStateMachineScript _envInteractionStateMachine;
+        [SerializeField] RigidbodyUtilsScript _rbUtils;
+        [SerializeField] ColliderUtilsScript _colliderUtils;
 
         [Header("Vitals States")] public bool IsUnconscious { get; private set; }
         public bool IsTired { get; private set; }
@@ -26,7 +29,8 @@ namespace Characters.StateMachine.PlayerStateMachine {
 
         public PlayerStateContextScript(Rigidbody rigidbody, CapsuleCollider collider,
             PlayerInputScript inputScript, PlayerControllerScript playerController,
-            StateVitalsCoordinator coordinator, EnvironmentInteractionStateMachineScript envStateMachine
+            StateVitalsCoordinator coordinator, EnvironmentInteractionStateMachineScript envStateMachine, 
+            RigidbodyUtilsScript rbUtilsScript, ColliderUtilsScript colliderUtilsScript
         ) {
             _rigidbody = rigidbody;
             _collider = collider;
@@ -34,10 +38,14 @@ namespace Characters.StateMachine.PlayerStateMachine {
             _playerController = playerController;
             _coordinator = coordinator;
             _envInteractionStateMachine = envStateMachine;
+            _rbUtils = rbUtilsScript;
+            _colliderUtils = colliderUtilsScript;
         }
 
         public Rigidbody Rb => _rigidbody;
         public CapsuleCollider Collider => _collider;
+        public RigidbodyUtilsScript RagdollRbUtils => _rbUtils;
+        public ColliderUtilsScript ColliderUtils => _colliderUtils;
         public PlayerInputScript Input => _inputScript;
         public PlayerControllerScript PlayerController => _playerController;
         public StateVitalsCoordinator Coordinator => _coordinator;
@@ -51,6 +59,8 @@ namespace Characters.StateMachine.PlayerStateMachine {
         
         public void HandleUnconsciousChange(bool isUnconscious) {
             IsUnconscious = isUnconscious;
+            _rbUtils.SetKinematicRigidbodies(isUnconscious);
+            _colliderUtils.SetCollidersTo(!isUnconscious);
             _inputScript.enabled = !isUnconscious;
             Debug.Log("Changing unconscious state to: " + isUnconscious);
         }

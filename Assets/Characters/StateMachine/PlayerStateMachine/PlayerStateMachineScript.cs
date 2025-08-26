@@ -5,6 +5,7 @@ using Characters.StateMachine.EnvironmentStateMachine;
 using Characters.StateMachine.PlayerStateMachine.ConcreteStates;
 using Characters.StateMachine.PlayerStateMachine.z;
 using Characters.SystemAdaptations;
+using Characters.Utils;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -23,6 +24,8 @@ namespace Characters.StateMachine.PlayerStateMachine
         [SerializeField] private StateVitalsCoordinator _coordinator;
         [SerializeField] private InverseKinematicsDriverScript _inverseKinematicsDriver;
         [SerializeField] private EnvironmentInteractionStateMachineScript _enviromentInteractionStateMachine;
+        [SerializeField] private RigidbodyUtilsScript _rbUtilsScript;
+        [SerializeField] private ColliderUtilsScript _colliderUtilsScript;
         
         public PlayerStateContextScript Context { get; private set; }
         
@@ -41,10 +44,15 @@ namespace Characters.StateMachine.PlayerStateMachine
             _playerControllerScript = GetComponent<PlayerControllerScript>();
             _coordinator = GetComponent<StateVitalsCoordinator>();
             _inputScript = GetComponent<PlayerInputScript>();
+            _rbUtilsScript = GetComponent<RigidbodyUtilsScript>();
+            _colliderUtilsScript = GetComponent<ColliderUtilsScript>();
             _rb = GetComponent<Rigidbody>();
             _enviromentInteractionStateMachine = GetComponent<EnvironmentInteractionStateMachineScript>();
 
-            Context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript, _coordinator, _enviromentInteractionStateMachine);
+            Context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript, 
+                _coordinator, _enviromentInteractionStateMachine, _rbUtilsScript, _colliderUtilsScript);
+            
+            _rbUtilsScript.SetKinematicRigidbodies(true);
             ValidateReferences();
             InitializeStates();
         }
