@@ -49,7 +49,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
                 if (Context.StateMachine.IsGrounded) { // only update the positions if grounded
                     Context.SetIkTargetWorldPosition(_currentFootGroundPos);
                     Context.SetIkPreviousTargetWorldPosition(newPreviousPos);
-                }
+                } 
         }
 
         public override EnvironmentInteractionStateMachineScript.EEnvironmentActions GetNextState() {

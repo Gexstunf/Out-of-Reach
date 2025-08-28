@@ -6,9 +6,9 @@ namespace Characters.Utils {
         [Header("Colliders to control")]
         public Collider[] colliders;
 
-        public void SetCollidersTo(bool isEnabled) {
+        public void SetCollidersToTriggers(bool isTrigger) {
             foreach (Collider col in colliders) {
-                col.enabled = isEnabled;
+                col.isTrigger = isTrigger;
             }
         }
     }

@@ -59,8 +59,8 @@ namespace Characters.StateMachine.PlayerStateMachine {
         
         public void HandleUnconsciousChange(bool isUnconscious) {
             IsUnconscious = isUnconscious;
-            _rbUtils.SetKinematicRigidbodies(isUnconscious);
-            _colliderUtils.SetCollidersTo(!isUnconscious);
+            _colliderUtils.SetCollidersToTriggers(!isUnconscious);
+            _rbUtils.SetKinematicRigidbodies(!isUnconscious);
             _inputScript.enabled = !isUnconscious;
             Debug.Log("Changing unconscious state to: " + isUnconscious);
         }
