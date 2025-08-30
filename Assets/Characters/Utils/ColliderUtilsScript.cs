@@ -11,5 +11,15 @@ namespace Characters.Utils {
                 col.isTrigger = isTrigger;
             }
         }
+
+        public void IgnoreCollidersBetweenEachOther() {
+            foreach (var currentCol in colliders) {
+                foreach (var ignoreCol in colliders) {
+                    if (currentCol != ignoreCol) {
+                        Physics.IgnoreCollision(currentCol, ignoreCol);
+                    }
+                }
+            }
+        }
     }
 }

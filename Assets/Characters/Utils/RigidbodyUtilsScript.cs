@@ -19,5 +19,17 @@ namespace Characters.Utils {
             }
             currentRb.isKinematic = !isKinematic;
         }
+
+        public void SetDetectCollisions(bool detectCollisions) {
+            foreach (var rb in rigidbodies) {
+                rb.detectCollisions = detectCollisions;
+            }
+        }
+
+        public void SetUseGravity(bool useGrav) {
+            foreach (var rb in rigidbodies) {
+                rb.useGravity = useGrav;
+            }
+        }
     }
 }

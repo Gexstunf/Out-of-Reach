@@ -52,7 +52,8 @@ namespace Characters.StateMachine.PlayerStateMachine
             Context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript, 
                 _coordinator, _enviromentInteractionStateMachine, _rbUtilsScript, _colliderUtilsScript);
             
-            _rbUtilsScript.SetKinematicRigidbodies(true);
+            _colliderUtilsScript.IgnoreCollidersBetweenEachOther();
+            _rbUtilsScript.SetDetectCollisions(false);
             ValidateReferences();
             InitializeStates();
         }
