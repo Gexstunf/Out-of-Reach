@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
             }
 
-            PhotonNetwork.Instantiate(playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
+            PhotonNetwork.Instantiate("PhotonPrefabs/FirstPersonController NETWORK", spawnPoint.position, spawnPoint.rotation);
         }
     }
 }

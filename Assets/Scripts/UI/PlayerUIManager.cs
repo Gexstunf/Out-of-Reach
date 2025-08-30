@@ -16,38 +16,78 @@ public class PlayerUIManager : MonoBehaviourPun
     public Sprite tickRed;
     public float maxHealth = 100f;
     public float healthPerTick = 10f;
-
     private List<Image> healthTicks = new List<Image>();
+
+    [Header("Inventario UI")]
+    public GameObject[] slotUI; // Paneles o botones de cada slot
+    public Image[] slotIcons;   // Imagen que muestra el icono del item
+    private PlayerInventoryPhoton inventory; // referencia al inventario del player
 
     void Awake()
     {
-        if (!photonView.IsMine) return; // Solo inicializar UI para el jugador local
+        if (!photonView.IsMine) return; // Solo para jugador local
 
-        // Buscar automáticamente StaminaBar y HealthContainer dentro del prefab del jugador
+        // Stamina y Health
         if (staminaBar == null)
-        {
             staminaBar = transform.Find("Canvas/StaminaBar")?.GetComponent<Image>();
-            if (staminaBar == null) Debug.LogError("StaminaBar no encontrada dentro del prefab del jugador");
-        }
-
         if (healthContainer == null)
-        {
             healthContainer = transform.Find("Canvas/HealthContainer");
-            if (healthContainer == null) Debug.LogError("HealthContainer no encontrado dentro del prefab del jugador");
-        }
 
-        // Guardar todos los ticks de vida
         healthTicks.Clear();
         foreach (Transform child in healthContainer)
         {
             Image img = child.GetComponent<Image>();
-            if (img != null)
-                healthTicks.Add(img);
+            if (img != null) healthTicks.Add(img);
         }
 
-        // Mostrar valores iniciales
         DisplayHealth(maxHealth);
         DisplayStamina(maxStamina);
+
+        // Inicializar botones de inventario
+        for (int i = 0; i < slotUI.Length; i++)
+        {
+            int index = i; // necesario para closures
+            Button btn = slotUI[i].GetComponent<Button>();
+            if (btn != null)
+            {
+                btn.onClick.AddListener(() => OnSlotClicked(index));
+            }
+        }
+    }
+
+    // Conectar el PlayerInventoryPhoton
+    public void InitInventory(PlayerInventoryPhoton inv)
+    {
+        inventory = inv;
+        UpdateInventoryUI();
+    }
+
+    // Actualizar íconos de slots
+    public void UpdateInventoryUI()
+    {
+        if (inventory == null) return;
+
+        for (int i = 0; i < slotUI.Length; i++)
+        {
+            if (i < inventory.slots.Length && inventory.slots[i] != null)
+            {
+                slotIcons[i].sprite = inventory.slots[i].icon;
+                slotIcons[i].enabled = true;
+            }
+            else
+            {
+                slotIcons[i].sprite = null;
+                slotIcons[i].enabled = false;
+            }
+        }
+    }
+
+    // Cuando se hace click en un slot
+    public void OnSlotClicked(int slotIndex)
+    {
+        if (inventory == null) return;
+        inventory.EquipFromSlot(slotIndex);
+        UpdateInventoryUI();
     }
 
     public void DisplayStamina(float amount)
@@ -66,7 +106,6 @@ public class PlayerUIManager : MonoBehaviourPun
         {
             if (i < ticksOn)
             {
-                // Colores según la cantidad de ticks
                 if (ticksOn <= 3)
                     healthTicks[i].sprite = tickRed;
                 else if (ticksOn <= 7)
@@ -74,14 +113,12 @@ public class PlayerUIManager : MonoBehaviourPun
                 else
                     healthTicks[i].sprite = tickOn;
 
-                // Visible
                 var c = healthTicks[i].color;
                 c.a = 1f;
                 healthTicks[i].color = c;
             }
             else
             {
-                // Invisible
                 var c = healthTicks[i].color;
                 c.a = 0f;
                 healthTicks[i].color = c;
