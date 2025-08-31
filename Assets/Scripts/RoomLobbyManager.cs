@@ -4,27 +4,41 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 using System.Collections.Generic;
 
 public class RoomLobbyManager : MonoBehaviourPunCallbacks
 {
+    [Header("UI Sala")]
+    public GameObject lobbyUI;
     public TextMeshProUGUI roomNameText;
     public GameObject playerListContainer;
     public GameObject playerEntryPrefab;
     public Button startGameButton;
     public Button leaveRoomButton;
 
+    [Header("UI Carga")]
+    public GameObject loadingPanel;
+    public Slider loadingBar;
+    public TextMeshProUGUI loadingText;
+
     private Dictionary<int, GameObject> playerEntries = new Dictionary<int, GameObject>();
+    private AsyncOperation asyncLoad;
 
     void Start()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
+
         roomNameText.text = "Room: " + PhotonNetwork.CurrentRoom.Name;
         leaveRoomButton.onClick.AddListener(LeaveRoom);
+
+        loadingPanel.SetActive(false);
+        lobbyUI.SetActive(true);
 
         if (!PhotonNetwork.IsMasterClient)
             startGameButton.gameObject.SetActive(false);
         else
-            startGameButton.onClick.AddListener(StartGame);
+            startGameButton.onClick.AddListener(() => StartCoroutine(LoadGameAsync()));
 
         UpdatePlayerList();
     }
@@ -32,9 +46,7 @@ public class RoomLobbyManager : MonoBehaviourPunCallbacks
     void UpdatePlayerList()
     {
         foreach (Transform child in playerListContainer.transform)
-        {
             Destroy(child.gameObject);
-        }
 
         playerEntries.Clear();
 
@@ -71,8 +83,33 @@ public class RoomLobbyManager : MonoBehaviourPunCallbacks
         SceneManager.LoadScene("MainMenu");
     }
 
-    void StartGame()
+    IEnumerator LoadGameAsync()
     {
-        PhotonNetwork.LoadLevel("GameScene"); 
+        lobbyUI.SetActive(false);
+
+        loadingPanel.SetActive(true);
+
+        loadingText.text = "Preparando datos...";
+        yield return new WaitForSeconds(1f);
+
+        loadingText.text = "Cargando escena...";
+        asyncLoad = SceneManager.LoadSceneAsync("GameScene");
+        asyncLoad.allowSceneActivation = false;
+
+        while (!asyncLoad.isDone)
+        {
+            float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+            loadingBar.value = progress;
+            loadingText.text = $"Cargando... {Mathf.RoundToInt(progress * 100f)}%";
+
+            if (asyncLoad.progress >= 0.9f)
+            {
+                loadingText.text = "Carga completa!";
+                yield return new WaitForSeconds(0.5f);
+                asyncLoad.allowSceneActivation = true;
+            }
+
+            yield return null;
+        }
     }
 }

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 
@@ -13,7 +14,11 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     public GameObject hostPanel;
     public GameObject joinPanel;
     public GameObject settingsPanel;
-    
+    public GameObject loadingPanel;
+
+    [Header("Loading UI")]
+    public Slider progressBar;
+    public TextMeshProUGUI progressText;
 
     [Header("Input Fields")]
     public TMP_InputField roomNameInput_Host;
@@ -45,6 +50,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         hostPanel.SetActive(false);
         joinPanel.SetActive(false);
         settingsPanel.SetActive(false);
+        if (loadingPanel != null) loadingPanel.SetActive(false);
 
         panelToShow.SetActive(true);
         Debug.Log("Mostrando panel: " + panelToShow.name);
@@ -85,13 +91,13 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
 
         if (string.IsNullOrEmpty(roomName))
         {
-            Debug.LogWarning("Nombre de sala vac�o.");
+            Debug.LogWarning("Nombre de sala vacío.");
             return;
         }
 
         if (roomPasswords.ContainsKey(roomName) && roomPasswords[roomName] != password)
         {
-            Debug.LogWarning("Contrase�a incorrecta.");
+            Debug.LogWarning("Contraseña incorrecta.");
             return;
         }
 
@@ -108,7 +114,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
             Debug.LogWarning("Nombre de jugador vacio.");
             return;
         }
-        
+
         PhotonNetwork.NickName = playerName;
         PlayerPrefs.SetString("PlayerName", playerName);
         Debug.Log("Nombre cambiado a: " + playerName);
@@ -131,7 +137,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("Es el Master Client. Cargando RoomLobby...");
-            PhotonNetwork.LoadLevel("RoomLobby");
+            StartCoroutine(LoadSceneAsync("RoomLobby"));
         }
         else
         {
@@ -139,14 +145,38 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         }
     }
 
+    private IEnumerator LoadSceneAsync(string sceneName)
+    {
+        ShowPanel(loadingPanel);
+
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
+        operation.allowSceneActivation = false;
+
+        while (!operation.isDone)
+        {
+            float progress = Mathf.Clamp01(operation.progress / 0.9f);
+
+            if (progressBar != null) progressBar.value = progress;
+            if (progressText != null) progressText.text = Mathf.RoundToInt(progress * 100f) + "%";
+
+            if (operation.progress >= 0.9f)
+            {
+                // Activamos automáticamente al terminar
+                operation.allowSceneActivation = true;
+            }
+
+            yield return null;
+        }
+    }
+
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        Debug.LogError($"Fallo al crear la sala: {message} (C�digo: {returnCode})");
+        Debug.LogError($"Fallo al crear la sala: {message} (Código: {returnCode})");
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        Debug.LogError($"Fallo al unirse a la sala: {message} (C�digo: {returnCode})");
+        Debug.LogError($"Fallo al unirse a la sala: {message} (Código: {returnCode})");
     }
 
     public override void OnConnectedToMaster()
