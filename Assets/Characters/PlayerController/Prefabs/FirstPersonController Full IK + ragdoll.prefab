@@ -142,6 +142,7 @@ GameObject:
   - component: {fileID: 8695611331328229975}
   - component: {fileID: 7010074513333130555}
   - component: {fileID: 1198915378954183574}
+  - component: {fileID: 7346173819508784061}
   - component: {fileID: 8787627040733604468}
   - component: {fileID: 2169237441691545651}
   - component: {fileID: 3419629819319595043}
@@ -150,8 +151,6 @@ GameObject:
   - component: {fileID: 5958900168071807168}
   - component: {fileID: 8620653341654282260}
   - component: {fileID: 127692177572220451}
-  - component: {fileID: 449553844424762581}
-  - component: {fileID: 6380187225939283870}
   - component: {fileID: 2115628088738748475}
   - component: {fileID: 3299730226876539248}
   - component: {fileID: 7457005484267477870}
@@ -334,6 +333,23 @@ CapsuleCollider:
   m_Height: 0
   m_Direction: 1
   m_Center: {x: 0, y: -3, z: 0}
+--- !u!114 &7346173819508784061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1208890262637909539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c96a3a301b097164ea241dd0fd2cfdca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ragdollPrefab: {fileID: 2824430355491859274, guid: afcb14d7a975e2b48ae978fb428a80f2, type: 3}
+  fpcControllerPrefab: {fileID: 0}
+  colliders: []
+  rigidbodies: []
+  mainRb: {fileID: 0}
 --- !u!114 &8787627040733604468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,8 +414,7 @@ MonoBehaviour:
   _coordinator: {fileID: 7660779582355102384}
   _inverseKinematicsDriver: {fileID: 0}
   _enviromentInteractionStateMachine: {fileID: 0}
-  _rbUtilsScript: {fileID: 0}
-  _colliderUtilsScript: {fileID: 0}
+  _ragdollControllerScript: {fileID: 7346173819508784061}
 --- !u!114 &2909005057306734719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -498,52 +513,6 @@ MonoBehaviour:
   - {fileID: 5368015412923403731}
   - {fileID: 285642130047782713}
   thisCollider: {fileID: 0}
---- !u!114 &449553844424762581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1208890262637909539}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6774f2cd493a6b4884878c85fd89f88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rigidbodies:
-  - {fileID: 1511755333580920955}
-  - {fileID: 3957732798885063818}
-  - {fileID: 573532200843302628}
-  - {fileID: 1969097154464563365}
-  - {fileID: 5603501005778218303}
-  - {fileID: 1026511439729811112}
-  - {fileID: 8702711584061656055}
-  - {fileID: 8627021760138115820}
-  - {fileID: 8389503033702064089}
-  - {fileID: 7708372322155411427}
---- !u!114 &6380187225939283870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1208890262637909539}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9faf7814e384fb4aa75c16e4ae7b9a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colliders:
-  - {fileID: 222832087098801578}
-  - {fileID: 7802748576928137629}
-  - {fileID: 7724155189616907422}
-  - {fileID: 3284472495385889368}
-  - {fileID: 3557681782934669157}
-  - {fileID: 8522997795851953962}
-  - {fileID: 5814123629659299884}
-  - {fileID: 6992261954619589630}
-  - {fileID: 5368015412923403731}
-  - {fileID: 285642130047782713}
 --- !u!114 &2115628088738748475
 MonoBehaviour:
   m_ObjectHideFlags: 0

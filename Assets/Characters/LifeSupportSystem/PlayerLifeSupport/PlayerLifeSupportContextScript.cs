@@ -15,6 +15,9 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         [SerializeField] private readonly float _maxStamina;
         [SerializeField] private float _currentHealth;
         [SerializeField] private float _currentStamina;
+        
+        [Header("DEBUG ONLY LOGIC")]
+        
 
         [Header("Movement states")] 
         public bool IsWalking { get; private set; }

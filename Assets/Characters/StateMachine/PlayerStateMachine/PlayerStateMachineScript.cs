@@ -24,8 +24,7 @@ namespace Characters.StateMachine.PlayerStateMachine
         [SerializeField] private StateVitalsCoordinator _coordinator;
         [SerializeField] private InverseKinematicsDriverScript _inverseKinematicsDriver;
         [SerializeField] private EnvironmentInteractionStateMachineScript _enviromentInteractionStateMachine;
-        [SerializeField] private RigidbodyUtilsScript _rbUtilsScript;
-        [SerializeField] private ColliderUtilsScript _colliderUtilsScript;
+        [SerializeField] private RagdollControllerScript _ragdollControllerScript;
         
         public PlayerStateContextScript Context { get; private set; }
         
@@ -44,16 +43,13 @@ namespace Characters.StateMachine.PlayerStateMachine
             _playerControllerScript = GetComponent<PlayerControllerScript>();
             _coordinator = GetComponent<StateVitalsCoordinator>();
             _inputScript = GetComponent<PlayerInputScript>();
-            _rbUtilsScript = GetComponent<RigidbodyUtilsScript>();
-            _colliderUtilsScript = GetComponent<ColliderUtilsScript>();
+            _ragdollControllerScript = GetComponent<RagdollControllerScript>();
             _rb = GetComponent<Rigidbody>();
             _enviromentInteractionStateMachine = GetComponent<EnvironmentInteractionStateMachineScript>();
 
             Context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript, 
-                _coordinator, _enviromentInteractionStateMachine, _rbUtilsScript, _colliderUtilsScript);
+                _coordinator, _enviromentInteractionStateMachine, _ragdollControllerScript);
             
-            _colliderUtilsScript.IgnoreCollidersBetweenEachOther();
-            _rbUtilsScript.SetDetectCollisions(false);
             ValidateReferences();
             InitializeStates();
         }
@@ -77,9 +73,10 @@ namespace Characters.StateMachine.PlayerStateMachine
             CurrentState = States[EPlayerStates.Idle];
         }
         
+        # region  Exposed vars
+
         public EPlayerStates StateKey => CurrentState.StateKey;
         
-        # region  Exposed vars
         public bool IsFalling => StateKey == EPlayerStates.Falling;
         public bool IsJumping => StateKey == EPlayerStates.Jumping;
         public bool IsRunning => StateKey == EPlayerStates.Running;

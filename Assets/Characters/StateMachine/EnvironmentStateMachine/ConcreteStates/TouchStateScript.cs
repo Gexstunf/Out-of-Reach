@@ -41,17 +41,16 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
         public override void UpdateState() {
                 _timer += Time.deltaTime;
                 _turnDegrees = Context.RootTransform.rotation.eulerAngles.y;
-            
-            
+                   
                 float t = Mathf.Clamp01(_timer / _downTime);
                 Vector3 newPreviousPos = Vector3.Lerp(_previousFootAirPos, _previousFootGroundPos, t);
 
                 if (Context.StateMachine.IsGrounded) { // only update the positions if grounded
                     Context.SetIkTargetWorldPosition(_currentFootGroundPos);
                     Context.SetIkPreviousTargetWorldPosition(newPreviousPos);
-                } 
+                }
         }
-
+        
         public override EnvironmentInteractionStateMachineScript.EEnvironmentActions GetNextState() {
             if (Context.StateMachine.IsGrounded) {
                 if (Context.StateMachine.IsIdle) {
@@ -59,7 +58,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
                         return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Rise;
                     }
                 }
-            
+                
                 if (MovementThresholdReached(_startPos) && _timer > _downTime) {
                     return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Rise;
                 }
@@ -109,15 +108,6 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             _turnDegrees = _startDegrees;
             _timer = 0f;
             _previousFootAirPos = Context.CurrentIkConstraint.data.target.position;
-        }
-
-        private void RestartStepSequence() {
-            _startPos = Context.RootTransform.position;
-            _startDegrees = Context.RootTransform.eulerAngles.y;
-            _turnDegrees = _startDegrees;
-            _timer = 0f;
-            _previousFootGroundPos = Context.PreviousIkConstraint.data.target.position;
-            _currentFootGroundPos = Context.CurrentIkConstraint.data.target.position;
         }
 
         private void SetFootPositions() {

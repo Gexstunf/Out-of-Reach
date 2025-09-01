@@ -77,11 +77,5 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             Vector3 clampedTarget = _currentTargetOffsetPosition + moveDir * Mathf.Clamp(_forwardOffset, -maxForward, maxForward);
             _riseTarget = clampedTarget;
         }
-
-        private void ResetVariables() {
-            _startPos = Context.CurrentIkConstraint.data.target.localPosition;
-            _timer = 0f;
-            _forwardOffset = 0f;
-        }
     }
 }

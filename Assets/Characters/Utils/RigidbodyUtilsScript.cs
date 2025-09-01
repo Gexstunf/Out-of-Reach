@@ -3,31 +3,32 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
 namespace Characters.Utils {
-    public class RigidbodyUtilsScript : MonoBehaviour
+    public class RigidbodyUtilsScript
     {
         [Header("Rigidbodies to control")]
-        public Rigidbody[] rigidbodies;
-        public Rigidbody currentRb;
+        public Rigidbody[] Rigidbodies;
+        public Rigidbody CurrentRb;
 
-        public void Start() {
-            currentRb = GetComponent<Rigidbody>();
+        public RigidbodyUtilsScript(Rigidbody[] rigidbodies, Rigidbody currentRb) {
+            Rigidbodies = rigidbodies;
+            CurrentRb = currentRb;
         }
 
         public void SetKinematicRigidbodies(bool isKinematic) {
-            foreach (Rigidbody rb in rigidbodies) {
+            foreach (Rigidbody rb in Rigidbodies) {
                 rb.isKinematic = isKinematic;
             }
-            currentRb.isKinematic = !isKinematic;
+            CurrentRb.isKinematic = !isKinematic;
         }
 
         public void SetDetectCollisions(bool detectCollisions) {
-            foreach (var rb in rigidbodies) {
+            foreach (var rb in Rigidbodies) {
                 rb.detectCollisions = detectCollisions;
             }
         }
 
         public void SetUseGravity(bool useGrav) {
-            foreach (var rb in rigidbodies) {
+            foreach (var rb in Rigidbodies) {
                 rb.useGravity = useGrav;
             }
         }

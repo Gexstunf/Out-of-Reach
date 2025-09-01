@@ -67,13 +67,5 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             Assert.IsNotNull(_rightMultiRotationConstraint, "Right Multi rotation constraint is not assigned!");
             Assert.IsNotNull(_groundLayer, "Ground layer is not assigned!");
         }
-        
-
-        private void OnDrawGizmosSelected() {
-            Gizmos.color = Color.red;
-            if (_context != null && _context.ClosestPointOnColliderFromLegShoulderTransform != null) {
-                Gizmos.DrawSphere(_context.ClosestPointOnColliderFromLegShoulderTransform, 0.3f);
-            }
-        }
     }
 }
