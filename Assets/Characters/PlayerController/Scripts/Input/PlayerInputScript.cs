@@ -107,17 +107,21 @@ namespace Characters.PlayerController.Scripts.Input
         public void OnSprint(InputAction.CallbackContext context) {
             if (context.performed) {
                 RunningPressed = true;
-                Debug.Log("Sprint press");
+                Debug.Log("Sprint press!");
             } else if (context.canceled) {
                 RunningPressed = false;
             }
         }
 
         public void OnInventory(InputAction.CallbackContext context) {
-            int slot = context.ReadValue<int>();
+            if (context.performed)
+            {
+                float slot = context.ReadValue<float>();
+                if (slot != ItemSlot)
+                {
+                }
 
-            if (context.performed && ItemSlot != slot) {
-                ItemSlot = slot;
+                Debug.Log("Key n: " + slot);
             }
         }
 
