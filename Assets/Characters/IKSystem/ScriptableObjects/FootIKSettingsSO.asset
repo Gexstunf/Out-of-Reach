@@ -12,10 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769a2e2a4b793ff44866c8ecd81af72d, type: 3}
   m_Name: FootIKSettingsSO
   m_EditorClassIdentifier: 
-  maxStepDistance: 0.5
-  stepHeight: 0.2
-  stepSpeed: 5
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
-  groundCheckDistance: 2
+    m_Bits: 8
+  raycastVerticalOffset: 0
+  groundCheckDistance: 3
+  footPlantOffsetY: 0
+  maxStepDistance: 0.7
+  stepHeight: 0.4
+  stepSpeed: 3
+  stepCooldown: 0.5
+  stepLength: 1
+  stepThreshold: 1
+  alignToSurface: 0
+  footRotLerpSpeed: 100
+  drawDebug: 1

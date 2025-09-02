@@ -1,19 +1,62 @@
 using UnityEngine;
+using Characters.IKSystem;
 
-namespace Characters.IKSystem.Solvers {
-    public class FootPosSolverScript : GroundDetectorScript
+namespace Characters.IKSystem.Solvers
+{
+    /// <summary>
+    /// Result of a ground probe.
+    /// </summary>
+    
+    public struct GroundHit
+    {
+        public bool Valid;
+        public Vector3 Position; // world position (already includes footPlantOffsetY)
+        public Vector3 Normal;   // world normal
+
+        public static GroundHit Invalid => new GroundHit { Valid = false, Position = Vector3.zero, Normal = Vector3.up };
+    }
+
+    /// <summary>
+    /// raycast solver. Operates in WORLD space.
+    /// </summary>
+    
+    public class FootPosSolverScript : MonoBehaviour
     {
         [SerializeField] private FootIKSettingsSO settings;
+        public GroundHit TryGetGround(Vector3 originWorld)
+        {
+            var rayOrigin = originWorld + Vector3.up * settings.raycastVerticalOffset;
 
-        public override bool TryGetGroundPos(Vector3 origin, out Vector3 hitPos, out Vector3 normal) {
-            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, settings.groundCheckDistance, settings.groundLayer)) {
-                hitPos = hit.point;
-                normal = hit.normal;
-                return true;
+            if (Physics.Raycast(rayOrigin, Vector3.down, out var hit,
+                    settings.groundCheckDistance + settings.raycastVerticalOffset,
+                    settings.groundLayer, QueryTriggerInteraction.Ignore))
+            {
+                var p = hit.point + Vector3.up * settings.footPlantOffsetY;
+                var n = hit.normal;
+                if (settings.drawDebug)
+                {
+                    DrawDebug(rayOrigin, hit, p, n);
+                }
+                return new GroundHit { Valid = true, Position = p, Normal = n };
             }
-            hitPos = origin;
-            normal = Vector3.up;
-            return false;
+
+            if (settings.drawDebug) Debug.DrawLine(rayOrigin, rayOrigin + Vector3.down * settings.groundCheckDistance, Color.red);
+            return GroundHit.Invalid;
+        }
+
+        /// <summary>
+        /// A helper to build a foot rotation aligned to the surface.
+        /// </summary>
+        public static Quaternion RotationFromNormal(Vector3 forwardRef, Vector3 groundNormal)
+        {
+            var projFwd = Vector3.ProjectOnPlane(forwardRef, groundNormal);
+            if (projFwd.sqrMagnitude < 1e-4f) projFwd = Vector3.forward; // fallback
+            return Quaternion.LookRotation(projFwd.normalized, groundNormal);
+        }
+        
+        private void DrawDebug(Vector3 rayOrigin, RaycastHit hit, Vector3 p, Vector3 n) {
+            Debug.DrawLine(rayOrigin, hit.point, Color.green);
+            Debug.DrawRay(p, n * 0.15f, Color.cyan);
         }
     }
 }
