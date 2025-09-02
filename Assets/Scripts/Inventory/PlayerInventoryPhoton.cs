@@ -17,6 +17,41 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
     [Header("Referencias")]
     public float dropForce = 3f;
 
+    private GameObject currentItemInHand;
+
+    public void EquipItem(int slot)
+    {
+        ClearHand();
+
+        if (slot >= 0 && slot < slots.Length && slots[slot] != null)
+        {
+            currentItemInHand = Instantiate(slots[slot], handSlot);
+            currentItemInHand.transform.localPosition = Vector3.zero;
+            currentItemInHand.transform.localRotation = Quaternion.identity;
+        }
+    }
+
+    public void ClearHand()
+    {
+        if (currentItemInHand != null)
+        {
+            Destroy(currentItemInHand);
+            currentItemInHand = null;
+        }
+    }
+
+    void Start()
+    {
+        if (photonView.IsMine)
+        {
+            var ui = FindFirstObjectByType<PlayerUIManager>();
+            if (ui != null)
+            {
+                ui.InitInventory(this);
+            }
+        }
+    }
+
     public void RequestPickupOnClosest(PhotonView targetItemPV)
     {
         if (targetItemPV == null) return;

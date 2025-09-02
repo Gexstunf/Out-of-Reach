@@ -96,12 +96,20 @@ namespace Characters.PlayerController.Scripts.Input
 
         public void OnPrevious(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
+            if (context.performed)
+            {
+                ItemSlot = Mathf.Max(0, ItemSlot - 1);
+                Debug.Log("Slot anterior: " + ItemSlot);
+            }
         }
 
         public void OnNext(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
+            if (context.performed)
+            {
+                ItemSlot++;
+                Debug.Log("Slot siguiente: " + ItemSlot);
+            }
         }
 
         public void OnSprint(InputAction.CallbackContext context) {
@@ -114,14 +122,18 @@ namespace Characters.PlayerController.Scripts.Input
         }
 
         public void OnInventory(InputAction.CallbackContext context) {
+            int slot = context.ReadValue<int>();
+
             if (context.performed)
             {
-                float slot = context.ReadValue<float>();
-                if (slot != ItemSlot)
+                if (ItemSlot == slot)
                 {
+                    ClearHand();
+                    return;
                 }
 
-                Debug.Log("Key n: " + slot);
+                ItemSlot = slot;
+                EquipItem(slot);
             }
         }
 
