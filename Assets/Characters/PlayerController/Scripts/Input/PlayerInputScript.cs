@@ -122,18 +122,22 @@ namespace Characters.PlayerController.Scripts.Input
         }
 
         public void OnInventory(InputAction.CallbackContext context) {
-            int slot = context.ReadValue<int>();
+            if (!context.performed) return;
 
-            if (context.performed)
+            var key = context.control;
+
+            if (key == Keyboard.current.digit1Key) ItemSlot = 0;
+            else if (key == Keyboard.current.digit2Key) ItemSlot = 1;
+            else if (key == Keyboard.current.digit3Key) ItemSlot = 2;
+            else if (key == Keyboard.current.digit4Key) ItemSlot = 3;
+
+            Debug.Log("Cambio a slot " + ItemSlot);
+
+            // Equipar directamente
+            var inv = GetComponent<PlayerInventoryPhoton>();
+            if (inv != null)
             {
-                if (ItemSlot == slot)
-                {
-                    ClearHand();
-                    return;
-                }
-
-                ItemSlot = slot;
-                EquipItem(slot);
+                inv.EquipFromSlot(ItemSlot);
             }
         }
 

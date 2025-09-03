@@ -19,13 +19,13 @@ public class PlayerUIManager : MonoBehaviourPun
     private List<Image> healthTicks = new List<Image>();
 
     [Header("Inventario UI")]
-    public GameObject[] slotUI; // Paneles o botones de cada slot
-    public Image[] slotIcons;   // Imagen que muestra el icono del item
-    private PlayerInventoryPhoton inventory; // referencia al inventario del player
+    public GameObject[] slotUI;
+    public Image[] slotIcons;
+    private PlayerInventoryPhoton inventory;
 
     void Awake()
     {
-        if (!photonView.IsMine) return; // Solo para jugador local
+        if (!photonView.IsMine) return;
 
         // Stamina y Health
         if (staminaBar == null)
@@ -55,21 +55,21 @@ public class PlayerUIManager : MonoBehaviourPun
         }
     }
 
-    // Conectar el PlayerInventoryPhoton
     public void InitInventory(PlayerInventoryPhoton inv)
     {
         inventory = inv;
         UpdateInventoryUI();
     }
 
-    // Actualizar íconos de slots
     public void UpdateInventoryUI()
     {
         if (inventory == null) return;
 
         for (int i = 0; i < slotUI.Length; i++)
         {
-            if (i < inventory.slots.Length && inventory.slots[i] != null)
+            bool hasItem = (i < inventory.slots.Length && inventory.slots[i] != null);
+
+            if (hasItem)
             {
                 slotIcons[i].sprite = inventory.slots[i].icon;
                 slotIcons[i].enabled = true;
@@ -78,6 +78,12 @@ public class PlayerUIManager : MonoBehaviourPun
             {
                 slotIcons[i].sprite = null;
                 slotIcons[i].enabled = false;
+            }
+
+            Image slotBg = slotUI[i].GetComponent<Image>();
+            if (slotBg != null)
+            {
+                slotBg.color = (i == inventory.activeSlot) ? Color.yellow : Color.white;
             }
         }
     }
