@@ -112,8 +112,8 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             HolsterCurrent();
             activeSlot = slotIndex;
 
-            var ui = FindFirstObjectByType<PlayerUIManager>();
-            if (ui != null) ui.UpdateInventoryUI();
+            var ui2 = FindFirstObjectByType<PlayerUIManager>();
+            if (ui2 != null) ui2.UpdateInventoryUI();
             return;
         }
 
