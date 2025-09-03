@@ -42,7 +42,7 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
 
         if (slots[inputScript.ItemSlot] != null)
         {
-            Debug.Log("El slot " + inputScript.ItemSlot + " ya está ocupado.");
+            Debug.Log("El slot " + inputScript.ItemSlot + " ya estï¿½ ocupado.");
             return;
         }
 
@@ -106,7 +106,16 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
     public void EquipFromSlot(int slotIndex)
     {
         if (!photonView.IsMine) return;
-        if (slots[slotIndex] == null) return;
+
+        if (slots[slotIndex] == null)
+        {
+            HolsterCurrent();
+            activeSlot = slotIndex;
+
+            var ui = FindFirstObjectByType<PlayerUIManager>();
+            if (ui != null) ui.UpdateInventoryUI();
+            return;
+        }
 
         if (activeSlot == slotIndex && currentHeldNetworkObj != null)
             return;
