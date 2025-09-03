@@ -16,14 +16,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   raycastVerticalOffset: 0
-  groundCheckDistance: 3
+  groundCheckDistance: 2.5
   footPlantOffsetY: 0
   maxStepDistance: 0.7
   stepHeight: 0.4
   stepSpeed: 3
   stepCooldown: 0.5
   stepLength: 1
-  stepThreshold: 1
+  stepThreshold: 0.4
   alignToSurface: 0
   footRotLerpSpeed: 100
   drawDebug: 1

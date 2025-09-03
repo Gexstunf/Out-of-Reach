@@ -8,12 +8,20 @@ namespace Characters.IKSystem.RigDrivers
     /// <summary>
     /// Updates the IK targets in local space based on the foot solver and gait planner.
     /// </summary>
+    
     public class LegIKInteractionScript : MonoBehaviour
     {
+        private enum StepState { Planted, Moving }
+        private StepState currentStepState;
+
         [Header("References")]
         [SerializeField] private FootIKSettingsSO settings;
         [SerializeField] private FootPosSolverScript solver;
 
+        [Header("Origin Transforms")]
+        [SerializeField] private Transform hipsLeftTransform;
+        [SerializeField] private Transform hipsRightTransform;
+        
         [Header("Transforms")]
         [SerializeField] private Transform ghostRigRoot;
         [SerializeField] private Transform leftLegTarget;
@@ -24,6 +32,7 @@ namespace Characters.IKSystem.RigDrivers
         
         [Header("Flags")]
         [SerializeField] private bool useLocalConversion;
+        [SerializeField] private bool debug;
 
         private GaitPlannerScript gaitPlanner;
         private Vector3 _characterPosition;
@@ -31,11 +40,13 @@ namespace Characters.IKSystem.RigDrivers
         private GroundHit _leftHit;
         private GroundHit _rightHit;
         private int _stepCounter;
+        private bool _triggerStep;
 
         void Start()
         {
-            _leftHit  = solver.TryGetGround(leftLegTarget.position);
-            _rightHit = solver.TryGetGround(rightLegTarget.position);
+            _leftHit  = solver.TryGetGround(hipsLeftTransform.position);
+            _rightHit = solver.TryGetGround(hipsRightTransform.position);
+            _triggerStep = false;
             
             Vector3 leftInitPos = _leftHit.Position;
             Vector3 rightInitPos = _rightHit.Position;
@@ -53,14 +64,21 @@ namespace Characters.IKSystem.RigDrivers
             
             if (MovementThresholdReached(_characterPosition, transform.position)) {
                 _characterPosition = rootTransform.position;
-                _leftHit  = solver.TryGetGround(leftLegTarget.position);
-                _rightHit = solver.TryGetGround(rightLegTarget.position);
+                _leftHit  = solver.TryGetGround(hipsLeftTransform.position);
+                _rightHit = solver.TryGetGround(hipsRightTransform.position);
+                
                 _stepCounter += 1;
                 Debug.Log("Taking a step! nº: " + _stepCounter);
+
+                if (_leftHit.Valid && _rightHit.Valid) {
+                    Debug.Log("They were Valid steps.");
+                }
+                _triggerStep = true;
             }
 
-            gaitPlanner.UpdateGait(deltaTime, rootTransform, _leftHit, _rightHit, settings);
-            
+            gaitPlanner.UpdateGait(deltaTime, rootTransform, _leftHit, _rightHit, _triggerStep, settings);
+            _triggerStep = false;
+
             // convert planner world-space outputs to GhostRig local-space
             if (useLocalConversion) {
                LocalFootTarget leftLocal  = new LocalFootTarget(gaitPlanner.LeftFootTargetPos,  gaitPlanner.LeftFootTargetRot,  ghostRigRoot);
@@ -89,6 +107,14 @@ namespace Characters.IKSystem.RigDrivers
             {
                 Position = rigRoot.InverseTransformPoint(worldPos);
                 Rotation = Quaternion.Inverse(rigRoot.rotation) * worldRot;
+            }
+        }
+
+        private void OnDrawGizmosSelected() {
+            if (debug) {
+                Gizmos.color = Color.green;
+                Gizmos.DrawSphere(_leftHit.Position, 0.15f);
+                Gizmos.DrawSphere(_rightHit.Position, 0.15f);
             }
         }
 

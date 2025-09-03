@@ -1,5 +1,6 @@
 using UnityEngine;
 using Characters.IKSystem;
+using UnityEngine.ProBuilder.Shapes;
 
 namespace Characters.IKSystem.Solvers
 {
@@ -23,6 +24,12 @@ namespace Characters.IKSystem.Solvers
     public class FootPosSolverScript : MonoBehaviour
     {
         [SerializeField] private FootIKSettingsSO settings;
+        
+        [Header("Debug Settings")]
+        [SerializeField] private bool debug;
+        [SerializeField] private Transform leftHomePoint;
+        [SerializeField] private Transform rightHomePoint;
+        
         public GroundHit TryGetGround(Vector3 originWorld)
         {
             var rayOrigin = originWorld + Vector3.up * settings.raycastVerticalOffset;
@@ -44,6 +51,12 @@ namespace Characters.IKSystem.Solvers
             return GroundHit.Invalid;
         }
 
+        public void OnDrawGizmos() {
+            if (debug) {
+                Debug.DrawLine(leftHomePoint.position, leftHomePoint.position + Vector3.down * settings.groundCheckDistance, Color.green);
+                Debug.DrawLine(rightHomePoint.position, rightHomePoint.position + Vector3.down * settings.groundCheckDistance, Color.green);
+            }
+        }
         /// <summary>
         /// A helper to build a foot rotation aligned to the surface.
         /// </summary>
@@ -56,6 +69,7 @@ namespace Characters.IKSystem.Solvers
         
         private void DrawDebug(Vector3 rayOrigin, RaycastHit hit, Vector3 p, Vector3 n) {
             Debug.DrawLine(rayOrigin, hit.point, Color.green);
+            //Gizmos.DrawSphere(hit.point ,0.15f);
             Debug.DrawRay(p, n * 0.15f, Color.cyan);
         }
     }
