@@ -141,6 +141,20 @@ namespace Characters.PlayerController.Scripts.Input
             }
         }
 
+        public void OnDrop(InputAction.CallbackContext context)
+        {
+            if(!context.performed) return;
+
+            var inv = GetComponent<PlayerInventoryPhoton>();
+            if (inv != null)
+            {
+                inv.DropCurrent(inv.activeSlot);
+
+                var ui = FindFirstObjectByType<PlayerUIManager>();
+                if (ui != null) ui.UpdateInventoryUI();
+            }
+        }
+
         #endregion
     }
 }
