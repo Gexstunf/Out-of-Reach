@@ -34,19 +34,17 @@ namespace Characters.IKSystem.RigDrivers
         [SerializeField] private bool useLocalConversion;
         [SerializeField] private bool debug;
 
-        private GaitPlannerScript gaitPlanner;
+        private GaitPlannerScript _gaitPlanner;
         private Vector3 _characterPosition;
         
         private GroundHit _leftHit;
         private GroundHit _rightHit;
         private int _stepCounter;
-        private bool _triggerStep;
 
         void Start()
         {
             _leftHit  = solver.TryGetGround(hipsLeftTransform.position);
             _rightHit = solver.TryGetGround(hipsRightTransform.position);
-            _triggerStep = false;
             
             Vector3 leftInitPos = _leftHit.Position;
             Vector3 rightInitPos = _rightHit.Position;
@@ -54,7 +52,7 @@ namespace Characters.IKSystem.RigDrivers
             Quaternion rightInitRot = rightLegTarget.rotation;
             
             _characterPosition = rootTransform.position;
-            gaitPlanner = new GaitPlannerScript(leftInitPos, rightInitPos, leftInitRot, rightInitRot);
+            _gaitPlanner = new GaitPlannerScript(leftInitPos, rightInitPos, leftInitRot, rightInitRot);
 
         }
 
@@ -73,16 +71,14 @@ namespace Characters.IKSystem.RigDrivers
                 if (_leftHit.Valid && _rightHit.Valid) {
                     Debug.Log("They were Valid steps.");
                 }
-                _triggerStep = true;
             }
 
-            gaitPlanner.UpdateGait(deltaTime, rootTransform, _leftHit, _rightHit, _triggerStep, settings);
-            _triggerStep = false;
+            _gaitPlanner.UpdateGait(deltaTime, rootTransform, _leftHit, _rightHit, settings);
 
             // convert planner world-space outputs to GhostRig local-space
             if (useLocalConversion) {
-               LocalFootTarget leftLocal  = new LocalFootTarget(gaitPlanner.LeftFootTargetPos,  gaitPlanner.LeftFootTargetRot,  ghostRigRoot);
-               LocalFootTarget rightLocal = new LocalFootTarget(gaitPlanner.RightFootTargetPos, gaitPlanner.RightFootTargetRot, ghostRigRoot);
+               LocalFootTarget leftLocal  = new LocalFootTarget(_gaitPlanner.LeftFootTargetPos,  _gaitPlanner.LeftFootTargetRot,  ghostRigRoot);
+               LocalFootTarget rightLocal = new LocalFootTarget(_gaitPlanner.RightFootTargetPos, _gaitPlanner.RightFootTargetRot, ghostRigRoot);
    
                leftLegTarget.localPosition  = leftLocal.Position;
                leftLegTarget.localRotation  = leftLocal.Rotation;
@@ -90,8 +86,8 @@ namespace Characters.IKSystem.RigDrivers
                rightLegTarget.localRotation = rightLocal.Rotation; 
             }
             else {
-                leftLegTarget.position = gaitPlanner.LeftFootTargetPos;
-                rightLegTarget.position = gaitPlanner.RightFootTargetPos;
+                leftLegTarget.position = _gaitPlanner.LeftFootTargetPos;
+                rightLegTarget.position = _gaitPlanner.RightFootTargetPos;
             }
         }
 
@@ -112,7 +108,7 @@ namespace Characters.IKSystem.RigDrivers
 
         private void OnDrawGizmosSelected() {
             if (debug) {
-                Gizmos.color = Color.green;
+                Gizmos.color = Color.black;
                 Gizmos.DrawSphere(_leftHit.Position, 0.15f);
                 Gizmos.DrawSphere(_rightHit.Position, 0.15f);
             }

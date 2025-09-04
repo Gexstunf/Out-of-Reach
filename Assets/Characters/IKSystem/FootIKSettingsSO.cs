@@ -15,15 +15,18 @@ namespace Characters.IKSystem {
 
         [Header("Stepping")]
         [Tooltip("Min planar distance from current planted pos to new ground needed to trigger a step.")]
-        public float maxStepDistance = 0.4f;
+        public float maxStepDistance = 0.5f;
         [Tooltip("Vertical arc height for the swing phase.")]
-        public float stepHeight = 0.15f;
+        public float stepHeight = 0.2f;
         [Tooltip("How fast the foot moves toward the new target (units/sec).")]
-        public float stepSpeed = 6.0f;
+        public float stepSpeed = 5.0f;
         [Tooltip("Minimum time between steps of the SAME foot.")]
         public float stepCooldown = 0.12f;
         [Tooltip("Base step length")] 
         public float stepLength = 0.3f;
+        [Tooltip("Duration of step")]
+        public float totalStepDuration = 0.3f;
+        public float downTimeStep = 0.15f;
         
         [Header("Threshold")]
         public float stepThreshold = 0.1f;

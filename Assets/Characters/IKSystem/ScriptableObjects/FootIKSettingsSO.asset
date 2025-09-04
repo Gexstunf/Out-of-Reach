@@ -23,7 +23,9 @@ MonoBehaviour:
   stepSpeed: 3
   stepCooldown: 0.5
   stepLength: 1
-  stepThreshold: 0.4
+  totalStepDuration: 0.6
+  downTimeStep: 0.15
+  stepThreshold: 0.8
   alignToSurface: 0
   footRotLerpSpeed: 100
   drawDebug: 1

@@ -26,17 +26,13 @@ namespace Characters.IKSystem.Planners
             public FootState CurrentFoot;
             public Leg CurrentLeg;
             public Vector3 CurrentPos;
-            public Vector3 StartPos;
-            public Vector3 EndPos;
             public GroundHit CurrentGroundHit;
 
-            public CurrentContext(Vector3 startPos, Vector3 currentPos, Leg currentLeg, FootState currentFoot, GroundHit currentGroundHit, Vector3 endPos) {
-                StartPos = startPos;
+            public CurrentContext(Vector3 currentPos, Leg currentLeg, FootState currentFoot, GroundHit currentGroundHit) {
                 CurrentPos = currentPos;
                 CurrentLeg = currentLeg;
                 CurrentFoot = currentFoot;
                 CurrentGroundHit = currentGroundHit;
-                EndPos = endPos;
             }
         }
         
@@ -60,7 +56,7 @@ namespace Characters.IKSystem.Planners
         {
             _leftFoot.PlantedPos  = initialLeftPos;  _leftFoot.PlantedRot  = initialLeftRot;
             _rightFoot.PlantedPos = initialRightPos; _rightFoot.PlantedRot = initialRightRot;
-            _context = new CurrentContext(initialLeftPos, initialLeftPos, Leg.Left, _leftFoot, new GroundHit(), initialLeftPos);
+            _context = new CurrentContext(initialLeftPos, Leg.Left, _leftFoot, new GroundHit());
             LeftFootTargetPos = initialLeftPos;   LeftFootTargetRot = initialLeftRot;
             RightFootTargetPos = initialRightPos; RightFootTargetRot = initialRightRot;
         }
@@ -70,20 +66,22 @@ namespace Characters.IKSystem.Planners
             Transform rootTransform,
             GroundHit leftHit,
             GroundHit rightHit,
-            bool hasToStep,
             FootIKSettingsSO settings) 
         {
-            t += deltaTime;
             
             if (t >= 1f) {
                 FinishStep(_context.CurrentFoot);
                 SwitchContext(_context.CurrentLeg);
                 t = 0f;
             }
-            
+            t += deltaTime;
+
             GroundHit currentHit = _context.CurrentLeg == Leg.Right ? rightHit : leftHit;
-            bool bothPlanted = _leftFoot.State == StepState.Planted && _rightFoot.State == StepState.Planted;
             _context.CurrentGroundHit = currentHit;
+
+            bool bothPlanted = (_leftFoot.State == StepState.Planted && _rightFoot.State == StepState.Planted);
+            
+            //if (ShouldStep(_context.CurrentFoot, rootTransform, settings.stepThreshold) && bothPlanted) Debug.Log("It should step once");
             
             if (bothPlanted) {
                 BeginStep(_context.CurrentFoot, currentHit.Position, quaternion.identity);
@@ -101,18 +99,18 @@ namespace Characters.IKSystem.Planners
             foot.MoveEndPos = endPosWorld;
             foot.MoveEndRot = endRotWorld;
         }
-
+        
         private void FinishStep(FootState foot) {
             foot.State = StepState.Planted;
-            foot.t = 0f;
-            foot.PlantedPos = foot.MoveEndPos;
+            foot.t = 0f; 
+            foot.PlantedPos = _context.CurrentPos;
             foot.PlantedRot = foot.MoveEndRot;
         }
-
+        
         private void UpdateCurrentFoot(FootIKSettingsSO settings, float time) {
             Vector3 targetPoint = _context.CurrentFoot.MoveEndPos;
             Vector3 startPos = _context.CurrentFoot.MoveStartPos;
-            float processedTime = time * settings.stepSpeed;
+            float processedTime = time * settings.totalStepDuration;
             Vector3 lerpPos = Vector3.Lerp(startPos, targetPoint, processedTime);
             
             lerpPos.y += Mathf.Sin(time * Mathf.PI) * settings.stepHeight;
@@ -125,6 +123,13 @@ namespace Characters.IKSystem.Planners
                 RightFootTargetPos = lerpPos;
             }
         }
+        
+        private bool ShouldStep(FootState foot, Transform rootTransform, float stepThreshold)
+        {
+            float distance = PlanarDistance(foot.PlantedPos, rootTransform.position);
+            return distance > stepThreshold;
+        }
+
         
         private void AddStepGap(ref Vector3 point) {
             point += Vector3.forward;
