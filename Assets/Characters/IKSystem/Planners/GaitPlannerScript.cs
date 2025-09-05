@@ -25,14 +25,20 @@ namespace Characters.IKSystem.Planners
         private struct CurrentContext {
             public FootState CurrentFoot;
             public Leg CurrentLeg;
+            public readonly Transform RootTransform;
+            public Vector3 StartRootPos;
+            public FootIKSettingsSO Settings;
             public Vector3 CurrentPos;
             public GroundHit CurrentGroundHit;
 
-            public CurrentContext(Vector3 currentPos, Leg currentLeg, FootState currentFoot, GroundHit currentGroundHit) {
+            public CurrentContext(Vector3 currentPos, Leg currentLeg, FootState currentFoot, GroundHit currentGroundHit, Transform rootTransform, Vector3 startRootPos, FootIKSettingsSO settings) {
                 CurrentPos = currentPos;
                 CurrentLeg = currentLeg;
                 CurrentFoot = currentFoot;
                 CurrentGroundHit = currentGroundHit;
+                RootTransform = rootTransform;
+                StartRootPos = startRootPos;
+                Settings = settings;
             }
         }
         
@@ -52,11 +58,12 @@ namespace Characters.IKSystem.Planners
         float t = 0f;
 
 
-        public GaitPlannerScript(Vector3 initialLeftPos, Vector3 initialRightPos, Quaternion initialLeftRot, Quaternion initialRightRot)
+        public GaitPlannerScript(Vector3 initialLeftPos, Vector3 initialRightPos, Quaternion initialLeftRot, 
+            Quaternion initialRightRot, Transform rootTransform, FootIKSettingsSO settings)
         {
             _leftFoot.PlantedPos  = initialLeftPos;  _leftFoot.PlantedRot  = initialLeftRot;
             _rightFoot.PlantedPos = initialRightPos; _rightFoot.PlantedRot = initialRightRot;
-            _context = new CurrentContext(initialLeftPos, Leg.Left, _leftFoot, new GroundHit());
+            _context = new CurrentContext(initialLeftPos, Leg.Left, _leftFoot, new GroundHit(), rootTransform, rootTransform.position, settings);
             LeftFootTargetPos = initialLeftPos;   LeftFootTargetRot = initialLeftRot;
             RightFootTargetPos = initialRightPos; RightFootTargetRot = initialRightRot;
         }
@@ -66,10 +73,11 @@ namespace Characters.IKSystem.Planners
             Transform rootTransform,
             GroundHit leftHit,
             GroundHit rightHit,
+            bool hasToStep,
             FootIKSettingsSO settings) 
         {
             
-            if (t >= 1f) {
+            if (t >= settings.totalStepDuration) {
                 FinishStep(_context.CurrentFoot);
                 SwitchContext(_context.CurrentLeg);
                 t = 0f;
@@ -81,13 +89,11 @@ namespace Characters.IKSystem.Planners
 
             bool bothPlanted = (_leftFoot.State == StepState.Planted && _rightFoot.State == StepState.Planted);
             
-            //if (ShouldStep(_context.CurrentFoot, rootTransform, settings.stepThreshold) && bothPlanted) Debug.Log("It should step once");
-            
-            if (bothPlanted) {
+            if (bothPlanted && ShouldStep(_context.CurrentFoot, _context.RootTransform)) {
                 BeginStep(_context.CurrentFoot, currentHit.Position, quaternion.identity);
             }
             
-            UpdateCurrentFoot(settings, t);
+            UpdateCurrentFoot(t);
         }
 
         private void BeginStep(FootState foot, Vector3 endPosWorld, Quaternion endRotWorld)
@@ -98,36 +104,46 @@ namespace Characters.IKSystem.Planners
             foot.MoveStartRot = foot.PlantedRot;
             foot.MoveEndPos = endPosWorld;
             foot.MoveEndRot = endRotWorld;
+            _context.StartRootPos = _context.RootTransform.position;
         }
         
         private void FinishStep(FootState foot) {
             foot.State = StepState.Planted;
             foot.t = 0f; 
-            foot.PlantedPos = _context.CurrentPos;
+            foot.PlantedPos = foot.MoveEndPos;
             foot.PlantedRot = foot.MoveEndRot;
         }
+
+        private void UpdateCurrentFoot(float time) {
+            bool bothPlanted = (_leftFoot.State == StepState.Planted && _rightFoot.State == StepState.Planted);
+
+            if (!bothPlanted) {
+                FootIKSettingsSO settings = _context.Settings;
+                Vector3 targetPoint = _context.CurrentFoot.MoveEndPos;
+                Vector3 startPos = _context.CurrentFoot.MoveStartPos;
+                float processedTime = time / settings.totalStepDuration;
+                processedTime = Mathf.Clamp01(processedTime);
+                Vector3 lerpPos = Vector3.Lerp(startPos, targetPoint, processedTime);
         
-        private void UpdateCurrentFoot(FootIKSettingsSO settings, float time) {
-            Vector3 targetPoint = _context.CurrentFoot.MoveEndPos;
-            Vector3 startPos = _context.CurrentFoot.MoveStartPos;
-            float processedTime = time * settings.totalStepDuration;
-            Vector3 lerpPos = Vector3.Lerp(startPos, targetPoint, processedTime);
-            
-            lerpPos.y += Mathf.Sin(time * Mathf.PI) * settings.stepHeight;
-            _context.CurrentPos = lerpPos;
-            
-            if (_context.CurrentLeg == Leg.Left) {
-                LeftFootTargetPos = lerpPos;
-            }
-            else {
-                RightFootTargetPos = lerpPos;
+                lerpPos.y += Mathf.Sin(processedTime * Mathf.PI) * settings.stepHeight;
+                _context.CurrentPos = lerpPos;
+        
+                if (_context.CurrentLeg == Leg.Left) {
+                    LeftFootTargetPos = lerpPos;
+                }
+                else {
+                    RightFootTargetPos = lerpPos;
+                }
             }
         }
         
-        private bool ShouldStep(FootState foot, Transform rootTransform, float stepThreshold)
+        private bool ShouldStep(FootState foot, Transform rootTransform)
         {
-            float distance = PlanarDistance(foot.PlantedPos, rootTransform.position);
-            return distance > stepThreshold;
+            float distance = Vector3.Distance(foot.PlantedPos, rootTransform.position);
+            if (_context.Settings.usePlanarDistance) {
+                distance = PlanarDistance(_context.RootTransform.position, _context.StartRootPos);
+            }
+            return distance > _context.Settings.stepThreshold;
         }
 
         
@@ -137,8 +153,15 @@ namespace Characters.IKSystem.Planners
 
         private static float PlanarDistance(Vector3 a, Vector3 b)
         {
-            a.y = 0f; b.y = 0f;
-            return Vector3.Distance(a, b);
+            var pointA = new Vector2(a.x, a.z);
+            var pointB = new Vector2(b.x, b.z);
+            return Vector3.Distance(pointA, pointB);
+        }
+
+        private float PlanarRootDistance(Vector3 current, Vector3 start) {
+            Vector3 rootDelta = current - start;
+            float planarDistance = new Vector2(rootDelta.x, rootDelta.z).magnitude;
+            return planarDistance;
         }
 
         private static Quaternion AimRot(Transform root, GroundHit hit, FootIKSettingsSO settings)

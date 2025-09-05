@@ -40,6 +40,7 @@ namespace Characters.IKSystem.RigDrivers
         private GroundHit _leftHit;
         private GroundHit _rightHit;
         private int _stepCounter;
+        private bool hasToStep;
 
         void Start()
         {
@@ -52,7 +53,8 @@ namespace Characters.IKSystem.RigDrivers
             Quaternion rightInitRot = rightLegTarget.rotation;
             
             _characterPosition = rootTransform.position;
-            _gaitPlanner = new GaitPlannerScript(leftInitPos, rightInitPos, leftInitRot, rightInitRot);
+            hasToStep = false;
+            _gaitPlanner = new GaitPlannerScript(leftInitPos, rightInitPos, leftInitRot, rightInitRot, rootTransform, settings);
 
         }
 
@@ -71,10 +73,13 @@ namespace Characters.IKSystem.RigDrivers
                 if (_leftHit.Valid && _rightHit.Valid) {
                     Debug.Log("They were Valid steps.");
                 }
+
+                hasToStep = true;
             }
 
-            _gaitPlanner.UpdateGait(deltaTime, rootTransform, _leftHit, _rightHit, settings);
-
+            _gaitPlanner.UpdateGait(deltaTime, rootTransform, _leftHit, _rightHit, hasToStep, settings);
+            hasToStep = false;
+            
             // convert planner world-space outputs to GhostRig local-space
             if (useLocalConversion) {
                LocalFootTarget leftLocal  = new LocalFootTarget(_gaitPlanner.LeftFootTargetPos,  _gaitPlanner.LeftFootTargetRot,  ghostRigRoot);

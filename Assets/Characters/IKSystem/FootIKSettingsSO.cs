@@ -14,6 +14,8 @@ namespace Characters.IKSystem {
         public float footPlantOffsetY = 0.02f;
 
         [Header("Stepping")]
+        [Tooltip("Should use planar distance?")]
+        public bool usePlanarDistance = true;
         [Tooltip("Min planar distance from current planted pos to new ground needed to trigger a step.")]
         public float maxStepDistance = 0.5f;
         [Tooltip("Vertical arc height for the swing phase.")]
