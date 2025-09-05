@@ -2,7 +2,9 @@ using Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals;
 using Characters.PlayerController.Scripts.Input;
 using UI.Scripts.TestingUI;
 using UnityEngine;
+#if UNITY_EDITOR
 using Assert = NUnit.Framework.Assert;
+#endif
 
 namespace Characters.LifeSupportSystem.PlayerLifeSupport {
     [RequireComponent(typeof(PlayerInputScript))]
