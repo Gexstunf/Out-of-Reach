@@ -1,11 +1,10 @@
 using System;
+using System.Diagnostics; // <-- para Debug.Assert
 using Characters.LifeSupportSystem.PlayerLifeSupport;
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using Characters.StateMachine.PlayerStateMachine;
 using Characters.SystemAdaptations.Utils;
 using UnityEngine;
-using UnityEngine.Assertions;
-using Assert = NUnit.Framework.Assert;
 
 namespace Characters.SystemAdaptations {
     [RequireComponent(typeof(PlayerStateMachineScript))]
@@ -69,19 +68,16 @@ namespace Characters.SystemAdaptations {
         }
         
         private void HandleVitals() {
-            // we first check for any events on vitals before updating the struct
-            
             _vitalsStruct.IsUnconscious = _context.IsUnconscious;
             _vitalsStruct.IsTired = _context.IsTired;
             // _vitalsStruct.IsStarved = playerLifeSupport.IsStarved;
-            // __vitalsStruct.IsHeavy = playerLifeSupport.IsHeavy;
+            // _vitalsStruct.IsHeavy = playerLifeSupport.IsHeavy;
         }
 
         private void CheckForVitalsEvents() {
-            // any discrepancies here, mean that the last frame vars != to the current frame vars (meaning the vital changed)
             if (_vitalsStruct.IsTired != _context.IsTired) {
                 OnTiredChanged?.Invoke(_context.IsTired);
-                Debug.Log("TIRED changed to: " + _context.IsTired);
+                UnityEngine.Debug.Log("TIRED changed to: " + _context.IsTired);
             }
             
             if (_vitalsStruct.IsHeavy != _context.IsTired) {
@@ -90,7 +86,7 @@ namespace Characters.SystemAdaptations {
             
             if (_vitalsStruct.IsUnconscious != _context.IsUnconscious) {
                 OnUnconsciousChanged?.Invoke(_context.IsUnconscious);
-                Debug.Log("UNCONSCIOUS changed to: " + _context.IsTired);
+                UnityEngine.Debug.Log("UNCONSCIOUS changed to: " + _context.IsTired);
             }
             
             if (_vitalsStruct.IsStarved != _context.IsTired) {
@@ -98,22 +94,22 @@ namespace Characters.SystemAdaptations {
             }
         }
 
-        private void ValidateReferences() {
-            Assert.IsNotNull(playerStateMachineScript, "playerStateMachineScript Is null");
-            Assert.IsNotNull(playerLifeSupportScript, "playerLifeSupportScript Is null");
-            Assert.IsNotNull(_vitalsStruct, "vitalsStruct Is null");
-            Assert.IsNotNull(_movementStruct, "movementStruct Is null");
+        private void ValidateReferences()
+        {
+            UnityEngine.Debug.Assert(playerStateMachineScript != null, "playerStateMachineScript is null");
+            UnityEngine.Debug.Assert(playerLifeSupportScript != null, "playerLifeSupportScript is null");
 
             if (playerStateMachineScript == null)
-                Debug.LogError("playerStateMachineScript is null");
+                UnityEngine.Debug.LogError("playerStateMachineScript is null");
 
             if (playerLifeSupportScript == null)
-                Debug.LogError("playerLifeSupportScript is null");
+                UnityEngine.Debug.LogError("playerLifeSupportScript is null");
 
-            if (_context == null) {
-                Debug.LogError("playerLifeSupportScript.Context is null");
-                Debug.Log(playerLifeSupportScript);
-                Debug.Log(playerLifeSupportScript.Context);
+            if (_context == null)
+            {
+                UnityEngine.Debug.LogError("playerLifeSupportScript.Context is null");
+                UnityEngine.Debug.Log(playerLifeSupportScript);
+                UnityEngine.Debug.Log(playerLifeSupportScript.Context);
             }
         }
     }
