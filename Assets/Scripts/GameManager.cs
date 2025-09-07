@@ -1,13 +1,12 @@
-using Characters.PlayerController.Scripts;
 using Photon.Pun;
 using UnityEngine;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    [Header("Player Prefab (Debe estar en Resources/PhotonPrefabs/)")]
+    [Header("Prefab del jugador")]
     public GameObject playerPrefab;
 
-    [Header("Spawn Points")]
+    [Header("Puntos de spawn")]
     public Transform[] spawnPoints;
 
     void Start()
@@ -18,61 +17,33 @@ public class GameManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        if (playerPrefab == null)
-        {
-            Debug.LogError("playerPrefab no asignado en GameManager.");
-            return;
-        }
-
-        if (spawnPoints.Length == 0)
-        {
-            Debug.LogError("No hay spawn points asignados.");
-            return;
-        }
-
-        SpawnLocalPlayer();
+        SpawnPlayer();
     }
 
-    private void SpawnLocalPlayer()
+    void SpawnPlayer()
     {
         int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
 
-        // Elegimos spawn point seguro
+        // Elegir spawnPoint correspondiente o aleatorio si hay más jugadores que spawnPoints
         Transform spawnPoint = (playerIndex < spawnPoints.Length)
             ? spawnPoints[playerIndex]
             : spawnPoints[Random.Range(0, spawnPoints.Length)];
 
-        // Instanciamos prefab de red (debe estar en Resources)
-        GameObject player = PhotonNetwork.Instantiate(
-            "PhotonPrefabs/FirstPersonController NETWORK", // ruta relativa a Resources
-            spawnPoint.position,
-            spawnPoint.rotation
-        );
+        // Instanciar prefab de jugador con Photon
+        GameObject player = PhotonNetwork.Instantiate("PhotonPrefabs/FirstPersonController NETWORK", spawnPoint.position, spawnPoint.rotation);
 
-        PhotonView pv = player.GetComponent<PhotonView>();
-
-        if (pv != null && pv.IsMine)
+        // Activar solo la cámara y UI del jugador local
+        if (player.TryGetComponent(out PhotonView pv))
         {
-            // Activamos PlayerControllerScript solo para jugador local
-            PlayerControllerScript controller = player.GetComponent<PlayerControllerScript>();
-            if (controller != null)
-                controller.enabled = true;
+            if (!pv.IsMine)
+            {
+                // Desactivar cámara y Canvas de jugadores remotos
+                Camera cam = player.GetComponentInChildren<Camera>();
+                if (cam != null) cam.gameObject.SetActive(false);
 
-            // Activamos cámara solo para jugador local
-            Camera cam = player.GetComponentInChildren<Camera>();
-            if (cam != null)
-                cam.enabled = true;
-        }
-        else
-        {
-            // Desactivamos scripts y cámara en jugadores remotos
-            PlayerControllerScript controller = player.GetComponent<PlayerControllerScript>();
-            if (controller != null)
-                controller.enabled = false;
-
-            Camera cam = player.GetComponentInChildren<Camera>();
-            if (cam != null)
-                cam.enabled = false;
+                Canvas canvas = player.GetComponentInChildren<Canvas>();
+                if (canvas != null) canvas.gameObject.SetActive(false);
+            }
         }
     }
 }

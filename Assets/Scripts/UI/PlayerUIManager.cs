@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
 using System.Collections.Generic;
 
-public class PlayerUIManager : MonoBehaviourPun
+public class PlayerUIManager : MonoBehaviour
 {
     [Header("Barra de Stamina")]
     public Image staminaBar;
@@ -22,38 +21,6 @@ public class PlayerUIManager : MonoBehaviourPun
     public GameObject[] slotUI;
     public Image[] slotIcons;
     private PlayerInventoryPhoton inventory;
-
-    void Awake()
-    {
-        if (!photonView.IsMine) return;
-
-        // Stamina y Health
-        if (staminaBar == null)
-            staminaBar = transform.Find("Canvas/StaminaBar")?.GetComponent<Image>();
-        if (healthContainer == null)
-            healthContainer = transform.Find("Canvas/HealthContainer");
-
-        healthTicks.Clear();
-        foreach (Transform child in healthContainer)
-        {
-            Image img = child.GetComponent<Image>();
-            if (img != null) healthTicks.Add(img);
-        }
-
-        DisplayHealth(maxHealth);
-        DisplayStamina(maxStamina);
-
-        // Inicializar botones de inventario
-        for (int i = 0; i < slotUI.Length; i++)
-        {
-            int index = i; // necesario para closures
-            Button btn = slotUI[i].GetComponent<Button>();
-            if (btn != null)
-            {
-                btn.onClick.AddListener(() => OnSlotClicked(index));
-            }
-        }
-    }
 
     public void InitInventory(PlayerInventoryPhoton inv)
     {
@@ -88,7 +55,6 @@ public class PlayerUIManager : MonoBehaviourPun
         }
     }
 
-    // Cuando se hace click en un slot
     public void OnSlotClicked(int slotIndex)
     {
         if (inventory == null) return;
@@ -96,6 +62,7 @@ public class PlayerUIManager : MonoBehaviourPun
         UpdateInventoryUI();
     }
 
+    // Métodos públicos para actualizar stats
     public void DisplayStamina(float amount)
     {
         if (staminaBar == null) return;
@@ -129,6 +96,28 @@ public class PlayerUIManager : MonoBehaviourPun
                 c.a = 0f;
                 healthTicks[i].color = c;
             }
+        }
+    }
+
+    private void Awake()
+    {
+        healthTicks.Clear();
+        if (healthContainer != null)
+        {
+            foreach (Transform child in healthContainer)
+            {
+                Image img = child.GetComponent<Image>();
+                if (img != null) healthTicks.Add(img);
+            }
+        }
+
+        // Inicializar botones de inventario
+        for (int i = 0; i < slotUI.Length; i++)
+        {
+            int index = i;
+            Button btn = slotUI[i]?.GetComponent<Button>();
+            if (btn != null)
+                btn.onClick.AddListener(() => OnSlotClicked(index));
         }
     }
 }

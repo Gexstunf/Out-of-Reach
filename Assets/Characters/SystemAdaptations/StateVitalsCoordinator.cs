@@ -5,6 +5,7 @@ using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using Characters.StateMachine.PlayerStateMachine;
 using Characters.SystemAdaptations.Utils;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Characters.SystemAdaptations {
     [RequireComponent(typeof(PlayerStateMachineScript))]
@@ -26,6 +27,17 @@ namespace Characters.SystemAdaptations {
         private PlayerLifeSupportContextScript _context;
         
         public void Start() {
+            playerStateMachineScript = GetComponent<PlayerStateMachineScript>();
+            playerLifeSupportScript = GetComponent<PlayerLifeSupportScript>();
+
+            if (playerLifeSupportScript.Context == null)
+            {
+                Debug.LogWarning("Context no inicializado para este jugador (no es local)");
+                return; // no hacemos nada para jugadores remotos
+            }
+
+            _context = playerLifeSupportScript.Context;
+
             playerStateMachineScript = GetComponent<PlayerStateMachineScript>();
             playerLifeSupportScript = GetComponent<PlayerLifeSupportScript>();
             
@@ -51,9 +63,20 @@ namespace Characters.SystemAdaptations {
             ValidateReferences();
         }
 
-        public void Update() {
+        private void Update()
+        {
+            if (playerLifeSupportScript == null) return;
+
+            if (_context == null)
+            {
+                if (playerLifeSupportScript.Context != null)
+                    _context = playerLifeSupportScript.Context;
+                else
+                    return; // todavía no inicializado, esperar
+            }
+
             HandleStateMachine();
-            playerLifeSupportScript.Context.SetMovementStates(_movementStruct);
+            _context.SetMovementStates(_movementStruct);
             CheckForVitalsEvents();
             HandleVitals();
         }
@@ -66,31 +89,43 @@ namespace Characters.SystemAdaptations {
             _movementStruct.IsMoving = playerStateMachineScript.IsMoving;
             _movementStruct.IsFalling = playerStateMachineScript.IsFalling;
         }
-        
-        private void HandleVitals() {
+
+        private void HandleVitals()
+        {
+            if (_context == null) return;
+
             _vitalsStruct.IsUnconscious = _context.IsUnconscious;
             _vitalsStruct.IsTired = _context.IsTired;
-            // _vitalsStruct.IsStarved = playerLifeSupport.IsStarved;
-            // _vitalsStruct.IsHeavy = playerLifeSupport.IsHeavy;
+            // otros vitals...
         }
 
-        private void CheckForVitalsEvents() {
-            if (_vitalsStruct.IsTired != _context.IsTired) {
+        private void CheckForVitalsEvents()
+        {
+            if (_context == null) return;
+
+            if (_vitalsStruct.IsTired != _context.IsTired)
+            {
                 OnTiredChanged?.Invoke(_context.IsTired);
                 UnityEngine.Debug.Log("TIRED changed to: " + _context.IsTired);
+                _vitalsStruct.IsTired = _context.IsTired; // actualizar struct
             }
-            
-            if (_vitalsStruct.IsHeavy != _context.IsTired) {
-                OnHeavyChanged?.Invoke(_context.IsTired);
+
+            if (_vitalsStruct.IsHeavy != _context.IsHeavy)
+            {
+                OnHeavyChanged?.Invoke(_context.IsHeavy);
+                _vitalsStruct.IsHeavy = _context.IsHeavy;
             }
-            
-            if (_vitalsStruct.IsUnconscious != _context.IsUnconscious) {
+
+            if (_vitalsStruct.IsUnconscious != _context.IsUnconscious)
+            {
                 OnUnconsciousChanged?.Invoke(_context.IsUnconscious);
-                UnityEngine.Debug.Log("UNCONSCIOUS changed to: " + _context.IsTired);
+                _vitalsStruct.IsUnconscious = _context.IsUnconscious;
             }
-            
-            if (_vitalsStruct.IsStarved != _context.IsTired) {
-                OnStarvedChanged?.Invoke(_context.IsTired);
+
+            if (_vitalsStruct.IsStarved != _context.IsStarved)
+            {
+                OnStarvedChanged?.Invoke(_context.IsStarved);
+                _vitalsStruct.IsStarved = _context.IsStarved;
             }
         }
 

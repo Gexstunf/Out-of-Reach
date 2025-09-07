@@ -1274,7 +1274,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 7697022590595758036}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -1978,7 +1978,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6020353486512268445, guid: 16d3da4ab08eb46229115c51ba2264af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.48025
+      value: 82.46041
       objectReference: {fileID: 0}
     - target: {fileID: 6020353486512268445, guid: 16d3da4ab08eb46229115c51ba2264af, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1986,7 +1986,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6020353486512268445, guid: 16d3da4ab08eb46229115c51ba2264af, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.32442
+      value: 52.85815
       objectReference: {fileID: 0}
     - target: {fileID: 6020353486512268445, guid: 16d3da4ab08eb46229115c51ba2264af, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2158,3 +2158,8 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!20 &7697022590595758036 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2561973245717852394, guid: 16d3da4ab08eb46229115c51ba2264af, type: 3}
+  m_PrefabInstance: {fileID: 5286280744108083006}
+  m_PrefabAsset: {fileID: 0}
