@@ -108,6 +108,7 @@ namespace Characters.IKSystem.Planners
             foot.MoveStartRot = foot.PlantedRot;
             foot.MoveEndPos = endPosWorld;
             foot.MoveEndRot = endRotWorld;
+            _context.StartRootPos = _context.RootTransform.position;
         }
         
         private void FinishStep(FootState foot) {
@@ -116,8 +117,38 @@ namespace Characters.IKSystem.Planners
             foot.PlantedPos = _context.CurrentFootPos;
             foot.PlantedRot = foot.MoveEndRot;
         }
-        
+
         private void UpdateCurrentFoot(float time) {
+            bool bothPlanted = (_leftFoot.State == StepState.Planted && _rightFoot.State == StepState.Planted);
+
+            if (!bothPlanted) {
+                FootIKSettingsSO settings = _context.Settings;
+                Vector3 targetPoint = _context.CurrentFoot.MoveEndPos;
+                Vector3 startPos = _context.CurrentFoot.MoveStartPos;
+                float processedTime = time / settings.totalStepDuration;
+                processedTime = Mathf.Clamp01(processedTime);
+                Vector3 lerpPos = Vector3.Lerp(startPos, targetPoint, processedTime);
+        
+                lerpPos.y += Mathf.Sin(processedTime * Mathf.PI) * settings.stepHeight;
+                _context.CurrentPos = lerpPos;
+        
+                if (_context.CurrentLeg == Leg.Left) {
+                    LeftFootTargetPos = lerpPos;
+                }
+                else {
+                    RightFootTargetPos = lerpPos;
+                }
+            }
+        }
+        
+        private bool ShouldStep(FootState foot, Transform rootTransform)
+        {
+            float distance = Vector3.Distance(foot.PlantedPos, rootTransform.position);
+            if (_context.Settings.usePlanarDistance) {
+                distance = PlanarDistance(_context.RootTransform.position, _context.StartRootPos);
+            }
+            return distance > _context.Settings.stepThreshold;
+        }
 
             if (_context.CurrentFoot.State == StepState.Moving) {
                 _context.CurrentFoot.Time += time;
@@ -152,9 +183,15 @@ namespace Characters.IKSystem.Planners
 
         private static float PlanarDistance(Vector3 a, Vector3 b)
         {
-            Vector2 pointA = new Vector2(a.x, a.z);
-            Vector2 pointB = new Vector2(b.x, b.z);
+            var pointA = new Vector2(a.x, a.z);
+            var pointB = new Vector2(b.x, b.z);
             return Vector3.Distance(pointA, pointB);
+        }
+
+        private float PlanarRootDistance(Vector3 current, Vector3 start) {
+            Vector3 rootDelta = current - start;
+            float planarDistance = new Vector2(rootDelta.x, rootDelta.z).magnitude;
+            return planarDistance;
         }
             
         private void SetDynamicForwardOffset(Vector3 speed) {

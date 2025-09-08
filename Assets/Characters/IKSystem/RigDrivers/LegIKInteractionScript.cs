@@ -42,6 +42,7 @@ namespace Characters.IKSystem.RigDrivers
         private GroundHit _leftHit;
         private GroundHit _rightHit;
         private int _stepCounter;
+        private bool hasToStep;
 
         void Start()
         {
