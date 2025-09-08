@@ -34,6 +34,11 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.LogError("no hay spaws");
             return;
         }
+        
+        if(PhotonNetwork.IsConnected)
+            InitializePlayers();
+
+        SpawnLocalPlayer();
     }
 
     private void InitializePlayers()
