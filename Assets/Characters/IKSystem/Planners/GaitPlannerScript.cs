@@ -83,13 +83,13 @@ namespace Characters.IKSystem.Planners
                 SwitchContext(_context.CurrentLeg);
                 _startDegrees = _context.RootTransform.eulerAngles.y;
             }
-
-            GroundHit currentHit = _context.CurrentLeg == Leg.Right ? rightHit : leftHit;
+            
             bool bothPlanted = (_leftFoot.State == StepState.Planted && _rightFoot.State == StepState.Planted);
             
             //if (ShouldStep(_context.CurrentFoot, rootTransform, settings.stepThreshold) && bothPlanted) Debug.Log("It should step once");
             
-            if (bothPlanted && ShouldStep(_context.PreviousRootPosition) || (bothPlanted && RotationThresholdReached(_startDegrees))) {
+            if ((bothPlanted && ShouldStep(_context.PreviousRootPosition)) || (bothPlanted && RotationThresholdReached(_startDegrees))) {
+                GroundHit currentHit = _context.CurrentLeg == Leg.Right ? rightHit : leftHit;
                 Vector3 processedEndPos = currentHit.Position;
                 SetDynamicForwardOffset(_context.RigidBody.linearVelocity);
                 AdjustTargetWithMovement(moveInput, ref processedEndPos);
@@ -108,7 +108,7 @@ namespace Characters.IKSystem.Planners
             foot.MoveStartRot = foot.PlantedRot;
             foot.MoveEndPos = endPosWorld;
             foot.MoveEndRot = endRotWorld;
-            _context.StartRootPos = _context.RootTransform.position;
+            _context.PreviousRootPosition = _context.RootTransform.position;
         }
         
         private void FinishStep(FootState foot) {
@@ -119,37 +119,6 @@ namespace Characters.IKSystem.Planners
         }
 
         private void UpdateCurrentFoot(float time) {
-            bool bothPlanted = (_leftFoot.State == StepState.Planted && _rightFoot.State == StepState.Planted);
-
-            if (!bothPlanted) {
-                FootIKSettingsSO settings = _context.Settings;
-                Vector3 targetPoint = _context.CurrentFoot.MoveEndPos;
-                Vector3 startPos = _context.CurrentFoot.MoveStartPos;
-                float processedTime = time / settings.totalStepDuration;
-                processedTime = Mathf.Clamp01(processedTime);
-                Vector3 lerpPos = Vector3.Lerp(startPos, targetPoint, processedTime);
-        
-                lerpPos.y += Mathf.Sin(processedTime * Mathf.PI) * settings.stepHeight;
-                _context.CurrentPos = lerpPos;
-        
-                if (_context.CurrentLeg == Leg.Left) {
-                    LeftFootTargetPos = lerpPos;
-                }
-                else {
-                    RightFootTargetPos = lerpPos;
-                }
-            }
-        }
-        
-        private bool ShouldStep(FootState foot, Transform rootTransform)
-        {
-            float distance = Vector3.Distance(foot.PlantedPos, rootTransform.position);
-            if (_context.Settings.usePlanarDistance) {
-                distance = PlanarDistance(_context.RootTransform.position, _context.StartRootPos);
-            }
-            return distance > _context.Settings.stepThreshold;
-        }
-
             if (_context.CurrentFoot.State == StepState.Moving) {
                 _context.CurrentFoot.Time += time;
                 
@@ -218,15 +187,15 @@ namespace Characters.IKSystem.Planners
             return FootPosSolverScript.RotationFromNormal(root.forward, hit.Normal);
         }
 
-        private void SwitchContext(Leg currentLeg) {  
+        private void SwitchContext(GaitPlannerScript.Leg currentLeg) {  
             // switch the data (from left foot --> to right foot)
-            if (currentLeg == Leg.Left) {
-                _context.CurrentLeg = Leg.Right;
+            if (currentLeg == GaitPlannerScript.Leg.Left) {
+                _context.CurrentLeg = GaitPlannerScript.Leg.Right;
                 _context.CurrentFoot = _rightFoot;
                 _context.PreviousCurrentFoot = _leftFoot;
             }
             else {
-                _context.CurrentLeg = Leg.Left;
+                _context.CurrentLeg = GaitPlannerScript.Leg.Left;
                 _context.CurrentFoot = _leftFoot;
                 _context.PreviousCurrentFoot = _rightFoot;
             }
@@ -235,7 +204,7 @@ namespace Characters.IKSystem.Planners
         private bool RotationThresholdReached(float startDeg) {
             float turnDiff = Mathf.DeltaAngle(startDeg, _context.RootTransform.rotation.eulerAngles.y);
 
-            if (Mathf.Abs(turnDiff) < 50f)
+            if (Mathf.Abs(turnDiff) < 20f)
                 return false;
 
             float turnSign = Mathf.Sign(turnDiff);
@@ -247,7 +216,7 @@ namespace Characters.IKSystem.Planners
 
             _stepTurnCounter++;
 
-            var dominantFoot = (turnSign > 0) 
+            var dominantFoot = (turnSign < 0) 
                 ? Leg.Right 
                 : Leg.Left;
 

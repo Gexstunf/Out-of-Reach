@@ -19,12 +19,12 @@ MonoBehaviour:
   groundCheckDistance: 2.5
   footPlantOffsetY: 0
   usePlanarDistance: 1
-  maxStepDistance: 1
+  maxStepDistance: 2
   stepHeight: 0.4
   stepSpeed: 3
   stepCooldown: 0.5
   stepLength: 1
-  totalStepDuration: 0.3
+  totalStepDuration: 0.2
   downTimeStep: 0.15
   offsetScaleFactor: 6
   stepThreshold: 0.5
