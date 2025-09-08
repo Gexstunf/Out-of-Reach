@@ -74,24 +74,24 @@ public class GameManager : MonoBehaviourPunCallbacks
             camera = player.GetComponentInChildren<Camera>()
         };
 
-        if (pv != null && pv.IsMine)
+        if (pv.IsMine)
         {
-            PlayerControllerScript controller = player.GetComponent<PlayerControllerScript>();
-            if (controller != null) controller.enabled = true;
-
-            if (pdata.camera != null) pdata.camera.enabled = true;
+            player.GetComponent<PlayerControllerScript>().enabled = true;
+            player.GetComponentInChildren<Camera>().enabled = true;
         }
         else
         {
-            PlayerControllerScript controller = player.GetComponent<PlayerControllerScript>();
-            if (controller != null) controller.enabled = false;
-
-            if (pdata.camera != null) pdata.camera.enabled = false;
+            player.GetComponent<PlayerControllerScript>().enabled = false;
+            player.GetComponentInChildren<Camera>().enabled = false;
         }
 
         if (PhotonNetwork.IsMasterClient)
         {
-            players[PhotonNetwork.LocalPlayer.ActorNumber] = pdata;
+            players[PhotonNetwork.LocalPlayer.ActorNumber] = new PlayerData
+            {
+                character = player,
+                camera = player.GetComponentInChildren<Camera>()
+            };
         }
     }
 
