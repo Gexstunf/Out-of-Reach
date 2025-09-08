@@ -68,11 +68,18 @@ public class GameManager : MonoBehaviourPunCallbacks
             // Desactivamos scripts y cámara en jugadores remotos
             PlayerControllerScript controller = player.GetComponent<PlayerControllerScript>();
             if (controller != null)
+            {
                 controller.enabled = false;
+                Debug.LogError("apague controller de " + controller.gameObject.name);
+            }
+                
 
             Camera cam = player.GetComponentInChildren<Camera>();
             if (cam != null)
+            {
                 cam.enabled = false;
+                Debug.LogError("apague cam de " + controller.gameObject.name);
+            }
         }
     }
 }
