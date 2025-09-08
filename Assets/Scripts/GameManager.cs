@@ -1,6 +1,9 @@
 using Characters.PlayerController.Scripts;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.Windows.Speech;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -10,76 +13,99 @@ public class GameManager : MonoBehaviourPunCallbacks
     [Header("Spawn Points")]
     public Transform[] spawnPoints;
 
-    void Start()
+    [SerializeField] Dictionary<int, PlayerData> players = new Dictionary<int, PlayerData> ();
+
+    private void Start()
     {
         if (!PhotonNetwork.IsConnected)
         {
-            Debug.LogError("PhotonNetwork no está conectado.");
+            Debug.LogError("photon network no conecta");
             return;
         }
 
-        if (playerPrefab == null)
+        if(playerPrefab == null)
         {
-            Debug.LogError("playerPrefab no asignado en GameManager.");
+            Debug.LogError("no hay playerprefab");
             return;
         }
 
-        if (spawnPoints.Length == 0)
+        if(spawnPoints.Length == 0)
         {
-            Debug.LogError("No hay spawn points asignados.");
+            Debug.LogError("no hay spaws");
             return;
         }
+    }
 
-        SpawnLocalPlayer();
+    private void InitializePlayers()
+    {
+        foreach(var p in PhotonNetwork.PlayerList)
+        {
+            if (!players.ContainsKey(p.ActorNumber))
+            {
+                players.Add(p.ActorNumber, new PlayerData());
+            }
+        }
     }
 
     private void SpawnLocalPlayer()
     {
         int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
 
-        // Elegimos spawn point seguro
         Transform spawnPoint = (playerIndex < spawnPoints.Length)
             ? spawnPoints[playerIndex]
             : spawnPoints[Random.Range(0, spawnPoints.Length)];
 
-        // Instanciamos prefab de red (debe estar en Resources)
         GameObject player = PhotonNetwork.Instantiate(
-            "PhotonPrefabs/FirstPersonController NETWORK", // ruta relativa a Resources
+            "PhotonPrefabs/FirstPersonController NETWORK",
             spawnPoint.position,
             spawnPoint.rotation
         );
 
         PhotonView pv = player.GetComponent<PhotonView>();
 
+        PlayerData pdata = new PlayerData
+        {
+            character = player,
+            camera = player.GetComponentInChildren<Camera>()
+        };
+
         if (pv != null && pv.IsMine)
         {
-            // Activamos PlayerControllerScript solo para jugador local
             PlayerControllerScript controller = player.GetComponent<PlayerControllerScript>();
-            if (controller != null)
-                controller.enabled = true;
+            if (controller != null) controller.enabled = true;
 
-            // Activamos cámara solo para jugador local
-            Camera cam = player.GetComponentInChildren<Camera>();
-            if (cam != null)
-                cam.enabled = true;
+            if (pdata.camera != null) pdata.camera.enabled = true;
         }
         else
         {
-            // Desactivamos scripts y cámara en jugadores remotos
             PlayerControllerScript controller = player.GetComponent<PlayerControllerScript>();
-            if (controller != null)
-            {
-                controller.enabled = false;
-                Debug.LogError("apague controller de " + controller.gameObject.name);
-            }
-                
+            if (controller != null) controller.enabled = false;
 
-            Camera cam = player.GetComponentInChildren<Camera>();
-            if (cam != null)
-            {
-                cam.enabled = false;
-                Debug.LogError("apague cam de " + controller.gameObject.name);
-            }
+            if (pdata.camera != null) pdata.camera.enabled = false;
+        }
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            players[PhotonNetwork.LocalPlayer.ActorNumber] = pdata;
+        }
+    }
+
+    [PunRPC]
+    public void ReceivePlayerAction(int actorNumber, string action)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        if (players.ContainsKey(actorNumber))
+        {
+            Debug.Log($"Acción recibida de {actorNumber}: {action}");
         }
     }
 }
+
+[System.Serializable]
+public class PlayerData
+{
+    public GameObject character;
+    public Camera camera;
+}
+
