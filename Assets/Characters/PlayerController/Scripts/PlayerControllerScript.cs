@@ -3,14 +3,12 @@ using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using Characters.StateMachine.PlayerStateMachine;
 using Characters.Utils;
-using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Photon.Pun;
 
 namespace Characters.PlayerController.Scripts
 {
-    public class PlayerControllerScript : MonoBehaviourPun
+    public class PlayerControllerScript : MonoBehaviour
     {
         #region Variables
         
@@ -50,7 +48,7 @@ namespace Characters.PlayerController.Scripts
         private float _groundCheckOffset;
 
         #endregion
-
+        
         #region Startup logic
         private void Awake()
         {
@@ -58,7 +56,7 @@ namespace Characters.PlayerController.Scripts
             _rb = GetComponent<Rigidbody>();
             _playerCollider = GetComponent<CapsuleCollider>();
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
-
+            
             _rotator = gameObject.AddComponent<RotatorScript>();
             _cameraController = gameObject.AddComponent<CameraControllerScript>();
 
@@ -67,43 +65,37 @@ namespace Characters.PlayerController.Scripts
 
         private void Start()
         {
-            if (!photonView.IsMine)
-            {
-                if (_playerCamera != null) _playerCamera.gameObject.SetActive(false);
-                if (_inputScript != null) _inputScript.enabled = false;
-                this.enabled = false;
-                return;
-            }
-
             _rb.linearDamping = playerDrag;
             _rotator.Init(_lookSenseH, _lookSenseV, _lookLimitV);
             _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
 
             _groundCheckOffset = _playerCollider.radius + 0.1f;
         }
+        
+        #endregion
+
+        #region Update logic
 
         private void Update()
         {
-            if (!photonView.IsMine) return;
-
             HandleJumping(jumpForce);
             HandleGroundState();
         }
 
         private void FixedUpdate()
         {
-            if (!photonView.IsMine) return;
-
+            // this is where physics should occurr
             Vector3 movementDir = CalculateMovementDirection();
             Vector3 force = CalculateNewForce(movementDir);
             CurrentForce = force;
             _rb.AddForce(force);
         }
-
+        
+        #endregion
+        
+        #region Late-update logic
         private void LateUpdate()
         {
-            if (!photonView.IsMine) return;
-
             Vector2 lookInput = _inputScript.LookInput;
             _rotator.RotateTransform(lookInput);
             _cameraController.UpdateCameraRotation(lookInput, _playerCamera);
