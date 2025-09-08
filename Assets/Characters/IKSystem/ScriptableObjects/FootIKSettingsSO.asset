@@ -18,14 +18,16 @@ MonoBehaviour:
   raycastVerticalOffset: 0
   groundCheckDistance: 2.5
   footPlantOffsetY: 0
-  maxStepDistance: 0.7
+  usePlanarDistance: 1
+  maxStepDistance: 1
   stepHeight: 0.4
   stepSpeed: 3
   stepCooldown: 0.5
   stepLength: 1
-  totalStepDuration: 0.6
+  totalStepDuration: 0.3
   downTimeStep: 0.15
-  stepThreshold: 0.8
+  offsetScaleFactor: 6
+  stepThreshold: 0.5
   alignToSurface: 0
   footRotLerpSpeed: 100
   drawDebug: 1

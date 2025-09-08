@@ -65,7 +65,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
 
         private void SetDynamicForwardOffset(Vector3 speed) {
             float planeSpeed = new Vector2(speed.x, speed.z).magnitude;
-            _forwardOffset = _forwardOffset + (planeSpeed * 0.2f);
+            _forwardOffset =+ (planeSpeed * 0.2f);
         }
         
         private void AdjustTargetWithMovement(Vector3 moveInput) {

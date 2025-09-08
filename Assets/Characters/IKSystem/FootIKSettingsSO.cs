@@ -14,6 +14,8 @@ namespace Characters.IKSystem {
         public float footPlantOffsetY = 0.02f;
 
         [Header("Stepping")]
+        [Tooltip("Should use Planar Distance or 3D Vector distance?")]
+        public bool usePlanarDistance = true;
         [Tooltip("Min planar distance from current planted pos to new ground needed to trigger a step.")]
         public float maxStepDistance = 0.5f;
         [Tooltip("Vertical arc height for the swing phase.")]
@@ -27,6 +29,8 @@ namespace Characters.IKSystem {
         [Tooltip("Duration of step")]
         public float totalStepDuration = 0.3f;
         public float downTimeStep = 0.15f;
+        [Tooltip("Dynamic offset applied to the foot")]
+        public float offsetScaleFactor = 0.2f;
         
         [Header("Threshold")]
         public float stepThreshold = 0.1f;

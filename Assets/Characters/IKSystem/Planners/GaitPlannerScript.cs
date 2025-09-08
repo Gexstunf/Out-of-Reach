@@ -18,21 +18,29 @@ namespace Characters.IKSystem.Planners
             public Quaternion MoveStartRot;
             public Vector3 MoveEndPos;     
             public Quaternion MoveEndRot;  
-            public float t;                // 0..1 progress
+            public float Time;                // 0..1 progress
             public float CooldownTimer;    // seconds left until allowed to step again
         }
 
         private struct CurrentContext {
             public FootState CurrentFoot;
+            public FootState PreviousCurrentFoot;
             public Leg CurrentLeg;
-            public Vector3 CurrentPos;
-            public GroundHit CurrentGroundHit;
+            public Rigidbody RigidBody;
+            public Vector3 CurrentFootPos;
+            public readonly Transform RootTransform;
+            public Vector3 PreviousRootPosition;
+            public FootIKSettingsSO FootSettings;
 
-            public CurrentContext(Vector3 currentPos, Leg currentLeg, FootState currentFoot, GroundHit currentGroundHit) {
-                CurrentPos = currentPos;
+            public CurrentContext(Vector3 currentFootPos, Leg currentLeg, FootState currentFoot, FootState previousCurrentFoot, Transform rootTransform, Vector3 previousRootPosition, FootIKSettingsSO footSettings, Rigidbody rigidBody) {
+                CurrentFootPos = currentFootPos;
                 CurrentLeg = currentLeg;
                 CurrentFoot = currentFoot;
-                CurrentGroundHit = currentGroundHit;
+                RootTransform = rootTransform;
+                PreviousRootPosition = previousRootPosition;
+                FootSettings = footSettings;
+                RigidBody = rigidBody;
+                PreviousCurrentFoot = previousCurrentFoot;
             }
         }
         
@@ -40,60 +48,62 @@ namespace Characters.IKSystem.Planners
         private readonly FootState _leftFoot = new FootState();
         private readonly FootState _rightFoot = new FootState();
         private CurrentContext _context;
-
-        private Leg _nextLeg = Leg.Right; // start with right by default (pick whatever you prefer)
-
+        
+        private int _stepTurnCounter = 0;
+        private float _lastTurnSign = 0f;
+        private float _startDegrees;
+        private float _forwardOffset;
+        
         // Public outputs (read after UpdateGait)
         public Vector3 LeftFootTargetPos  { get; private set; }
         public Vector3 RightFootTargetPos { get; private set; }
         public Quaternion LeftFootTargetRot  { get; private set; } = Quaternion.identity;
         public Quaternion RightFootTargetRot { get; private set; } = Quaternion.identity;
-        public Leg CurrentLeg { get; private set; }
-        float t = 0f;
 
 
-        public GaitPlannerScript(Vector3 initialLeftPos, Vector3 initialRightPos, Quaternion initialLeftRot, Quaternion initialRightRot)
+        public GaitPlannerScript(Vector3 initialLeftPos, Vector3 initialRightPos, Quaternion initialLeftRot, Quaternion initialRightRot, Transform rootTransform, FootIKSettingsSO footSettings, Rigidbody rigidBody)
         {
             _leftFoot.PlantedPos  = initialLeftPos;  _leftFoot.PlantedRot  = initialLeftRot;
             _rightFoot.PlantedPos = initialRightPos; _rightFoot.PlantedRot = initialRightRot;
-            _context = new CurrentContext(initialLeftPos, Leg.Left, _leftFoot, new GroundHit());
+            _context = new CurrentContext(initialLeftPos, Leg.Left, _leftFoot, _rightFoot, rootTransform, rootTransform.position, footSettings, rigidBody);
             LeftFootTargetPos = initialLeftPos;   LeftFootTargetRot = initialLeftRot;
             RightFootTargetPos = initialRightPos; RightFootTargetRot = initialRightRot;
         }
 
         public void UpdateGait(
             float deltaTime,
-            Transform rootTransform,
             GroundHit leftHit,
             GroundHit rightHit,
-            FootIKSettingsSO settings) 
-        {
+            Vector3 moveInput
+        ) {
+            var settings = _context.FootSettings;
             
-            if (t >= 1f) {
+            if (_context.CurrentFoot.Time >= settings.totalStepDuration) {
                 FinishStep(_context.CurrentFoot);
                 SwitchContext(_context.CurrentLeg);
-                t = 0f;
+                _startDegrees = _context.RootTransform.eulerAngles.y;
             }
-            t += deltaTime;
 
             GroundHit currentHit = _context.CurrentLeg == Leg.Right ? rightHit : leftHit;
-            _context.CurrentGroundHit = currentHit;
-
             bool bothPlanted = (_leftFoot.State == StepState.Planted && _rightFoot.State == StepState.Planted);
             
             //if (ShouldStep(_context.CurrentFoot, rootTransform, settings.stepThreshold) && bothPlanted) Debug.Log("It should step once");
             
-            if (bothPlanted) {
-                BeginStep(_context.CurrentFoot, currentHit.Position, quaternion.identity);
+            if (bothPlanted && ShouldStep(_context.PreviousRootPosition) || (bothPlanted && RotationThresholdReached(_startDegrees))) {
+                Vector3 processedEndPos = currentHit.Position;
+                SetDynamicForwardOffset(_context.RigidBody.linearVelocity);
+                AdjustTargetWithMovement(moveInput, ref processedEndPos);
+                BeginStep(_context.CurrentFoot, processedEndPos, quaternion.identity);
+                _context.PreviousRootPosition = _context.RootTransform.position;
             }
             
-            UpdateCurrentFoot(settings, t);
+            UpdateCurrentFoot(deltaTime);
         }
 
         private void BeginStep(FootState foot, Vector3 endPosWorld, Quaternion endRotWorld)
         {
             foot.State = StepState.Moving;
-            foot.t = 0f;
+            foot.Time = 0f;
             foot.MoveStartPos = foot.PlantedPos;
             foot.MoveStartRot = foot.PlantedRot;
             foot.MoveEndPos = endPosWorld;
@@ -102,60 +112,119 @@ namespace Characters.IKSystem.Planners
         
         private void FinishStep(FootState foot) {
             foot.State = StepState.Planted;
-            foot.t = 0f; 
-            foot.PlantedPos = _context.CurrentPos;
+            foot.Time = 0f;
+            foot.PlantedPos = _context.CurrentFootPos;
             foot.PlantedRot = foot.MoveEndRot;
         }
         
-        private void UpdateCurrentFoot(FootIKSettingsSO settings, float time) {
-            Vector3 targetPoint = _context.CurrentFoot.MoveEndPos;
-            Vector3 startPos = _context.CurrentFoot.MoveStartPos;
-            float processedTime = time * settings.totalStepDuration;
-            Vector3 lerpPos = Vector3.Lerp(startPos, targetPoint, processedTime);
-            
-            lerpPos.y += Mathf.Sin(time * Mathf.PI) * settings.stepHeight;
-            _context.CurrentPos = lerpPos;
-            
-            if (_context.CurrentLeg == Leg.Left) {
-                LeftFootTargetPos = lerpPos;
-            }
-            else {
-                RightFootTargetPos = lerpPos;
-            }
-        }
-        
-        private bool ShouldStep(FootState foot, Transform rootTransform, float stepThreshold)
-        {
-            float distance = PlanarDistance(foot.PlantedPos, rootTransform.position);
-            return distance > stepThreshold;
-        }
+        private void UpdateCurrentFoot(float time) {
 
+            if (_context.CurrentFoot.State == StepState.Moving) {
+                _context.CurrentFoot.Time += time;
+                
+                Vector3 targetPoint = _context.CurrentFoot.MoveEndPos;
+                Vector3 startPos = _context.CurrentFoot.MoveStartPos;
+                
+                float processedTime = _context.CurrentFoot.Time / _context.FootSettings.totalStepDuration;  
+                processedTime = Mathf.Clamp01(processedTime);
+                Vector3 lerpPos = Vector3.Lerp(startPos, targetPoint, processedTime);
+            
+                lerpPos.y += Mathf.Sin(processedTime * Mathf.PI) * _context.FootSettings.stepHeight;
+                _context.CurrentFootPos = lerpPos;
+            
+                if (_context.CurrentLeg == Leg.Left) {
+                    LeftFootTargetPos = lerpPos;
+                }
+                else {
+                    RightFootTargetPos = lerpPos;
+                }
+            }
+        }
         
-        private void AddStepGap(ref Vector3 point) {
-            point += Vector3.forward;
+        private bool ShouldStep(Vector3 previousPos)
+        {
+            float distance = Vector3.Distance(previousPos, _context.RootTransform.position);
+            if (_context.FootSettings.usePlanarDistance) {
+                distance = PlanarDistance(previousPos, _context.RootTransform.position);
+            } 
+            return distance > _context.FootSettings.stepThreshold;
         }
 
         private static float PlanarDistance(Vector3 a, Vector3 b)
         {
-            a.y = 0f; b.y = 0f;
-            return Vector3.Distance(a, b);
+            Vector2 pointA = new Vector2(a.x, a.z);
+            Vector2 pointB = new Vector2(b.x, b.z);
+            return Vector3.Distance(pointA, pointB);
         }
+            
+        private void SetDynamicForwardOffset(Vector3 speed) {
+            float planeSpeed = new Vector2(speed.x, speed.z).magnitude;
+            _forwardOffset =+ (planeSpeed * _context.FootSettings.offsetScaleFactor);
+        }
+        
+        private void AdjustTargetWithMovement(Vector3 moveInput, ref Vector3 targetPos) {
+            if (!(moveInput.sqrMagnitude > 0.01f)) return;
+            float maxForward = _context.FootSettings.maxStepDistance;
 
+            Vector3 localInput = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
+
+            Vector3 movementDir = _context.RootTransform.TransformDirection(localInput);
+            movementDir.y = 0f;
+
+            Vector3 clampedTarget = targetPos + movementDir * Mathf.Clamp(_forwardOffset, -maxForward, maxForward);
+            targetPos = clampedTarget;
+        }
+        
         private static Quaternion AimRot(Transform root, GroundHit hit, FootIKSettingsSO settings)
         {
             if (!settings.alignToSurface) return Quaternion.LookRotation(root.forward, Vector3.up);
             return FootPosSolverScript.RotationFromNormal(root.forward, hit.Normal);
         }
 
-        private void SwitchContext(Leg currentLeg) {
+        private void SwitchContext(Leg currentLeg) {  
             // switch the data (from left foot --> to right foot)
             if (currentLeg == Leg.Left) {
                 _context.CurrentLeg = Leg.Right;
                 _context.CurrentFoot = _rightFoot;
+                _context.PreviousCurrentFoot = _leftFoot;
             }
             else {
                 _context.CurrentLeg = Leg.Left;
                 _context.CurrentFoot = _leftFoot;
+                _context.PreviousCurrentFoot = _rightFoot;
+            }
+        }
+        
+        private bool RotationThresholdReached(float startDeg) {
+            float turnDiff = Mathf.DeltaAngle(startDeg, _context.RootTransform.rotation.eulerAngles.y);
+
+            if (Mathf.Abs(turnDiff) < 50f)
+                return false;
+
+            float turnSign = Mathf.Sign(turnDiff);
+
+            if (turnSign != _lastTurnSign) {
+                _stepTurnCounter = 0;
+                _lastTurnSign = turnSign;
+            }
+
+            _stepTurnCounter++;
+
+            var dominantFoot = (turnSign > 0) 
+                ? Leg.Right 
+                : Leg.Left;
+
+            bool useDominant = (_stepTurnCounter % 2 == 1);
+            SwitchContext(useDominant ? dominantFoot : GetOppositeLeg(dominantFoot));
+            return true;
+        }
+
+        private Leg GetOppositeLeg(Leg leg) {
+            if (leg == Leg.Left) {
+                return Leg.Right;
+            }
+            else {
+                return Leg.Left;
             }
         }
     }

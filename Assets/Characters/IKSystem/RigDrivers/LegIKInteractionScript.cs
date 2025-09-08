@@ -1,6 +1,8 @@
 using Characters.IKSystem.Planners;
 using Characters.IKSystem.Solvers;
+using Characters.PlayerController.Scripts.Input;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
 namespace Characters.IKSystem.RigDrivers
@@ -11,12 +13,12 @@ namespace Characters.IKSystem.RigDrivers
     
     public class LegIKInteractionScript : MonoBehaviour
     {
-        private enum StepState { Planted, Moving }
-        private StepState currentStepState;
 
         [Header("References")]
         [SerializeField] private FootIKSettingsSO settings;
         [SerializeField] private FootPosSolverScript solver;
+        [SerializeField] private PlayerInputScript playerInput;
+        [SerializeField] private Rigidbody rb;
 
         [Header("Origin Transforms")]
         [SerializeField] private Transform hipsLeftTransform;
@@ -52,7 +54,7 @@ namespace Characters.IKSystem.RigDrivers
             Quaternion rightInitRot = rightLegTarget.rotation;
             
             _characterPosition = rootTransform.position;
-            _gaitPlanner = new GaitPlannerScript(leftInitPos, rightInitPos, leftInitRot, rightInitRot);
+            _gaitPlanner = new GaitPlannerScript(leftInitPos, rightInitPos, leftInitRot, rightInitRot, transform, settings, rb);
 
         }
 
@@ -60,20 +62,18 @@ namespace Characters.IKSystem.RigDrivers
         {
             float deltaTime = Time.deltaTime;
             
-            if (MovementThresholdReached(_characterPosition, transform.position)) {
-                _characterPosition = rootTransform.position;
-                _leftHit  = solver.TryGetGround(hipsLeftTransform.position);
-                _rightHit = solver.TryGetGround(hipsRightTransform.position);
-                
-                _stepCounter += 1;
-                Debug.Log("Taking a step! nº: " + _stepCounter);
+            _characterPosition = rootTransform.position;
+            _leftHit  = solver.TryGetGround(hipsLeftTransform.position);
+            _rightHit = solver.TryGetGround(hipsRightTransform.position);
+            
+            //_stepCounter += 1;
+            //Debug.Log("Taking a step! nº: " + _stepCounter);
 
-                if (_leftHit.Valid && _rightHit.Valid) {
-                    Debug.Log("They were Valid steps.");
-                }
-            }
+            // if (_leftHit.Valid && _rightHit.Valid) {
+            //     Debug.Log("They were Valid steps.");
+            // }
 
-            _gaitPlanner.UpdateGait(deltaTime, rootTransform, _leftHit, _rightHit, settings);
+            _gaitPlanner.UpdateGait(deltaTime, _leftHit, _rightHit, playerInput.MoveInput);
 
             // convert planner world-space outputs to GhostRig local-space
             if (useLocalConversion) {
@@ -108,9 +108,9 @@ namespace Characters.IKSystem.RigDrivers
 
         private void OnDrawGizmosSelected() {
             if (debug) {
-                Gizmos.color = Color.black;
-                Gizmos.DrawSphere(_leftHit.Position, 0.15f);
-                Gizmos.DrawSphere(_rightHit.Position, 0.15f);
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(_leftHit.Position, 0.1f);
+                Gizmos.DrawSphere(_rightHit.Position, 0.1f);
             }
         }
 

@@ -2572,6 +2572,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: c526dffc44c71974bb55d4f1852d20e9, type: 2}
   solver: {fileID: 1258816171}
+  playerInput: {fileID: 414885243}
+  rb: {fileID: 414885245}
   hipsLeftTransform: {fileID: 454069315}
   hipsRightTransform: {fileID: 1653231199}
   ghostRigRoot: {fileID: 1258816167}
