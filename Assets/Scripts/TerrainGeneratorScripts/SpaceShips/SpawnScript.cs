@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace TerrainGeneratorScripts.SpaceShips
@@ -11,7 +12,7 @@ namespace TerrainGeneratorScripts.SpaceShips
         public ExitScript exitScript; 
         public GameObject entrance;
         public GameObject intersection;
-        public GameObject room;
+        public GameObject [] roomsPosibbles;
         public int rooms;
         public int quantityOfRooms;
         private int _roomHallwayIntersection;
@@ -99,7 +100,7 @@ namespace TerrainGeneratorScripts.SpaceShips
                         else if (_roomHallwayIntersection == 12) // Room
                         {
                             //Debug.Log("Spawning Room");
-                            InstantiateFunction(room, pos, rot);
+                            InstantiateFunction(roomsPosibbles[Random.Range(0,roomsPosibbles.Length)], pos, rot);
                             exit.DeactivateExit();
                             rooms++;
                             spawnedThisIteration = true;
