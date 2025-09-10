@@ -2,7 +2,6 @@ using Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals;
 using Characters.PlayerController.Scripts.Input;
 using UI.Scripts.TestingUI;
 using UnityEngine;
-using Assert = NUnit.Framework.Assert;
 
 namespace Characters.LifeSupportSystem.PlayerLifeSupport {
     [RequireComponent(typeof(PlayerInputScript))]
@@ -19,8 +18,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         
         public PlayerLifeSupportContextScript Context { get; private set; }
         
-        public enum EVitals
-        {
+        public enum EVitals {
             Weight,
             Health,
             Stamina,
@@ -44,8 +42,9 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         }
 
         private void ValidateReferences() {
-            Assert.IsNotNull(_rb, "Rigidbody is not assigned.");
-            Assert.IsNotNull(_uiManager, "UIManager is not assigned.");
+            Debug.Assert(_rb != null, "Rigidbody is not assigned.");
+            Debug.Assert(_uiManager != null, "UIManager is not assigned.");
+            Debug.Assert(_playerInputScript != null, "PlayerInputScript is not assigned.");
         }
     }
 }

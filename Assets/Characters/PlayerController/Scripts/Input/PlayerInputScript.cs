@@ -96,28 +96,62 @@ namespace Characters.PlayerController.Scripts.Input
 
         public void OnPrevious(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
+            if (context.performed)
+            {
+                ItemSlot = Mathf.Max(0, ItemSlot - 1);
+                Debug.Log("Slot anterior: " + ItemSlot);
+            }
         }
 
         public void OnNext(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
+            if (context.performed)
+            {
+                ItemSlot++;
+                Debug.Log("Slot siguiente: " + ItemSlot);
+            }
         }
 
         public void OnSprint(InputAction.CallbackContext context) {
             if (context.performed) {
                 RunningPressed = true;
-                Debug.Log("Sprint press");
+                Debug.Log("Sprint press!");
             } else if (context.canceled) {
                 RunningPressed = false;
             }
         }
 
         public void OnInventory(InputAction.CallbackContext context) {
-            int slot = context.ReadValue<int>();
+            if (!context.performed) return;
 
-            if (context.performed && ItemSlot != slot) {
-                ItemSlot = slot;
+            var key = context.control;
+
+            if (key == Keyboard.current.digit1Key) ItemSlot = 0;
+            else if (key == Keyboard.current.digit2Key) ItemSlot = 1;
+            else if (key == Keyboard.current.digit3Key) ItemSlot = 2;
+            else if (key == Keyboard.current.digit4Key) ItemSlot = 3;
+
+            Debug.Log("Cambio a slot " + ItemSlot);
+
+            // Equipar directamente
+            var inv = GetComponent<PlayerInventoryPhoton>();
+            if (inv != null)
+            {
+                inv.EquipFromSlot(ItemSlot);
+            }
+        }
+
+        public void OnDrop(InputAction.CallbackContext context)
+        {
+            if(!context.performed) return;
+
+            var inv = GetComponent<PlayerInventoryPhoton>();
+            if (inv != null)
+            {
+                inv.DropCurrent(inv.activeSlot);
+
+                var ui = FindFirstObjectByType<PlayerUIManager>();
+                if (ui != null) ui.UpdateInventoryUI();
             }
         }
 

@@ -4,7 +4,6 @@ using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine;
 using Characters.StateMachine.EnvironmentStateMachine.ConcreteStates;
 using Characters.StateMachine.PlayerStateMachine;
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -23,27 +22,38 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         [SerializeField] private CapsuleCollider _rootCollider;
         [SerializeField] private Camera _camera;
         
-        
         [Header("Environment interaction settings")]
         [SerializeField] private TwoBoneIKConstraint _leftIkConstraint;
         [SerializeField] private TwoBoneIKConstraint _rightIkConstraint;
         [SerializeField] private MultiRotationConstraint _leftMultiRotationConstraint;
         [SerializeField] private MultiRotationConstraint _rightMultiRotationConstraint;
         [SerializeField] private LayerMask _groundLayer;
+
         private void Awake() {
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
             _rootCollider = GetComponent<CapsuleCollider>();
             _inputScript = GetComponent<PlayerInputScript>();
             
-            _context = new EnvironmentInteractionContextScript(_leftIkConstraint, _rightIkConstraint, 
-                _leftMultiRotationConstraint, _rightMultiRotationConstraint, transform.root, _inputScript, _camera, _groundLayer);
+            _context = new EnvironmentInteractionContextScript(
+                _leftIkConstraint, 
+                _rightIkConstraint,
+                _leftMultiRotationConstraint, 
+                _rightMultiRotationConstraint, 
+                transform.root, 
+                _inputScript, 
+                _camera, 
+                _groundLayer
+            );
                 
             ValidateConstraints();
             InitializeStates();
             //ConstructTerrainDetectorCollider();
 
             _context.SetCurrentStep(EnvironmentInteractionContextScript.EStep.Right);            
-            _context.SetTargetOffset(_leftIkConstraint.data.target.localPosition, _rightIkConstraint.data.target.localPosition);
+            _context.SetTargetOffset(
+                _leftIkConstraint.data.target.localPosition, 
+                _rightIkConstraint.data.target.localPosition
+            );
         }
         
         private void InitializeStates() {
@@ -54,10 +64,10 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         }
         
         private void ValidateConstraints() {
-            Assert.IsNotNull(_leftIkConstraint, "Left IK constraint is not assigned!");
-            Assert.IsNotNull(_rightIkConstraint, "Right IK constraint is not assigned!");
-            Assert.IsNotNull(_leftMultiRotationConstraint, "Left Multi rotation constraint is not assigned!");
-            Assert.IsNotNull(_rightMultiRotationConstraint, "Right Multi rotation constraint is not assigned!");
+            Debug.Assert(_leftIkConstraint != null, "Left IK constraint is not assigned!");
+            Debug.Assert(_rightIkConstraint != null, "Right IK constraint is not assigned!");
+            Debug.Assert(_leftMultiRotationConstraint != null, "Left Multi rotation constraint is not assigned!");
+            Debug.Assert(_rightMultiRotationConstraint != null, "Right Multi rotation constraint is not assigned!");
         }
         
         private void ConstructTerrainDetectorCollider() {
@@ -65,7 +75,11 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
 
             BoxCollider boxCollider = gameObject.AddComponent<BoxCollider>();
             boxCollider.size = new Vector3(legSpan + 0.4f, legSpan, legSpan + 0.4f);
-            boxCollider.center = new Vector3(_rootCollider.center.x, _rootCollider.center.y - (legSpan/2f + 0.7f), _rootCollider.center.z);
+            boxCollider.center = new Vector3(
+                _rootCollider.center.x, 
+                _rootCollider.center.y - (legSpan / 2f + 0.7f), 
+                _rootCollider.center.z
+            );
             boxCollider.isTrigger = true;
         }
 

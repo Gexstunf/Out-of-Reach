@@ -1,10 +1,14 @@
 using System.Collections;
+using Characters.PlayerController.Scripts.Input;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
 public class PlayerInventoryPhoton : MonoBehaviourPun
 {
+    [Header("Referencia")]
+    public PlayerInputScript inputScript;
+
     [Header("Inventario")]
     public ItemSO[] slots = new ItemSO[4];
     public int activeSlot = 0;
@@ -17,11 +21,32 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
     [Header("Referencias")]
     public float dropForce = 3f;
 
+    void Start()
+    {
+        if (inputScript == null)
+            inputScript = GetComponent<PlayerInputScript>();
+
+        if (photonView.IsMine)
+        {
+            var ui = FindFirstObjectByType<PlayerUIManager>();
+            if (ui != null)
+            {
+                ui.InitInventory(this);
+            }
+        }
+    }
+
     public void RequestPickupOnClosest(PhotonView targetItemPV)
     {
         if (targetItemPV == null) return;
 
-        photonView.RPC(nameof(RPC_RequestPickup_Master), RpcTarget.MasterClient, targetItemPV.ViewID, activeSlot);
+        if (slots[inputScript.ItemSlot] != null)
+        {
+            Debug.Log("El slot " + inputScript.ItemSlot + " ya est� ocupado.");
+            return;
+        }
+
+        photonView.RPC(nameof(RPC_RequestPickup_Master), RpcTarget.MasterClient, targetItemPV.ViewID, inputScript.ItemSlot);
     }
 
     [PunRPC]
@@ -54,6 +79,13 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
+        if (slots[slotIndex] != null && currentHeldNetworkObj != null)
+        {
+            PhotonNetwork.Destroy(currentHeldNetworkObj);
+            currentHeldNetworkObj = null;
+            currentHeldViewId = -1;
+        }
+
         Vector3 spawnPos = handSlot.position;
         Quaternion spawnRot = handSlot.rotation;
         GameObject held = PhotonNetwork.Instantiate(heldPrefabName, spawnPos, spawnRot);
@@ -64,23 +96,43 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
 
         ItemSO itemData = ItemDatabase.FindByHeldPrefabName(heldPrefabName);
         slots[slotIndex] = itemData;
+
+        activeSlot = slotIndex;
+
+        var ui = FindFirstObjectByType<PlayerUIManager>();
+        if (ui != null) ui.UpdateInventoryUI();
     }
 
     public void EquipFromSlot(int slotIndex)
     {
         if (!photonView.IsMine) return;
-        if (slots[slotIndex] == null) return;
 
-        if (currentHeldNetworkObj != null)
+        if (slots[slotIndex] == null)
         {
             HolsterCurrent();
+            activeSlot = slotIndex;
+
+            var ui2 = FindFirstObjectByType<PlayerUIManager>();
+            if (ui2 != null) ui2.UpdateInventoryUI();
+            return;
         }
+
+        if (activeSlot == slotIndex && currentHeldNetworkObj != null)
+            return;
+
+        HolsterCurrent();
 
         string heldPrefabName = slots[slotIndex].heldPrefabName;
         GameObject held = PhotonNetwork.Instantiate(heldPrefabName, handSlot.position, handSlot.rotation);
         held.transform.SetParent(handSlot, true);
+
         currentHeldNetworkObj = held;
         currentHeldViewId = held.GetComponent<PhotonView>()?.ViewID ?? -1;
+
+        activeSlot = slotIndex;
+
+        var ui = FindFirstObjectByType<PlayerUIManager>();
+        if (ui != null) ui.UpdateInventoryUI();
     }
 
     public void HolsterCurrent()

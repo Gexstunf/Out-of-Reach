@@ -125,7 +125,7 @@ namespace Characters.PlayerController.Scripts.Input
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""852140f2-7766-474d-8707-702459ba45f3"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
@@ -134,7 +134,7 @@ namespace Characters.PlayerController.Scripts.Input
                     ""name"": ""Crouch"",
                     ""type"": ""Button"",
                     ""id"": ""27c5f898-bc57-4ee1-8800-db469aca5fe3"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -179,6 +179,15 @@ namespace Characters.PlayerController.Scripts.Input
                     ""name"": ""Inventory"",
                     ""type"": ""Button"",
                     ""id"": ""3e405841-af03-4a7c-9ea3-aa96a94076bc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Drop"",
+                    ""type"": ""Button"",
+                    ""id"": ""b498e33a-8c35-400a-94ce-f8b8395f1f37"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -375,17 +384,6 @@ namespace Characters.PlayerController.Scripts.Input
                 },
                 {
                     ""name"": """",
-                    ""id"": ""05f6913d-c316-48b2-a6bb-e225f14c7960"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Attack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""886e731e-7071-4ae4-95c0-e61739dad6fd"",
                     ""path"": ""<Touchscreen>/primaryTouch/tap"",
                     ""interactions"": """",
@@ -562,6 +560,17 @@ namespace Characters.PlayerController.Scripts.Input
                 },
                 {
                     ""name"": """",
+                    ""id"": ""508bf96a-4b3c-4528-92f1-dd20b51bf7da"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""4f4649ac-64a8-4a73-af11-b3faef356a4d"",
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
@@ -586,7 +595,7 @@ namespace Characters.PlayerController.Scripts.Input
                     ""name"": """",
                     ""id"": ""64da1e6e-a1d3-42e9-8fbe-f6dcabc2e3cc"",
                     ""path"": ""<Keyboard>/1"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Inventory"",
@@ -597,7 +606,7 @@ namespace Characters.PlayerController.Scripts.Input
                     ""name"": """",
                     ""id"": ""e7aa9cc2-aadd-443d-8258-d8c32c61f224"",
                     ""path"": ""<Keyboard>/2"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Inventory"",
@@ -608,7 +617,7 @@ namespace Characters.PlayerController.Scripts.Input
                     ""name"": """",
                     ""id"": ""b43e9802-a464-4514-9e5c-94db5e556f4d"",
                     ""path"": ""<Keyboard>/3"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Inventory"",
@@ -619,10 +628,21 @@ namespace Characters.PlayerController.Scripts.Input
                     ""name"": """",
                     ""id"": ""7936d2e5-c3bb-4f70-9ac0-f36b32c9584d"",
                     ""path"": ""<Keyboard>/4"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2f661ed7-d704-4a0c-b046-7890160405db"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1220,6 +1240,7 @@ namespace Characters.PlayerController.Scripts.Input
             m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
             m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
             m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
+            m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1323,6 +1344,7 @@ namespace Characters.PlayerController.Scripts.Input
         private readonly InputAction m_Player_Next;
         private readonly InputAction m_Player_Sprint;
         private readonly InputAction m_Player_Inventory;
+        private readonly InputAction m_Player_Drop;
         /// <summary>
         /// Provides access to input actions defined in input action map "Player".
         /// </summary>
@@ -1374,6 +1396,10 @@ namespace Characters.PlayerController.Scripts.Input
             /// Provides access to the underlying input action "Player/Inventory".
             /// </summary>
             public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Drop".
+            /// </summary>
+            public InputAction @Drop => m_Wrapper.m_Player_Drop;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1430,6 +1456,9 @@ namespace Characters.PlayerController.Scripts.Input
                 @Inventory.started += instance.OnInventory;
                 @Inventory.performed += instance.OnInventory;
                 @Inventory.canceled += instance.OnInventory;
+                @Drop.started += instance.OnDrop;
+                @Drop.performed += instance.OnDrop;
+                @Drop.canceled += instance.OnDrop;
             }
 
             /// <summary>
@@ -1471,6 +1500,9 @@ namespace Characters.PlayerController.Scripts.Input
                 @Inventory.started -= instance.OnInventory;
                 @Inventory.performed -= instance.OnInventory;
                 @Inventory.canceled -= instance.OnInventory;
+                @Drop.started -= instance.OnDrop;
+                @Drop.performed -= instance.OnDrop;
+                @Drop.canceled -= instance.OnDrop;
             }
 
             /// <summary>
@@ -1841,6 +1873,13 @@ namespace Characters.PlayerController.Scripts.Input
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnInventory(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Drop" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnDrop(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

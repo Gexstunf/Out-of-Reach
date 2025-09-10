@@ -1,31 +1,54 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using UnityEngine;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
+    [Header("Prefab del jugador (poner en Resources/PhotonPrefabs/)")]
     public GameObject playerPrefab;
+
+    [Header("Spawn Points")]
     public Transform[] spawnPoints;
 
-    void Start()
+    private void Start()
     {
-        if (PhotonNetwork.IsConnected)
+        if (!PhotonNetwork.IsConnected)
         {
-            int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
-
-            // Si hay menos jugadores que puntos, usar el punto correspondiente
-            // Si hay mas, tomar aleatorio pero evitando superposicion
-            Transform spawnPoint;
-            if (playerIndex < spawnPoints.Length)
-            {
-                spawnPoint = spawnPoints[playerIndex];
-            }
-            else
-            {
-                // Backup: tomar uno aleatorio no ocupado (mejorable)
-                spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-            }
-
-            PhotonNetwork.Instantiate("PhotonPrefabs/FirstPersonController NETWORK", spawnPoint.position, spawnPoint.rotation);
+            Debug.LogError("Photon no está conectado.");
+            return;
         }
+
+        if (playerPrefab == null)
+        {
+            Debug.LogError("No hay prefab asignado en el inspector.");
+            return;
+        }
+
+        if (spawnPoints == null || spawnPoints.Length == 0)
+        {
+            Debug.LogError("No hay spawn points asignados.");
+            return;
+        }
+
+        // Solo crear jugador si todavía no existe uno local
+        if (PhotonNetwork.LocalPlayer.TagObject == null)
+        {
+            SpawnLocalPlayer();
+        }
+    }
+
+    private void SpawnLocalPlayer()
+    {
+        // Elegimos spawn aleatorio
+        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+
+        // Instanciamos el prefab
+        GameObject player = PhotonNetwork.Instantiate(
+            playerPrefab.name,
+            spawnPoint.position,
+            spawnPoint.rotation
+        );
+
+        // Guardamos referencia en el TagObject del jugador de Photon
+        PhotonNetwork.LocalPlayer.TagObject = player;
     }
 }

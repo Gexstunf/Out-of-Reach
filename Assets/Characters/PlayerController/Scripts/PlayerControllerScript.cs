@@ -1,14 +1,15 @@
-using System;
+﻿using System;
 using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using Characters.StateMachine.PlayerStateMachine;
 using Characters.Utils;
 using UnityEngine;
+using Photon.Pun;
 using UnityEngine.Serialization;
 
 namespace Characters.PlayerController.Scripts
 {
-    public class PlayerControllerScript : MonoBehaviour
+    public class PlayerControllerScript : MonoBehaviourPun
     {
         #region Variables
         
@@ -65,6 +66,18 @@ namespace Characters.PlayerController.Scripts
 
         private void Start()
         {
+
+            if (!photonView.IsMine)
+            {
+                // Desactivar cámara y audio de los jugadores remotos
+                if (_playerCamera != null) _playerCamera.enabled = false;
+
+                AudioListener listener = GetComponentInChildren<AudioListener>();
+                if (listener != null) listener.enabled = false;
+
+                // Evitar conflictos de físicas
+                _rb.isKinematic = true;
+            }
             _rb.linearDamping = playerDrag;
             _rotator.Init(_lookSenseH, _lookSenseV, _lookLimitV);
             _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
@@ -78,6 +91,8 @@ namespace Characters.PlayerController.Scripts
 
         private void Update()
         {
+            if (!photonView.IsMine) return;
+
             HandleJumping(jumpForce);
             HandleGroundState();
         }
