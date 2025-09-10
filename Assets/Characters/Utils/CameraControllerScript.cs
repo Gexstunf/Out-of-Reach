@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Characters.Utils
 {
-    public class CameraControllerScript : MonoBehaviour
+    public class CameraControllerScript
     {
         private Vector2 _cameraRotation = Vector2.zero;
         private float _lookSenseH;

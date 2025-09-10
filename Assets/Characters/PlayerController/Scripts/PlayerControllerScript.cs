@@ -59,7 +59,7 @@ namespace Characters.PlayerController.Scripts
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
             
             _rotator = gameObject.AddComponent<RotatorScript>();
-            _cameraController = gameObject.AddComponent<CameraControllerScript>();
+            _cameraController = new CameraControllerScript();
 
             gravity = Physics.gravity.y;
         }

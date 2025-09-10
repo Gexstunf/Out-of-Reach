@@ -3,7 +3,27 @@ guid: 775cb38d7a94b1e43986dc1f3943ad58
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: AccesoriosBotas
+    second: {fileID: 2100000, guid: ed64bf2a21c7a48dab717030ac892bd4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Casco
+    second: {fileID: 2100000, guid: ff366795fc07b45f1a9b303b52a10987, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Ojos
+    second: {fileID: 2100000, guid: 23907f2b1c57547308d3400f2c450b56, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Traje
+    second: {fileID: 2100000, guid: 29d602135d2d24bd69d3fc40210f5cdd, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -17,13 +37,7 @@ ModelImporter:
     removeConstantScaleCurves: 0
     motionNodeName: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'Armature|Crouching' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Hips' is inbetween humanoid transforms
-      and has rotation animation that will be discarded.\n\nClip 'Armature|Standing
-      up' has import animation warnings that might lower retargeting quality:\nNote:
-      Activate translation DOF on avatar to improve retargeting quality.\n\t'Hips'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n"
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
