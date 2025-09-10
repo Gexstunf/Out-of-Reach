@@ -93,23 +93,10 @@ public class RoomLobbyManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(1f);
 
         loadingText.text = "Cargando escena...";
-        asyncLoad = SceneManager.LoadSceneAsync("GameScene");
-        asyncLoad.allowSceneActivation = false;
 
-        while (!asyncLoad.isDone)
+        if (PhotonNetwork.IsMasterClient)
         {
-            float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
-            loadingBar.value = progress;
-            loadingText.text = $"Cargando... {Mathf.RoundToInt(progress * 100f)}%";
-
-            if (asyncLoad.progress >= 0.9f)
-            {
-                loadingText.text = "Carga completa!";
-                yield return new WaitForSeconds(0.5f);
-                asyncLoad.allowSceneActivation = true;
-            }
-
-            yield return null;
+            PhotonNetwork.LoadLevel("GameScene");
         }
     }
 }

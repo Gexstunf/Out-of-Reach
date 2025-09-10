@@ -3,52 +3,26 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    [Header("Prefab del jugador (poner en Resources/PhotonPrefabs/)")]
+    [Header("Prefab del jugador")]
     public GameObject playerPrefab;
 
-    [Header("Spawn Points")]
+    [Header("Puntos de spawn")]
     public Transform[] spawnPoints;
 
-    private void Start()
+    void Start()
     {
-        if (!PhotonNetwork.IsConnected)
+        if (PhotonNetwork.InRoom)
         {
-            Debug.LogError("Photon no está conectado.");
-            return;
-        }
+            Debug.Log(" Ya estoy en una sala, spawneo jugador...");
 
-        if (playerPrefab == null)
+            int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
+            Transform spawnPoint = spawnPoints[playerIndex % spawnPoints.Length];
+
+            PhotonNetwork.Instantiate(playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
+        }
+        else
         {
-            Debug.LogError("No hay prefab asignado en el inspector.");
-            return;
+            Debug.LogError(" No estás en ninguna sala, no se puede spawnear jugador.");
         }
-
-        if (spawnPoints == null || spawnPoints.Length == 0)
-        {
-            Debug.LogError("No hay spawn points asignados.");
-            return;
-        }
-
-        // Solo crear jugador si todavía no existe uno local
-        if (PhotonNetwork.LocalPlayer.TagObject == null)
-        {
-            SpawnLocalPlayer();
-        }
-    }
-
-    private void SpawnLocalPlayer()
-    {
-        // Elegimos spawn aleatorio
-        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-
-        // Instanciamos el prefab
-        GameObject player = PhotonNetwork.Instantiate(
-            playerPrefab.name,
-            spawnPoint.position,
-            spawnPoint.rotation
-        );
-
-        // Guardamos referencia en el TagObject del jugador de Photon
-        PhotonNetwork.LocalPlayer.TagObject = player;
     }
 }

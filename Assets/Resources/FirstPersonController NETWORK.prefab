@@ -1960,10 +1960,6 @@ PrefabInstance:
       propertyPath: ObservedComponents.Array.size
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1363018003469552130, guid: 16d3da4ab08eb46229115c51ba2264af, type: 3}
-      propertyPath: 'ObservedComponents.Array.data[1]'
-      value: 
-      objectReference: {fileID: 2099486108631387925}
     - target: {fileID: 3877149896871887914, guid: 16d3da4ab08eb46229115c51ba2264af, type: 3}
       propertyPath: _uiManager
       value: 
@@ -2066,10 +2062,10 @@ PrefabInstance:
       addedObject: {fileID: 7489042568434189459}
     - targetCorrespondingSourceObject: {fileID: 8393454046273109848, guid: 16d3da4ab08eb46229115c51ba2264af, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3690264279130018150}
+      addedObject: {fileID: 3489176015057978763}
     - targetCorrespondingSourceObject: {fileID: 8393454046273109848, guid: 16d3da4ab08eb46229115c51ba2264af, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2099486108631387925}
+      addedObject: {fileID: 8344190582722022918}
   m_SourcePrefab: {fileID: 100100000, guid: 16d3da4ab08eb46229115c51ba2264af, type: 3}
 --- !u!4 &1932101197420159907 stripped
 Transform:
@@ -2119,7 +2115,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   inventory: {fileID: 631870188439735982}
---- !u!114 &3690264279130018150
+--- !u!114 &3489176015057978763
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2138,11 +2134,11 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 2099486108631387925}
+  - {fileID: 8344190582722022918}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &2099486108631387925
+--- !u!114 &8344190582722022918
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
