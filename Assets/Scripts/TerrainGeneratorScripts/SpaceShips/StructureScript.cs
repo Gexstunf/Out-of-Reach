@@ -33,6 +33,7 @@ namespace TerrainGeneratorScripts.SpaceShips
                             if (distance > 0.5f) // margen para no contar solo el "roce"
                             {
                                 Destroy(gameObject);
+                                Debug.Log("Se destruyó " + gameObject.name + "porque chocó con " + other.name);
                                 return; // me destruyo, no sigo chequeando
                             }
                         }

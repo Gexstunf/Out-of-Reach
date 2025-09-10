@@ -30,9 +30,9 @@ namespace TerrainGeneratorScripts.SpaceShips
             DoorScript.ClearAllDoors();
         }
         
-        public void SecondStart(int doorNumber)
+        public void SecondStart()
         {
-            doorGameObject = GameObject.Find("Door" + doorNumber);
+            doorGameObject = GameObject.Find("Door1");
             if (doorGameObject != null)
             {
                 DoorScript doorScript = doorGameObject.GetComponentInChildren<DoorScript>();
@@ -45,12 +45,6 @@ namespace TerrainGeneratorScripts.SpaceShips
                     ToSetExitNumber();
                 }
             }
-        }
-
-        public void SpawnHallwayAndRooms()
-        {
-            // SecondStart() already handles initial entrance spawning, so we only need to continue generation
-            SpawnHallWaysUntilRooms();
         }
 
         public void ToSetExitNumber()

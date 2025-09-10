@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4406438063816913375}
   m_Layer: 0
   m_Name: Exit
-  m_TagString: Excluido
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   exitID: 
   isActive: 0
-  activationChance: 0.4
+  activationChance: 0.9
 --- !u!1 &2802472599057623417
 GameObject:
   m_ObjectHideFlags: 0
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 3181329759728264846}
   m_Layer: 0
   m_Name: Exit
-  m_TagString: Excluido
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   exitID: 
   isActive: 0
-  activationChance: 0.4
+  activationChance: 0.6
 --- !u!1 &5530704666649068394
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 8421480958493691658}
   m_Layer: 0
   m_Name: Exit
-  m_TagString: Excluido
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   exitID: 
   isActive: 0
-  activationChance: 0.4
+  activationChance: 0.6
 --- !u!1 &5926746056615673932
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 4299512693187298272}
   m_Layer: 0
   m_Name: Intersection
-  m_TagString: DungeonPiece
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -284,7 +284,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.98, y: 1, z: 0.98}
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0.5, y: 0, z: 0}
 --- !u!54 &4020614005463933162
 Rigidbody:

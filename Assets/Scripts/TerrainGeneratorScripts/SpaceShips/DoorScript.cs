@@ -8,7 +8,6 @@ namespace TerrainGeneratorScripts.SpaceShips
     {
         public static Dictionary<string, DoorScript> allDoors = new();
         public string doorID;
-        private static int maxDoors = 4;
         public bool isActive;
         public float activationChance;
         public GameObject activeVisual;
@@ -29,27 +28,8 @@ namespace TerrainGeneratorScripts.SpaceShips
 
             RandomizeActivation();
             UpdateVisuals();
-            
-            if (allDoors.Count == maxDoors)
-            {
-                int index = 0;
-                foreach (var d in allDoors.Values)
-                {
-                    if (d != null)
-                    {
-                        d.gameObject.name = "Door" + index;
-                        if (entrance != null)
-                        {
-                            entrance.SecondStart(index);
-                        }
-                        index++;
-                    }
-                }
-                if (entrance != null)
-                {
-                    entrance.SpawnHallwayAndRooms();
-                }
-            }
+            entrance.SecondStart();
+            entrance.SpawnHallWaysUntilRooms();
         }
 
         void OnDestroy()
