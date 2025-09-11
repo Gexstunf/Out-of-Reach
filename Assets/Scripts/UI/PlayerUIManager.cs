@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using System.Collections.Generic;
 
-public class PlayerUIManager : MonoBehaviourPun
+public class PlayerUIManager : MonoBehaviour
 {
     [Header("Barra de Stamina")]
     public Image staminaBar;
@@ -23,21 +23,26 @@ public class PlayerUIManager : MonoBehaviourPun
     public Image[] slotIcons;
     private PlayerInventoryPhoton inventory;
 
-    void Awake()
+    private bool _initialized = false;
+
+    public void InitUI()
     {
-        if (!photonView.IsMine) return;
+        if (_initialized) return;
 
-        // Stamina y Health
+        // Buscar automáticamente si no está asignado
         if (staminaBar == null)
-            staminaBar = transform.Find("Canvas/StaminaBar")?.GetComponent<Image>();
+            staminaBar = GameObject.Find("Canvas/StaminaBar")?.GetComponent<Image>();
         if (healthContainer == null)
-            healthContainer = transform.Find("Canvas/HealthContainer");
+            healthContainer = GameObject.Find("Canvas/HealthContainer")?.transform;
 
-        healthTicks.Clear();
-        foreach (Transform child in healthContainer)
+        if (healthContainer != null)
         {
-            Image img = child.GetComponent<Image>();
-            if (img != null) healthTicks.Add(img);
+            healthTicks.Clear();
+            foreach (Transform child in healthContainer)
+            {
+                Image img = child.GetComponent<Image>();
+                if (img != null) healthTicks.Add(img);
+            }
         }
 
         DisplayHealth(maxHealth);
@@ -53,6 +58,8 @@ public class PlayerUIManager : MonoBehaviourPun
                 btn.onClick.AddListener(() => OnSlotClicked(index));
             }
         }
+
+        _initialized = true;
     }
 
     public void InitInventory(PlayerInventoryPhoton inv)
@@ -88,7 +95,6 @@ public class PlayerUIManager : MonoBehaviourPun
         }
     }
 
-    // Cuando se hace click en un slot
     public void OnSlotClicked(int slotIndex)
     {
         if (inventory == null) return;

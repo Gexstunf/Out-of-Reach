@@ -19,12 +19,10 @@ namespace Characters.Utils
 
         public void UpdateCameraRotation(Vector2 lookInput, Camera _camera)
         {
-            _cameraRotation.x += lookInput.x * _lookSenseH;
             _cameraRotation.y -= lookInput.y * _lookSenseV;
-            // _cameraRotation.y += Mathf.Clamp(_cameraRotation.y, -lookLimitV, lookLimitV);
-            _cameraRotation.y = Mathf.Clamp(_cameraRotation.y, -(_lookLimitV), _lookLimitV);
-            
-            _camera.transform.rotation = Quaternion.Euler(_cameraRotation.y, _cameraRotation.x, 0f);
+            _cameraRotation.y = Mathf.Clamp(_cameraRotation.y, -_lookLimitV, _lookLimitV);
+
+            _camera.transform.localRotation = Quaternion.Euler(_cameraRotation.y, 0f, 0f);
         }
     }
 }
