@@ -29,6 +29,10 @@ namespace Characters.PlayerController.Scripts {
                 bone.rb.maxAngularVelocity = _maxAngularVelocity;
                 
                 bone.initialLocalRotation = bone.rb.transform.localRotation;
+
+                if (!bone.joint) {
+                    Debug.Log("Bone doesnt have joint: " + bone.rb.name);    
+                }
             }
         }
 
@@ -38,7 +42,7 @@ namespace Characters.PlayerController.Scripts {
         {
             foreach (var bone in boneMaps)
             {
-                if (bone.joint) {
+                if (bone.joint && bone.ghostBone) {
                     bone.joint.SetTargetRotationLocal(bone.ghostBone.localRotation, bone.initialLocalRotation);
                 }
             }
