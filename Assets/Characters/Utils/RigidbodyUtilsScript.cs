@@ -18,7 +18,6 @@ namespace Characters.Utils {
             foreach (Rigidbody rb in Rigidbodies) {
                 rb.isKinematic = isKinematic;
             }
-            CurrentRb.isKinematic = !isKinematic;
         }
 
         public void SetDetectCollisions(bool detectCollisions) {

@@ -16,7 +16,7 @@ namespace Characters.Utils {
             }
         }
 
-        public void IgnoreCollidersBetweenEachOther(bool ignore) {
+        public void SetIgnoreCollidersBetweenEachOther(bool ignore) {
             foreach (var currentCol in Colliders) {
                 foreach (var ignoreCol in Colliders) {
                     if (currentCol != ignoreCol) {
