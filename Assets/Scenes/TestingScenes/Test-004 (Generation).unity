@@ -156,6 +156,7 @@ MonoBehaviour:
   intersectionsPossibles:
   - {fileID: 193496881068272272, guid: 65f182e66a6c2be4b9b43b5d808f0bf9, type: 3}
   - {fileID: 4950417639267779701, guid: abb6aee28b2bb1743807263c25d293bc, type: 3}
+  - {fileID: 6677434570533079222, guid: 0f6d33ca023f81741bc954fcdc2b3558, type: 3}
   roomsPossibles:
   - {fileID: 8846650929021130192, guid: 361adf9c31be7914c9ed3ac21a5129f8, type: 3}
   - {fileID: 6182710203842667853, guid: 2a5e44a9a0e821e4081b7cb05d2d2122, type: 3}
