@@ -1,24 +1,9 @@
 fileFormatVersion: 2
-guid: e3eb33b39397ff046ba48a87cdb62421
+guid: c2f6647b782a3334b99538496f347ddb
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Columna
-    second: {fileID: 2100000, guid: 7aa6894ce46cbb640ab14b6a3128d3d4, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: HabReactor
-    second: {fileID: 2100000, guid: 30e1c269aafab3e4a88ad4349a0729a6, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Reactor
-    second: {fileID: 2100000, guid: f00e4ebfcc2787346ae4785556dd674c, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
