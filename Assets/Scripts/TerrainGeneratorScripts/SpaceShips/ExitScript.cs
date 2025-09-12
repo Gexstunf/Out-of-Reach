@@ -22,13 +22,15 @@ namespace TerrainGeneratorScripts.SpaceShips
         {
             boxCollider = GetComponent<BoxCollider>();
             meshCollider = GetComponent<MeshCollider>();
-            
-            
-            if (CheckForCollisions())
+
+            for (int i = 0; i < 1; i++)
             {
-                DeactivateExit();
-                Destroy(gameObject);
-                return;
+                if (CheckForCollisions())
+                {
+                    DeactivateExit();
+                    Destroy(gameObject);
+                    return;
+                }
             }
             
             // Original activation logic

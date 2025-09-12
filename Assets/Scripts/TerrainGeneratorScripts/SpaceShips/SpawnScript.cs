@@ -77,21 +77,15 @@ namespace TerrainGeneratorScripts.SpaceShips
                     {
                         _roomHallwayIntersection = Random.Range(1, 12);
 
-                        if (_roomHallwayIntersection is >= 1 and <= 7) // Hallway
+                        if (_roomHallwayIntersection is >= 1 and <= 8) // Hallway
                         {
                             InstantiateFunction(entrance, exit.transform);
                             exit.DeactivateExit();
                             spawnedThisIteration = true;
                         }
-                        else if (_roomHallwayIntersection is >= 8 and <= 9) // Intersection
+                        else if (_roomHallwayIntersection is >= 9 and <= 10) // Intersection
                         {
                             InstantiateFunction(intersectionsPossibles[Random.Range(0,intersectionsPossibles.Length)], exit.transform);
-                            exit.DeactivateExit();
-                            spawnedThisIteration = true;
-                        }
-                        else if (_roomHallwayIntersection == 10 && rooms > 2) // Exit
-                        {
-                            InstantiateFunction(exitOut, exit.transform);
                             exit.DeactivateExit();
                             spawnedThisIteration = true;
                         }
