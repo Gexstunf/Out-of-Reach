@@ -40,6 +40,8 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private float _lookSenseH = 10f;
         [SerializeField] private float _lookSenseV = 10f;
         [SerializeField] private float _lookLimitV = 10f;
+        [SerializeField] private Transform _eyesTransform;
+        public Vector3 eyesOffset;
 
         [Header("Visualize Variables")] 
         public bool isGrounded = true;
@@ -60,7 +62,7 @@ namespace Characters.PlayerController.Scripts
             
             _rotator = gameObject.AddComponent<RotatorScript>();
             _cameraController = new CameraControllerScript();
-
+            _cameraController.TieToTransform(_eyesTransform, eyesOffset);
             gravity = Physics.gravity.y;
         }
 
@@ -99,7 +101,10 @@ namespace Characters.PlayerController.Scripts
         {
             Vector2 lookInput = _inputScript.LookInput;
             _rotator.RotateTransform(lookInput);
-            _cameraController.UpdateCameraRotation(lookInput, _playerCamera);
+            
+            float characterYaw = _rotator.GetYaw();
+
+            _cameraController.UpdateCameraRotation(lookInput, _playerCamera, characterYaw);
         }
         
         #endregion
