@@ -1308,6 +1308,17 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!114 &1182220209 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 464395842362223865, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
+  m_PrefabInstance: {fileID: 9009485614359479826}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 548193a6232a8c54dac7f767db8567be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1182382617
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2563,6 +2574,18 @@ PrefabInstance:
       propertyPath: _uiManager
       value: 
       objectReference: {fileID: 2075601344}
+    - target: {fileID: 892568939044708005, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
+      propertyPath: _staminaUseRate
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 892568939044708005, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
+      propertyPath: _staminaRegenRate
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 892568939044708005, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
+      propertyPath: _staminaRegenDelay
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1178103718604873752, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2603,6 +2626,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2217721505803945520, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
+      propertyPath: _stateVitalsCoordinator
+      value: 
+      objectReference: {fileID: 1182220209}
     - target: {fileID: 4435028759415357092, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: m_Name
       value: NewActiveRagdoll
