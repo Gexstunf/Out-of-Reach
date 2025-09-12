@@ -92,6 +92,13 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         GameObject held = PhotonNetwork.Instantiate(heldPrefabName, spawnPos, spawnRot);
         held.transform.SetParent(handSlot, true);
 
+        Rigidbody rb = held.GetComponent<Rigidbody>();
+        if(rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
+
         currentHeldNetworkObj = held;
         currentHeldViewId = held.GetComponent<PhotonView>()?.ViewID ?? -1;
 
@@ -126,6 +133,13 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         string heldPrefabName = slots[slotIndex].heldPrefabName;
         GameObject held = PhotonNetwork.Instantiate(heldPrefabName, handSlot.position, handSlot.rotation);
         held.transform.SetParent(handSlot, true);
+
+        Rigidbody rb = held.GetComponent<Rigidbody>();
+        if(rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
 
         currentHeldNetworkObj = held;
         currentHeldViewId = held.GetComponent<PhotonView>()?.ViewID ?? -1;
