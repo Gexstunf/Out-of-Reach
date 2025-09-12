@@ -2,6 +2,7 @@ using System.Collections;
 using Characters.PlayerController.Scripts.Input;
 using Photon.Pun;
 using Photon.Realtime;
+using UI;
 using UnityEngine;
 
 public class PlayerInventoryPhoton : MonoBehaviourPun

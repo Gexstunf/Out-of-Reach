@@ -1,139 +1,148 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
-using System.Collections.Generic;
 
-public class PlayerUIManager : MonoBehaviour
-{
-    [Header("Barra de Stamina")]
-    public Image staminaBar;
-    public float maxStamina = 100f;
-
-    [Header("Vida en Ticks")]
-    public Transform healthContainer;
-    public Sprite tickOn;
-    public Sprite tickYellow;
-    public Sprite tickRed;
-    public float maxHealth = 100f;
-    public float healthPerTick = 10f;
-    private List<Image> healthTicks = new List<Image>();
-
-    [Header("Inventario UI")]
-    public GameObject[] slotUI;
-    public Image[] slotIcons;
-    private PlayerInventoryPhoton inventory;
-
-    private bool _initialized = false;
-
-    public void InitUI()
+namespace UI {
+    public class PlayerUIManager : MonoBehaviour
     {
-        if (_initialized) return;
+        [Header("Barra de Stamina")]
+        public Image staminaBar;
+        public float maxStamina = 100f;
 
-        // Buscar automáticamente si no está asignado
-        if (staminaBar == null)
-            staminaBar = GameObject.Find("Canvas/StaminaBar")?.GetComponent<Image>();
-        if (healthContainer == null)
-            healthContainer = GameObject.Find("Canvas/HealthContainer")?.transform;
+        [Header("Vida en Ticks")]
+        public Transform healthContainer;
+        public Sprite tickOn;
+        public Sprite tickYellow;
+        public Sprite tickRed;
+        public float maxHealth = 100f;
+        public float healthPerTick = 10f;
+        private List<Image> healthTicks = new List<Image>();
 
-        if (healthContainer != null)
-        {
-            healthTicks.Clear();
-            foreach (Transform child in healthContainer)
-            {
-                Image img = child.GetComponent<Image>();
-                if (img != null) healthTicks.Add(img);
-            }
+        [Header("Inventario UI")]
+        public GameObject[] slotUI;
+        public Image[] slotIcons;
+        private PlayerInventoryPhoton inventory;
+
+        private bool _initialized = false;
+
+        public void Start() {
+            InitUI();
         }
 
-        DisplayHealth(maxHealth);
-        DisplayStamina(maxStamina);
-
-        // Inicializar botones de inventario
-        for (int i = 0; i < slotUI.Length; i++)
+        public void InitUI()
         {
-            int index = i; // necesario para closures
-            Button btn = slotUI[i].GetComponent<Button>();
-            if (btn != null)
+            if (_initialized) return;
+
+            // Buscar automï¿½ticamente si no estï¿½ asignado
+            if (staminaBar == null)
+                staminaBar = GameObject.Find("Canvas/StaminaBar")?.GetComponent<Image>();
+            if (healthContainer == null)
+                healthContainer = GameObject.Find("Canvas/HealthContainer")?.transform;
+
+            if (healthContainer != null)
             {
-                btn.onClick.AddListener(() => OnSlotClicked(index));
+                healthTicks.Clear();
+                foreach (Transform child in healthContainer)
+                {
+                    Image img = child.GetComponent<Image>();
+                    if (img != null) healthTicks.Add(img);
+                }
             }
+
+            DisplayHealth(maxHealth);
+            DisplayStamina(maxStamina);
+
+            // Inicializar botones de inventario
+            for (int i = 0; i < slotUI.Length; i++)
+            {
+                int index = i; // necesario para closures
+                Button btn = slotUI[i].GetComponent<Button>();
+                if (btn != null)
+                {
+                    btn.onClick.AddListener(() => OnSlotClicked(index));
+                }
+            }
+
+            _initialized = true;
         }
 
-        _initialized = true;
-    }
-
-    public void InitInventory(PlayerInventoryPhoton inv)
-    {
-        inventory = inv;
-        UpdateInventoryUI();
-    }
-
-    public void UpdateInventoryUI()
-    {
-        if (inventory == null) return;
-
-        for (int i = 0; i < slotUI.Length; i++)
+        public void InitInventory(PlayerInventoryPhoton inv)
         {
-            bool hasItem = (i < inventory.slots.Length && inventory.slots[i] != null);
-
-            if (hasItem)
-            {
-                slotIcons[i].sprite = inventory.slots[i].icon;
-                slotIcons[i].enabled = true;
-            }
-            else
-            {
-                slotIcons[i].sprite = null;
-                slotIcons[i].enabled = false;
-            }
-
-            Image slotBg = slotUI[i].GetComponent<Image>();
-            if (slotBg != null)
-            {
-                slotBg.color = (i == inventory.activeSlot) ? Color.yellow : Color.white;
-            }
+            inventory = inv;
+            UpdateInventoryUI();
         }
-    }
 
-    public void OnSlotClicked(int slotIndex)
-    {
-        if (inventory == null) return;
-        inventory.EquipFromSlot(slotIndex);
-        UpdateInventoryUI();
-    }
-
-    public void DisplayStamina(float amount)
-    {
-        if (staminaBar == null) return;
-        staminaBar.fillAmount = Mathf.Clamp01(amount / maxStamina);
-    }
-
-    public void DisplayHealth(float amount)
-    {
-        if (healthTicks.Count == 0) return;
-
-        int ticksOn = Mathf.CeilToInt(amount / healthPerTick);
-
-        for (int i = 0; i < healthTicks.Count; i++)
+        public void UpdateInventoryUI()
         {
-            if (i < ticksOn)
+            if (inventory == null) return;
+
+            for (int i = 0; i < slotUI.Length; i++)
             {
-                if (ticksOn <= 3)
-                    healthTicks[i].sprite = tickRed;
-                else if (ticksOn <= 7)
-                    healthTicks[i].sprite = tickYellow;
+                bool hasItem = (i < inventory.slots.Length && inventory.slots[i] != null);
+
+                if (hasItem)
+                {
+                    slotIcons[i].sprite = inventory.slots[i].icon;
+                    slotIcons[i].enabled = true;
+                }
                 else
-                    healthTicks[i].sprite = tickOn;
+                {
+                    slotIcons[i].sprite = null;
+                    slotIcons[i].enabled = false;
+                }
 
-                var c = healthTicks[i].color;
-                c.a = 1f;
-                healthTicks[i].color = c;
+                Image slotBg = slotUI[i].GetComponent<Image>();
+                if (slotBg != null)
+                {
+                    slotBg.color = (i == inventory.activeSlot) ? Color.yellow : Color.white;
+                }
             }
-            else
+        }
+
+        public void OnSlotClicked(int slotIndex)
+        {
+            if (inventory == null) return;
+            inventory.EquipFromSlot(slotIndex);
+            UpdateInventoryUI();
+        }
+
+        public void DisplayStamina(float amount)
+        {
+            if (staminaBar == null) return;
+            staminaBar.fillAmount = Mathf.Clamp01(amount / maxStamina);
+        }
+
+        public void DisplayHealth(float amount) {
+            if (healthTicks.Count == 0) {
+                Debug.Log("No health left to update.");
+            }
+
+            ;
+
+            int ticksOn = Mathf.CeilToInt(amount / healthPerTick);
+
+            for (int i = 0; i < healthTicks.Count; i++)
             {
-                var c = healthTicks[i].color;
-                c.a = 0f;
-                healthTicks[i].color = c;
+                if (i < ticksOn)
+                {
+                    if (ticksOn <= 3)
+                        healthTicks[i].sprite = tickRed;
+                    else if (ticksOn <= 7)
+                        healthTicks[i].sprite = tickYellow;
+                    else
+                        healthTicks[i].sprite = tickOn;
+
+                    var c = healthTicks[i].color;
+                    c.a = 1f;
+                    healthTicks[i].color = c;
+                }
+                else
+                {
+                    var c = healthTicks[i].color;
+                    c.a = 0f;
+                    healthTicks[i].color = c;
+                }
             }
         }
     }

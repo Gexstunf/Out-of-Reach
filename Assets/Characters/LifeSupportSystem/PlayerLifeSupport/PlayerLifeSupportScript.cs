@@ -1,5 +1,6 @@
 ﻿using Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals;
 using Characters.PlayerController.Scripts.Input;
+using UI;
 using UI.Scripts.TestingUI;
 using UnityEngine;
 
@@ -48,6 +49,8 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
 
         private void Start()
         {
+            if (!photonView.IsMine) return;
+
             // Inicializamos cada vital después de crearlos
             foreach (var vital in Vitals.Values)
             {
@@ -57,6 +60,8 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
 
         private void Update()
         {
+            if (!photonView.IsMine) return;
+
             // Actualizamos modificadores primero (ej: running, jumping, falling)
             foreach (var vital in Vitals.Values)
             {
