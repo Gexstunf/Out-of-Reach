@@ -1703,11 +1703,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!4 &1310958293 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5584611404305298706, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-  m_PrefabInstance: {fileID: 9009485614359479826}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1311235385
 Mesh:
   m_ObjectHideFlags: 0
@@ -2568,30 +2563,6 @@ PrefabInstance:
       propertyPath: _uiManager
       value: 
       objectReference: {fileID: 2075601344}
-    - target: {fileID: 1081855665796605543, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: jumpForce
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 1081855665796605543, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: eyesOffset.y
-      value: 0.35
-      objectReference: {fileID: 0}
-    - target: {fileID: 1081855665796605543, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: eyesOffset.z
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1081855665796605543, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: _eyesTransform
-      value: 
-      objectReference: {fileID: 1310958293}
-    - target: {fileID: 1081855665796605543, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: forwardJumpForce
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1081855665796605543, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: groundCheckBoxSize.y
-      value: 0.44
-      objectReference: {fileID: 0}
     - target: {fileID: 1178103718604873752, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2631,30 +2602,6 @@ PrefabInstance:
     - target: {fileID: 1178103718604873752, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2217721505803945520, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: _lockDamper
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2217721505803945520, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: _lockSpring
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 2217721505803945520, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: _initialClearance
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2217721505803945520, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: _smoothLockDuration
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 2217721505803945520, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: _interpolationScaler
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 2217721505803945520, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: _interpolationDuration
-      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4435028759415357092, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: m_Name
