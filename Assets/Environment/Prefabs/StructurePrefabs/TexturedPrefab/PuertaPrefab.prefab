@@ -84,11 +84,57 @@ PrefabInstance:
       propertyPath: m_Name
       value: Puerta
       objectReference: {fileID: 0}
+    - target: {fileID: 1046497350367986417, guid: 829551e15a09d04479c47a11ad7c9850, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1046497350367986417, guid: 829551e15a09d04479c47a11ad7c9850, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.2045326
+      objectReference: {fileID: 0}
+    - target: {fileID: 6689147737737535908, guid: 829551e15a09d04479c47a11ad7c9850, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6689147737737535908, guid: 829551e15a09d04479c47a11ad7c9850, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.8724403
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 829551e15a09d04479c47a11ad7c9850, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5928423453578488219}
   m_SourcePrefab: {fileID: 100100000, guid: 829551e15a09d04479c47a11ad7c9850, type: 3}
+--- !u!1 &2767361834824982362 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 829551e15a09d04479c47a11ad7c9850, type: 3}
+  m_PrefabInstance: {fileID: 3073369457028653579}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &5928423453578488219
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2767361834824982362}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 2151515227523668204, guid: 829551e15a09d04479c47a11ad7c9850, type: 3}
 --- !u!4 &3255104455938868704 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 829551e15a09d04479c47a11ad7c9850, type: 3}

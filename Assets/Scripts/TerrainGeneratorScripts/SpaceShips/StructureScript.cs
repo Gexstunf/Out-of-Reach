@@ -30,7 +30,7 @@ namespace TerrainGeneratorScripts.SpaceShips
                     {
                         if (other.CompareTag("Indestructible"))
                         {
-                            if (distance > 0.5f) // margen para no contar solo el "roce"
+                            if (distance > 0.05f) // margen para no contar solo el "roce"
                             {
                                 Destroy(gameObject);
                                 Debug.Log("Se destruyó " + gameObject.name + "porque chocó con " + other.name);

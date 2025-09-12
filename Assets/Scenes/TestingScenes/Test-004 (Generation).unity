@@ -152,12 +152,18 @@ MonoBehaviour:
   uniqueHall: {fileID: 0}
   exitScript: {fileID: 0}
   entrance: {fileID: 3791255646465563467, guid: 77922a2cae706654f873abce6fe30345, type: 3}
-  intersection: {fileID: 8106151275122085428, guid: ad9438217ccb06f45a5ff9dbf28d5518, type: 3}
-  roomsPosibbles:
-  - {fileID: 8106151275122085428, guid: 06b5f7deb79b6e443a0436efeaed2e9f, type: 3}
-  - {fileID: 8106151275122085428, guid: 87e76a3097deb7647afd271e2e1205e4, type: 3}
-  - {fileID: 8106151275122085428, guid: e979dd14497cd1b4fb1d40e04ef3ff36, type: 3}
-  - {fileID: 8106151275122085428, guid: d86d1540aa4fa1445adc9ea5150ff220, type: 3}
+  exitOut: {fileID: 6596308107174760454, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
+  intersectionsPossibles:
+  - {fileID: 193496881068272272, guid: 65f182e66a6c2be4b9b43b5d808f0bf9, type: 3}
+  - {fileID: 4950417639267779701, guid: abb6aee28b2bb1743807263c25d293bc, type: 3}
+  roomsPossibles:
+  - {fileID: 8846650929021130192, guid: 361adf9c31be7914c9ed3ac21a5129f8, type: 3}
+  - {fileID: 6182710203842667853, guid: 2a5e44a9a0e821e4081b7cb05d2d2122, type: 3}
+  - {fileID: 6182710203842667853, guid: 2a5e44a9a0e821e4081b7cb05d2d2122, type: 3}
+  - {fileID: 1377035139366547631, guid: e5796f6983b2c5f4ca80c6777fe0ce11, type: 3}
+  - {fileID: 1377035139366547631, guid: e5796f6983b2c5f4ca80c6777fe0ce11, type: 3}
+  - {fileID: 5273698022927060502, guid: 8f88c383886971e4fb6b47e893313d92, type: 3}
+  - {fileID: 5273698022927060502, guid: 8f88c383886971e4fb6b47e893313d92, type: 3}
   rooms: 0
   quantityOfRooms: 0
 --- !u!4 &165239719
@@ -336,6 +342,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2127902911562139094, guid: 3575bb1fd2863124684289052619c997, type: 3}
+      propertyPath: m_TagString
+      value: Indestructible
+      objectReference: {fileID: 0}
     - target: {fileID: 6552041856830867853, guid: 3575bb1fd2863124684289052619c997, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -376,9 +386,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7913231569805563048, guid: 3575bb1fd2863124684289052619c997, type: 3}
+      propertyPath: m_TagString
+      value: Indestructible
+      objectReference: {fileID: 0}
     - target: {fileID: 8981073472407013214, guid: 3575bb1fd2863124684289052619c997, type: 3}
       propertyPath: m_Name
       value: HabSpawnPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 8981073472407013214, guid: 3575bb1fd2863124684289052619c997, type: 3}
+      propertyPath: m_TagString
+      value: Indestructible
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

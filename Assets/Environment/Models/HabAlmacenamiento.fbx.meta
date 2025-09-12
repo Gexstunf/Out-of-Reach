@@ -3,32 +3,7 @@ guid: 216fffbb3b7f5fa4686abc4ece2d8c0d
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: HabAlmacenamiento
-    second: {fileID: 2100000, guid: 505e46a023975704fb1fbf2576c3a63a, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: HabAlmacenamiento Color
-    second: {fileID: 2800000, guid: ce38af5ef44befa429b7070f96d3f009, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: HabAlmacenamiento Metallic
-    second: {fileID: 2800000, guid: e508c157daebe4447b9f4e9358964976, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: HabAlmacenamiento Normal
-    second: {fileID: 2800000, guid: 37a279715b387d1408b4547986923c72, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: HabAlmacenamiento Roughness
-    second: {fileID: 2800000, guid: b88e406d1d1928e46bb57dbbe218cc57, type: 3}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
