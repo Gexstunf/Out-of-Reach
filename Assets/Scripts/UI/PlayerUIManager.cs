@@ -1,9 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Characters.LifeSupportSystem.PlayerLifeSupport;
+using static Characters.LifeSupportSystem.PlayerLifeSupport.PlayerLifeSupportScript;
+using Characters.LifeSupportSystem;
 
-namespace UI {
+namespace UI
+{
     public class PlayerUIManager : MonoBehaviour
     {
         [Header("Barra de Stamina")]
@@ -22,19 +26,31 @@ namespace UI {
         [Header("Inventario UI")]
         public GameObject[] slotUI;
         public Image[] slotIcons;
-        private PlayerInventoryPhoton inventory;
 
+        private PlayerInventoryPhoton inventory;
         private bool _initialized = false;
 
-        public void Start() {
+        // NUEVO: jugador objetivo
+        private PlayerLifeSupportContextScript _context;
+        private Dictionary<PlayerLifeSupportScript.EVitals, BaseVitalScript<PlayerLifeSupportScript.EVitals>> _vitals;
+        private PlayerInventoryPhoton _inventory;
+
+        public void Start()
+        {
             InitUI();
+        }
+
+        private void Update()
+        {
+            if (!_initialized) return;
+
+            UpdateUI();
         }
 
         public void InitUI()
         {
             if (_initialized) return;
 
-            // Buscar autom�ticamente si no est� asignado
             if (staminaBar == null)
                 staminaBar = GameObject.Find("Canvas/StaminaBar")?.GetComponent<Image>();
             if (healthContainer == null)
@@ -53,10 +69,9 @@ namespace UI {
             DisplayHealth(maxHealth);
             DisplayStamina(maxStamina);
 
-            // Inicializar botones de inventario
             for (int i = 0; i < slotUI.Length; i++)
             {
-                int index = i; // necesario para closures
+                int index = i;
                 Button btn = slotUI[i].GetComponent<Button>();
                 if (btn != null)
                 {
@@ -70,6 +85,25 @@ namespace UI {
         public void InitInventory(PlayerInventoryPhoton inv)
         {
             inventory = inv;
+            UpdateInventoryUI();
+        }
+
+        public void SetTarget(PlayerLifeSupportContextScript context,
+                      Dictionary<PlayerLifeSupportScript.EVitals, BaseVitalScript<PlayerLifeSupportScript.EVitals>> vitals)
+        {
+            // Guardamos referencia al contexto y vitals para actualizar UI
+            _context = context;
+            _vitals = vitals;
+        }
+
+        private void UpdateUI()
+        {
+            if (_context == null) return;
+
+            Debug.Log($"Actualizando UI - Health: {_context.Health}, Stamina: {_context.Stamina}");
+
+            DisplayHealth(_context.Health);
+            DisplayStamina(_context.Stamina);
             UpdateInventoryUI();
         }
 
@@ -109,18 +143,29 @@ namespace UI {
 
         public void DisplayStamina(float amount)
         {
-            if (staminaBar == null) return;
-            staminaBar.fillAmount = Mathf.Clamp01(amount / maxStamina);
-        }
-
-        public void DisplayHealth(float amount) {
-            if (healthTicks.Count == 0) {
-                Debug.Log("No health left to update.");
+            if (staminaBar == null)
+            {
+                Debug.LogWarning("StaminaBar es NULL en " + gameObject.name);
+                return;
             }
 
-            ;
+            float fill = Mathf.Clamp01(amount / maxStamina);
+            Debug.Log($"[{gameObject.name}] Cambiando staminaBar.fillAmount a {fill}");
+            staminaBar.fillAmount = fill;
+        }
+
+        public void DisplayHealth(float amount)
+        {
+            Debug.Log($"[{gameObject.name}] Actualizando vida: {amount}");
+
+            if (healthTicks.Count == 0)
+            {
+                Debug.LogWarning("No hay healthTicks en " + gameObject.name);
+                return;
+            }
 
             int ticksOn = Mathf.CeilToInt(amount / healthPerTick);
+            Debug.Log($"[{gameObject.name}] Ticks encendidos: {ticksOn}/{healthTicks.Count}");
 
             for (int i = 0; i < healthTicks.Count; i++)
             {

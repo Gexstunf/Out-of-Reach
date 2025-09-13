@@ -15,6 +15,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
         [SerializeField] private PlayerUIManager _uiManager;
         [SerializeField] private Rigidbody _rb;
         [SerializeField] private PlayerInputScript _playerInputScript;
+        [SerializeField] private PlayerInventoryPhoton _inventory;
 
         [Header("Life support settings")]
         [SerializeField] private float _maxHealth = 100f;
@@ -33,7 +34,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
 
         private void Awake()
         {
-            if (!photonView.IsMine) return;
+            Debug.Log("Awake de PlayerLifeSupportScript en: " + gameObject.name);
 
             if (_rb == null) _rb = GetComponent<Rigidbody>();
             if (_playerInputScript == null) _playerInputScript = GetComponent<PlayerInputScript>();
@@ -43,35 +44,58 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
                 _rb, _maxHealth, _maxStamina, _uiManager, _playerInputScript
             );
 
+            Debug.Log("Context creado: " + (Context != null));
+
             ValidateReferences();
             InitializeVitals();
         }
 
         private void Start()
         {
-            if (!photonView.IsMine) return;
-
-            // Inicializamos cada vital después de crearlos
-            foreach (var vital in Vitals.Values)
+            if (photonView.IsMine)
             {
-                vital.SetupVital();
+                // Busca la UI del jugador dentro del prefab
+                _uiManager = GetComponentInChildren<PlayerUIManager>(true);
+
+                if (_uiManager != null)
+                {
+                    _uiManager.SetTarget(Context, Vitals);
+
+                    if (_inventory != null)
+                        _uiManager.InitInventory(_inventory);
+                }
             }
+            else
+            {
+                // Si no es nuestro player, apagamos su canvas de HUD
+                var uiCanvas = GetComponentInChildren<Canvas>(true);
+                if (uiCanvas != null)
+                    uiCanvas.gameObject.SetActive(false);
+            }
+
+            // Setup de vitales siempre, para locales y remotos
+            foreach (var vital in Vitals.Values)
+                vital.SetupVital();
         }
 
         private void Update()
         {
             if (!photonView.IsMine) return;
 
-            // Actualizamos modificadores primero (ej: running, jumping, falling)
+            // Primero modificadores
             foreach (var vital in Vitals.Values)
-            {
                 vital.UpdateModifiers();
-            }
 
-            // Después actualizamos el valor real
+            // Luego valores reales
             foreach (var vital in Vitals.Values)
-            {
                 vital.UpdateVital();
+
+            // Actualizamos UI
+            if (_uiManager != null)
+            {
+                Debug.Log($"{gameObject.name} - Stamina: {Context.Stamina}, Health: {Context.Health}");
+                _uiManager.DisplayStamina(Context.Stamina);
+                _uiManager.DisplayHealth(Context.Health);
             }
         }
 
@@ -89,6 +113,15 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
             Debug.Assert(_rb != null, "Rigidbody is not assigned.");
             Debug.Assert(_uiManager != null, "UIManager is not assigned.");
             Debug.Assert(_playerInputScript != null, "PlayerInputScript is not assigned.");
+
+            if (_uiManager == null)
+            {
+                Debug.LogError("❌ No se encontró PlayerUIManager en " + gameObject.name);
+            }
+            else
+            {
+                Debug.Log("✅ PlayerUIManager encontrado en " + gameObject.name);
+            }
 
             if (_uiManager == null)
             {

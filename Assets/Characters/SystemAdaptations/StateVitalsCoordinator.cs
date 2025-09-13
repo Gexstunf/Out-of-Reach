@@ -51,7 +51,11 @@ namespace Characters.SystemAdaptations {
             ValidateReferences();
         }
 
-        public void Update() {
+        private void Update()
+        {
+            if (playerLifeSupportScript.photonView != null && !playerLifeSupportScript.photonView.IsMine)
+                return;
+
             HandleStateMachine();
             playerLifeSupportScript.Context.SetMovementStates(_movementStruct);
             CheckForVitalsEvents();
