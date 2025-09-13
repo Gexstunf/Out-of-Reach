@@ -540,6 +540,9 @@ MonoBehaviour:
   - {fileID: 3235712755607139366}
   - {fileID: 5056217207721426155}
   - {fileID: 160049441196366561}
+  backpackPanel: {fileID: 0}
+  backpackSlotUI: []
+  backpackSlotIcons: []
 --- !u!1 &2446280908296551528
 GameObject:
   m_ObjectHideFlags: 0
@@ -2093,14 +2096,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputScript: {fileID: 0}
+  handSlot: {fileID: 4937558335129596934}
+  backSlot: {fileID: 0}
+  itemLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  dropForce: 3
   slots:
   - {fileID: 11400000, guid: bcc905355785a7d47ab54c8832fce1cc, type: 2}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   activeSlot: 0
-  handSlot: {fileID: 4937558335129596934}
-  dropForce: 3
+  backpackObj: {fileID: 0}
+  tempHeldObj: {fileID: 0}
+  tempItemData: {fileID: 0}
 --- !u!114 &7489042568434189459
 MonoBehaviour:
   m_ObjectHideFlags: 0

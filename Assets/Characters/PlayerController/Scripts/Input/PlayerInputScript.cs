@@ -87,7 +87,29 @@ namespace Characters.PlayerController.Scripts.Input
 
         public void OnInteract(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
+            if (!context.performed) return;
+
+            var inv = GetComponent<PlayerInventoryPhoton>();
+            if (inv == null) return;
+
+            // Abrir mochila en mano
+            if (inv.backpackObj != null && inv.slots[3] != null && inv.activeSlot == 3)
+            {
+                inv.OpenBackpack();
+                return;
+            }
+
+            // Buscar mochila tirada cerca
+            Collider[] hits = Physics.OverlapSphere(transform.position, 2f, inv.itemLayer);
+            foreach (var hit in hits)
+            {
+                var netItem = hit.GetComponentInParent<NetworkedItem>();
+                if (netItem != null && netItem.itemData != null && netItem.itemData.itemType == ItemType.Backpack)
+                {
+                    inv.OpenBackpackWorld(netItem);
+                    break;
+                }
+            }
         }
 
         public void OnCrouch(InputAction.CallbackContext context)
@@ -125,20 +147,28 @@ namespace Characters.PlayerController.Scripts.Input
         public void OnInventory(InputAction.CallbackContext context) {
             if (!context.performed) return;
 
-            var key = context.control;
-
-            if (key == Keyboard.current.digit1Key) ItemSlot = 0;
-            else if (key == Keyboard.current.digit2Key) ItemSlot = 1;
-            else if (key == Keyboard.current.digit3Key) ItemSlot = 2;
-            else if (key == Keyboard.current.digit4Key) ItemSlot = 3;
-
-            Debug.Log("Cambio a slot " + ItemSlot);
-
-            // Equipar directamente
             var inv = GetComponent<PlayerInventoryPhoton>();
-            if (inv != null)
+            if (inv == null) return;
+
+            if (Keyboard.current.digit1Key.wasPressedThisFrame)
             {
-                inv.EquipFromSlot(ItemSlot);
+                if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(0);
+                else inv.EquipFromSlot(0);
+            }
+            else if (Keyboard.current.digit2Key.wasPressedThisFrame)
+            {
+                if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(1);
+                else inv.EquipFromSlot(1);
+            }
+            else if (Keyboard.current.digit3Key.wasPressedThisFrame)
+            {
+                if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(2);
+                else inv.EquipFromSlot(2);
+            }
+            else if (Keyboard.current.digit4Key.wasPressedThisFrame)
+            {
+                if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(3);
+                else inv.EquipFromSlot(3);
             }
         }
 

@@ -30,6 +30,12 @@ namespace UI
         private PlayerInventoryPhoton inventory;
         private bool _initialized = false;
 
+        [Header("Inventario Mochila")]
+        public GameObject backpackPanel;
+        public GameObject[] backpackSlotUI;
+        public Image[] backpackSlotIcons;
+
+
         // NUEVO: jugador objetivo
         private PlayerLifeSupportContextScript _context;
         private Dictionary<PlayerLifeSupportScript.EVitals, BaseVitalScript<PlayerLifeSupportScript.EVitals>> _vitals;
@@ -139,6 +145,53 @@ namespace UI
             if (inventory == null) return;
             inventory.EquipFromSlot(slotIndex);
             UpdateInventoryUI();
+        }
+
+        public void ShowBackpackInventory(ItemSO[] internalSlots, PlayerInventoryPhoton inv)
+        {
+            backpackPanel.SetActive(true);
+
+            for (int i = 0; i < backpackSlotUI.Length; i++)
+            {
+                if (i >= internalSlots.Length) continue;
+
+                ItemSO item = internalSlots[i];
+                backpackSlotIcons[i].sprite = item != null ? item.icon : null;
+                backpackSlotIcons[i].enabled = item != null;
+
+                // Configurar botón para sacar objeto
+                int slotIndex = i;
+                Button btn = backpackSlotUI[i].GetComponent<Button>();
+                if (btn != null)
+                {
+                    btn.onClick.RemoveAllListeners();
+                    btn.onClick.AddListener(() =>
+                    {
+                        if (item != null)
+                        {
+                            inv.DropFromBackpack(slotIndex);       // Método en PlayerInventoryPhoton
+                            UpdateBackpackUI(internalSlots);       // Actualizamos la UI
+                        }
+                    });
+                }
+            }
+        }
+
+        public void UpdateBackpackUI(ItemSO[] internalSlots)
+        {
+            for (int i = 0; i < backpackSlotUI.Length; i++)
+            {
+                if (i >= internalSlots.Length) continue;
+
+                ItemSO item = internalSlots[i];
+                backpackSlotIcons[i].sprite = item != null ? item.icon : null;
+                backpackSlotIcons[i].enabled = item != null;
+            }
+        }
+
+        public void CloseBackpack()
+        {
+            backpackPanel.SetActive(false);
         }
 
         public void DisplayStamina(float amount)

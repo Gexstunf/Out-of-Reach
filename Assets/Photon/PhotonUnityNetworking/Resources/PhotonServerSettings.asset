@@ -42,6 +42,8 @@ MonoBehaviour:
   - RPC_RequestPickup_Master
   - RPC_SpawnHeldOnPlayer
   - ReceivePlayerAction
+  - RPC_AttachItemToPlayer
+  - RPC_SpawnTempHeld
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
