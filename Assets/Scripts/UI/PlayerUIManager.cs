@@ -156,23 +156,39 @@ namespace UI
                 if (i >= internalSlots.Length) continue;
 
                 ItemSO item = internalSlots[i];
+
+                // Mostrar icono
                 backpackSlotIcons[i].sprite = item != null ? item.icon : null;
                 backpackSlotIcons[i].enabled = item != null;
 
-                // Configurar botón para sacar objeto
                 int slotIndex = i;
                 Button btn = backpackSlotUI[i].GetComponent<Button>();
                 if (btn != null)
                 {
                     btn.onClick.RemoveAllListeners();
-                    btn.onClick.AddListener(() =>
+
+                    if (item != null)
                     {
-                        if (item != null)
+                        // Si hay item, botón sirve para sacarlo
+                        btn.onClick.AddListener(() =>
                         {
-                            inv.DropFromBackpack(slotIndex);       // Método en PlayerInventoryPhoton
-                            UpdateBackpackUI(internalSlots);       // Actualizamos la UI
-                        }
-                    });
+                            inv.DropFromBackpack(slotIndex);
+                            UpdateBackpackUI(internalSlots);
+                        });
+                    }
+                    else
+                    {
+                        // Si no hay item, botón sirve para guardar el que tengas en mano
+                        btn.onClick.AddListener(() =>
+                        {
+                            if (inv.tempItemData != null)
+                            {
+                                inv.StoreInBackpack(inv.tempItemData, slotIndex);
+                                inv.ClearTempHeld();
+                                UpdateBackpackUI(internalSlots);
+                            }
+                        });
+                    }
                 }
             }
         }

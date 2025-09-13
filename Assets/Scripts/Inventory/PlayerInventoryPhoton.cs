@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 using UI;
@@ -61,19 +61,57 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         if (netItem == null || netItem.itemData == null) return;
 
         string heldPrefabName = netItem.GetHeldPrefabName();
+
+        // Si es mochila, extraer sus contents antes de destruir
+        string[] backpackIds = null;
+        if (netItem.itemData.itemType == ItemType.Backpack)
+        {
+            var bd = itemPV.GetComponent<BackpackData>();
+            if (bd != null) backpackIds = bd.GetItemIds();
+        }
+
         PhotonNetwork.Destroy(itemPV.gameObject);
 
-        photonView.RPC(nameof(RPC_SpawnTempHeld), info.Sender, heldPrefabName);
+        // Llamar al cliente que pidió pickup pasándole las IDs (puede ser null)
+        photonView.RPC(nameof(RPC_SpawnTempHeld), info.Sender, heldPrefabName, backpackIds);
     }
 
     [PunRPC]
-    public void RPC_SpawnTempHeld(string heldPrefabName)
+    public void RPC_SpawnTempHeld(string heldPrefabName, string[] backpackIds)
     {
         if (!photonView.IsMine) return;
 
         tempItemData = ItemDatabase.FindByHeldPrefabName(heldPrefabName);
-        tempHeldObj = PhotonNetwork.Instantiate(heldPrefabName, Vector3.zero, Quaternion.identity); // No mostrar a�n
-        tempHeldObj.SetActive(false); // oculto hasta colocar en slot
+        tempHeldObj = PhotonNetwork.Instantiate(heldPrefabName, Vector3.zero, Quaternion.identity);
+        // ocultalo hasta colocarlo
+        tempHeldObj.SetActive(false);
+
+        // Si vino contenido (era una mochila), inicializá BackpackData en el tempHeldObj
+        if (backpackIds != null && backpackIds.Length > 0)
+        {
+            var bd = tempHeldObj.GetComponent<BackpackData>();
+            if (bd == null) bd = tempHeldObj.AddComponent<BackpackData>();
+
+            // Llamamos RPC en la propia PV del objeto para sincronizar en todos
+            var pv = tempHeldObj.GetComponent<PhotonView>();
+            if (pv != null)
+            {
+                pv.RPC("RPC_InitContents", RpcTarget.AllBuffered, (object)backpackIds);
+            }
+        }
+        else
+        {
+            // si querés plantilla por defecto desde ItemSO:
+            if (tempItemData != null && tempItemData.defaultInternalSlots != null && tempItemData.defaultInternalSlots.Length > 0)
+            {
+                var bd = tempHeldObj.GetComponent<BackpackData>() ?? tempHeldObj.AddComponent<BackpackData>();
+                for (int i = 0; i < bd.internalSlots.Length && i < tempItemData.defaultInternalSlots.Length; i++)
+                    bd.internalSlots[i] = tempItemData.defaultInternalSlots[i];
+                // opcional: sincronizar con pv.RPC(...)
+                var pv = tempHeldObj.GetComponent<PhotonView>();
+                if (pv != null) pv.RPC("RPC_InitContents", RpcTarget.AllBuffered, (object)bd.GetItemIds());
+            }
+        }
     }
 
     // ---------- COLOCAR OBJETO EN SLOT ----------
@@ -81,10 +119,8 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
     {
         if (tempHeldObj == null || tempItemData == null) return;
 
-        // La mochila siempre va al �ltimo slot
         if (tempItemData.itemType == ItemType.Backpack) slotIndex = 3;
 
-        // Si ya hay algo en ese slot, lo tiramos
         if (slots[slotIndex] != null) DropCurrent(slotIndex);
 
         slots[slotIndex] = tempItemData;
@@ -92,26 +128,41 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         if (tempItemData.itemType == ItemType.Backpack)
         {
             backpackObj = tempHeldObj;
-            // Equipar mochila en la espalda
-            photonView.RPC(nameof(RPC_AttachItemToPlayer), RpcTarget.AllBuffered,
+            // asegurar que BackpackData existe (debería estar)
+            var bd = backpackObj.GetComponent<BackpackData>();
+            if (bd == null) bd = backpackObj.AddComponent<BackpackData>();
+            // parent por defecto a espalda
+            backpackObj.SetActive(true);
+            backpackObj.transform.SetParent(backSlot, false);
+            backpackObj.transform.localPosition = Vector3.zero;
+            backpackObj.transform.localRotation = Quaternion.identity;
+
+            // sincronizamos parent para todos
+            photonView.RPC(nameof(RPC_AttachItemToPlayer),
+                RpcTarget.AllBuffered,
                 backpackObj.GetComponent<PhotonView>().ViewID,
                 photonView.ViewID,
                 "back");
         }
         else
         {
-            // Guardamos referencia y lo equipamos directamente
+            // item normal → equipar en mano
             currentHeldNetworkObj = tempHeldObj;
             currentHeldViewId = tempHeldObj.GetComponent<PhotonView>().ViewID;
             activeSlot = slotIndex;
 
-            photonView.RPC(nameof(RPC_AttachItemToPlayer), RpcTarget.AllBuffered,
+            tempHeldObj.SetActive(true);
+            tempHeldObj.transform.SetParent(handSlot, false);
+            tempHeldObj.transform.localPosition = Vector3.zero;
+            tempHeldObj.transform.localRotation = Quaternion.identity;
+
+            photonView.RPC(nameof(RPC_AttachItemToPlayer),
+                RpcTarget.AllBuffered,
                 currentHeldViewId,
                 photonView.ViewID,
                 "hand");
         }
 
-        // Limpiar temp
         tempHeldObj = null;
         tempItemData = null;
 
@@ -200,8 +251,21 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         if (itemData.itemType == ItemType.Backpack)
         {
             if (backpackObj == null) return;
-            objToDrop = backpackObj;
+            // obtener ids desde backpackObj
+            var bd = backpackObj.GetComponent<BackpackData>();
+            string[] ids = bd != null ? bd.GetItemIds() : new string[4];
+
+            // destruir la instancia local (held) en la escena
+            PhotonNetwork.Destroy(backpackObj);
             backpackObj = null;
+
+            // instanciar world prefab y enviar los ids para inicializar
+            GameObject worldObj = PhotonNetwork.Instantiate(itemData.worldPrefabName, dropPos, Quaternion.identity);
+            var worldPV = worldObj.GetComponent<PhotonView>();
+            if (worldPV != null)
+            {
+                worldPV.RPC("RPC_InitContents", RpcTarget.AllBuffered, (object)ids);
+            }
         }
         else
         {
