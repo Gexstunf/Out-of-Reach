@@ -44,6 +44,7 @@ MonoBehaviour:
   - ReceivePlayerAction
   - RPC_AttachItemToPlayer
   - RPC_SpawnTempHeld
+  - RPC_InitContents
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

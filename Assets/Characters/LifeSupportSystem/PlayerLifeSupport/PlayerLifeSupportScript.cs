@@ -93,7 +93,6 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
             // Actualizamos UI
             if (_uiManager != null)
             {
-                Debug.Log($"{gameObject.name} - Stamina: {Context.Stamina}, Health: {Context.Health}");
                 _uiManager.DisplayStamina(Context.Stamina);
                 _uiManager.DisplayHealth(Context.Health);
             }

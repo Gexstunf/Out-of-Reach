@@ -6,6 +6,12 @@ public class BackpackData : MonoBehaviourPun
     // Inventario por instancia (4 slots)
     public ItemSO[] internalSlots = new ItemSO[4];
 
+    void Awake()
+    {
+        if (internalSlots == null || internalSlots.Length == 0)
+            internalSlots = new ItemSO[4];
+    }
+
     // Devuelve IDs (string) para serializar / enviar por RPC
     public string[] GetItemIds()
     {

@@ -146,7 +146,6 @@ namespace Characters.PlayerController.Scripts.Input
 
         public void OnInventory(InputAction.CallbackContext context) {
             if (!context.performed) return;
-
             var inv = GetComponent<PlayerInventoryPhoton>();
             if (inv == null) return;
 

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Mochila
   m_EditorClassIdentifier: 
   itemId: 3
-  worldPrefabName: PhotonPrefabs/Items/World_Backpack
-  heldPrefabName: PhotonPrefabs/Items/World_Backpack
+  worldPrefabName: World_Backpack
+  heldPrefabName: Held_Backpack
   icon: {fileID: 21300000, guid: 52d8e09ca8f9d7d419ddc9cd2bb364ef, type: 3}
   displayName: Backpack
   itemType: 2

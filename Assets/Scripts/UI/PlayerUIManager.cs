@@ -106,8 +106,6 @@ namespace UI
         {
             if (_context == null) return;
 
-            Debug.Log($"Actualizando UI - Health: {_context.Health}, Stamina: {_context.Stamina}");
-
             DisplayHealth(_context.Health);
             DisplayStamina(_context.Stamina);
             UpdateInventoryUI();
@@ -147,15 +145,15 @@ namespace UI
             UpdateInventoryUI();
         }
 
-        public void ShowBackpackInventory(ItemSO[] internalSlots, PlayerInventoryPhoton inv)
+        public void ShowBackpackInventory(BackpackData bd, PlayerInventoryPhoton inv)
         {
             backpackPanel.SetActive(true);
 
             for (int i = 0; i < backpackSlotUI.Length; i++)
             {
-                if (i >= internalSlots.Length) continue;
+                if (i >= bd.internalSlots.Length) continue;
 
-                ItemSO item = internalSlots[i];
+                ItemSO item = bd.internalSlots[i];
 
                 // Mostrar icono
                 backpackSlotIcons[i].sprite = item != null ? item.icon : null;
@@ -169,23 +167,23 @@ namespace UI
 
                     if (item != null)
                     {
-                        // Si hay item, botón sirve para sacarlo
+                        // Si hay item → botón lo saca al mundo
                         btn.onClick.AddListener(() =>
                         {
-                            inv.DropFromBackpack(slotIndex);
-                            UpdateBackpackUI(internalSlots);
+                            inv.DropFromBackpack(bd, slotIndex);
+                            UpdateBackpackUI(bd.internalSlots);
                         });
                     }
                     else
                     {
-                        // Si no hay item, botón sirve para guardar el que tengas en mano
+                        // Si no hay item → botón guarda el tempHeld
                         btn.onClick.AddListener(() =>
                         {
                             if (inv.tempItemData != null)
                             {
-                                inv.StoreInBackpack(inv.tempItemData, slotIndex);
+                                inv.StoreInBackpack(bd, inv.tempItemData, slotIndex);
                                 inv.ClearTempHeld();
-                                UpdateBackpackUI(internalSlots);
+                                UpdateBackpackUI(bd.internalSlots);
                             }
                         });
                     }
@@ -219,14 +217,11 @@ namespace UI
             }
 
             float fill = Mathf.Clamp01(amount / maxStamina);
-            Debug.Log($"[{gameObject.name}] Cambiando staminaBar.fillAmount a {fill}");
             staminaBar.fillAmount = fill;
         }
 
         public void DisplayHealth(float amount)
         {
-            Debug.Log($"[{gameObject.name}] Actualizando vida: {amount}");
-
             if (healthTicks.Count == 0)
             {
                 Debug.LogWarning("No hay healthTicks en " + gameObject.name);
@@ -234,7 +229,6 @@ namespace UI
             }
 
             int ticksOn = Mathf.CeilToInt(amount / healthPerTick);
-            Debug.Log($"[{gameObject.name}] Ticks encendidos: {ticksOn}/{healthTicks.Count}");
 
             for (int i = 0; i < healthTicks.Count; i++)
             {

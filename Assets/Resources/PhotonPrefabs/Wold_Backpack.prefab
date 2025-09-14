@@ -9,12 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2193909794861739162}
-  - component: {fileID: 2271101571125635440}
   - component: {fileID: 1698525152141508340}
   - component: {fileID: 6114959827215699346}
   - component: {fileID: 8724584025304412538}
   - component: {fileID: 585544864658590776}
-  m_Layer: 0
+  - component: {fileID: 6750821520029695696}
+  - component: {fileID: 3962430510511170143}
+  m_Layer: 6
   m_Name: Wold_Backpack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37,28 +38,6 @@ Transform:
   - {fileID: 5504287129294250422}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &2271101571125635440
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7290111258176593654}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!54 &1698525152141508340
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -138,6 +117,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: 7d72c12c13191654580ede329588e30f, type: 2}
+--- !u!114 &6750821520029695696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7290111258176593654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66dbe15d4b6a4e04ba59015c534cb0fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  internalSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!65 &3962430510511170143
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7290111258176593654}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.6230057, y: 2.0763729, z: 1}
+  m_Center: {x: 0.005598128, y: -0.53818643, z: 0}
 --- !u!1001 &5470077522222499421
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -193,6 +210,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 160bccd7d8182344dad3eb18cf40a6cc, type: 3}
       propertyPath: m_Name
       value: Mochila
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 160bccd7d8182344dad3eb18cf40a6cc, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

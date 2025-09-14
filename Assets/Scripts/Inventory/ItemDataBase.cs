@@ -27,4 +27,13 @@ public class ItemDatabase : MonoBehaviour
             if (it != null && it.worldPrefabName == worldName) return it;
         return null;
     }
+
+    public static ItemSO FindById(string id)
+    {
+        if (Instance == null) return null;
+        foreach (var it in Instance.allItems)
+            if (it != null && it.itemId == id) return it;
+        return null;
+    }
+
 }
