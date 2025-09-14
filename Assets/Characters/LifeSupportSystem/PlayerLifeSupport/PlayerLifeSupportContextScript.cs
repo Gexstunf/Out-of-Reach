@@ -13,6 +13,11 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         [SerializeField] private PlayerInputScript _playerInputScript;
         [SerializeField] private readonly float _maxHealth;
         [SerializeField] private readonly float _maxStamina;
+        
+        [SerializeField] private readonly float _staminaUseRate;
+        [SerializeField] private readonly float _staminaRegenRate;
+        [SerializeField] private readonly float _staminaRegenDelay;
+
         [SerializeField] private float _currentHealth;
         [SerializeField] private float _currentStamina;
         
@@ -29,7 +34,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         
         public bool IsMoving { get; private set; }
         
-        public PlayerLifeSupportContextScript(Rigidbody rb, float maxHealth, float maxStamina, 
+        public PlayerLifeSupportContextScript(Rigidbody rb, float maxHealth, float maxStamina, float stamUseRate, float stamRegenRate, float stamRegenDelay, 
             UIManagerScript uiManager, PlayerInputScript playerInputScript) 
         {
             _rb = rb;
@@ -37,6 +42,9 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
             _maxStamina = maxStamina;
             _uiManager = uiManager;
             _playerInputScript = playerInputScript;
+            _staminaUseRate = stamUseRate;
+            _staminaRegenRate = stamRegenRate;
+            _staminaRegenDelay = stamRegenDelay;
         }
         
         public void SetMovementStates(MovementStatesStructScript states) {
@@ -60,9 +68,9 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         public float Stamina => _currentStamina;
         
 
-        public float StaminaUseRate => 5f;
-        public float StaminaRegenRate => 2f;
-        public float StaminaRegenDelay => 5f;
+        public float StaminaUseRate => _staminaUseRate;
+        public float StaminaRegenRate => _staminaRegenRate;
+        public float StaminaRegenDelay => _staminaRegenDelay;
         
         public float HealthRegenRate => 2f;
         public float HealthRegenDelay => 4f;

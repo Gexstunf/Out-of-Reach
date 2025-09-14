@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using Characters.PlayerController.Scripts.Input;
+using Characters.SystemAdaptations;
 using Characters.Utils.ConfigurableJoints;
 using Unity.Mathematics;
 using UnityEngine;
@@ -17,6 +19,9 @@ namespace Characters.PlayerController.Scripts {
         [Header("References")]
         [SerializeField] private PlayerInputScript playerInputScript;
         [SerializeField] private PlayerControllerScript playerController;
+        
+        [Header("Settings")]
+        [SerializeField] private StateVitalsCoordinator _stateVitalsCoordinator;
         
         [Header("Physics settings")]
         [SerializeField] private int _solverIterations = 12;
@@ -82,6 +87,12 @@ namespace Characters.PlayerController.Scripts {
                     bone.angularDriveSpring = bone.joint.angularXDrive.positionSpring;
                 }
             }
+
+            _stateVitalsCoordinator.OnTiredChanged += HandleActiveRagdollState;
+        }
+
+        private void OnDisable() {
+            _stateVitalsCoordinator.OnTiredChanged -= HandleActiveRagdollState;
         }
         
         void FixedUpdate()
@@ -264,6 +275,16 @@ namespace Characters.PlayerController.Scripts {
                 StopCoroutine(_stabilizerCoroutine);
             }
             _stabilizerCoroutine = StartCoroutine(SmoothLockStabilizer(_stabilizerMap.joint)); 
+        }
+
+        private void HandleActiveRagdollState(bool kill) {
+            Debug.Log("HANDLING ACTIVE RAGDOLL");
+            if (kill) {
+                KillActiveRagdoll();
+            }
+            else {
+                ReviveActiveRagdoll();
+            }
         }
     }
 }
