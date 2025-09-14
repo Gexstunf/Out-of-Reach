@@ -28,6 +28,9 @@ namespace Characters.PlayerController.Scripts
         public float runForce = 60f;
         public float playerDrag = 20f;
         
+        [Header("Crouch Settings")]
+        public float crouchHeight = 1.5f;
+        
         [Header("Jump Settings")]
         public float jumpForce = 10f;
         public float forwardJumpForce = 5f;

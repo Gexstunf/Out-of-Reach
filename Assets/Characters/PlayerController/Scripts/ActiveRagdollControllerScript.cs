@@ -1,7 +1,9 @@
 using System.Collections;
+using Characters.PlayerController.Scripts.Input;
 using Characters.Utils.ConfigurableJoints;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Characters.PlayerController.Scripts {
     public class ActiveRagdollControllerScript : MonoBehaviour
@@ -12,6 +14,9 @@ namespace Characters.PlayerController.Scripts {
         //[Tooltip("Debug HAS to be on for these properties to take effect.")]
         //[SerializeField] private bool debug = false;
         [SerializeField] private bool alive = true;
+        [Header("References")]
+        [SerializeField] private PlayerInputScript playerInputScript;
+        [SerializeField] private PlayerControllerScript playerController;
         
         [Header("Physics settings")]
         [SerializeField] private int _solverIterations = 12;
@@ -28,12 +33,18 @@ namespace Characters.PlayerController.Scripts {
         [SerializeField] private float _lockSpring = 10000f;
         [SerializeField] private float _lockDamper = 50f;
         [SerializeField] private float _initialClearance = 0.5f;
+        
+        public BoneMap[] boneMaps;
+        
+        private BoneMap _stabilizerMap;
+        private Vector3 _normalFixedPos;
+        private Vector3 _normalLocalFixedPos;
 
-        private ConfigurableJoint _stabilizerJoint;
         private bool _isInterpolating = false;
         private float _interpolationTime = 0f;
         private bool _targetAlive;
         private Coroutine _stabilizerCoroutine;
+        private Coroutine _stabilizerCrouchCoroutine;
 
         
         [System.Serializable]
@@ -50,6 +61,7 @@ namespace Characters.PlayerController.Scripts {
         }
 
         private void Start() {
+            playerInputScript = GetComponent<PlayerInputScript>();
             foreach (var bone in boneMaps) {
                 // beware of those who dont have joints
                 bone.rb.solverIterations = _solverIterations;
@@ -59,7 +71,8 @@ namespace Characters.PlayerController.Scripts {
                 bone.initialLocalRotation = bone.rb.transform.localRotation;
 
                 if (bone.isStabilizer) {
-                    _stabilizerJoint = bone.joint;
+                    _stabilizerMap = bone;
+                    _normalLocalFixedPos = bone.rb.transform.localPosition;
                 }
                 
                 if (!bone.joint) {
@@ -70,16 +83,24 @@ namespace Characters.PlayerController.Scripts {
                 }
             }
         }
-
-        public BoneMap[] boneMaps;
-
+        
         void FixedUpdate()
         {
 
-            // if (debug || !alive) {
-            //     return;
-            // }
-
+            if (playerInputScript.CrouchPressed) {
+                if (_stabilizerCoroutine != null) {
+                    StopCoroutine(_stabilizerCoroutine);
+                }
+                _stabilizerCrouchCoroutine = StartCoroutine(CrouchStabilizer());
+            }
+            else {
+                _stabilizerMap.joint.targetPosition = new Vector3(
+                    _stabilizerMap.rb.transform.position.x,
+                    _stabilizerMap.rb.transform.TransformDirection(_normalLocalFixedPos).y,
+                    _stabilizerMap.rb.transform.position.z
+                );
+            }
+            
             if (_isInterpolating) {
                 _interpolationTime += Time.fixedDeltaTime;
                 float t = Mathf.Clamp01(_interpolationTime / _interpolationDuration);
@@ -186,6 +207,25 @@ namespace Characters.PlayerController.Scripts {
             joint.angularZMotion = ConfigurableJointMotion.Limited;
         }
 
+        private IEnumerator CrouchStabilizer() {
+            while (_stabilizerMap.rb.transform.position.y <= _stabilizerMap.rb.transform.TransformDirection(_normalLocalFixedPos).y ) {
+                _stabilizerMap.joint.yMotion = ConfigurableJointMotion.Limited;
+                var jointLim = new SoftJointLimit();
+                jointLim.limit = playerController.crouchHeight;
+                _stabilizerMap.joint.linearLimit = jointLim;
+                
+                _stabilizerMap.joint.targetPosition = new Vector3(
+                    _stabilizerMap.rb.transform.position.x,
+                    playerController.crouchHeight,
+                    _stabilizerMap.rb.transform.position.z
+                );
+                
+                yield return null;
+            }
+            
+            _stabilizerMap.joint.yMotion = ConfigurableJointMotion.Locked;
+        }
+
         void AllowLimitedConfigurableJointMovement(ConfigurableJoint joint, bool allow = true) {
             if (allow) {
                 joint.yMotion = ConfigurableJointMotion.Free;
@@ -207,7 +247,7 @@ namespace Characters.PlayerController.Scripts {
         [ContextMenu("Kill active ragdoll")]
         void KillActiveRagdoll() {
             SetActiveRagdollState(false);
-            AllowLimitedConfigurableJointMovement(_stabilizerJoint);
+            AllowLimitedConfigurableJointMovement(_stabilizerMap.joint);
             
             if (_stabilizerCoroutine != null) {
                 StopCoroutine(_stabilizerCoroutine);
@@ -218,12 +258,12 @@ namespace Characters.PlayerController.Scripts {
         [ContextMenu("Revive active ragdoll")]
         void ReviveActiveRagdoll() {
             SetActiveRagdollState(isAlive: true);
-            SmoothLockStabilizer(_stabilizerJoint);
+            SmoothLockStabilizer(_stabilizerMap.joint);
             
             if (_stabilizerCoroutine != null) {
                 StopCoroutine(_stabilizerCoroutine);
             }
-            _stabilizerCoroutine = StartCoroutine(SmoothLockStabilizer(_stabilizerJoint)); 
+            _stabilizerCoroutine = StartCoroutine(SmoothLockStabilizer(_stabilizerMap.joint)); 
         }
     }
 }

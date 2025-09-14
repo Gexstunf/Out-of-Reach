@@ -121,7 +121,7 @@ ConfigurableJoint:
   m_YDrive:
     serializedVersion: 4
     positionSpring: 0
-    positionDamper: 0
+    positionDamper: 50
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_ZDrive:
@@ -376,12 +376,13 @@ MonoBehaviour:
   moveForce: 30
   runForce: 60
   playerDrag: 20
+  crouchHeight: 1.5
   jumpForce: 20
   forwardJumpForce: 3
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  groundCheckBoxSize: {x: 0.5, y: 0.44, z: 0.5}
+  groundCheckBoxSize: {x: 0.5, y: 0.15, z: 0.5}
   _lookSenseH: 0.2
   _lookSenseV: 0.2
   _lookLimitV: 30
@@ -453,6 +454,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alive: 1
+  playerInputScript: {fileID: 5100631225743810992}
+  playerController: {fileID: 1081855665796605543}
   _solverIterations: 12
   _solverVelIterations: 12
   _maxAngularVelocity: 20
@@ -1006,6 +1009,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1178103718604873752}
     m_Modifications:
+    - target: {fileID: 102087761990903696, guid: d358000590f7e40c39b5f67606d35089, type: 3}
+      propertyPath: m_AngularXDrive.positionSpring
+      value: 1700
+      objectReference: {fileID: 0}
+    - target: {fileID: 102087761990903696, guid: d358000590f7e40c39b5f67606d35089, type: 3}
+      propertyPath: m_AngularYZDrive.positionSpring
+      value: 1700
+      objectReference: {fileID: 0}
+    - target: {fileID: 116559190013530234, guid: d358000590f7e40c39b5f67606d35089, type: 3}
+      propertyPath: m_AngularXDrive.positionSpring
+      value: 1700
+      objectReference: {fileID: 0}
+    - target: {fileID: 116559190013530234, guid: d358000590f7e40c39b5f67606d35089, type: 3}
+      propertyPath: m_AngularYZDrive.positionSpring
+      value: 1700
+      objectReference: {fileID: 0}
     - target: {fileID: 479482509429907675, guid: d358000590f7e40c39b5f67606d35089, type: 3}
       propertyPath: m_AngularYLimit.limit
       value: 15.2616
@@ -1035,12 +1054,16 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1058779455836424290, guid: d358000590f7e40c39b5f67606d35089, type: 3}
+      propertyPath: m_LowAngularXLimit.limit
+      value: -98
+      objectReference: {fileID: 0}
+    - target: {fileID: 1058779455836424290, guid: d358000590f7e40c39b5f67606d35089, type: 3}
       propertyPath: m_AngularXDrive.positionSpring
-      value: 1700
+      value: 1900
       objectReference: {fileID: 0}
     - target: {fileID: 1058779455836424290, guid: d358000590f7e40c39b5f67606d35089, type: 3}
       propertyPath: m_AngularYZDrive.positionSpring
-      value: 1700
+      value: 1900
       objectReference: {fileID: 0}
     - target: {fileID: 1679925848558318533, guid: d358000590f7e40c39b5f67606d35089, type: 3}
       propertyPath: m_AngularYLimit.limit
@@ -1183,12 +1206,16 @@ PrefabInstance:
       value: 1300
       objectReference: {fileID: 0}
     - target: {fileID: 6219460550705928772, guid: d358000590f7e40c39b5f67606d35089, type: 3}
+      propertyPath: m_LowAngularXLimit.limit
+      value: -98
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219460550705928772, guid: d358000590f7e40c39b5f67606d35089, type: 3}
       propertyPath: m_AngularXDrive.positionSpring
-      value: 1700
+      value: 1900
       objectReference: {fileID: 0}
     - target: {fileID: 6219460550705928772, guid: d358000590f7e40c39b5f67606d35089, type: 3}
       propertyPath: m_AngularYZDrive.positionSpring
-      value: 1700
+      value: 1900
       objectReference: {fileID: 0}
     - target: {fileID: 8362164436482877409, guid: d358000590f7e40c39b5f67606d35089, type: 3}
       propertyPath: m_Mass
