@@ -14,6 +14,12 @@ namespace TerrainGeneratorScripts.SpaceShips
         public GameObject inactiveVisual;
         public SpawnScript entrance;
 
+        
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void ResetStatics()
+        {
+            allDoors.Clear();
+        }
         void Awake()
         {
             entrance = FindAnyObjectByType<SpawnScript>();

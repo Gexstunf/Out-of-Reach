@@ -12,6 +12,12 @@ namespace TerrainGeneratorScripts.SpaceShips
         public float activationChance;
         
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void ResetStatics()
+        {
+            allExits.Clear();
+        }
+        
         public void Awake()
         {
             

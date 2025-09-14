@@ -6,14 +6,14 @@ namespace TerrainGeneratorScripts.SpaceShips
 {
     public class RoomScript : MonoBehaviour
     {
-        private static bool reloadTriggered = false;
+        private static bool _reloadTriggered = false;
 
         [RuntimeInitializeOnLoadMethod]
         private static void ResetOnSceneLoad()
         {
             SceneManager.sceneLoaded += (scene, mode) =>
             {
-                reloadTriggered = false; // reset for the new scene
+                _reloadTriggered = false; // reset for the new scene
             };
         }
 
@@ -21,7 +21,7 @@ namespace TerrainGeneratorScripts.SpaceShips
         {
             yield return new WaitForFixedUpdate();
 
-            if (reloadTriggered) yield break;
+            if (_reloadTriggered) yield break;
 
             Collider myCol = GetComponent<Collider>();
             if (myCol == null) yield break;
@@ -34,7 +34,7 @@ namespace TerrainGeneratorScripts.SpaceShips
 
             foreach (Collider other in others)
             {
-                // 🚫 Ignore my own colliders (root + children)
+                // Ignore my own colliders (root + children)
                 if (other == myCol || other.transform.IsChildOf(transform))
                     continue;
 
@@ -46,11 +46,11 @@ namespace TerrainGeneratorScripts.SpaceShips
                         other, other.transform.position, other.transform.rotation,
                         out dir, out distance))
                 {
-                    if (other.CompareTag("Indestructible") && distance > 0.1f)
+                    if (other.CompareTag("Indestructible") && distance > 0.01f)
                     {
-                        reloadTriggered = true;
+                        _reloadTriggered = true;
                         Debug.LogWarning($"Reloading due to overlap: {name} with {other.name}");
-                        SceneManager.LoadScene("Test-004 (Generation)");
+                        ReloadManager.ReloadScene("Test-004 (Generation)");
                         yield break;
                     }
                 }
