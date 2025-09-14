@@ -47,10 +47,6 @@ MonoBehaviour:
   exitID: 
   isActive: 1
   activationChance: 1
-  collisionLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  includeOwnCollider: 0
 --- !u!1 &4720354236634264399
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,7 +89,7 @@ GameObject:
   - component: {fileID: 7955747525249215874}
   - component: {fileID: 8386710125997119683}
   - component: {fileID: 972005482293578842}
-  - component: {fileID: 370885726454451046}
+  - component: {fileID: -5024970676767906612}
   m_Layer: 0
   m_Name: HabCompuertaPrefab
   m_TagString: Indestructible
@@ -171,17 +167,17 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &370885726454451046
+  m_CollisionDetection: 1
+--- !u!114 &-5024970676767906612
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5273698022927060502}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07e7128d98dda90449d444956c921198, type: 3}
+  m_Script: {fileID: 11500000, guid: 03b8744d405dffb42a9ecd231fc43294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &9023254580018263102
@@ -231,10 +227,6 @@ MonoBehaviour:
   exitID: 
   isActive: 1
   activationChance: 1
-  collisionLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  includeOwnCollider: 0
 --- !u!1001 &1194762143511137584
 PrefabInstance:
   m_ObjectHideFlags: 0

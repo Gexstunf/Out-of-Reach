@@ -3,6 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 namespace TerrainGeneratorScripts.SpaceShips
 {
@@ -102,7 +103,7 @@ namespace TerrainGeneratorScripts.SpaceShips
                 if (!spawnedThisIteration || ExitScript.allExits.Count == 0)
                 {
                     Debug.LogWarning("No more active exits available or no spawning occurred, stopping generation");
-                    break;
+                    SceneManager.LoadScene("Test-004 (Generation)");
                 }
             }
     

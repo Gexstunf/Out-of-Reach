@@ -78,10 +78,6 @@ MonoBehaviour:
   exitID: 
   isActive: 1
   activationChance: 1
-  collisionLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  includeOwnCollider: 0
 --- !u!1 &4521770302298686743
 GameObject:
   m_ObjectHideFlags: 0
@@ -129,10 +125,6 @@ MonoBehaviour:
   exitID: 
   isActive: 1
   activationChance: 1
-  collisionLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  includeOwnCollider: 0
 --- !u!1 &5089975720083485264
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,10 +172,6 @@ MonoBehaviour:
   exitID: 
   isActive: 1
   activationChance: 1
-  collisionLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  includeOwnCollider: 0
 --- !u!1 &6182710203842667853
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,9 +181,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5956655198905727707}
-  - component: {fileID: 6734842530831912622}
   - component: {fileID: 2757128625436097975}
   - component: {fileID: 2688458356117339520}
+  - component: {fileID: 419983524728686328}
   m_Layer: 0
   m_Name: HabReactorPrefab
   m_TagString: Indestructible
@@ -227,18 +215,6 @@ Transform:
   - {fileID: 7704562664511114112}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6734842530831912622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6182710203842667853}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07e7128d98dda90449d444956c921198, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!64 &2757128625436097975
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -287,7 +263,19 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
+--- !u!114 &419983524728686328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6182710203842667853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03b8744d405dffb42a9ecd231fc43294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2100021777683816407
 PrefabInstance:
   m_ObjectHideFlags: 0

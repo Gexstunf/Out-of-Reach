@@ -3,7 +3,22 @@ guid: 4f1ea87c0f700794e9574bdc1729e2ab
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HabBar
+    second: {fileID: 2100000, guid: 1e085fe377a043e489dad14e524b41ff, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MesaBar
+    second: {fileID: 2100000, guid: 8b6b5a6d6c1a15645bf2ba4435772c06, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sillon
+    second: {fileID: 2100000, guid: 3fb58b5cbbc74f8499a1c29718d838fb, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

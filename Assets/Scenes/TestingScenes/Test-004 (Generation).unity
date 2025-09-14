@@ -155,8 +155,11 @@ MonoBehaviour:
   exitOut: {fileID: 6596308107174760454, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
   intersectionsPossibles:
   - {fileID: 193496881068272272, guid: 65f182e66a6c2be4b9b43b5d808f0bf9, type: 3}
-  - {fileID: 4950417639267779701, guid: abb6aee28b2bb1743807263c25d293bc, type: 3}
   - {fileID: 6677434570533079222, guid: 0f6d33ca023f81741bc954fcdc2b3558, type: 3}
+  - {fileID: 6677434570533079222, guid: dc6486f5e381d6947bf62af3d849ec17, type: 3}
+  - {fileID: 4950417639267779701, guid: abb6aee28b2bb1743807263c25d293bc, type: 3}
+  - {fileID: 4950417639267779701, guid: 8596901f8308b6d42becc243141484f2, type: 3}
+  - {fileID: 4950417639267779701, guid: 3ba2df82aea2f4c41a3abf2917701aab, type: 3}
   roomsPossibles:
   - {fileID: 8846650929021130192, guid: 361adf9c31be7914c9ed3ac21a5129f8, type: 3}
   - {fileID: 6182710203842667853, guid: 2a5e44a9a0e821e4081b7cb05d2d2122, type: 3}
@@ -165,6 +168,10 @@ MonoBehaviour:
   - {fileID: 1377035139366547631, guid: e5796f6983b2c5f4ca80c6777fe0ce11, type: 3}
   - {fileID: 5273698022927060502, guid: 8f88c383886971e4fb6b47e893313d92, type: 3}
   - {fileID: 5273698022927060502, guid: 8f88c383886971e4fb6b47e893313d92, type: 3}
+  - {fileID: 8525219668423997740, guid: 590424f9ef66e5443ac715025d4ceda7, type: 3}
+  - {fileID: 8525219668423997740, guid: 590424f9ef66e5443ac715025d4ceda7, type: 3}
+  - {fileID: 8525219668423997740, guid: 53e2ed81dbeeaf34198bf991ab375ca2, type: 3}
+  - {fileID: 8525219668423997740, guid: 53e2ed81dbeeaf34198bf991ab375ca2, type: 3}
   rooms: 0
   quantityOfRooms: 0
 --- !u!4 &165239719

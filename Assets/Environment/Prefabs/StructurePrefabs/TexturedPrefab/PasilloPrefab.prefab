@@ -47,10 +47,6 @@ MonoBehaviour:
   exitID: 
   isActive: 1
   activationChance: 1
-  collisionLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  includeOwnCollider: 0
 --- !u!1 &3791255646465563467
 GameObject:
   m_ObjectHideFlags: 0
@@ -115,7 +111,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &1379781152491563441
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -95,8 +95,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7500236061927494659}
   - component: {fileID: 9122222825340130878}
-  - component: {fileID: 9042537853196131504}
   - component: {fileID: 4208568413692538244}
+  - component: {fileID: 5642003417432666921}
   m_Layer: 0
   m_Name: HabInvernaderoPrefab
   m_TagString: Indestructible
@@ -149,19 +149,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &9042537853196131504
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8846650929021130192}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07e7128d98dda90449d444956c921198, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_CollisionDetection: 1
 --- !u!64 &4208568413692538244
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -184,6 +172,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4766090231595631520, guid: 65aff32bfa92c324da1ed8c12f3ec0d5, type: 3}
+--- !u!114 &5642003417432666921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8846650929021130192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03b8744d405dffb42a9ecd231fc43294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2529836428615001567
 PrefabInstance:
   m_ObjectHideFlags: 0
