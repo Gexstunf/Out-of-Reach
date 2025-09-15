@@ -744,17 +744,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &765763802 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8577612288252698396, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-  m_PrefabInstance: {fileID: 9009485614359479826}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b81a7529834b4f6eb163dd352a00a6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &869258023
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2574,18 +2563,6 @@ PrefabInstance:
       propertyPath: _uiManager
       value: 
       objectReference: {fileID: 2075601344}
-    - target: {fileID: 926872951551675757, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7072302
-      objectReference: {fileID: 0}
-    - target: {fileID: 926872951551675757, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7069834
-      objectReference: {fileID: 0}
-    - target: {fileID: 926872951551675757, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -89.98
-      objectReference: {fileID: 0}
     - target: {fileID: 1178103718604873752, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2630,10 +2607,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: NewActiveRagdoll
       objectReference: {fileID: 0}
-    - target: {fileID: 4772635120696456569, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
-      propertyPath: playerStateMachineScript
-      value: 
-      objectReference: {fileID: 765763802}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
