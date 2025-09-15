@@ -211,9 +211,28 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
         if (slotIndex < 0 || slotIndex >= slots.Length) return;
-        if (slots[slotIndex] == null) return;
+        if (slots[slotIndex] == null)
+        {
+            Debug.Log($"[Inventory] Slot {slotIndex} vacío, holstering current item");
+            HolsterCurrent();
 
-        ItemSO itemData = slots[slotIndex];
+            // si tenías mochila en mano, moverla a espalda
+            if (backpackObj != null && backpackObj.transform.parent == handSlot)
+            {
+                photonView.RPC(nameof(RPC_AttachItemToPlayer),
+                    RpcTarget.AllBuffered,
+                    backpackObj.GetComponent<PhotonView>().ViewID,
+                    photonView.ViewID,
+                    "back");
+            }
+
+            activeSlot = -1; // importante para que no quede seleccionado ningún slot
+            FindFirstObjectByType<PlayerUIManager>()?.UpdateInventoryUI();
+
+            return;
+        }
+
+            ItemSO itemData = slots[slotIndex];
         Debug.Log($"[Equip] Trying to equip slot {slotIndex} -> '{itemData.displayName}'");
 
         if (activeSlot == slotIndex)
