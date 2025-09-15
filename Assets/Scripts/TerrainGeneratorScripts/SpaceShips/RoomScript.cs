@@ -7,6 +7,7 @@ namespace TerrainGeneratorScripts.SpaceShips
     public class RoomScript : MonoBehaviour
     {
         private static bool _reloadTriggered = false;
+        [SerializeField] private static string _sceneName = "RoomGeneration";
 
         [RuntimeInitializeOnLoadMethod]
         private static void ResetOnSceneLoad()
@@ -49,8 +50,8 @@ namespace TerrainGeneratorScripts.SpaceShips
                     if (other.CompareTag("Indestructible") && distance > 0.01f)
                     {
                         _reloadTriggered = true;
-                        Debug.LogWarning($"Reloading due to overlap: {name} with {other.name}");
-                        ReloadManager.ReloadScene("Test-004 (Generation)");
+                        Debug.LogWarning($"Reloading due to overlap: {name} with {other.name}!!");
+                        ReloadManager.ReloadScene("RoomGeneration");
                         yield break;
                     }
                 }

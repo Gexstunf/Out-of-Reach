@@ -9,6 +9,7 @@ namespace TerrainGeneratorScripts.SpaceShips
 {
     public class SpawnScript : MonoBehaviour
     {
+        [SerializeField] public static string sceneName = "RoomGeneration";
         public GameObject doorGameObject;
         public GameObject uniqueHall;
         public ExitScript exitScript; 
@@ -103,7 +104,7 @@ namespace TerrainGeneratorScripts.SpaceShips
                 if (!spawnedThisIteration || ExitScript.allExits.Count == 0)
                 {
                     Debug.LogWarning("No more active exits available or no spawning occurred, stopping generation");
-                    ReloadManager.ReloadScene("Test-004 (Generation)");
+                    ReloadManager.ReloadScene("RoomGeneration");
                 }
             }
     

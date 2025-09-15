@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8092656335910759136}
   - component: {fileID: 4397292786193472230}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: mesh
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
@@ -66,7 +66,7 @@ GameObject:
   - component: {fileID: 8870479802968787408}
   - component: {fileID: 3425888450882013640}
   - component: {fileID: -7074156836604390784}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HabAlmacenamientoPrefab
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2728040775686607521}
   - component: {fileID: 4684944355774433031}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Exit
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
@@ -211,7 +211,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1044016540060917746}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: EntryPoint
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
@@ -281,9 +281,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2268283068839917404, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_Name
       value: PuertaPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_TagString
@@ -292,6 +300,18 @@ PrefabInstance:
     - target: {fileID: 2603972251886297338, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_LocalPosition.z
       value: -1.62
+      objectReference: {fileID: 0}
+    - target: {fileID: 2767361834824982362, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616762866652952180, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6432246925732745725, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8535004441035555759, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -355,9 +375,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2268283068839917404, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_Name
       value: PuertaPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_TagString
@@ -366,6 +394,18 @@ PrefabInstance:
     - target: {fileID: 2603972251886297338, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_LocalPosition.z
       value: -1.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 2767361834824982362, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616762866652952180, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6432246925732745725, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8535004441035555759, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -432,6 +472,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 216fffbb3b7f5fa4686abc4ece2d8c0d, type: 3}
       propertyPath: m_Name
       value: HabAlmacenamiento
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 216fffbb3b7f5fa4686abc4ece2d8c0d, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 216fffbb3b7f5fa4686abc4ece2d8c0d, type: 3}
       propertyPath: m_TagString

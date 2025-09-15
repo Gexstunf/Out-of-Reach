@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2381517754763504076}
   - component: {fileID: 7688797232831172929}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65,7 +65,7 @@ GameObject:
   - component: {fileID: 1474997286500611468}
   - component: {fileID: 325162800195859173}
   - component: {fileID: 9168835775679528493}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Exit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3866076571888049586}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: EntryPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 2159092596608871846}
   - component: {fileID: 8448889730241548898}
   - component: {fileID: 6324268874213675828}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PasilloLPrefabIZQ
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -304,6 +304,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 65e63f2ea6c80904981fe8ba7f3e8a6c, type: 3}
       propertyPath: m_Name
       value: PasilloL
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 65e63f2ea6c80904981fe8ba7f3e8a6c, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

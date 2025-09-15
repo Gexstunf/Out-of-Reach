@@ -48,11 +48,17 @@ namespace Characters.PlayerController.Scripts.Input
 
         #endregion
 
-        #region Disable logic
+        #region Kill logic
+        
         private void OnDisable()
         {
-            _playerLocomotionScript.Player.Disable();
+            _playerLocomotionScript.Disable();
             _playerLocomotionScript.Player.RemoveCallbacks(this);
+        }
+        
+        private void OnDestroy()
+        {
+            _playerLocomotionScript.Dispose(); 
         }
         
         #endregion

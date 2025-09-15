@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6853398451803945505}
   - component: {fileID: 1539828236738453246}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Exit
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 8159648630796179722}
   - component: {fileID: 7613376731416345821}
   - component: {fileID: 1950356135825468676}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HabBarPrefabDER
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
@@ -156,7 +156,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3124067020732381342}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: EntryPoint
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
@@ -226,13 +226,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2268283068839917404, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_Name
       value: PuertaPrefab
       objectReference: {fileID: 0}
     - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_TagString
       value: Indestructible
+      objectReference: {fileID: 0}
+    - target: {fileID: 2767361834824982362, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616762866652952180, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6432246925732745725, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -292,13 +312,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2268283068839917404, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_Name
       value: PuertaPrefab
       objectReference: {fileID: 0}
     - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_TagString
       value: Indestructible
+      objectReference: {fileID: 0}
+    - target: {fileID: 2767361834824982362, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616762866652952180, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6432246925732745725, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -318,6 +358,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9009231210767436806}
     m_Modifications:
+    - target: {fileID: -8839357785889411204, guid: 4f1ea87c0f700794e9574bdc1729e2ab, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4f1ea87c0f700794e9574bdc1729e2ab, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -363,8 +407,20 @@ PrefabInstance:
       value: HabBar
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4f1ea87c0f700794e9574bdc1729e2ab, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4f1ea87c0f700794e9574bdc1729e2ab, type: 3}
       propertyPath: m_TagString
       value: Indestructible
+      objectReference: {fileID: 0}
+    - target: {fileID: 924813498428372733, guid: 4f1ea87c0f700794e9574bdc1729e2ab, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6629445461497743900, guid: 4f1ea87c0f700794e9574bdc1729e2ab, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

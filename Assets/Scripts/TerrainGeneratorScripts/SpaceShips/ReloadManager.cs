@@ -21,6 +21,7 @@ namespace TerrainGeneratorScripts.SpaceShips
         {
             if (_reloading) return; // prevent multiple reloads
             _reloading = true;
+            Debug.Log(sceneName);
             SceneManager.LoadScene(sceneName);
         }
 

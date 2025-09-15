@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5170823984737146726}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: EntryPoint
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 662699387104270479}
   - component: {fileID: 8988808455594324939}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Mesh
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 9122222825340130878}
   - component: {fileID: 4208568413692538244}
   - component: {fileID: 5642003417432666921}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HabInvernaderoPrefab
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
@@ -165,11 +165,11 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4766090231595631520, guid: 65aff32bfa92c324da1ed8c12f3ec0d5, type: 3}
 --- !u!114 &5642003417432666921
@@ -232,9 +232,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2268283068839917404, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_Name
       value: PuertaPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_TagString
@@ -244,9 +252,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -1.84
       objectReference: {fileID: 0}
+    - target: {fileID: 2767361834824982362, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3255104455938868704, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616762866652952180, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6432246925732745725, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8535004441035555759, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -313,6 +333,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 65aff32bfa92c324da1ed8c12f3ec0d5, type: 3}
       propertyPath: m_Name
       value: HabInvernadero
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 65aff32bfa92c324da1ed8c12f3ec0d5, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 65aff32bfa92c324da1ed8c12f3ec0d5, type: 3}
       propertyPath: m_TagString
