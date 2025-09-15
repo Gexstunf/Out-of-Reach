@@ -12,7 +12,7 @@ namespace Characters.PlayerController.Scripts {
         private static readonly int Falling = Animator.StringToHash("Falling");
 
         [SerializeField] private Animator animator;
-        [SerializeField] private Rigidbody rigidbody;
+        [SerializeField] private Rigidbody rb;
         
         [Header("References")]
         [SerializeField] private PlayerInputScript playerInput;
