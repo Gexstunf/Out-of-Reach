@@ -2222,10 +2222,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1326912332}
+    - target: {fileID: 1089688607054762252, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
+      propertyPath: m_VersionIndex
+      value: 2369
+      objectReference: {fileID: 0}
     - target: {fileID: 1537853954165519948, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1311235385}
+    - target: {fileID: 1537853954165519948, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
+      propertyPath: m_VersionIndex
+      value: 6901
+      objectReference: {fileID: 0}
     - target: {fileID: 2722907217845235162, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -2246,6 +2254,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1959733824}
+    - target: {fileID: 3601119958049890497, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
+      propertyPath: m_VersionIndex
+      value: 1196
+      objectReference: {fileID: 0}
     - target: {fileID: 3824602795623192284, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
       propertyPath: m_Name
       value: Level
@@ -2262,10 +2274,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1234770908}
+    - target: {fileID: 4201491721648637158, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
+      propertyPath: m_VersionIndex
+      value: 420
+      objectReference: {fileID: 0}
     - target: {fileID: 4900214862044704638, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 178597657}
+    - target: {fileID: 4900214862044704638, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
+      propertyPath: m_VersionIndex
+      value: 2502
+      objectReference: {fileID: 0}
     - target: {fileID: 5062662267678631075, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -2326,10 +2346,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 74575861}
+    - target: {fileID: 6467979828375497399, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
+      propertyPath: m_VersionIndex
+      value: 1304
+      objectReference: {fileID: 0}
     - target: {fileID: 6875577325893227361, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1160903529}
+    - target: {fileID: 6875577325893227361, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
+      propertyPath: m_VersionIndex
+      value: 316
+      objectReference: {fileID: 0}
     - target: {fileID: 6982468799530301053, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -2338,10 +2366,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1107799492}
+    - target: {fileID: 7021807702194000024, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
+      propertyPath: m_VersionIndex
+      value: 3544
+      objectReference: {fileID: 0}
     - target: {fileID: 7553184548855540268, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1313973921}
+    - target: {fileID: 7553184548855540268, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
+      propertyPath: m_VersionIndex
+      value: 5954
+      objectReference: {fileID: 0}
     - target: {fileID: 7751238346492734485, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -2370,6 +2406,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1224932406}
+    - target: {fileID: 9178673005937747441, guid: a7a88ad406c384036b45222b347ffdd0, type: 3}
+      propertyPath: m_VersionIndex
+      value: 3117
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
