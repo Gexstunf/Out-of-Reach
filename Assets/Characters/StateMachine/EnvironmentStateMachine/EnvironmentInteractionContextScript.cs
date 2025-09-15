@@ -1,6 +1,7 @@
 
 
 
+using Characters.PlayerController.Scripts;
 using Characters.PlayerController.Scripts.Input;
 using Characters.StateMachine.PlayerStateMachine;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         public EnvironmentInteractionContextScript( TwoBoneIKConstraint leftIkConstraint, TwoBoneIKConstraint rightIkConstraint,
             MultiRotationConstraint leftMultiRotationConstraint, MultiRotationConstraint rightMultiRotationConstraint,
             Transform rootTransform, PlayerInputScript inputScript, Camera playerCamera, LayerMask groundLayer, PlayerStateMachineScript stateMachine,
-            Rigidbody rigidBody) 
+            Rigidbody rigidBody, InverseKinematicsDriverScript ikDriver, Transform leftParent, Transform rightParent) 
         {
             _leftIkConstraint = leftIkConstraint;
             _rightIkConstraint = rightIkConstraint;
@@ -29,6 +30,9 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             _playerCamera = playerCamera;
             _groundLayerMask = groundLayer;
             _playerStateMachine = stateMachine;
+            _ikDriver = ikDriver;
+            _leftParent = leftParent;
+            _rightParent = rightParent;
         }
 
         [SerializeField] private LayerMask _groundLayerMask;
@@ -41,11 +45,17 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private PlayerStateMachineScript _playerStateMachine;
         [SerializeField] private Rigidbody _rigidBody;
+        [SerializeField] private Transform _leftParent;
+        [SerializeField] private Transform _rightParent;
+        [SerializeField] InverseKinematicsDriverScript _ikDriver;
+
         
         public TwoBoneIKConstraint LeftIkConstraint => _leftIkConstraint;
         public TwoBoneIKConstraint RightIkConstraint => _rightIkConstraint;
         public MultiRotationConstraint LeftMultiRotationConstraint => _leftMultiRotationConstraint;
         public MultiRotationConstraint RightMultiRotationConstraint => _rightMultiRotationConstraint;
+        
+        public InverseKinematicsDriverScript IKDriver => _ikDriver;
         
         public PlayerStateMachineScript StateMachine => _playerStateMachine;
         
@@ -63,12 +73,15 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         
         public Transform PreviousIkTargetTransform {get; private set;}
         public Transform CurrentIkTargetTransform { get; private set; }
+        public Transform CurrentParentTransform { get; private set; }
         public Transform CurrentLegShoulderTransform { get; private set; }
         public Transform RootTransform => _rootTransform;
         public Vector3 RightTargetOffsetPosition { get; private set; }
         public Vector3 LeftTargetOffsetPosition { get; private set; }
-        public float SideTargetOffset = 0.3f;
+        public Vector3 CurrentTargetOffsetPosition { get; private set; }
 
+        public float SideTargetOffset = 0.3f;
+        public float MaxStepDifference = 3f;
 
         public Vector3 ClosestPointOnColliderFromLegShoulderTransform { get; set; }
         public float MaxGroundCheckDistance => 6f;
@@ -83,12 +96,13 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
             PreviousStep = GetOppositeStep(CurrentStep);
             
             if (step == EStep.Left) {
-                
                 PreviousIkConstraint = _rightIkConstraint;
                 CurrentIkConstraint = _leftIkConstraint;
                 
                 PreviousMultiRotationConstraint = _rightMultiRotationConstraint;
                 CurrentMultiRotationConstraint = _leftMultiRotationConstraint;
+                CurrentTargetOffsetPosition = LeftTargetOffsetPosition;
+                CurrentParentTransform = _leftParent;
             }
             else {
 
@@ -97,6 +111,8 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
                 
                 PreviousMultiRotationConstraint = _leftMultiRotationConstraint;
                 CurrentMultiRotationConstraint = _rightMultiRotationConstraint;
+                CurrentTargetOffsetPosition = RightTargetOffsetPosition;
+                CurrentParentTransform = _rightParent;
             }
             // no need for previous in this one
             CurrentLegShoulderTransform = CurrentIkConstraint.data.root.transform;
@@ -113,7 +129,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         public void SetIkTargetLocalPosition(Vector3 position) {
             CurrentIkTargetTransform.localPosition = position;
         }
-
+    
         public void SetIkPreviousTargetWorldPosition(Vector3 position) {
             PreviousIkTargetTransform.position = position;
         }

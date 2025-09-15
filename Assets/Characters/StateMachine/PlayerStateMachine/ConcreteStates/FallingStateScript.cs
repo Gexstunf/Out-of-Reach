@@ -15,6 +15,7 @@ namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
             Context.Input.enabled = false;
             Context.Rb.linearDamping = 0f;
             Context.Coordinator.OnUnconsciousChanged += Context.HandleUnconsciousChange;
+            //Context.EnvironmentInteractionStateMachine.enabled = false;
         }
 
         public override void ExitState() {
@@ -22,6 +23,7 @@ namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
             Context.PlayerController.ResetVariables();
             Context.Input.enabled = true;
             Context.Coordinator.OnUnconsciousChanged -= Context.HandleUnconsciousChange;
+            //Context.EnvironmentInteractionStateMachine.enabled = true;
         }
 
         public override void UpdateState() {

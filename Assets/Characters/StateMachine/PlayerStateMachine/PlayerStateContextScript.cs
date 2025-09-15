@@ -1,7 +1,9 @@
 using Characters.PlayerController.Scripts;
 using Characters.PlayerController.Scripts.Input;
+using Characters.StateMachine.EnvironmentStateMachine;
 using Characters.SystemAdaptations;
 using Characters.SystemAdaptations.Utils;
+using Characters.Utils;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -13,25 +15,30 @@ namespace Characters.StateMachine.PlayerStateMachine {
         [SerializeField] PlayerInputScript _inputScript;
         [SerializeField] PlayerControllerScript _playerController;
         [SerializeField] StateVitalsCoordinator _coordinator;
+        [SerializeField] EnvironmentInteractionStateMachineScript _envInteractionStateMachine;
+        [SerializeField] RagdollControllerScript _ragdollControllerScript;
+        [SerializeField] ColliderUtilsScript _colliderUtils;
 
         [Header("Vitals States")] public bool IsUnconscious { get; private set; }
         public bool IsTired { get; private set; }
         public bool IsHeavy { get; private set; }
         public bool IsStarved { get; private set; }
 
-
-
+        
         private float _movementThreshold = 0.1f;
 
         public PlayerStateContextScript(Rigidbody rigidbody, CapsuleCollider collider,
             PlayerInputScript inputScript, PlayerControllerScript playerController,
-            StateVitalsCoordinator coordinator
+            StateVitalsCoordinator coordinator, EnvironmentInteractionStateMachineScript envStateMachine, 
+            RagdollControllerScript _ragdollController
         ) {
             _rigidbody = rigidbody;
             _collider = collider;
             _inputScript = inputScript;
             _playerController = playerController;
             _coordinator = coordinator;
+            _envInteractionStateMachine = envStateMachine;
+            _ragdollControllerScript = _ragdollController;
         }
 
         public Rigidbody Rb => _rigidbody;
@@ -39,6 +46,8 @@ namespace Characters.StateMachine.PlayerStateMachine {
         public PlayerInputScript Input => _inputScript;
         public PlayerControllerScript PlayerController => _playerController;
         public StateVitalsCoordinator Coordinator => _coordinator;
+        public EnvironmentInteractionStateMachineScript EnvironmentInteractionStateMachine => _envInteractionStateMachine;
+        public float MovementThreshold => _movementThreshold;
 
         public void HandleTiredChange(bool isTired) {
             IsTired = isTired;

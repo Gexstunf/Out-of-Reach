@@ -39,18 +39,18 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
         }
 
         public override void UpdateState() {
-            if (Context.StateMachine.IsGrounded) {
                 _timer += Time.deltaTime;
                 _turnDegrees = Context.RootTransform.rotation.eulerAngles.y;
-            
-                Context.SetIkTargetWorldPosition(_currentFootGroundPos);
-            
+                   
                 float t = Mathf.Clamp01(_timer / _downTime);
                 Vector3 newPreviousPos = Vector3.Lerp(_previousFootAirPos, _previousFootGroundPos, t);
-                Context.SetIkPreviousTargetWorldPosition(newPreviousPos);
-            }
-        }
 
+                if (Context.StateMachine.IsGrounded) { // only update the positions if grounded
+                    Context.SetIkTargetWorldPosition(_currentFootGroundPos);
+                    Context.SetIkPreviousTargetWorldPosition(newPreviousPos);
+                }
+        }
+        
         public override EnvironmentInteractionStateMachineScript.EEnvironmentActions GetNextState() {
             if (Context.StateMachine.IsGrounded) {
                 if (Context.StateMachine.IsIdle) {
@@ -58,8 +58,8 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
                         return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Rise;
                     }
                 }
-            
-                if (MovementThresholdReached()) {
+                
+                if (MovementThresholdReached(_startPos) && _timer > _downTime) {
                     return EnvironmentInteractionStateMachineScript.EEnvironmentActions.Rise;
                 }
             }
@@ -76,11 +76,6 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             //ResetIkTargetPositionTracking(other);
         }
         
-        private bool MovementThresholdReached() {
-            Vector3 rootDelta = Context.RootTransform.position - _startPos;
-            float planarDistance = new Vector2(rootDelta.x, rootDelta.z).magnitude;
-            return planarDistance >= StepThreshold;
-        }
 
         private bool RotationThresholdReached() {
             float turnDiff = Mathf.DeltaAngle(_startDegrees, _turnDegrees);
@@ -116,15 +111,15 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
         }
 
         private void SetFootPositions() {
-            _previousFootGroundPos = GetGroundPos();
+            _previousFootGroundPos = GetGroundPos(_previousFootGroundPos);
             _previousFootGroundPos = ApplySideOffset(_previousFootGroundPos);
             Context.SetCurrentStep(Context.GetOppositeStep(Context.CurrentStep));
-            _currentFootGroundPos = GetGroundPos();
+            _currentFootGroundPos = GetGroundPos(_currentFootGroundPos);
         }
 
         private void SetDynamicThreshold(Vector3 speed) {
             float planeSpeed = new Vector2(speed.x, speed.z).magnitude;
             SetStepThreshold(_stepThreshold + (planeSpeed * _scaleFactor));
         }
-    }
+    }  
 }

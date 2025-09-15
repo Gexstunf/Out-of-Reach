@@ -1,9 +1,11 @@
 using Characters.PlayerController.Scripts;
 using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine;
+using Characters.StateMachine.EnvironmentStateMachine;
 using Characters.StateMachine.PlayerStateMachine.ConcreteStates;
 using Characters.StateMachine.PlayerStateMachine.z;
 using Characters.SystemAdaptations;
+using Characters.Utils;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -20,6 +22,9 @@ namespace Characters.StateMachine.PlayerStateMachine
         [SerializeField] private PlayerControllerScript _playerControllerScript;
         [SerializeField] private CapsuleCollider _collider;
         [SerializeField] private StateVitalsCoordinator _coordinator;
+        [SerializeField] private InverseKinematicsDriverScript _inverseKinematicsDriver;
+        [SerializeField] private EnvironmentInteractionStateMachineScript _enviromentInteractionStateMachine;
+        [SerializeField] private RagdollControllerScript _ragdollControllerScript;
         
         public PlayerStateContextScript Context { get; private set; }
         
@@ -38,9 +43,13 @@ namespace Characters.StateMachine.PlayerStateMachine
             _playerControllerScript = GetComponent<PlayerControllerScript>();
             _coordinator = GetComponent<StateVitalsCoordinator>();
             _inputScript = GetComponent<PlayerInputScript>();
+            _ragdollControllerScript = GetComponent<RagdollControllerScript>();
             _rb = GetComponent<Rigidbody>();
+            _enviromentInteractionStateMachine = GetComponent<EnvironmentInteractionStateMachineScript>();
 
-            Context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript, _coordinator);
+            Context = new PlayerStateContextScript(_rb, _collider, _inputScript, _playerControllerScript, 
+                _coordinator, _enviromentInteractionStateMachine, _ragdollControllerScript);
+            
             ValidateReferences();
             InitializeStates();
         }
@@ -64,9 +73,10 @@ namespace Characters.StateMachine.PlayerStateMachine
             CurrentState = States[EPlayerStates.Idle];
         }
         
+        # region  Exposed vars
+
         public EPlayerStates StateKey => CurrentState.StateKey;
         
-        # region  Exposed vars
         public bool IsFalling => StateKey == EPlayerStates.Falling;
         public bool IsJumping => StateKey == EPlayerStates.Jumping;
         public bool IsRunning => StateKey == EPlayerStates.Running;

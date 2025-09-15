@@ -29,5 +29,8 @@ namespace Characters.Utils
             _targetRotation.x += _lookSenseH * lookInput.x;
             _transform.rotation = Quaternion.Euler(0f, _targetRotation.x, 0f);
         }
+        
+        public float GetYaw() => _targetRotation.x;
+
     }
 }

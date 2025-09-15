@@ -26,7 +26,10 @@ namespace Characters.PlayerController.Scripts
         [Header("Movement Settings")] 
         public float moveForce = 30f;
         public float runForce = 60f;
-        public float playerDrag = 5f;
+        public float playerDrag = 20f;
+        
+        [Header("Crouch Settings")]
+        public float crouchHeight = 1.5f;
         
         [Header("Jump Settings")]
         public float jumpForce = 10f;
@@ -34,16 +37,19 @@ namespace Characters.PlayerController.Scripts
         
         [Header("General settings")]
         public LayerMask groundLayer;
+        public Vector3 groundCheckBoxSize = new Vector3(0.5f, 0.15f, 0.5f);
 
         [Header("Look Settings")]
         [SerializeField] private float _lookSenseH = 10f;
         [SerializeField] private float _lookSenseV = 10f;
         [SerializeField] private float _lookLimitV = 10f;
+        [SerializeField] private Transform _eyesTransform;
+        public Vector3 eyesOffset;
 
         [Header("Visualize Variables")] 
         public bool isGrounded = true;
         public Vector3 CurrentForce { get; private set; }
-        public float Gravity;
+        public float gravity;
         
         private float _groundCheckOffset;
 
@@ -58,17 +64,17 @@ namespace Characters.PlayerController.Scripts
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
             
             _rotator = gameObject.AddComponent<RotatorScript>();
-            _cameraController = gameObject.AddComponent<CameraControllerScript>();
-
-            Gravity = Physics.gravity.y;
+            _cameraController = new CameraControllerScript();
+            _cameraController.TieToTransform(_eyesTransform, eyesOffset);
+            gravity = Physics.gravity.y;
         }
 
         private void Start()
         {
             _rb.linearDamping = playerDrag;
+            
             _rotator.Init(_lookSenseH, _lookSenseV, _lookLimitV);
             _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
-
             _groundCheckOffset = _playerCollider.radius + 0.1f;
         }
         
@@ -76,11 +82,11 @@ namespace Characters.PlayerController.Scripts
 
         #region Update logic
 
-        private void Update()
-        {
+        private void Update() {
+
             HandleJumping(jumpForce);
             HandleGroundState();
-        }
+        } 
 
         private void FixedUpdate()
         {
@@ -98,7 +104,10 @@ namespace Characters.PlayerController.Scripts
         {
             Vector2 lookInput = _inputScript.LookInput;
             _rotator.RotateTransform(lookInput);
-            _cameraController.UpdateCameraRotation(lookInput, _playerCamera);
+            
+            float characterYaw = _rotator.GetYaw();
+
+            _cameraController.UpdateCameraRotation(lookInput, _playerCamera, characterYaw);
         }
         
         #endregion
@@ -145,25 +154,22 @@ namespace Characters.PlayerController.Scripts
         #endregion
         
         #region Helper funcs
-
+        
         public void ResetVariables()
         {
             _rb.linearDamping = playerDrag;
         }
-
+        
         private bool IsGroundedWhileGrounded() {
-            float sphereRadius = _playerCollider.radius;
-            Vector3 spherePosition = transform.position + Vector3.down * (_playerCollider.height / 2f - sphereRadius + _groundCheckOffset);
-            bool hit = Physics.CheckSphere(spherePosition, sphereRadius, groundLayer, QueryTriggerInteraction.Ignore);
-            return hit;
-        }
+            Vector3 pos = transform.TransformPoint(_playerCollider.center) - new Vector3(0f, _playerCollider.radius, 0f);
+            
+            bool hit = Physics.CheckBox(
+                pos,
+                groundCheckBoxSize,
+                Quaternion.identity,
+                groundLayer
+            );
 
-        private bool IsGroundedWhileAirborne()
-        {
-            Vector3 origin = transform.position + Vector3.up * 0.1f;
-            float sphereRadius = _playerCollider.radius;
-            float maxDistance = 0.3f; 
-            bool hit = Physics.SphereCast(origin, sphereRadius, Vector3.down, out _, maxDistance, groundLayer, QueryTriggerInteraction.Ignore);
             return hit;
         }
         
@@ -171,44 +177,15 @@ namespace Characters.PlayerController.Scripts
 
         #region Gizmo draw
 
-        private void OnDrawGizmosSelected()
-                {
-                    if (_playerCollider == null) return;
-        
-                    // Draw the original capsule collider (yellow)
-                    Gizmos.color = Color.yellow;
-                    float radius = _playerCollider.radius;
-                    float height = _playerCollider.height;
-                    Vector3 center = _playerCollider.center;
-        
-                    Vector3 top = transform.position + center + Vector3.up * (height / 2 - radius);
-                    Vector3 bottom = transform.position + center + Vector3.down * (height / 2 - radius);
-        
-                    // Draw spheres at the ends
-                    Gizmos.DrawWireSphere(top, radius);
-                    Gizmos.DrawWireSphere(bottom, radius);
-        
-                    // Draw lines connecting spheres (body of capsule)
-                    Gizmos.DrawLine(top + Vector3.forward * radius, bottom + Vector3.forward * radius);
-                    Gizmos.DrawLine(top + Vector3.back * radius, bottom + Vector3.back * radius);
-                    Gizmos.DrawLine(top + Vector3.left * radius, bottom + Vector3.left * radius);
-                    Gizmos.DrawLine(top + Vector3.right * radius, bottom + Vector3.right * radius);
-        
-                    // Draw the ground check sphere (green if grounded, red if not)
-                    Vector3 spherePosition = transform.position + Vector3.down * (height / 2f - radius + _groundCheckOffset);
-                    bool grounded = IsGroundedWhileGrounded();
-            
-                    Gizmos.color = grounded ? Color.green : Color.red;
-                    Gizmos.DrawWireSphere(spherePosition, radius);
-            
-                    // Draw a line from the bottom of the collider to the check sphere
-                    Gizmos.color = Color.cyan;
-                    Gizmos.DrawLine(bottom, spherePosition);
-                }
+        private void OnDrawGizmosSelected() {
+            if (_playerCollider == null) return;
 
+            Vector3 pos = transform.TransformPoint(_playerCollider.center) - new Vector3(0f, _playerCollider.radius, 0f);
+            bool grounded = IsGroundedWhileGrounded();
+
+            Gizmos.color = grounded ? Color.green : Color.red;
+            Gizmos.DrawCube(pos, groundCheckBoxSize * 2);
+        }
         #endregion
-        
-        
-    
     }
 }
