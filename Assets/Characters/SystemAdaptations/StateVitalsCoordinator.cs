@@ -90,7 +90,7 @@ namespace Characters.SystemAdaptations {
             
             if (_vitalsStruct.IsUnconscious != _context.IsUnconscious) {
                 OnUnconsciousChanged?.Invoke(_context.IsUnconscious);
-                Debug.Log("UNCONSCIOUS changed to: " + _context.IsTired);
+                Debug.Log("Unconscious event fired with: " + _context.IsUnconscious);
             }
             
             if (_vitalsStruct.IsStarved != _context.IsTired) {

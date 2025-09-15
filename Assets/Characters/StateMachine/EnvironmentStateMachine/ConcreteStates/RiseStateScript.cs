@@ -6,8 +6,8 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             base(context, estate) 
         { }
 
-        private readonly float _stepHeight = 0.6f;
-        private readonly float _riseTime = 0.15f;
+        private readonly float _stepHeight = 0.5f;
+        private readonly float _riseTime = 0.2f;
 
         private float _timer;
         private float _forwardOffset; 
@@ -20,7 +20,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
             Debug.Log("Enter R State");
 
             _timer = 0f;
-            _forwardOffset = 0.4f;
+            _forwardOffset = 0.25f;
             _startPos = Context.CurrentIkConstraint.data.target.localPosition;
             Vector2 moveInput = Context.InputScript.MoveInput;
 
@@ -37,11 +37,13 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
         
         public override void UpdateState()
         {
+
             _timer += Time.deltaTime;
             float t = Mathf.Clamp01(_timer / _riseTime);
 
             Vector3 currentPos = Vector3.Lerp(_startPos, _riseTarget, t);
-            Context.SetIkTargetLocalPosition(currentPos);
+            // only update if grounded
+            if (Context.StateMachine.IsGrounded) Context.SetIkTargetLocalPosition(currentPos);
         }
 
         public override void ExitState()
@@ -63,7 +65,7 @@ namespace Characters.StateMachine.EnvironmentStateMachine.ConcreteStates {
 
         private void SetDynamicForwardOffset(Vector3 speed) {
             float planeSpeed = new Vector2(speed.x, speed.z).magnitude;
-            _forwardOffset = _forwardOffset + (planeSpeed * 0.2f);
+            _forwardOffset =+ (planeSpeed * 0.2f);
         }
         
         private void AdjustTargetWithMovement(Vector3 moveInput) {

@@ -13,6 +13,7 @@ namespace Characters.PlayerController.Scripts.Input
         public Vector2 MoveInput { get; private set; }
         public Vector2 LookInput { get; private set; }
         public bool JumpPressed { get; private set; }
+        public bool CrouchPressed { get; private set; }
         
         public bool RunningPressed { get; private set; }
         
@@ -89,7 +90,12 @@ namespace Characters.PlayerController.Scripts.Input
 
         public void OnCrouch(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
+            if (context.performed) {
+                CrouchPressed = true;
+                Debug.Log("Crouch press");
+            } else if (context.canceled) {
+                CrouchPressed = false;
+            }
         }
 
         public void OnPrevious(InputAction.CallbackContext context)
