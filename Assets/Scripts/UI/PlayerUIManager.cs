@@ -170,7 +170,7 @@ namespace UI
                         // Si hay item → botón lo saca al mundo
                         btn.onClick.AddListener(() =>
                         {
-                            inv.DropFromBackpack(bd, slotIndex);
+                            //inv.DropFromBackpack(bd, slotIndex);
                             UpdateBackpackUI(bd.internalSlots);
                         });
                     }
@@ -181,8 +181,8 @@ namespace UI
                         {
                             if (inv.tempItemData != null)
                             {
-                                inv.StoreInBackpack(bd, inv.tempItemData, slotIndex);
-                                inv.ClearTempHeld();
+                                //inv.StoreInBackpack(bd, inv.tempItemData, slotIndex);
+                                //inv.ClearTempHeld();
                                 UpdateBackpackUI(bd.internalSlots);
                             }
                         });
