@@ -1,49 +1,67 @@
 using System;
 using System.Collections;
 using Characters.PlayerController.Scripts.Input;
+using Characters.StateMachine.PlayerStateMachine;
 using Characters.SystemAdaptations;
 using Characters.Utils.ConfigurableJoints;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.Serialization;
 
 namespace Characters.PlayerController.Scripts {
-    public class ActiveRagdollControllerScript : MonoBehaviour
-    {
-        
-        
+    public class ActiveRagdollControllerScript : MonoBehaviour {
+
+
         //[Header("Debug Settings")]
         //[Tooltip("Debug HAS to be on for these properties to take effect.")]
         //[SerializeField] private bool debug = false;
         [SerializeField] private bool alive = true;
-        [Header("References")]
-        [SerializeField] private PlayerInputScript playerInputScript;
-        [SerializeField] private PlayerControllerScript playerController;
-        
-        [Header("Settings")]
+
+        [Header("References")] [SerializeField]
+        private PlayerInputScript _playerInputScript;
+
+        [SerializeField] private PlayerControllerScript _playerController;
         [SerializeField] private StateVitalsCoordinator _stateVitalsCoordinator;
-        
-        [Header("Physics settings")]
-        [SerializeField] private int _solverIterations = 12;
+        [SerializeField] private PlayerStateMachineScript _playerStateMachine;
+
+        [Header("Physics settings")] [SerializeField]
+        private int _solverIterations = 12;
+
         [SerializeField] private int _solverVelIterations = 12;
         [SerializeField] private float _maxAngularVelocity = 20f;
-        
-        [Header("Configurable Joint Settings")]
-        [SerializeField] private float _deadAngularDrive;
-        [SerializeField] private float _interpolationDuration; 
+
+        [Header("Configurable Joint Settings")] [SerializeField]
+        private float _deadAngularDrive;
+
+        [SerializeField] private float _interpolationDuration;
         [SerializeField] private float _interpolationScaler;
-        
-        [Header("Revival settings")] 
-        [SerializeField] private float _smoothLockDuration = 1.5f;
+
+        [Header("Revival settings")] [SerializeField]
+        private float _smoothLockDuration = 1.5f;
+
         [SerializeField] private float _lockSpring = 10000f;
         [SerializeField] private float _lockDamper = 50f;
         [SerializeField] private float _initialClearance = 0.5f;
+
+        [Header("Jump Settings")]
+        [SerializeField] private float _stabilizerPitch = 45f;
+        [SerializeField] private float _rotationSpeed = 2f;
+        [SerializeField] private float _jumpRigBlendSpeed = 1f;
         
+        [Header("Rigs")]
+        [SerializeField] private Rig _jumpRig;
+
         public BoneMap[] boneMaps;
         
         private BoneMap _stabilizerMap;
         private Vector3 _normalFixedPos;
         private Vector3 _normalLocalFixedPos;
+        private Quaternion _cachedRot; // world
+        private Quaternion _baseLocalRotation;
+
+        private bool _hasJumped = false;
+        private bool _hasCrouched = false;
 
         private bool _isInterpolating = false;
         private float _interpolationTime = 0f;
@@ -66,7 +84,7 @@ namespace Characters.PlayerController.Scripts {
         }
 
         private void Start() {
-            playerInputScript = GetComponent<PlayerInputScript>();
+            _playerInputScript = GetComponent<PlayerInputScript>();
             foreach (var bone in boneMaps) {
                 // beware of those who dont have joints
                 bone.rb.solverIterations = _solverIterations;
@@ -87,6 +105,9 @@ namespace Characters.PlayerController.Scripts {
                     bone.angularDriveSpring = bone.joint.angularXDrive.positionSpring;
                 }
             }
+            
+            _cachedRot = _stabilizerMap.rb.transform.rotation;        
+            _baseLocalRotation = _stabilizerMap.rb.transform.localRotation;
 
             _stateVitalsCoordinator.OnTiredChanged += HandleActiveRagdollState;
         }
@@ -98,18 +119,54 @@ namespace Characters.PlayerController.Scripts {
         void FixedUpdate()
         {
 
-            if (playerInputScript.CrouchPressed) {
+            if (_playerStateMachine.IsJumping || _playerStateMachine.IsFalling) {
+                if (!_hasJumped) {
+                    _hasJumped = true;
+                }
+
+                Quaternion currentLocal = _stabilizerMap.rb.transform.localRotation;
+
+                Quaternion pitchOffset = Quaternion.Euler(_stabilizerPitch, 0f, 0f);
+                Quaternion targetLocal = _baseLocalRotation * pitchOffset;
+                _stabilizerMap.rb.transform.localRotation =
+                    Quaternion.Slerp(currentLocal, targetLocal, Time.fixedDeltaTime * _rotationSpeed);
+
+                _jumpRig.weight = Mathf.Lerp(_jumpRig.weight, 1f, Time.fixedDeltaTime * _jumpRigBlendSpeed);
+            }
+            else if (_hasJumped) {
+                Quaternion currentLocal = _stabilizerMap.rb.transform.localRotation;
+
+                Quaternion targetLocal = _baseLocalRotation;
+
+                _stabilizerMap.rb.transform.localRotation =
+                    Quaternion.Slerp(currentLocal, targetLocal, Time.fixedDeltaTime * _rotationSpeed);
+
+                _jumpRig.weight = Mathf.Lerp(_jumpRig.weight, 0f, Time.fixedDeltaTime * _jumpRigBlendSpeed);
+
+                if (_jumpRig.weight < 0.05f) {
+                    _hasJumped = false;
+                }
+            }
+
+
+            if (_playerInputScript.CrouchPressed && _playerStateMachine.IsIdle) {
+                
+                _stabilizerMap.joint.yMotion = ConfigurableJointMotion.Limited;
+                var jointLim = new SoftJointLimit();
+                jointLim.limit = _playerController.crouchHeight;
+                _stabilizerMap.joint.linearLimit = jointLim;
+                
+                _stabilizerMap.joint.targetPosition = new Vector3(0f, _playerController.crouchHeight, 0f);
+                
+                _hasCrouched = true;
+            }
+            else if (_hasCrouched) {
+                
                 if (_stabilizerCoroutine != null) {
                     StopCoroutine(_stabilizerCoroutine);
                 }
                 _stabilizerCrouchCoroutine = StartCoroutine(CrouchStabilizer());
-            }
-            else {
-                _stabilizerMap.joint.targetPosition = new Vector3(
-                    _stabilizerMap.rb.transform.position.x,
-                    _stabilizerMap.rb.transform.TransformDirection(_normalLocalFixedPos).y,
-                    _stabilizerMap.rb.transform.position.z
-                );
+                _hasCrouched = false;
             }
             
             if (_isInterpolating) {
@@ -219,21 +276,28 @@ namespace Characters.PlayerController.Scripts {
         }
 
         private IEnumerator CrouchStabilizer() {
-            while (_stabilizerMap.rb.transform.position.y <= _stabilizerMap.rb.transform.TransformDirection(_normalLocalFixedPos).y ) {
-                _stabilizerMap.joint.yMotion = ConfigurableJointMotion.Limited;
-                var jointLim = new SoftJointLimit();
-                jointLim.limit = playerController.crouchHeight;
-                _stabilizerMap.joint.linearLimit = jointLim;
-                
-                _stabilizerMap.joint.targetPosition = new Vector3(
-                    _stabilizerMap.rb.transform.position.x,
-                    playerController.crouchHeight,
-                    _stabilizerMap.rb.transform.position.z
-                );
-                
+            _stabilizerMap.joint.yMotion = ConfigurableJointMotion.Limited;
+
+            // Cache start and end
+            Vector3 startTarget = _stabilizerMap.joint.targetPosition;
+            Vector3 endTarget   = _normalLocalFixedPos; // standing offset (local)
+
+            float duration = 0.3f; 
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+
+                // Smooth interpolate back
+                _stabilizerMap.joint.targetPosition = Vector3.Lerp(startTarget, endTarget, t);
+
                 yield return null;
             }
-            
+
+            // Snap to final position and lock again
+            _stabilizerMap.joint.targetPosition = endTarget;
             _stabilizerMap.joint.yMotion = ConfigurableJointMotion.Locked;
         }
 
