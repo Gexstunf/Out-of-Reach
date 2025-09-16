@@ -1,31 +1,28 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using UnityEngine;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
+    [Header("Prefab del jugador")]
     public GameObject playerPrefab;
+
+    [Header("Puntos de spawn")]
     public Transform[] spawnPoints;
 
     void Start()
     {
-        if (PhotonNetwork.IsConnected)
+        if (PhotonNetwork.InRoom)
         {
-            int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
+            Debug.Log(" Ya estoy en una sala, spawneo jugador...");
 
-            // Si hay menos jugadores que puntos, usar el punto correspondiente
-            // Si hay mas, tomar aleatorio pero evitando superposicion
-            Transform spawnPoint;
-            if (playerIndex < spawnPoints.Length)
-            {
-                spawnPoint = spawnPoints[playerIndex];
-            }
-            else
-            {
-                // Backup: tomar uno aleatorio no ocupado (mejorable)
-                spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-            }
+            int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
+            Transform spawnPoint = spawnPoints[playerIndex % spawnPoints.Length];
 
             PhotonNetwork.Instantiate(playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
+        }
+        else
+        {
+            Debug.LogError(" No estás en ninguna sala, no se puede spawnear jugador.");
         }
     }
 }

@@ -1,17 +1,21 @@
-using System;
+﻿using System;
 using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using Characters.StateMachine.PlayerStateMachine;
 using Characters.Utils;
 using UnityEngine;
-using UnityEngine.Serialization;
+using Photon.Pun;
 
 namespace Characters.PlayerController.Scripts
 {
-    public class PlayerControllerScript : MonoBehaviour
+    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(CapsuleCollider))]
+    [RequireComponent(typeof(PlayerInputScript))]
+    [RequireComponent(typeof(PlayerStateMachineScript))]
+    public class PlayerControllerScript : MonoBehaviourPun
     {
         #region Variables
-        
+
         [Header("References")]
         [SerializeField] private Camera _playerCamera;
         [SerializeField] private RotatorScript _rotator;
@@ -19,11 +23,11 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private PlayerInputScript _inputScript;
         [SerializeField] private Rigidbody _rb;
         [SerializeField] public CapsuleCollider _playerCollider;
-        
+
         [Header("State machine")]
         [SerializeField] private PlayerStateMachineScript _playerStateMachine;
 
-        [Header("Movement Settings")] 
+        [Header("Movement Settings")]
         public float moveForce = 30f;
         public float runForce = 60f;
         public float playerDrag = 20f;
@@ -34,7 +38,7 @@ namespace Characters.PlayerController.Scripts
         [Header("Jump Settings")]
         public float jumpForce = 10f;
         public float forwardJumpForce = 5f;
-        
+
         [Header("General settings")]
         public LayerMask groundLayer;
         public Vector3 groundCheckBoxSize = new Vector3(0.5f, 0.15f, 0.5f);
@@ -46,7 +50,7 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private Transform _eyesTransform;
         public Vector3 eyesOffset;
 
-        [Header("Visualize Variables")] 
+        [Header("Visualize Variables")]
         public bool isGrounded = true;
         public Vector3 CurrentForce { get; private set; }
         public float gravity;
@@ -54,15 +58,16 @@ namespace Characters.PlayerController.Scripts
         private float _groundCheckOffset;
 
         #endregion
-        
+
         #region Startup logic
+
         private void Awake()
         {
             _inputScript = GetComponent<PlayerInputScript>();
             _rb = GetComponent<Rigidbody>();
             _playerCollider = GetComponent<CapsuleCollider>();
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
-            
+
             _rotator = gameObject.AddComponent<RotatorScript>();
             _cameraController = new CameraControllerScript();
             _cameraController.TieToTransform(_eyesTransform, eyesOffset);
@@ -71,18 +76,34 @@ namespace Characters.PlayerController.Scripts
 
         private void Start()
         {
+            // if (!photonView.IsMine)
+            // {
+            //     if (_playerCamera != null) _playerCamera.enabled = false;
+            //
+            //     AudioListener listener = GetComponentInChildren<AudioListener>();
+            //     if (listener != null) listener.enabled = false;
+            //
+            //     _rb.isKinematic = true;
+            // }
+            //else
+            //{
+                _rotator.Init(_lookSenseH, _lookSenseV, _lookLimitV);
+                _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
+
+                _rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            //}
+
             _rb.linearDamping = playerDrag;
-            
-            _rotator.Init(_lookSenseH, _lookSenseV, _lookLimitV);
-            _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
             _groundCheckOffset = _playerCollider.radius + 0.1f;
         }
-        
+
         #endregion
 
         #region Update logic
 
-        private void Update() {
+        private void Update()
+        {
+            //if (!photonView.IsMine) return;
 
             HandleJumping(jumpForce);
             HandleGroundState();
@@ -90,18 +111,27 @@ namespace Characters.PlayerController.Scripts
 
         private void FixedUpdate()
         {
-            // this is where physics should occurr
+            //if (!photonView.IsMine) return;
+
             Vector3 movementDir = CalculateMovementDirection();
             Vector3 force = CalculateNewForce(movementDir);
             CurrentForce = force;
-            _rb.AddForce(force);
+
+            _rb.AddForce(force, ForceMode.Force);
+
+            float yRotation = _inputScript.LookInput.x * _lookSenseH;
+            Quaternion deltaRotation = Quaternion.Euler(0f, yRotation, 0f);
+            _rb.MoveRotation(_rb.rotation * deltaRotation);
         }
-        
+
         #endregion
-        
+
         #region Late-update logic
+
         private void LateUpdate()
         {
+            //if (!photonView.IsMine) return;
+
             Vector2 lookInput = _inputScript.LookInput;
             _rotator.RotateTransform(lookInput);
             
@@ -109,15 +139,16 @@ namespace Characters.PlayerController.Scripts
 
             _cameraController.UpdateCameraRotation(lookInput, _playerCamera, characterYaw);
         }
-        
+
         #endregion
-        
+
         #region Movement & ground state logic
+
         private Vector3 CalculateMovementDirection()
         {
             Vector3 forwardCamTransform = _playerCamera.transform.forward;
             Vector3 rightCamTransform = _playerCamera.transform.right;
-            
+
             Vector3 cameraForwardXZ = new Vector3(forwardCamTransform.x, 0f, forwardCamTransform.z).normalized;
             Vector3 cameraRightXZ = new Vector3(rightCamTransform.x, 0f, rightCamTransform.z).normalized;
 
@@ -126,33 +157,33 @@ namespace Characters.PlayerController.Scripts
             return movementDirection;
         }
 
-        private Vector3 CalculateNewForce(Vector3 movementDirection) {
+        private Vector3 CalculateNewForce(Vector3 movementDirection)
+        {
             float currentForce = _playerStateMachine.IsRunning ? runForce : moveForce;
             Vector3 force = movementDirection * currentForce;
-            return force ;
+            return force;
         }
 
         private void HandleJumping(float force)
         {
             bool jumped = _inputScript.JumpPressed;
             bool tired = _playerStateMachine.Context.IsTired;
-            
+
             if (jumped && isGrounded && !tired)
             {
                 _rb.AddForce(Vector3.up * force, ForceMode.Impulse);
-                _rb.AddForce(_rb.transform.forward * forwardJumpForce, ForceMode.Impulse);
+                _rb.AddForce(transform.forward * forwardJumpForce, ForceMode.Impulse);
                 isGrounded = false;
-                Debug.Log("Jumped");
             }
         }
 
-        private void HandleGroundState() {
-            // maybe more logic
+        private void HandleGroundState()
+        {
             isGrounded = IsGroundedWhileGrounded();
         }
-        
+
         #endregion
-        
+
         #region Helper funcs
         
         public void ResetVariables()
@@ -177,9 +208,10 @@ namespace Characters.PlayerController.Scripts
 
         #region Gizmo draw
 
-        private void OnDrawGizmosSelected() {
+        private void OnDrawGizmosSelected()
+        {
             if (_playerCollider == null) return;
-
+            
             Vector3 pos = transform.TransformPoint(_playerCollider.center) - new Vector3(0f, _playerCollider.radius, 0f);
             bool grounded = IsGroundedWhileGrounded();
 

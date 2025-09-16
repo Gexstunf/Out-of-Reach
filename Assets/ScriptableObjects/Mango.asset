@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd30862700d3ab04c8502dfb46c13249, type: 3}
+  m_Name: Mango
+  m_EditorClassIdentifier: 
+  itemId: 2
+  worldPrefabName: '"Resources/PhotonPrefabs/Items/World_Mango"'
+  heldPrefabName: '"Resources/PhotonPrefabs/Items/Held_Mango"'
+  icon: {fileID: 21300000, guid: 0c602d3f270a93a49838d44a264e3224, type: 3}
+  displayName: Mango

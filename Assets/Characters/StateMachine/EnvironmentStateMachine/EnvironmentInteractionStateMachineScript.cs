@@ -4,7 +4,6 @@ using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine;
 using Characters.StateMachine.EnvironmentStateMachine.ConcreteStates;
 using Characters.StateMachine.PlayerStateMachine;
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -23,7 +22,6 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         [SerializeField] private CapsuleCollider _rootCollider;
         [SerializeField] private Camera _camera;
         [SerializeField] private InverseKinematicsDriverScript _ikDriver;
-        
         
         [Header("Environment interaction settings")]
         [SerializeField] private TwoBoneIKConstraint _leftIkConstraint;
@@ -45,12 +43,16 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
                 _leftMultiRotationConstraint, _rightMultiRotationConstraint, transform.root, _inputScript, _camera,
                 _groundLayer, _playerStateMachine, _rigidBody, _ikDriver, _leftParent, _rightParent);
             
+                
             ValidateConstraints();
             InitializeStates();
             //ConstructTerrainDetectorCollider();
 
             _context.SetCurrentStep(EnvironmentInteractionContextScript.EStep.Right);            
-            _context.SetTargetOffset(_leftIkConstraint.data.target.localPosition, _rightIkConstraint.data.target.localPosition);
+            _context.SetTargetOffset(
+                _leftIkConstraint.data.target.localPosition, 
+                _rightIkConstraint.data.target.localPosition
+            );
         }
         
         private void InitializeStates() {
@@ -61,11 +63,30 @@ namespace Characters.StateMachine.EnvironmentStateMachine {
         }
         
         private void ValidateConstraints() {
-            Assert.IsNotNull(_leftIkConstraint, "Left IK constraint is not assigned!");
-            Assert.IsNotNull(_rightIkConstraint, "Right IK constraint is not assigned!");
-            Assert.IsNotNull(_leftMultiRotationConstraint, "Left Multi rotation constraint is not assigned!");
-            Assert.IsNotNull(_rightMultiRotationConstraint, "Right Multi rotation constraint is not assigned!");
-            Assert.IsNotNull(_groundLayer, "Ground layer is not assigned!");
+            Debug.Assert(_leftIkConstraint != null, "Left IK constraint is not assigned!");
+            Debug.Assert(_rightIkConstraint != null, "Right IK constraint is not assigned!");
+            Debug.Assert(_leftMultiRotationConstraint != null, "Left Multi rotation constraint is not assigned!");
+            Debug.Assert(_rightMultiRotationConstraint != null, "Right Multi rotation constraint is not assigned!");
+        }
+        
+        private void ConstructTerrainDetectorCollider() {
+            float legSpan = _rootCollider.height / 2;
+
+            BoxCollider boxCollider = gameObject.AddComponent<BoxCollider>();
+            boxCollider.size = new Vector3(legSpan + 0.4f, legSpan, legSpan + 0.4f);
+            boxCollider.center = new Vector3(
+                _rootCollider.center.x, 
+                _rootCollider.center.y - (legSpan / 2f + 0.7f), 
+                _rootCollider.center.z
+            );
+            boxCollider.isTrigger = true;
+        }
+
+        private void OnDrawGizmosSelected() {
+            Gizmos.color = Color.red;
+            if (_context != null && _context.ClosestPointOnColliderFromLegShoulderTransform != null) {
+                Gizmos.DrawSphere(_context.ClosestPointOnColliderFromLegShoulderTransform, 0.3f);
+            }
         }
     }
 }
