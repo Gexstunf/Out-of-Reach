@@ -34,6 +34,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
             _stamina = Context.MaxStamina;
             _currentStaminaUseRate = VitalUtil.BaseUseRate;
             _currentStaminaRegenRate = VitalUtil.BaseRegenRate;
+            Debug.Log("Stamina setup: " + _stamina);
         }
 
         public override void UpdateModifiers()
@@ -44,7 +45,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
             if (Context.IsRunning) _currentStaminaUseRate += _runningModifier;
             if (Context.IsClimbing) _currentStaminaUseRate += _climbingModifier;
 
-            // Solo actualizamos el Context, el Coordinator decidirá si dispara evento
+            // Solo actualizamos el Context, el Coordinator decidirï¿½ si dispara evento
             Context.SetTired(!HasStamina);
         }
 

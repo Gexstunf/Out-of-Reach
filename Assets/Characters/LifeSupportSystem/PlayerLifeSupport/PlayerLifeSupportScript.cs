@@ -47,51 +47,44 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
 
         /*private new void Start()
         {
-            if (photonView.IsMine)
-            {
-                // Busca la UI del jugador dentro del prefab
+            if (photonView.IsMine) {
+                //Busca la UI del jugador dentro del prefab
                 _uiManager = GetComponentInChildren<UIManagerScript>(true);
 
-                if (_uiManager != null)
-                {
+                if (_uiManager != null) {
                     _uiManager.SetTarget(Context, Vitals);
-
-                    if (_inventory != null)
-                        _uiManager.InitInventory(_inventory);
+                    if (_inventory != null) _uiManager.InitInventory(_inventory);
                 }
-            }
-            else
-            {
-                // Si no es nuestro player, apagamos su canvas de HUD
+            } else {
+                //Si no es nuestro player, apagamos su canvas de HUD
                 var uiCanvas = GetComponentInChildren<Canvas>(true);
                 if (uiCanvas != null)
                     uiCanvas.gameObject.SetActive(false);
+                }
+
+                //Setup de vitales siempre, para locales y remotos
+                foreach (var vital in Vitals.Values)
+                    vital.SetupVital();
             }
 
-            // Setup de vitales siempre, para locales y remotos
+        private void Update() {
+            if (!photonView.IsMine) return;
+
+            //Primero modificadores
             foreach (var vital in Vitals.Values)
-                vital.SetupVital();
-        }*/
+                vital.UpdateModifiers();
 
-        private void Update()
-        {
-            //if (!photonView.IsMine) return;
+            //Luego valores reales
+            foreach (var vital in Vitals.Values)
+                vital.UpdateVital();
 
-            // Primero modificadores
-            // foreach (var vital in Vitals.Values)
-            //     vital.UpdateModifiers();
-            //
-            // // Luego valores reales
-            // foreach (var vital in Vitals.Values)
-            //     vital.UpdateVital();
-
-            // Actualizamos UI
-            if (_uiManager != null)
-            {
+            //Actualizamos UI
+            if (_uiManager != null) {
                 _uiManager.DisplayStamina(Context.Stamina);
                 _uiManager.DisplayHealth(Context.Health);
             }
         }
+        */
 
         private void InitializeVitals()
         {
