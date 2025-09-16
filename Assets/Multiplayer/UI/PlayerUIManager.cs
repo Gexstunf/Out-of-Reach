@@ -35,7 +35,6 @@ namespace UI
         public GameObject[] backpackSlotUI;
         public Image[] backpackSlotIcons;
 
-
         // NUEVO: jugador objetivo
         private PlayerLifeSupportContextScript _context;
         private Dictionary<PlayerLifeSupportScript.EVitals, BaseVitalScript<PlayerLifeSupportScript.EVitals>> _vitals;
@@ -43,6 +42,7 @@ namespace UI
 
         public void Start()
         {
+            Debug.Log($"[UIManager] Start en {gameObject.name}");
             InitUI();
         }
 
@@ -55,12 +55,27 @@ namespace UI
 
         public void InitUI()
         {
-            if (_initialized) return;
+            if (_initialized)
+            {
+                Debug.Log("[UIManager] Ya estaba inicializado, se salta InitUI.");
+                return;
+            }
 
             if (staminaBar == null)
+            {
                 staminaBar = GameObject.Find("Canvas/StaminaBar")?.GetComponent<Image>();
+                Debug.Log(staminaBar != null
+                    ? "[UIManager] ✅ StaminaBar encontrado dinámicamente."
+                    : "[UIManager] ⚠️ No se encontró StaminaBar dinámicamente.");
+            }
+
             if (healthContainer == null)
+            {
                 healthContainer = GameObject.Find("Canvas/HealthContainer")?.transform;
+                Debug.Log(healthContainer != null
+                    ? "[UIManager] ✅ HealthContainer encontrado dinámicamente."
+                    : "[UIManager] ⚠️ No se encontró HealthContainer dinámicamente.");
+            }
 
             if (healthContainer != null)
             {
@@ -70,6 +85,7 @@ namespace UI
                     Image img = child.GetComponent<Image>();
                     if (img != null) healthTicks.Add(img);
                 }
+                Debug.Log($"[UIManager] Health ticks cargados: {healthTicks.Count}");
             }
 
             DisplayHealth(maxHealth);
@@ -82,29 +98,46 @@ namespace UI
                 if (btn != null)
                 {
                     btn.onClick.AddListener(() => OnSlotClicked(index));
+                    Debug.Log($"[UIManager] Listener agregado a slot {i}");
                 }
             }
 
             _initialized = true;
+            Debug.Log("[UIManager] ✅ InitUI completado.");
         }
 
         public void InitInventory(PlayerInventoryPhoton inv)
         {
             inventory = inv;
+            Debug.Log(inventory != null
+                ? "[UIManager] ✅ Inventario asignado correctamente."
+                : "[UIManager] ⚠️ Inventario NULL al inicializar.");
+
             UpdateInventoryUI();
         }
 
         public void SetTarget(PlayerLifeSupportContextScript context,
                       Dictionary<PlayerLifeSupportScript.EVitals, BaseVitalScript<PlayerLifeSupportScript.EVitals>> vitals)
         {
-            // Guardamos referencia al contexto y vitals para actualizar UI
             _context = context;
             _vitals = vitals;
+
+            Debug.Log(_context != null
+                ? "[UIManager] ✅ Context asignado correctamente."
+                : "[UIManager] ⚠️ Context es NULL!");
+
+            Debug.Log(_vitals != null
+                ? $"[UIManager] ✅ Vitals asignados: {_vitals.Count}"
+                : "[UIManager] ⚠️ Vitals es NULL!");
         }
 
         private void UpdateUI()
         {
-            if (_context == null) return;
+            if (_context == null)
+            {
+                Debug.LogWarning("[UIManager] ⚠️ UpdateUI llamado pero Context es NULL.");
+                return;
+            }
 
             DisplayHealth(_context.Health);
             DisplayStamina(_context.Stamina);
@@ -113,7 +146,11 @@ namespace UI
 
         public void UpdateInventoryUI()
         {
-            if (inventory == null) return;
+            if (inventory == null)
+            {
+                Debug.LogWarning("[UIManager] ⚠️ UpdateInventoryUI llamado pero Inventario es NULL.");
+                return;
+            }
 
             for (int i = 0; i < slotUI.Length; i++)
             {
@@ -140,7 +177,12 @@ namespace UI
 
         public void OnSlotClicked(int slotIndex)
         {
-            if (inventory == null) return;
+            if (inventory == null)
+            {
+                Debug.LogWarning("[UIManager] ⚠️ OnSlotClicked llamado pero Inventario es NULL.");
+                return;
+            }
+
             inventory.EquipFromSlot(slotIndex);
             UpdateInventoryUI();
         }
@@ -148,14 +190,13 @@ namespace UI
         public void ShowBackpackInventory(BackpackData bd, PlayerInventoryPhoton inv)
         {
             backpackPanel.SetActive(true);
+            Debug.Log("[UIManager] Mostrando mochila.");
 
             for (int i = 0; i < backpackSlotUI.Length; i++)
             {
                 if (i >= bd.internalSlots.Length) continue;
 
                 ItemSO item = bd.internalSlots[i];
-
-                // Mostrar icono
                 backpackSlotIcons[i].sprite = item != null ? item.icon : null;
                 backpackSlotIcons[i].enabled = item != null;
 
@@ -167,22 +208,19 @@ namespace UI
 
                     if (item != null)
                     {
-                        // Si hay item → botón lo saca al mundo
                         btn.onClick.AddListener(() =>
                         {
-                            //inv.DropFromBackpack(bd, slotIndex);
+                            Debug.Log($"[UIManager] Sacando item de la mochila slot {slotIndex}");
                             UpdateBackpackUI(bd.internalSlots);
                         });
                     }
                     else
                     {
-                        // Si no hay item → botón guarda el tempHeld
                         btn.onClick.AddListener(() =>
                         {
                             if (inv.tempItemData != null)
                             {
-                                //inv.StoreInBackpack(bd, inv.tempItemData, slotIndex);
-                                //inv.ClearTempHeld();
+                                Debug.Log($"[UIManager] Guardando item en mochila slot {slotIndex}");
                                 UpdateBackpackUI(bd.internalSlots);
                             }
                         });
@@ -201,18 +239,21 @@ namespace UI
                 backpackSlotIcons[i].sprite = item != null ? item.icon : null;
                 backpackSlotIcons[i].enabled = item != null;
             }
+
+            Debug.Log("[UIManager] Mochila UI actualizada.");
         }
 
         public void CloseBackpack()
         {
             backpackPanel.SetActive(false);
+            Debug.Log("[UIManager] Mochila cerrada.");
         }
 
         public void DisplayStamina(float amount)
         {
             if (staminaBar == null)
             {
-                Debug.LogWarning("StaminaBar es NULL en " + gameObject.name);
+                Debug.LogWarning("[UIManager] ⚠️ StaminaBar es NULL.");
                 return;
             }
 
@@ -224,7 +265,6 @@ namespace UI
         {
             if (healthTicks.Count == 0)
             {
-                Debug.LogWarning("No hay healthTicks en " + gameObject.name);
                 return;
             }
 

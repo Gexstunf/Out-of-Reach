@@ -232,7 +232,7 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             return;
         }
 
-            ItemSO itemData = slots[slotIndex];
+        ItemSO itemData = slots[slotIndex];
         Debug.Log($"[Equip] Trying to equip slot {slotIndex} -> '{itemData.displayName}'");
 
         if (activeSlot == slotIndex)
