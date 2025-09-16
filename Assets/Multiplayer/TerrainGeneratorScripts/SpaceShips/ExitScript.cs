@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace TerrainGeneratorScripts.SpaceShips
+namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 {
     public class ExitScript : MonoBehaviour
     {
@@ -10,7 +10,8 @@ namespace TerrainGeneratorScripts.SpaceShips
         public string exitID;
         public bool isActive;
         public float activationChance;
-        
+        public GameObject activeVisual;
+        public GameObject inactiveVisual;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void ResetStatics()
@@ -20,10 +21,7 @@ namespace TerrainGeneratorScripts.SpaceShips
         
         public void Awake()
         {
-            
-            // Original activation logic
             isActive = Random.Range(0f, 1f) <= activationChance;
-            //Debug.Log($"Exit {name} isActive: {isActive}");
         }
 
         public void SetExitNumber()
@@ -36,7 +34,6 @@ namespace TerrainGeneratorScripts.SpaceShips
                 }
                 else
                 {
-                    // Generate new ID if collision occurs
                     exitID = System.Guid.NewGuid().ToString();
                     allExits.Add(exitID, this);
                 }
@@ -51,7 +48,6 @@ namespace TerrainGeneratorScripts.SpaceShips
             {
                 allExits.Remove(exitID);
             }
-            //Debug.Log($"Exit {name} deactivated and removed from active exits");
         }
 
         private void OnDestroy()
@@ -60,6 +56,12 @@ namespace TerrainGeneratorScripts.SpaceShips
             {
                 allExits.Remove(exitID);
             }
+        }
+        
+        public void UpdateVisuals(bool active)
+        {
+            if (activeVisual != null) activeVisual.SetActive(active);
+            if (inactiveVisual != null) inactiveVisual.SetActive(!active);
         }
     
         public static void ClearAllExits()

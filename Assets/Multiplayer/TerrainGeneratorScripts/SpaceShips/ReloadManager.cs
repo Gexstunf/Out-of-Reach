@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace TerrainGeneratorScripts.SpaceShips
+namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 {
     public static class ReloadManager
     {
@@ -12,22 +12,20 @@ namespace TerrainGeneratorScripts.SpaceShips
         {
             SceneManager.sceneLoaded += (scene, mode) =>
             {
-                _reloading = false; // reset for the new scene
+                _reloading = false;
             };
         }
-
-        // Call this instead of SceneManager.LoadScene
+        
         public static void ReloadScene(string sceneName)
         {
-            if (_reloading) return; // prevent multiple reloads
+            if (_reloading) return;
             _reloading = true;
             Debug.Log(sceneName);
             SceneManager.LoadScene(sceneName);
         }
-
-        // Optional: reset reload flag when new scene is fully loaded
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        private static void ResetReloadFlag()
+        public static void ResetReloadFlag()
         {
             _reloading = false;
         }

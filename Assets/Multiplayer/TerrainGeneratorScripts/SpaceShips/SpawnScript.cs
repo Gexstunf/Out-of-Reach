@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
-using UnityEngine.SceneManagement;
+using System.Linq;
 
-namespace TerrainGeneratorScripts.SpaceShips
+namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 {
     public class SpawnScript : MonoBehaviour
     {
@@ -14,7 +12,6 @@ namespace TerrainGeneratorScripts.SpaceShips
         public GameObject uniqueHall;
         public ExitScript exitScript; 
         public GameObject entrance;
-        public GameObject exitOut;
         public GameObject [] intersectionsPossibles;
         public GameObject [] roomsPossibles;
         public int rooms;
@@ -24,8 +21,6 @@ namespace TerrainGeneratorScripts.SpaceShips
         private readonly int _minOfRoomSpawn = 5;
         private float _roomChance;
         private float _intersectionChance;
-        
-        
         private int maxIterations = 1000;
 
         void Start()
@@ -108,6 +103,19 @@ namespace TerrainGeneratorScripts.SpaceShips
                 }
             }
     
+            if (rooms < quantityOfRooms)
+            {
+                Debug.LogWarning("Not enough rooms, Reloading Scene");
+                ReloadManager.ResetReloadFlag();
+                ReloadManager.ReloadScene("RoomGeneration");
+            }
+            
+            foreach (var exit in ExitScript.allExits.Values.Skip(1))
+            {
+                exitScript = exit.GetComponent<ExitScript>();
+                exitScript.UpdateVisuals(true);
+            }
+            
             if (iterations >= maxIterations)
             {
                 Debug.LogError("Hit maximum iterations in SpawnHallWaysUntilRooms - prevented infinite loop");
@@ -119,10 +127,8 @@ namespace TerrainGeneratorScripts.SpaceShips
         {
             if (prefab != null && targetExit != null)
             {
-                // 1. Instanciamos en la escena
                 GameObject spawnedObject = Instantiate(prefab);
-
-                // 2. Buscamos el EntryPoint del prefab
+                
                 Transform entryPoint = spawnedObject.transform.Find("EntryPoint");
                 if (entryPoint == null)
                 {
@@ -130,16 +136,13 @@ namespace TerrainGeneratorScripts.SpaceShips
                     Destroy(spawnedObject);
                     return;
                 }
-
-                // 3. Alinear rotación
+                
                 Quaternion rotationOffset = targetExit.rotation * Quaternion.Inverse(entryPoint.rotation);
                 spawnedObject.transform.rotation = rotationOffset * spawnedObject.transform.rotation;
-
-                // 4. Alinear posición
+                
                 Vector3 positionOffset = targetExit.position - entryPoint.position;
                 spawnedObject.transform.position += positionOffset;
-
-                // 5. Registrar nuevas salidas
+                
                 ExitScript[] newExits = spawnedObject.GetComponentsInChildren<ExitScript>();
                 foreach (ExitScript newExit in newExits)
                 {
@@ -150,6 +153,5 @@ namespace TerrainGeneratorScripts.SpaceShips
                 }
             }
         }
-
     }
 }

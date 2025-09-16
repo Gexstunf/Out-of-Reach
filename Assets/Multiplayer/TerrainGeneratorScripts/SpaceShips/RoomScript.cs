@@ -1,8 +1,8 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
-namespace TerrainGeneratorScripts.SpaceShips
+namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 {
     public class RoomScript : MonoBehaviour
     {
@@ -14,7 +14,7 @@ namespace TerrainGeneratorScripts.SpaceShips
         {
             SceneManager.sceneLoaded += (scene, mode) =>
             {
-                _reloadTriggered = false; // reset for the new scene
+                _reloadTriggered = false;
             };
         }
 
@@ -35,7 +35,6 @@ namespace TerrainGeneratorScripts.SpaceShips
 
             foreach (Collider other in others)
             {
-                // Ignore my own colliders (root + children)
                 if (other == myCol || other.transform.IsChildOf(transform))
                     continue;
 

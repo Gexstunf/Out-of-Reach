@@ -1,18 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-namespace TerrainGeneratorScripts.SpaceShips
+namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 {
     public class DoorScript : MonoBehaviour
     {
         public static Dictionary<string, DoorScript> allDoors = new();
         public string doorID;
         public bool isActive;
-        public float activationChance;
-        public GameObject activeVisual;
-        public GameObject inactiveVisual;
-        public SpawnScript entrance;
+        public float activationChance; 
+        public SpawnScript spawn;
 
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -22,7 +21,7 @@ namespace TerrainGeneratorScripts.SpaceShips
         }
         void Awake()
         {
-            entrance = FindAnyObjectByType<SpawnScript>();
+            spawn = FindAnyObjectByType<SpawnScript>();
 
             if (string.IsNullOrEmpty(doorID))
                 doorID = System.Guid.NewGuid().ToString();
@@ -33,9 +32,8 @@ namespace TerrainGeneratorScripts.SpaceShips
             }
 
             RandomizeActivation();
-            UpdateVisuals();
-            entrance.SecondStart();
-            entrance.SpawnHallWaysUntilRooms();
+            spawn.SecondStart();
+            spawn.SpawnHallWaysUntilRooms();
         }
 
         void OnDestroy()
@@ -47,21 +45,6 @@ namespace TerrainGeneratorScripts.SpaceShips
         public void RandomizeActivation()
         {
             isActive = Random.Range(0f, 1f) <= activationChance;
-        }
-
-        public void SetActivation(bool active)
-        {
-            isActive = active;
-            UpdateVisuals();
-        }
-
-        void UpdateVisuals()
-        {
-            if (activeVisual != null)
-                activeVisual.SetActive(isActive);
-
-            if (inactiveVisual != null)
-                inactiveVisual.SetActive(!isActive);
         }
         
         public static void ClearAllDoors()
