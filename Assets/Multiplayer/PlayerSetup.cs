@@ -25,18 +25,19 @@ namespace Multiplayer {
 
         void Start()
         {
-            if (!photonView.IsMine) {
-                // Desactivar cosas en jugadores remotos
-                if (_playerCamera != null) _playerCamera.enabled = false;
-                if (_audioListener != null) _audioListener.enabled = false;
-                if (_controller != null) _controller.enabled = false;
-                if (_rotator != null) _rotator.enabled = false;
-            } else {
-                // Inicializar cámara para el jugador local
-                if (_cameraController != null && _playerCamera != null)
-                {
-                    _cameraController.Init(2.0f, 2.0f, 80f);
-                }
+            if (photonView.IsMine)
+            {
+                _playerCamera.enabled = true;
+                _audioListener.enabled = true;
+                _controller.enabled = true;
+                _rotator.enabled = true;
+            }
+            else
+            {
+                _playerCamera.enabled = false;
+                _audioListener.enabled = false;
+                _controller.enabled = false;
+                _rotator.enabled = false;
             }
         }
     }

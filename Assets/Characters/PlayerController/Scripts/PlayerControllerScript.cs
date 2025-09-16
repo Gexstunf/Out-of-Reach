@@ -88,22 +88,22 @@ namespace Characters.PlayerController.Scripts
 
         private void Start()
         {
-            // if (!photonView.IsMine)
-            // {
-            //     if (_playerCamera != null) _playerCamera.enabled = false;
-            //
-            //     AudioListener listener = GetComponentInChildren<AudioListener>();
-            //     if (listener != null) listener.enabled = false;
-            //
-            //     _rb.isKinematic = true;
-            // }
-            //else
-            //{
+            if (!photonView.IsMine)
+            {
+                if (_playerCamera != null) _playerCamera.enabled = false;
+
+                AudioListener listener = GetComponentInChildren<AudioListener>();
+                if (listener != null) listener.enabled = false;
+
+                _rb.isKinematic = true;
+            }
+            else
+            {
                 _rotator.Init(_lookSenseH, _lookSenseV, _lookLimitV);
                 _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
 
                 _rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            //}
+            }
 
             _rb.linearDamping = playerDrag;
             _groundCheckOffset = _playerCollider.radius + 0.1f;
@@ -115,7 +115,7 @@ namespace Characters.PlayerController.Scripts
 
         private void Update()
         {
-            //if (!photonView.IsMine) return;
+            if (!photonView.IsMine) return;
 
             HandleJumping(jumpForce);
             HandleGroundState();
@@ -123,7 +123,7 @@ namespace Characters.PlayerController.Scripts
 
         private void FixedUpdate()
         {
-            //if (!photonView.IsMine) return;
+            if (!photonView.IsMine) return;
 
             if (useCustomGravity) {
                 ApplyCustomGravity(gravityScale);
@@ -146,10 +146,11 @@ namespace Characters.PlayerController.Scripts
 
         private void LateUpdate()
         {
-            //if (!photonView.IsMine) return;
+            if (!photonView.IsMine) return;
             
             visualGravity = Physics.gravity.y;
             if (useCustomGravity) visualGravity = Physics.gravity.y * gravityScale;
+
 
             Vector2 lookInput = _inputScript.LookInput;
             _rotator.RotateTransform(lookInput);
