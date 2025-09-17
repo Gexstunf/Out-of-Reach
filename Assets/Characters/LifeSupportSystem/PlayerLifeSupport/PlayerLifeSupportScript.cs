@@ -36,7 +36,10 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
 
         private void Awake()
         {
-            _rb = GetComponent<Rigidbody>();
+            _rb = _rb ?? GetComponent<Rigidbody>();
+            _playerInputScript = _playerInputScript ?? GetComponent<PlayerInputScript>();
+            _inventory = _inventory ?? GetComponent<PlayerInventoryPhoton>();
+
             Context = new PlayerLifeSupportContextScript(
                 _rb, _maxHealth, _maxStamina, _staminaUseRate,
                 _staminaRegenRate, _staminaRegenDelay, null, _playerInputScript
