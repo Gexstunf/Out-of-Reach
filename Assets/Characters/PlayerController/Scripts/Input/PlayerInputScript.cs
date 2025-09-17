@@ -96,7 +96,7 @@ namespace Characters.PlayerController.Scripts.Input
         {
             if (!context.performed) return;
 
-            var inv = GetComponent<PlayerInventoryPhoton>();
+            /*var inv = GetComponent<PlayerInventoryPhoton>();
             if (inv == null) return;
 
             // Abrir mochila en mano
@@ -116,7 +116,7 @@ namespace Characters.PlayerController.Scripts.Input
                     inv.OpenBackpackWorld(netItem);
                     break;
                 }
-            }
+            }*/
         }
 
         public void OnCrouch(InputAction.CallbackContext context)
@@ -158,7 +158,7 @@ namespace Characters.PlayerController.Scripts.Input
 
         public void OnInventory(InputAction.CallbackContext context) {
             if (!context.performed) return;
-            var inv = GetComponent<PlayerInventoryPhoton>();
+            /*var inv = GetComponent<PlayerInventoryPhoton>();
             if (inv == null) return;
 
             if (Keyboard.current.digit1Key.wasPressedThisFrame)
@@ -180,21 +180,21 @@ namespace Characters.PlayerController.Scripts.Input
             {
                 if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(3);
                 else inv.EquipFromSlot(3);
-            }
+            }*/
         }
 
         public void OnDrop(InputAction.CallbackContext context)
         {
             if(!context.performed) return;
 
-            var inv = GetComponent<PlayerInventoryPhoton>();
-            if (inv != null)
-            {
-                inv.DropCurrent(inv.activeSlot);
-
-                var ui = FindFirstObjectByType<PlayerUIManager>();
-                if (ui != null) ui.UpdateInventoryUI();
-            }
+            // var inv = GetComponent<PlayerInventoryPhoton>();
+            // if (inv != null)
+            // {
+            //     inv.DropCurrent(inv.activeSlot);
+            //
+            //     var ui = FindFirstObjectByType<PlayerUIManager>();
+            //     if (ui != null) ui.UpdateInventoryUI();
+            // }
         }
 
         #endregion

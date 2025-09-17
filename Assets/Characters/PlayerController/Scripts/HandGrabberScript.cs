@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -19,7 +20,12 @@ namespace Characters.PlayerController.Scripts {
         
         private GrabbableScript _current;
         private Coroutine _grabCoroutine;
-        
+        private Vector3 _localHomeIKTargetPosition;
+
+        private void Start() {
+            _localHomeIKTargetPosition = handIKTarget.localPosition;
+        }
+
         void Update()
         {
             if (!_current)
@@ -55,15 +61,27 @@ namespace Characters.PlayerController.Scripts {
             while (elapsed < 1f) {
                 elapsed += Time.deltaTime * grabSpeed; 
                 float progress = Mathf.Clamp01(elapsed);
-                
-                handIKTarget.position = Vector3.Lerp(start, target, progress);
+                LerpTargetFromTo(start, target, progress);
                 yield return null;
             }
             
             handIKTarget.position = target;
             item.Grab(handRb);
+            
+            elapsed = 0f;
+            Vector3 newPos = handIKTarget.position;
+            while (elapsed < 1f) {
+                elapsed += Time.deltaTime * grabSpeed; 
+                float progress = Mathf.Clamp01(elapsed);
+                LerpTargetFromTo(newPos, handIKTarget.parent.TransformPoint(_localHomeIKTargetPosition), progress);
+                yield return null;
+            }
         }
 
+        private void LerpTargetFromTo(Vector3 start, Vector3 target, float progress) {
+            handIKTarget.position = Vector3.Lerp(start, target, progress);
+        }
+        
         void OnDrawGizmos()
         {
             if (!debug || cameraTransform == null) return;
