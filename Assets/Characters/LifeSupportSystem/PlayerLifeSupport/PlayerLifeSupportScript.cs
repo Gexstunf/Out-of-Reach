@@ -13,7 +13,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
         [SerializeField] private PlayerUIManager _uiManager;
         [SerializeField] private Rigidbody _rb;
         [SerializeField] private PlayerInputScript _playerInputScript;
-        //[SerializeField] private PlayerInventoryPhoton _inventory;
+        [SerializeField] private PlayerInventoryPhoton _inventory;
 
         [Header("Life support settings")]
         [SerializeField] private float _maxHealth = 100f;

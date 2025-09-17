@@ -96,7 +96,7 @@ public class RoomLobbyManager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.LoadLevel("RoomGeneration");
+            PhotonNetwork.LoadLevel("GameScene");
         }
     }
 }
