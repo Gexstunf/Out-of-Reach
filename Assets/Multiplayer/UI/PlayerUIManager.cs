@@ -113,7 +113,7 @@ namespace UI
             Debug.Log(inventory != null
                 ? "[UIManager] ✅ Inventario asignado correctamente."
                 : "[UIManager] ⚠️ Inventario NULL al inicializar.");
-
+            Debug.Log("[UIManager] Inventario inicializado");
             UpdateInventoryUI();
         }
 

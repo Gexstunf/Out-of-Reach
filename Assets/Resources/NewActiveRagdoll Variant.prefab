@@ -90,7 +90,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4116814565739982824, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: itemLayer.m_Bits
-      value: 0
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 4116814565739982824, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: 'slots.Array.data[0]'

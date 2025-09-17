@@ -39,7 +39,15 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         if (photonView.IsMine)
         {
             var ui = FindFirstObjectByType<PlayerUIManager>();
-            if (ui != null) ui.InitInventory(this);
+            if (ui != null)
+            {
+                Debug.Log("[Inventory] Inicializando UI con este inventario");
+                ui.InitInventory(this); // <--- asegura que Inventario se setea aquí
+            }
+            else
+            {
+                Debug.LogWarning("[Inventory] No se encontró PlayerUIManager en la escena!");
+            }
         }
     }
 
