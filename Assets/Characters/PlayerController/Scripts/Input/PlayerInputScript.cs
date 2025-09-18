@@ -17,9 +17,11 @@ namespace Characters.PlayerController.Scripts.Input
         public int ItemSlot { get; private set; }
         public bool JumpPressed { get; private set; }
         public bool CrouchPressed { get; private set; }
-        
         public bool RunningPressed { get; private set; }
         
+        public bool LeftClickPressed { get; private set; }
+        public bool RightClickPressed { get; private set; }
+
         #endregion
         
         #region Awake logic
@@ -87,11 +89,26 @@ namespace Characters.PlayerController.Scripts.Input
             LookInput = context.ReadValue<Vector2>();
         }
 
-        public void OnAttack(InputAction.CallbackContext context)
+        public void OnGrabLeft(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
-        }
+            if (!context.started) return;
+            LeftClickPressed = true;
 
+            if (context.canceled) {
+                LeftClickPressed = false;
+            };
+        }
+        
+        public void OnGrabRight(InputAction.CallbackContext context)
+        {
+            if (!context.started) return;
+            RightClickPressed = true;
+            
+            if (context.canceled) {
+                RightClickPressed = false;
+            };
+        }
+        
         public void OnInteract(InputAction.CallbackContext context)
         {
             if (!context.performed) return;
