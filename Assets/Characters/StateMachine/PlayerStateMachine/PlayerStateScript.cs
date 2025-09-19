@@ -13,7 +13,7 @@ namespace Characters.StateMachine.PlayerStateMachine
         }
         
         public bool IsMovingLaterally() {
-            Vector3 moveInput = Context.Input.MoveInput;
+            Vector2 moveInput = Context.Input.MoveInput;
 
             if (moveInput.magnitude > Context.MovementThreshold) {
                 return true;
