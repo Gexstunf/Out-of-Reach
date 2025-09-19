@@ -91,22 +91,22 @@ namespace Characters.PlayerController.Scripts.Input
 
         public void OnGrabLeft(InputAction.CallbackContext context)
         {
-            if (!context.started) return;
-            LeftClickPressed = true;
-
-            if (context.canceled) {
+            if (context.started) {
+                LeftClickPressed = true;
+            } 
+            else if (context.canceled) {
                 LeftClickPressed = false;
-            };
+            } 
         }
         
         public void OnGrabRight(InputAction.CallbackContext context)
         {
-            if (!context.started) return;
-            RightClickPressed = true;
-            
-            if (context.canceled) {
+            if (context.started) {
+                RightClickPressed = true;
+            } 
+            else if (context.canceled) {
                 RightClickPressed = false;
-            };
+            } 
         }
         
         public void OnInteract(InputAction.CallbackContext context)

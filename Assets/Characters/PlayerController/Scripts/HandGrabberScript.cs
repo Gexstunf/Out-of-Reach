@@ -2,25 +2,31 @@ using System;
 using System.Collections;
 using Characters.PlayerController.Scripts.Input;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.Serialization;
 
 namespace Characters.PlayerController.Scripts {
-    public class HandGrabberScript : MonoBehaviour
-    {
-        
-        [Header("Settings")]
-        public float grabDistance = 2f;      // how far you can grab
+    public class HandGrabberScript : MonoBehaviour {
+
+        [Header("Settings")] 
+        public float grabDistance = 2f; // how far you can grab
         public float grabSpeed = 3f;
         public LayerMask itemMask;
         public bool debug;
-        
-        [Header("References")]
+
+        [Header("References")] 
         [SerializeField] private PlayerInputScript input;
+
         public Transform rightHandIKTarget;
-        public Rigidbody rightHandRb;            
-        public Transform leftHandIKTarget;         
-        public Rigidbody leftHandRb;             
-        public Transform cameraTransform;  
+        public Rigidbody rightHandRb;
+        public Transform leftHandIKTarget;
+        public Rigidbody leftHandRb;
+        public Transform camTransform;
+
+        [Header("Rig Settings")]
+        public Rig grabRig;
+        public TwoBoneIKConstraint rightIKConstraint;
+        public TwoBoneIKConstraint leftIKConstraint;
 
         
         private GrabbableScript _current;
@@ -28,9 +34,14 @@ namespace Characters.PlayerController.Scripts {
         private Vector3 _leftLocalHomeIKTargetPosition;
         private Vector3 _rightLocalHomeIKTargetPosition;
 
+
         private void Start() {
             _leftLocalHomeIKTargetPosition = leftHandIKTarget.localPosition;
             _rightLocalHomeIKTargetPosition = rightHandIKTarget.localPosition;
+
+            grabRig.weight = 1f;
+            leftIKConstraint.weight = 0f;
+            rightIKConstraint.weight = 0f;
         }
 
         void Update()
@@ -39,13 +50,28 @@ namespace Characters.PlayerController.Scripts {
             if (clicked && !_current) {
                 TryGrab(input.LeftClickPressed);
             }
+            
+            if (_current && !clicked) {
+                Debug.Log("Released an item");
+                
+                if (_grabCoroutine != null) {
+                    StopCoroutine(_grabCoroutine);
+                }
+                _current.Release();
+                _current = null;
+            }
+
+            if (!_current) {
+                leftIKConstraint.weight = Mathf.Lerp(leftIKConstraint.weight, 0f, Time.deltaTime * grabSpeed);
+                rightIKConstraint.weight = Mathf.Lerp(rightIKConstraint.weight, 0f, Time.deltaTime * grabSpeed);
+            }
         }
 
         void TryGrab(bool isLeftClick)
         {
             RaycastHit hit;
-            Vector3 origin = cameraTransform.position;
-            Vector3 direction = cameraTransform.forward;
+            Vector3 origin = camTransform.position;
+            Vector3 direction = camTransform.forward;
 
             if (Physics.Raycast(origin, direction, out hit, grabDistance, itemMask)) {
                 GrabbableScript item = hit.collider.GetComponent<GrabbableScript>();
@@ -64,6 +90,7 @@ namespace Characters.PlayerController.Scripts {
             Transform ikTarget = isLeftClick ? leftHandIKTarget : rightHandIKTarget;
             Rigidbody rb = isLeftClick ? leftHandRb : rightHandRb;
             Vector3 currentHome = isLeftClick ? _leftLocalHomeIKTargetPosition : _rightLocalHomeIKTargetPosition;
+            TwoBoneIKConstraint currentConstraint = isLeftClick ? leftIKConstraint : rightIKConstraint;
             
             Vector3 start = ikTarget.position;
             Vector3 target = item.grabPoint ? item.grabPoint.position : hitPoint;
@@ -73,6 +100,7 @@ namespace Characters.PlayerController.Scripts {
                 elapsed += Time.deltaTime * grabSpeed; 
                 float progress = Mathf.Clamp01(elapsed);
                 LerpTargetFromTo(start, target, progress, isLeftClick);
+                currentConstraint.weight = Mathf.Lerp(currentConstraint.weight, 1f, Time.deltaTime * grabSpeed);
                 yield return null;
             }
 
@@ -91,6 +119,7 @@ namespace Characters.PlayerController.Scripts {
                 elapsed += Time.deltaTime * grabSpeed; 
                 float progress = Mathf.Clamp01(elapsed);
                 LerpTargetFromTo(newPos, ikTarget.parent.TransformPoint(currentHome), progress, isLeftClick);
+                currentConstraint.weight = Mathf.Lerp(currentConstraint.weight, 0f, Time.deltaTime * grabSpeed);
                 yield return null;
             }
         }
@@ -106,9 +135,9 @@ namespace Characters.PlayerController.Scripts {
         
         void OnDrawGizmos()
         {
-            if (!debug || cameraTransform == null) return;
+            if (!debug || camTransform == null) return;
             Gizmos.color = Color.yellow;
-            Gizmos.DrawRay(cameraTransform.position, cameraTransform.forward * grabDistance);
+            Gizmos.DrawRay(camTransform.position, camTransform.forward * grabDistance);
         }
     }
 }
