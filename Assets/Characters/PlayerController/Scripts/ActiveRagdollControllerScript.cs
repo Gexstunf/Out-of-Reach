@@ -18,28 +18,25 @@ namespace Characters.PlayerController.Scripts {
         //[SerializeField] private bool debug = false;
         [SerializeField] private bool alive = true;
 
-        [Header("References")] [SerializeField]
-        private PlayerInputScript _playerInputScript;
-
+        [Header("References")] 
+        [SerializeField] private PlayerInputScript _playerInputScript;
         [SerializeField] private PlayerControllerScript _playerController;
         [SerializeField] private StateVitalsCoordinator _stateVitalsCoordinator;
         [SerializeField] private PlayerStateMachineScript _playerStateMachine;
 
-        [Header("Physics settings")] [SerializeField]
-        private int _solverIterations = 12;
-
+        [Header("Physics settings")] 
+        [SerializeField] private int _solverIterations = 12;
         [SerializeField] private int _solverVelIterations = 12;
         [SerializeField] private float _maxAngularVelocity = 20f;
 
-        [Header("Configurable Joint Settings")] [SerializeField]
-        private float _deadAngularDrive;
+        [Header("Configurable Joint Settings")] 
+        [SerializeField] private float _deadAngularDrive;
 
         [SerializeField] private float _interpolationDuration;
         [SerializeField] private float _interpolationScaler;
 
-        [Header("Revival settings")] [SerializeField]
-        private float _smoothLockDuration = 1.5f;
-
+        [Header("Revival settings")] 
+        [SerializeField] private float _smoothLockDuration = 1.5f;
         [SerializeField] private float _lockSpring = 10000f;
         [SerializeField] private float _lockDamper = 50f;
         [SerializeField] private float _initialClearance = 0.5f;
@@ -332,7 +329,7 @@ namespace Characters.PlayerController.Scripts {
         
         [ContextMenu("Revive active ragdoll")]
         void ReviveActiveRagdoll() {
-            SetActiveRagdollState(isAlive: true);
+            SetActiveRagdollState(true);
             SmoothLockStabilizer(_stabilizerMap.joint);
             
             if (_stabilizerCoroutine != null) {
