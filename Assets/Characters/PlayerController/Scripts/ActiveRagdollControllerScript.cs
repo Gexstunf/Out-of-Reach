@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Characters.ActiveRagdollSystem;
 using Characters.PlayerController.Scripts.Input;
 using Characters.StateMachine.PlayerStateMachine;
 using Characters.SystemAdaptations;
@@ -242,7 +243,7 @@ namespace Characters.PlayerController.Scripts {
 
             var limit = joint.linearLimit;
             float startLimit = _initialClearance;
-            float endLimit = 0f;
+            float endLimit = 0f; 
             limit.limit = startLimit;
             joint.linearLimit = limit;
 

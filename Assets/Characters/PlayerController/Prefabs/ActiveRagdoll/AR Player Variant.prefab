@@ -8,17 +8,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1128726467035652736, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
+      propertyPath: m_LinearLimit.limit
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1128726467035652736, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
+      propertyPath: m_AngularYLimit.limit
+      value: 129.07657
+      objectReference: {fileID: 0}
     - target: {fileID: 1178103718604873752, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -22.22
+      value: 15.670998
       objectReference: {fileID: 0}
     - target: {fileID: 1178103718604873752, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -8.32
+      value: 6.44
       objectReference: {fileID: 0}
     - target: {fileID: 1178103718604873752, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.58
+      value: -2.6259327
       objectReference: {fileID: 0}
     - target: {fileID: 1178103718604873752, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: m_LocalRotation.w
@@ -269,9 +277,9 @@ MonoBehaviour:
   _rotationSpeed: 5
   _jumpRigBlendSpeed: 4
   _smoothLockDuration: 6
-  _lockSpring: 10000
-  _lockDamper: 50
-  _initialClearance: 0.5
+  _lockSpring: 60
+  _lockDamper: 20
+  _initialClearance: 2.5
   _jumpRig: {fileID: 8184489010054618510}
 --- !u!54 &2817449403658750029 stripped
 Rigidbody:

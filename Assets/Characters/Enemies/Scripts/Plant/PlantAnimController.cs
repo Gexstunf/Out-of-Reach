@@ -6,7 +6,7 @@ namespace Characters.Enemies.Scripts.Plant {
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         [Header("References")]
         [SerializeField] private Animator plantAnimator;
-
+        
         [Header("Visualize")]
         public bool attack;
         

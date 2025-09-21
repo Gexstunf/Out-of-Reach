@@ -14,7 +14,7 @@ namespace Characters.ActiveRagdollSystem {
         [SerializeField] private float _deadAngularDrive = 3.5f;
         [SerializeField] private float _interpolationDuration = 0.5f;
         [SerializeField] private float _interpolationScaler = 1f;
-        [SerializeField]private float _stabilizerSpring = 10000f;
+        [SerializeField] private float _stabilizerSpring = 60f;
 
 
         public BoneMap[] boneMaps;
@@ -64,8 +64,21 @@ namespace Characters.ActiveRagdollSystem {
                     _normalLocalFixedPos = bone.rb.transform.localPosition;
                 }
 
-                if (bone.joint != null)
+                if (bone.joint == null) continue;
+
+                if (bone.joint.angularXDrive.positionSpring != 0f) {
                     bone.angularDriveSpring = bone.joint.angularXDrive.positionSpring;
+                    continue;
+                }
+
+                var drive = new JointDrive {
+                    positionSpring = bone.angularDriveSpring,
+                    positionDamper = 0f,
+                    maximumForce = Mathf.Infinity
+                };
+
+                bone.joint.angularXDrive = drive;
+                bone.joint.angularYZDrive = drive;
             }
         }
 
@@ -155,8 +168,9 @@ namespace Characters.ActiveRagdollSystem {
         {
             foreach (var bone in boneMaps)
             {
-                if (bone.joint && bone.ghostBone)
+                if (bone.joint && bone.ghostBone) {
                     bone.joint.SetTargetRotationLocal(bone.ghostBone.localRotation, bone.initialLocalRotation);
+                }
             }
         }
 
@@ -186,14 +200,16 @@ namespace Characters.ActiveRagdollSystem {
                     break;
 
                 case StabilizerMode.Dead:
-                    SetAlive(false);
-                    AllowLimitedConfigurableJointMovement(_stabilizerMap.joint);
+                    if (parameters is DeathParams death) {
+                        SetAlive(false);
+                        if (death.AllowLimitedMovement) AllowLimitedConfigurableJointMovement(_stabilizerMap.joint);
+                    }
                     break;
 
                 case StabilizerMode.Reviving:
                     if (parameters is RevivalParams revive) {
                         SetAlive(true);
-                        _modeCoroutine = StartCoroutine(SmoothLockStabilizer(_stabilizerMap.joint, revive.Clearance, revive.Damper, revive.Duration));
+                        _modeCoroutine = StartCoroutine(SmoothLockStabilizer(_stabilizerMap.joint, revive));
                     }
                     break;
             }
@@ -201,41 +217,45 @@ namespace Characters.ActiveRagdollSystem {
 
         #region Coroutine Logic
         
-        private IEnumerator SmoothLockStabilizer(ConfigurableJoint joint, float clearance, float damper, float duration) {
+        private IEnumerator SmoothLockStabilizer(ConfigurableJoint joint, RevivalParams p) {
             float elapsed = 0f;
-
-            joint.yMotion = ConfigurableJointMotion.Limited;
-
             var limit = joint.linearLimit;
-            float startLimit = clearance;
-            float endLimit = 0f;
-            limit.limit = startLimit;
-            joint.linearLimit = limit;
 
+            if (p.UseClearance) {
+                limit.limit = p.StartClearance;
+                joint.linearLimit = limit;
+            }
+            
+            joint.yMotion = p.YMotionStart;
+
+
+            // initialize drive properties once
             JointDrive drive = joint.yDrive;
-            float startSpring = 0f;
-            drive.positionSpring = startSpring;
-            drive.positionDamper = damper;
+            drive.positionSpring = p.StartSpring;
+            drive.positionDamper = p.Damper;
             joint.yDrive = drive;
 
-            while (elapsed < duration) {
+
+            while (elapsed < p.Duration) {
                 elapsed += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsed / duration);
+                float t = Mathf.Clamp01(elapsed / p.Duration);
 
-                limit.limit = Mathf.Lerp(startLimit, endLimit, t);
-                joint.linearLimit = limit;
-
-                drive.positionSpring = Mathf.Lerp(startSpring, _stabilizerSpring, t);
+                if (p.UseClearance) {
+                    limit.limit = Mathf.Lerp(p.StartClearance, p.EndClearance, t);
+                    joint.linearLimit = limit;
+                }
+                drive.positionSpring = Mathf.Lerp(p.StartSpring, p.EndSpring, t);
                 joint.yDrive = drive;
-
+                
                 yield return null;
             }
 
             // finally hard lock and restore limits
-            joint.yMotion = ConfigurableJointMotion.Locked;
-            joint.angularXMotion = ConfigurableJointMotion.Limited;
-            joint.angularYMotion = ConfigurableJointMotion.Locked;
-            joint.angularZMotion = ConfigurableJointMotion.Limited;
+            joint.yMotion = p.YMotionEnd;
+            joint.angularXMotion = p.AngularXEnd;
+            joint.angularYMotion = p.AngularYEnd;
+            joint.angularZMotion = p.AngularZEnd;
+            
         }
 
         private IEnumerator CrouchRoutine(float duration) {
@@ -261,6 +281,7 @@ namespace Characters.ActiveRagdollSystem {
             // snap to final position and lock again
             _stabilizerMap.joint.targetPosition = endTarget;
             _stabilizerMap.joint.yMotion = ConfigurableJointMotion.Locked;
+            _currentMode = StabilizerMode.Normal;
         }
 
         #endregion
@@ -273,7 +294,7 @@ namespace Characters.ActiveRagdollSystem {
                 joint.angularZMotion = ConfigurableJointMotion.Free;
             }
             else {
-                joint.yMotion = ConfigurableJointMotion.Limited;
+                joint.yMotion = ConfigurableJointMotion.Limited;  
                 joint.angularXMotion = ConfigurableJointMotion.Limited;
                 joint.angularYMotion = ConfigurableJointMotion.Free;
                 joint.angularZMotion = ConfigurableJointMotion.Limited;

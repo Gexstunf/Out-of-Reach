@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Indestructible
   - Item
+  - MovingPlatform
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,6 @@ TagManager:
   - UI
   - Interactable
   - Item
-  - 
   - 
   - 
   - 

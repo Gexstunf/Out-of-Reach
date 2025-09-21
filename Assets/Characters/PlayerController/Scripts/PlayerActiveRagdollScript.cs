@@ -24,9 +24,9 @@ namespace Characters.PlayerController.Scripts {
         
         [Header("Revival settings")] 
         [SerializeField] private float _smoothLockDuration = 6f;
-        [SerializeField] private float _lockSpring = 60f;
-        [SerializeField] private float _lockDamper = 30f;
-        [SerializeField] private float _initialClearance = 2f;
+        [SerializeField] private float _lockSpring = 70f;
+        [SerializeField] private float _lockDamper = 20f;
+        [SerializeField] private float _initialClearance = 1f;
         
         [Header("Rigs")]
         [SerializeField] private Rig _jumpRig;
@@ -84,13 +84,20 @@ namespace Characters.PlayerController.Scripts {
 
         void HandleTiredChange(bool tired) {
             RevivalParams revive = new RevivalParams {
-                Clearance = _initialClearance,
+                StartClearance = _initialClearance,
+                EndClearance = 0f,
+                UseClearance = true,
                 Damper    = _lockDamper,
-                Duration  = _smoothLockDuration
+                Duration  = _smoothLockDuration,
+                EndSpring = _lockSpring, // 10000f
+            };
+            
+            DeathParams death = new DeathParams {
+                AllowLimitedMovement = true
             };
             
             if (tired) {
-                _ar.SetStabilizerMode(ActiveRagdollCoreScript.StabilizerMode.Dead, null);
+                _ar.SetStabilizerMode(ActiveRagdollCoreScript.StabilizerMode.Dead, death);
             }
             else {
                 _ar.SetStabilizerMode(ActiveRagdollCoreScript.StabilizerMode.Reviving, revive);
