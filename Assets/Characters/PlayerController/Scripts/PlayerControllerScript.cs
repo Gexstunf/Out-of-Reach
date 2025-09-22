@@ -5,6 +5,7 @@ using Characters.StateMachine.PlayerStateMachine;
 using Characters.Utils;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.Serialization;
 
 namespace Characters.PlayerController.Scripts
 {
@@ -28,6 +29,8 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private PlayerStateMachineScript _playerStateMachine;
 
         [Header("Movement Settings")]
+        public bool useCustomGravity;
+        [Range(0f, 1f)] public float gravityScale = 1f;
         public float moveForce = 30f;
         public float runForce = 60f;
         public float playerDrag = 20f;
@@ -53,7 +56,7 @@ namespace Characters.PlayerController.Scripts
         [Header("Visualize Variables")]
         public bool isGrounded = true;
         public Vector3 CurrentForce { get; private set; }
-        public float gravity;
+        public float visualGravity;
         
         private float _groundCheckOffset;
 
@@ -71,7 +74,13 @@ namespace Characters.PlayerController.Scripts
             _rotator = gameObject.AddComponent<RotatorScript>();
             _cameraController = new CameraControllerScript();
             _cameraController.TieToTransform(_eyesTransform, eyesOffset);
-            gravity = Physics.gravity.y;
+
+            if (useCustomGravity) {
+                _rb.useGravity = false;
+            }   
+            else {
+                _rb.useGravity = true;
+            }
         }
 
         private void Start()
@@ -113,6 +122,10 @@ namespace Characters.PlayerController.Scripts
         {
             //if (!photonView.IsMine) return;
 
+            if (useCustomGravity) {
+                //ApplyCustomGravity(gravityScale);
+            }
+
             Vector3 movementDir = CalculateMovementDirection();
             Vector3 force = CalculateNewForce(movementDir);
             CurrentForce = force;
@@ -131,10 +144,13 @@ namespace Characters.PlayerController.Scripts
         private void LateUpdate()
         {
             //if (!photonView.IsMine) return;
+            
+            visualGravity = Physics.gravity.y;
+            if (useCustomGravity) visualGravity = Physics.gravity.y * gravityScale;
 
             Vector2 lookInput = _inputScript.LookInput;
             _rotator.RotateTransform(lookInput);
-            
+              
             float characterYaw = _rotator.GetYaw();
 
             _cameraController.UpdateCameraRotation(lookInput, _playerCamera, characterYaw);
@@ -202,6 +218,11 @@ namespace Characters.PlayerController.Scripts
             );
 
             return hit;
+        }
+
+        private void ApplyCustomGravity(float scale) {
+            Vector3 grav = Physics.gravity * scale;
+            //_rb.AddForce(grav, ForceMode.Acceleration);
         }
         
         #endregion
