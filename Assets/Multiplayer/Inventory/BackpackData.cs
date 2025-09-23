@@ -35,6 +35,12 @@ public class BackpackData : MonoBehaviourPun
         SetFromIds(ids);
     }
 
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        if (photonView.IsMine)
+            photonView.RPC(nameof(RPC_InitContents), RpcTarget.AllBuffered, GetItemIds());
+    }
+
     public bool TryAddItem(ItemSO item)
     {
         if (item == null || item.itemType == ItemType.Backpack) return false;

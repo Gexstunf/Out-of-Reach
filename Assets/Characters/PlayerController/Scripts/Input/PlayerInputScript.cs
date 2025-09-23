@@ -116,25 +116,33 @@ namespace Characters.PlayerController.Scripts.Input
             var inv = GetComponent<PlayerInventoryPhoton>();
             if (inv == null) return;
 
-            // Abrir mochila en mano
+            var ui = FindFirstObjectByType<PlayerUIManager>();
+            if (ui == null) return;
+
+            // Si mochila está equipada en slot 4 y seleccionada
             if (inv.backpackObj != null && inv.slots[3] != null && inv.activeSlot == 3)
             {
-                inv.OpenBackpack();
+                ui.ToggleBackpackInventory(inv.backpackObj.GetComponent<BackpackData>(), inv);
                 return;
             }
 
-            // Buscar mochila tirada cerca
+            // Buscar mochila en el suelo cerca
             Collider[] hits = Physics.OverlapSphere(transform.position, 2f, inv.itemLayer);
             foreach (var hit in hits)
             {
                 var netItem = hit.GetComponentInParent<NetworkedItem>();
                 if (netItem != null && netItem.itemData != null && netItem.itemData.itemType == ItemType.Backpack)
                 {
-                    inv.OpenBackpackWorld(netItem);
+                    var bd = netItem.GetComponent<BackpackData>();
+                    if (bd != null)
+                    {
+                        ui.ToggleBackpackInventory(bd, inv);
+                    }
                     break;
                 }
             }
         }
+
 
         public void OnCrouch(InputAction.CallbackContext context)
         {

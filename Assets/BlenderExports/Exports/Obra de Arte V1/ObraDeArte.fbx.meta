@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3c7d2a5767bd2344e9fe97d9d915af9d
+guid: f9ea54bb5d60f8d4b91c4fa2251deff3
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,8 +7,23 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: 419040f1bddf6f04bb281973e45c5259, type: 2}
+      name: Madera
+    second: {fileID: 2100000, guid: 0c1fa75103ae7ac46aa90aedc6b8925b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pintura
+    second: {fileID: 2100000, guid: 63842b1af5fa0904b8339ce23f154830, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: 58-581193_aloysius-ohare-o-hare-lorax-png
+    second: {fileID: 2800000, guid: cb3ebdef423bfa14d92a4d820693a19f, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: red_oak
+    second: {fileID: 2800000, guid: fc07555da4223074da1317a55a91074c, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

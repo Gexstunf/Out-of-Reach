@@ -15,19 +15,18 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
     public float dropForce = 3f;
 
     [Header("Inventario")]
-    public ItemSO[] slots = new ItemSO[4];
+    public ItemSO[] slots = new ItemSO[4]; // Slots 0-2 normales, slot 3 mochila
     public int activeSlot = -1;
 
     private GameObject currentHeldNetworkObj;
     private int currentHeldViewId = -1;
 
-    public GameObject backpackObj; // referencia a la instancia de la mochila (networked)
+    public GameObject backpackObj; // referencia a la mochila networked
 
     [Header("Objeto temporal")]
     public GameObject tempHeldObj;
     public ItemSO tempItemData;
 
-    // Nuevos campos para manejar pickup temporal local y posibles contents de mochila
     private string tempHeldPrefabName;
     private string[] tempBackpackIds;
 
@@ -40,24 +39,16 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         {
             var ui = FindFirstObjectByType<PlayerUIManager>();
             if (ui != null)
-            {
-                Debug.Log("[Inventory] Inicializando UI con este inventario");
-                ui.InitInventory(this); // <--- asegura que Inventario se setea aquí
-            }
+                ui.InitInventory(this);
             else
-            {
                 Debug.LogWarning("[Inventory] No se encontró PlayerUIManager en la escena!");
-            }
         }
     }
 
     // ---------- PICKUP TEMPORAL ----------
-    // ---------- PICKUP TEMPORAL ----------
     public void RequestPickupOnClosest(PhotonView targetItemPV)
     {
         if (targetItemPV == null) return;
-
-        Debug.Log($"[Pickup] Requesting pickup on item '{targetItemPV.name}' (ViewID: {targetItemPV.ViewID})");
 
         var netItem = targetItemPV.GetComponent<NetworkedItem>();
         if (netItem == null || netItem.itemData == null) return;
@@ -73,14 +64,12 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         PhotonView itemPV = PhotonView.Find(itemViewID);
         if (itemPV == null) return;
 
-        Debug.Log($"[Pickup Master] Handling pickup for '{itemPV.name}' by {info.Sender.NickName}");
-
         var netItem = itemPV.GetComponent<NetworkedItem>();
         if (netItem == null || netItem.itemData == null) return;
 
         string heldPrefabName = netItem.GetHeldPrefabName();
-
         string[] backpackIds = null;
+
         if (netItem.itemData.itemType == ItemType.Backpack)
         {
             var bd = itemPV.GetComponent<BackpackData>();
@@ -88,9 +77,110 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         }
 
         PhotonNetwork.Destroy(itemPV.gameObject);
-        Debug.Log($"[Pickup Master] Destroyed item '{itemPV.name}' in world");
-
         photonView.RPC(nameof(RPC_SpawnTempHeld), info.Sender, heldPrefabName, backpackIds);
+    }
+
+    public void Pickup(ItemSO item)
+    {
+        if (item == null) return;
+
+        Debug.Log($"[Inventory] Intentando recoger item '{item.displayName}'");
+
+        if (item.itemType == ItemType.Backpack)
+        {
+            Debug.Log("[Inventory] Es una mochila, slot reservado 3");
+
+            // Guardar en slot 4 (índice 3)
+            slots[3] = item;
+
+            // Instanciar en mano
+            GameObject held = PhotonNetwork.Instantiate(item.heldPrefabName, handSlot.position, handSlot.rotation);
+            currentHeldNetworkObj = held;
+            currentHeldViewId = held.GetComponent<PhotonView>().ViewID;
+            activeSlot = 3;
+            backpackObj = held; // guardamos la referencia a la mochila
+
+            held.transform.SetParent(handSlot, false);
+            held.transform.localPosition = Vector3.zero;
+            held.transform.localRotation = Quaternion.identity;
+
+            var rb = held.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = true;
+                rb.useGravity = false;
+            }
+
+            Debug.Log($"[Inventory] Mochila recogida y equipada en mano. ViewID={currentHeldViewId}");
+
+            // RPC para que todos vean la mochila en la mano
+            photonView.RPC(nameof(RPC_AttachItemToPlayer), RpcTarget.AllBuffered,
+                currentHeldViewId, photonView.ViewID, "hand");
+
+            var ui = FindFirstObjectByType<PlayerUIManager>();
+            if (ui != null) ui.UpdateInventoryUI();
+
+            return;
+        }
+
+        // Si no es mochila, agregamos al inventario normal
+        TryAddItem(item);
+    }
+
+    private bool TryAddItem(ItemSO item)
+    {
+        if (item == null) return false;
+
+        // Slot 3 exclusivo para mochilas
+        if (item.itemType == ItemType.Backpack)
+        {
+            if (slots[3] == null)
+            {
+                slots[3] = item;
+                EquipFromSlot(3);
+                FindFirstObjectByType<PlayerUIManager>()?.UpdateInventoryUI();
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning("[Inventory] Slot de mochila ya está ocupado.");
+                return false;
+            }
+        }
+
+        // Para items normales, buscar primer slot vacío
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (i == 3) continue; // slot mochila
+            if (slots[i] == null)
+            {
+                slots[i] = item;
+                EquipFromSlot(i);
+                FindFirstObjectByType<PlayerUIManager>()?.UpdateInventoryUI();
+                return true;
+            }
+        }
+
+        Debug.LogWarning($"[Inventory] No hay slot disponible para '{item.displayName}'.");
+        return false;
+    }
+
+    private void SpawnHeldItem(string prefabName, Transform parentSlot)
+    {
+        if (string.IsNullOrEmpty(prefabName) || parentSlot == null) return;
+
+        GameObject held = PhotonNetwork.Instantiate(prefabName, parentSlot.position, parentSlot.rotation);
+        currentHeldNetworkObj = held;
+        currentHeldViewId = held.GetComponent<PhotonView>().ViewID;
+
+        held.transform.SetParent(parentSlot, false);
+        held.transform.localPosition = Vector3.zero;
+        held.transform.localRotation = Quaternion.identity;
+
+        var rb = held.GetComponent<Rigidbody>();
+        if (rb != null) { rb.isKinematic = true; rb.useGravity = false; }
+
+        photonView.RPC(nameof(RPC_AttachItemToPlayer), RpcTarget.AllBuffered, currentHeldViewId, photonView.ViewID, parentSlot == handSlot ? "hand" : "back");
     }
 
     [PunRPC]
@@ -102,12 +192,18 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         tempBackpackIds = backpackIds;
         tempItemData = ItemDatabase.FindByHeldPrefabName(heldPrefabName);
 
+        if (tempItemData == null)
+        {
+            Debug.LogError("[TempHeld] No se encontró ItemSO para " + heldPrefabName);
+            return;
+        }
+
         Debug.Log($"[TempHeld] Spawning local preview of '{heldPrefabName}'");
 
         GameObject prefab = Resources.Load<GameObject>(heldPrefabName);
         if (prefab == null)
         {
-            Debug.LogError($"[TempHeld] No prefab found in Resources with name '{heldPrefabName}'");
+            Debug.LogError("[TempHeld] No prefab found in Resources with name " + heldPrefabName);
             return;
         }
 
@@ -115,8 +211,6 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         tempHeldObj.transform.SetParent(handSlot, false);
         tempHeldObj.transform.localPosition = Vector3.zero;
         tempHeldObj.transform.localRotation = Quaternion.identity;
-
-        Debug.Log($"[TempHeld] Temp object instantiated at handSlot ({handSlot.position})");
 
         var pv = tempHeldObj.GetComponent<PhotonView>();
         if (pv != null) Destroy(pv);
@@ -127,13 +221,22 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         var bd = tempHeldObj.GetComponent<BackpackData>() ?? tempHeldObj.AddComponent<BackpackData>();
         if (tempBackpackIds != null && tempBackpackIds.Length > 0)
             bd.SetFromIds(tempBackpackIds);
-        else if (tempItemData != null && tempItemData.internalSlots != null)
+        else if (tempItemData.internalSlots != null)
             bd.internalSlots = tempItemData.internalSlots;
 
-        Debug.Log($"[TempHeld] Local temp held setup complete");
+        Debug.Log("[TempHeld] Local temp held setup complete");
+
+        // **Si es mochila, guardamos en slot 4 y lo equipamos**
+        if (tempItemData.itemType == ItemType.Backpack)
+        {
+            slots[3] = tempItemData;
+            backpackObj = tempHeldObj;
+            activeSlot = 3;
+            Debug.Log("[Inventory] Mochila guardada en slot 4 y equipada en la mano");
+        }
     }
 
-    // ---------- COLOCAR OBJETO EN SLOT ----------
+
     public void PlaceTempHeldInSlot(int slotIndex)
     {
         if (tempHeldObj == null || tempItemData == null) return;
@@ -144,44 +247,17 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
 
         slots[slotIndex] = tempItemData;
 
-        Debug.Log($"[Inventory] Placing item '{tempItemData.displayName}' in slot {slotIndex}");
-
         if (tempItemData.itemType == ItemType.Backpack)
         {
             DestroyTempHeldLocal();
-            GameObject netBack = PhotonNetwork.Instantiate(tempItemData.heldPrefabName, backSlot.position, backSlot.rotation);
-            backpackObj = netBack;
-
-            Debug.Log($"[Inventory] Networked backpack instantiated at backSlot ({backSlot.position})");
-
-            photonView.RPC(nameof(RPC_AttachItemToPlayer),
-                RpcTarget.AllBuffered,
-                backpackObj.GetComponent<PhotonView>().ViewID,
-                photonView.ViewID,
-                "back");
+            SpawnHeldItem(tempItemData.heldPrefabName, backSlot);
+            backpackObj = currentHeldNetworkObj;
         }
         else
         {
             DestroyTempHeldLocal();
-            GameObject held = PhotonNetwork.Instantiate(tempItemData.heldPrefabName, handSlot.position, handSlot.rotation);
-            currentHeldNetworkObj = held;
-            currentHeldViewId = held.GetComponent<PhotonView>().ViewID;
+            SpawnHeldItem(tempItemData.heldPrefabName, handSlot);
             activeSlot = slotIndex;
-
-            Debug.Log($"[Inventory] Networked item '{tempItemData.displayName}' instantiated in handSlot ({handSlot.position})");
-
-            held.transform.SetParent(handSlot, false);
-            held.transform.localPosition = Vector3.zero;
-            held.transform.localRotation = Quaternion.identity;
-
-            var rb = held.GetComponent<Rigidbody>();
-            if (rb != null) { rb.isKinematic = true; rb.useGravity = false; }
-
-            photonView.RPC(nameof(RPC_AttachItemToPlayer),
-                RpcTarget.AllBuffered,
-                currentHeldViewId,
-                photonView.ViewID,
-                "hand");
         }
 
         tempHeldObj = null;
@@ -189,73 +265,38 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         tempHeldPrefabName = null;
         tempBackpackIds = null;
 
-        var ui = FindFirstObjectByType<PlayerUIManager>();
-        if (ui != null) ui.UpdateInventoryUI();
-        Debug.Log($"[Inventory] PlaceTempHeldInSlot finished for slot {slotIndex}");
+        FindFirstObjectByType<PlayerUIManager>()?.UpdateInventoryUI();
     }
 
-    // Destruye el tempHeldObj correctamente (si fue networked usar PhotonNetwork.Destroy, si fue local usar Destroy)
     private void DestroyTempHeldLocal()
     {
         if (tempHeldObj == null) return;
-
         var pv = tempHeldObj.GetComponent<PhotonView>();
         if (pv != null && pv.ViewID != 0)
-        {
-            Debug.Log($"[DestroyTempHeldLocal] Destroying networked tempHeldObj '{tempHeldObj.name}' (ViewID: {pv.ViewID})");
             PhotonNetwork.Destroy(tempHeldObj);
-        }
         else
-        {
-            Debug.Log($"[DestroyTempHeldLocal] Destroying local tempHeldObj '{tempHeldObj.name}'");
             Destroy(tempHeldObj);
-        }
 
         tempHeldObj = null;
     }
 
-
-    // ---------- EQUIPAR (TOGGLE si re-seleccionas) ----------
     public void EquipFromSlot(int slotIndex)
     {
         if (!photonView.IsMine) return;
         if (slotIndex < 0 || slotIndex >= slots.Length) return;
-        if (slots[slotIndex] == null)
+
+        ItemSO itemData = slots[slotIndex];
+        if (itemData == null)
         {
-            Debug.Log($"[Inventory] Slot {slotIndex} vacío, holstering current item");
             HolsterCurrent();
-
-            // si tenías mochila en mano, moverla a espalda
-            if (backpackObj != null && backpackObj.transform.parent == handSlot)
-            {
-                photonView.RPC(nameof(RPC_AttachItemToPlayer),
-                    RpcTarget.AllBuffered,
-                    backpackObj.GetComponent<PhotonView>().ViewID,
-                    photonView.ViewID,
-                    "back");
-            }
-
-            activeSlot = -1; // importante para que no quede seleccionado ningún slot
-            FindFirstObjectByType<PlayerUIManager>()?.UpdateInventoryUI();
-
+            activeSlot = -1;
             return;
         }
 
-        ItemSO itemData = slots[slotIndex];
-        Debug.Log($"[Equip] Trying to equip slot {slotIndex} -> '{itemData.displayName}'");
-
         if (activeSlot == slotIndex)
         {
-            Debug.Log($"[Equip] Slot {slotIndex} already active, toggling off");
-
             if (itemData.itemType == ItemType.Backpack && backpackObj != null)
-            {
-                photonView.RPC(nameof(RPC_AttachItemToPlayer),
-                    RpcTarget.AllBuffered,
-                    backpackObj.GetComponent<PhotonView>().ViewID,
-                    photonView.ViewID,
-                    "back");
-            }
+                photonView.RPC(nameof(RPC_AttachItemToPlayer), RpcTarget.AllBuffered, backpackObj.GetComponent<PhotonView>().ViewID, photonView.ViewID, "back");
             else HolsterCurrent();
 
             activeSlot = -1;
@@ -267,78 +308,57 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
 
         if (itemData.itemType == ItemType.Backpack)
         {
-            if (backpackObj != null && backpackObj.transform.parent == handSlot)
+            if (backpackObj == null) return; // no hay mochila instanciada aún
+
+            // Si está en la mano, pasar a espalda
+            if (backpackObj.transform.parent == handSlot)
             {
-                Debug.Log($"[Equip] Moving backpack to back");
                 photonView.RPC(nameof(RPC_AttachItemToPlayer),
                     RpcTarget.AllBuffered,
                     backpackObj.GetComponent<PhotonView>().ViewID,
                     photonView.ViewID,
                     "back");
-                activeSlot = -1;
             }
-            else
+            else // si está en la espalda, pasar a mano
             {
-                Debug.Log($"[Equip] Equipping backpack to hand");
                 photonView.RPC(nameof(RPC_AttachItemToPlayer),
                     RpcTarget.AllBuffered,
                     backpackObj.GetComponent<PhotonView>().ViewID,
                     photonView.ViewID,
                     "hand");
-                activeSlot = slotIndex;
             }
+
+            activeSlot = 3; // siempre queda como slot activo
             FindFirstObjectByType<PlayerUIManager>()?.UpdateInventoryUI();
             return;
         }
 
-        string heldPrefabName = itemData.heldPrefabName;
-        GameObject held = PhotonNetwork.Instantiate(heldPrefabName, handSlot.position, handSlot.rotation);
-        currentHeldNetworkObj = held;
-        currentHeldViewId = held.GetComponent<PhotonView>().ViewID;
+        SpawnHeldItem(itemData.heldPrefabName, handSlot);
         activeSlot = slotIndex;
-
-        held.transform.SetParent(handSlot, false);
-        held.transform.localPosition = Vector3.zero;
-        held.transform.localRotation = Quaternion.identity;
-
-        var rbHeld = held.GetComponent<Rigidbody>();
-        if (rbHeld != null) { rbHeld.isKinematic = true; rbHeld.useGravity = false; }
-
-        Debug.Log($"[Equip] Networked item '{itemData.displayName}' equipped in handSlot ({handSlot.position})");
-
-        photonView.RPC(nameof(RPC_AttachItemToPlayer),
-            RpcTarget.AllBuffered,
-            currentHeldViewId,
-            photonView.ViewID,
-            "hand");
-
         FindFirstObjectByType<PlayerUIManager>()?.UpdateInventoryUI();
     }
 
-    // ---------- HOLSTER ----------
     public void HolsterCurrent()
     {
         if (!photonView.IsMine) return;
         if (currentHeldNetworkObj != null)
         {
-            Debug.Log($"[Holster] Destroying current held object '{currentHeldNetworkObj.name}'");
             PhotonNetwork.Destroy(currentHeldNetworkObj);
             currentHeldNetworkObj = null;
             currentHeldViewId = -1;
         }
     }
 
-    // ---------- TIRAR OBJETO ----------
     public void DropCurrent(int slotIndex)
     {
         if (!photonView.IsMine) return;
 
         Vector3 dropPos = handSlot.position + transform.forward * 1.2f + Vector3.up * 0.3f;
 
-        // --- Primero: mochila en mano ---
+        // Mochila en mano
         if (backpackObj != null && backpackObj.transform.parent == handSlot)
         {
-            ItemSO itemData = slots[3]; // slot 4
+            ItemSO itemData = slots[3];
             var bd = backpackObj.GetComponent<BackpackData>();
             string[] ids = bd != null ? bd.GetItemIds() : new string[4];
 
@@ -348,15 +368,13 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             GameObject worldObj = PhotonNetwork.Instantiate(itemData.worldPrefabName, dropPos, Quaternion.identity);
             worldObj.GetComponent<PhotonView>()?.RPC("RPC_InitContents", RpcTarget.AllBuffered, (object)ids);
 
-            Debug.Log($"[Drop] Backpack dropped in world at {dropPos}");
-
             slots[3] = null;
             activeSlot = -1;
             FindFirstObjectByType<PlayerUIManager>()?.UpdateInventoryUI();
             return;
         }
 
-        // --- Segundo: item normal en mano ---
+        // Item normal
         if (currentHeldNetworkObj != null)
         {
             ItemSO itemData = slots[slotIndex];
@@ -370,66 +388,59 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             Rigidbody rb = worldObj.GetComponent<Rigidbody>();
             if (rb != null) rb.AddForce(transform.forward * dropForce + Vector3.up * 1.2f, ForceMode.Impulse);
 
-            Debug.Log($"[Drop] Item '{itemData.displayName}' dropped at {dropPos}");
-
             slots[slotIndex] = null;
             activeSlot = -1;
             FindFirstObjectByType<PlayerUIManager>()?.UpdateInventoryUI();
-            return;
         }
+    }
 
-        // --- Si no hay nada en mano ni mochila ---
-        Debug.Log("[Drop] Nothing to drop in current slot");
+    public void PickupBackpack(GameObject backpackObj)
+    {
+        var netItem = backpackObj.GetComponent<NetworkedItem>();
+        if (netItem == null || netItem.itemData == null) return;
+
+        if (slots[3] == null) // slot 4 vacío
+        {
+            slots[3] = netItem.itemData; // guardo el ItemSO
+            activeSlot = 3;
+            EquipFromSlot(3);
+
+            Debug.Log("[Inventory] Mochila recogida y equipada en slot 4.");
+        }
+        else
+        {
+            Debug.Log("[Inventory] Slot 4 ocupado, no se pudo recoger mochila.");
+        }
     }
 
 
-    // Abrir mochila del jugador (en mano o equipada)
     public void OpenBackpack()
     {
         if (backpackObj == null || slots[3] == null) return;
-
         var bd = backpackObj.GetComponent<BackpackData>();
         if (bd == null) return;
-
-        var ui = FindFirstObjectByType<PlayerUIManager>();
-        if (ui != null) ui.ShowBackpackInventory(bd, this); // Mostrar UI con slots internos
-    }
-
-    // Abrir mochila del mundo (item tirado)
-    public void OpenBackpackWorld(NetworkedItem netItem)
-    {
-        if (netItem == null || netItem.itemData == null) return;
-
-        var bd = netItem.GetComponent<BackpackData>();
-        if (bd == null) return;
-
-        var ui = FindFirstObjectByType<PlayerUIManager>();
-        if (ui != null) ui.ShowBackpackInventory(bd, this);
+        FindFirstObjectByType<PlayerUIManager>()?.ShowBackpackInventory(bd, this);
     }
 
     public void StoreInBackpack(BackpackData backpack, ItemSO item, int slotIndex)
     {
-        if (backpack == null) return;
-        if (slotIndex < 0 || slotIndex >= backpack.internalSlots.Length) return;
-        if (item == null || item.itemType == ItemType.Backpack) return;
+        if (backpack == null || item == null || slotIndex < 0 || slotIndex >= backpack.internalSlots.Length) return;
+        if (item.itemType == ItemType.Backpack) return;
 
         backpack.internalSlots[slotIndex] = item;
 
-        // sincronizar por RPC
         var pv = backpack.GetComponent<PhotonView>();
-        if (pv != null)
-            pv.RPC("RPC_InitContents", RpcTarget.AllBuffered, (object)backpack.GetItemIds());
+        if (pv != null) pv.RPC("RPC_InitContents", RpcTarget.AllBuffered, (object)backpack.GetItemIds());
 
         FindFirstObjectByType<PlayerUIManager>()?.UpdateBackpackUI(backpack.internalSlots);
     }
 
     public void DropFromBackpack(BackpackData backpack, int slotIndex)
     {
-        if (backpack == null) return;
-        if (slotIndex < 0 || slotIndex >= backpack.internalSlots.Length) return;
-        if (backpack.internalSlots[slotIndex] == null) return;
-
+        if (backpack == null || slotIndex < 0 || slotIndex >= backpack.internalSlots.Length) return;
         ItemSO item = backpack.internalSlots[slotIndex];
+        if (item == null) return;
+
         backpack.internalSlots[slotIndex] = null;
 
         Vector3 dropPos = handSlot.position + transform.forward * 1.2f + Vector3.up * 0.3f;
@@ -443,20 +454,22 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         FindFirstObjectByType<PlayerUIManager>()?.UpdateBackpackUI(backpack.internalSlots);
     }
 
-
-    // ---------- RPC PARA PARENT ----------
     [PunRPC]
     void RPC_AttachItemToPlayer(int itemViewID, int playerViewID, string slot)
     {
         PhotonView itemPV = PhotonView.Find(itemViewID);
         PhotonView playerPV = PhotonView.Find(playerViewID);
 
-        if (itemPV == null || playerPV == null) return;
+        if (itemPV == null || playerPV == null)
+        {
+            Debug.LogWarning("[AttachItem] No se encontró item o player PV");
+            return;
+        }
 
         var inv = playerPV.GetComponent<PlayerInventoryPhoton>();
         Transform parent = slot == "hand" ? inv.handSlot : inv.backSlot;
 
-        Debug.Log($"[AttachItem] Attaching '{itemPV.name}' to {slot} of player '{playerPV.name}'");
+        Debug.Log($"[AttachItem] {itemPV.name} se va a parentear a {slot} de {playerPV.name}");
 
         if (parent != null)
         {
@@ -465,4 +478,5 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             itemPV.transform.localRotation = Quaternion.identity;
         }
     }
+
 }

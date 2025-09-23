@@ -33,8 +33,12 @@ namespace UI
 
         [Header("Inventario Mochila")]
         public GameObject backpackPanel;
+        public bool backpackOpen = false;
         public GameObject[] backpackSlotUI;
         public Image[] backpackSlotIcons;
+
+        private BackpackData currentBackpackWorld;
+        private PlayerInventoryPhoton currentInv;
 
         // NUEVO: jugador objetivo
         private PlayerLifeSupportContextScript _context;
@@ -43,6 +47,8 @@ namespace UI
 
         public void Start()
         {
+            backpackPanel.SetActive(false);
+            Debug.Log("[UIManager] Panel de mochila inicializado como oculto.");
             Debug.Log($"[UIManager] Start en {gameObject.name}");
             InitUI();
         }
@@ -188,10 +194,24 @@ namespace UI
             UpdateInventoryUI();
         }
 
+        public void ToggleBackpackInventory(BackpackData bd, PlayerInventoryPhoton inv)
+        {
+            if (backpackPanel.activeSelf)
+            {
+                HideBackpackInventory();
+            }
+            else
+            {
+                ShowBackpackInventory(bd, inv);
+                currentBackpackWorld = bd;
+                currentInv = inv;
+            }
+        }
+
         public void ShowBackpackInventory(BackpackData bd, PlayerInventoryPhoton inv)
         {
+            Debug.Log("[UIManager] Abriendo inventario de mochila.");
             backpackPanel.SetActive(true);
-            Debug.Log("[UIManager] Mostrando mochila.");
 
             for (int i = 0; i < backpackSlotUI.Length; i++)
             {
@@ -211,7 +231,7 @@ namespace UI
                     {
                         btn.onClick.AddListener(() =>
                         {
-                            Debug.Log($"[UIManager] Sacando item de la mochila slot {slotIndex}");
+                            Debug.Log($"[UIManager] Sacando item de slot {slotIndex}");
                             UpdateBackpackUI(bd.internalSlots);
                         });
                     }
@@ -221,12 +241,21 @@ namespace UI
                         {
                             if (inv.tempItemData != null)
                             {
-                                Debug.Log($"[UIManager] Guardando item en mochila slot {slotIndex}");
+                                Debug.Log($"[UIManager] Guardando item en slot {slotIndex}");
                                 UpdateBackpackUI(bd.internalSlots);
                             }
                         });
                     }
                 }
+            }
+        }
+
+        public void HideBackpackInventory()
+        {
+            if (backpackPanel.activeSelf)
+            {
+                Debug.Log("[UIManager] Cerrando inventario de mochila.");
+                backpackPanel.SetActive(false);
             }
         }
 

@@ -1,10 +1,10 @@
-using Photon.Pun;
+Ôªøusing Photon.Pun;
 using UnityEngine;
 using UI;
 
 public class PickupControllerPhoton : MonoBehaviourPun
 {
-    [Header("ConfiguraciÛn")]
+    [Header("Configuraci√≥n")]
     public float pickupRange = 3f;
     public LayerMask itemLayer;
     public PlayerInventoryPhoton inventory;
@@ -13,30 +13,28 @@ public class PickupControllerPhoton : MonoBehaviourPun
 
     void Start()
     {
-        // Solo el jugador local necesita la c·mara
+        // Solo el jugador local necesita la c√°mara
         if (!photonView.IsMine) return;
 
         playerCamera = GetComponentInChildren<Camera>();
         if (playerCamera == null)
-        {
-            Debug.LogError("[PickupControllerPhoton] No se encontrÛ la c·mara del player local.");
-        }
+            Debug.LogError("[PickupControllerPhoton] No se encontr√≥ la c√°mara del player local.");
 
-        // Aseg˙rate de tener la referencia al inventario
+        // Aseg√∫rate de tener la referencia al inventario
         if (inventory == null)
         {
             inventory = GetComponent<PlayerInventoryPhoton>();
             if (inventory == null)
-                Debug.LogError("[PickupControllerPhoton] No se encontrÛ PlayerInventoryPhoton en el jugador.");
+                Debug.LogError("[PickupControllerPhoton] No se encontr√≥ PlayerInventoryPhoton en el jugador.");
         }
     }
 
     void Update()
     {
-        // Solo el jugador local puede hacer pickup
         if (!photonView.IsMine) return;
         if (playerCamera == null || inventory == null) return;
 
+        // Detectar clic izquierdo para pickup
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
@@ -47,9 +45,45 @@ public class PickupControllerPhoton : MonoBehaviourPun
 
                 if (pv != null && netItem != null)
                 {
-                    // Solicita pickup al MasterClient
+                    Debug.Log($"[Pickup] Click detectado sobre '{netItem.name}' con ViewID {pv.ViewID}");
+                    Debug.Log($"[Pickup] Solicitud de pickup enviada para item '{netItem.name}'");
+
                     inventory.RequestPickupOnClosest(pv);
-                    Debug.Log($"[Pickup] Click detectado sobre '{netItem.name}'");
+                }
+            }
+        }
+
+        // Detectar "E" para abrir mochila (en mano o del mundo)
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (inventory == null) return;
+
+            // Mochila equipada en slot 4 y activa
+            if (inventory.backpackObj != null && inventory.slots[3] != null && inventory.activeSlot == 3)
+            {
+                Debug.Log("[Pickup] Abrir mochila equipada en mano");
+                inventory.OpenBackpack();
+                return;
+            }
+
+            // Buscar mochila cercana en el mundo
+            Collider[] hits = Physics.OverlapSphere(transform.position, 2f, inventory.itemLayer);
+            foreach (var hit in hits)
+            {
+                var netItemWorld = hit.GetComponentInParent<NetworkedItem>();
+                if (netItemWorld != null && netItemWorld.itemData != null && netItemWorld.itemData.itemType == ItemType.Backpack)
+                {
+                    var bd = netItemWorld.GetComponent<BackpackData>();
+                    if (bd != null)
+                    {
+                        Debug.Log($"[Pickup] Abrir mochila en el mundo: {netItemWorld.name}");
+                        var ui = FindFirstObjectByType<PlayerUIManager>();
+                        if (ui != null)
+                        {
+                            ui.ShowBackpackInventory(bd, inventory);
+                        }
+                    }
+                    break;
                 }
             }
         }

@@ -10,16 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd30862700d3ab04c8502dfb46c13249, type: 3}
-  m_Name: Cristal
+  m_Name: DronRoto
   m_EditorClassIdentifier: 
-  itemId: 1
-  worldPrefabName: PhotonPrefabs/Items/World_Cristal
-  heldPrefabName: PhotonPrefabs/Items/Held_Cristal
-  icon: {fileID: 21300000, guid: 792e6ea0316fff4478cf7f1a6264e518, type: 3}
-  displayName: Cristal
+  itemId: 5
+  worldPrefabName: PhotonPrefabs/Items/World_DronRoto
+  heldPrefabName: PhotonPrefabs/Items/Held_DronRoto
+  icon: {fileID: 21300000, guid: e934fbf094a501a42ba8c1084f4fd56e, type: 3}
+  displayName: Dron Roto
   itemType: 3
-  internalSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  internalSlots: []
