@@ -18,6 +18,8 @@ namespace Characters.PlayerController.Scripts.Input
         public bool JumpPressed { get; private set; }
         public bool CrouchPressed { get; private set; }
         public bool RunningPressed { get; private set; }
+        public bool PropelPressed { get; private set; }
+
         
         public bool LeftClickPressed { get; private set; }
         public bool RightClickPressed { get; private set; }
@@ -210,6 +212,15 @@ namespace Characters.PlayerController.Scripts.Input
             //     var ui = FindFirstObjectByType<PlayerUIManager>();
             //     if (ui != null) ui.UpdateInventoryUI();
             // }
+        }
+
+        public void OnPropel(InputAction.CallbackContext context) {
+            if (context.performed) {
+                PropelPressed = true;
+            }
+            else if (context.canceled) {
+                PropelPressed = false;
+            }
         }
 
         #endregion

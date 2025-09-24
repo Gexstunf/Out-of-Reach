@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Characters.PlayerController.Scripts.Input;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private float itemGrabDistance = 2f;
         [SerializeField] private float wallGrabDistance = 2f;
         [SerializeField] private float grabSpeed = 3f;
+        [SerializeField] private float pushForce = 5f;                   
         [SerializeField] private bool debug;
 
         [Header("References")]
@@ -128,6 +130,17 @@ namespace Characters.PlayerController.Scripts
 
             // update IK target transforms and weights (visual smoothing)
             UpdateIKWeightsAndTargets();
+        }
+        
+        private void FixedUpdate() {
+            // left or right hand holding a wall?
+            bool holdingWall = (_leftHand.CurrentGrabbable != null || _rightHand.CurrentGrabbable != null);
+            
+            if (holdingWall && input.PropelPressed) {
+                Vector3 pushDir = camTransform.forward;   
+                Debug.Log("Adding focre");
+                rb.AddForce(pushDir * pushForce, ForceMode.Acceleration);
+            }
         }
 
         // -------------------------
