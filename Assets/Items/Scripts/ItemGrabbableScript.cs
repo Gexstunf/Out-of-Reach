@@ -19,8 +19,10 @@ namespace Items.Scripts {
             _rb = GetComponent<Rigidbody>();
             _rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         }
-        
-        public void Grab(Rigidbody handRb, Vector3 grabPoint) {
+
+        public Transform GrabHandle { get; set; }
+
+        public void Grab(Rigidbody rb, Vector3 grabPoint) {
             Debug.Log("Couldnt attach, already have a joint");
             if (_joint) return; // already grabbed
             
@@ -28,13 +30,13 @@ namespace Items.Scripts {
 
             if (grabHandle) {
                 Vector3 offset = transform.position - grabHandle.position;
-                transform.position = handRb.position + offset;  
+                transform.position = rb.position + offset;  
             }
 
             
             // Add joint on the OBJECT, connect to hand
             _joint = gameObject.AddComponent<ConfigurableJoint>();
-            _joint.connectedBody = handRb;
+            _joint.connectedBody = rb;
 
             _joint.xMotion = ConfigurableJointMotion.Locked;
             _joint.yMotion = ConfigurableJointMotion.Locked;
@@ -49,12 +51,14 @@ namespace Items.Scripts {
             _joint.connectedMassScale = connectedMassScale;
         }
 
-        public void Release(Rigidbody handRb) {
+        public void Release() {
             if (_joint)
             {
                 Destroy(_joint);
                 _joint = null;
             }
         }
+
+        public bool IsItem { get; } = true;
     }
 }

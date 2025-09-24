@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 3600027568976836868}
   - component: {fileID: 1734592132064251368}
   - component: {fileID: 754991250609270488}
-  - component: {fileID: 6456937502686441316}
+  - component: {fileID: 900429142587625120}
   m_Layer: 6
   m_Name: Item1
   m_TagString: Item
@@ -201,7 +201,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6456937502686441316
+--- !u!114 &900429142587625120
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -210,9 +210,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8438738916363824067}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6099a78d976bb47578e688e9915644c0, type: 3}
+  m_Script: {fileID: 11500000, guid: d8dcb26be4a601845885b14a8dd66ad3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabPoint: {fileID: 2360205113715216532}
+  grabHandle: {fileID: 2360205113715216532}
   massScale: 1
   connectedMassScale: 1

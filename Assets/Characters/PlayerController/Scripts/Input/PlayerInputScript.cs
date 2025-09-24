@@ -99,8 +99,7 @@ namespace Characters.PlayerController.Scripts.Input
             } 
         }
         
-        public void OnGrabRight(InputAction.CallbackContext context)
-        {
+        public void OnGrabRight(InputAction.CallbackContext context) {
             if (context.started) {
                 RightClickPressed = true;
             } 
@@ -109,8 +108,7 @@ namespace Characters.PlayerController.Scripts.Input
             } 
         }
         
-        public void OnInteract(InputAction.CallbackContext context)
-        {
+        public void OnInteract(InputAction.CallbackContext context) {
             if (!context.performed) return;
 
             /*var inv = GetComponent<PlayerInventoryPhoton>();

@@ -1,311 +1,415 @@
-using System;
 using System.Collections;
 using Characters.PlayerController.Scripts.Input;
-using Environment.Scripts;
-using Items.Scripts;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
-using UnityEngine.Serialization;
 
-namespace Characters.PlayerController.Scripts {
-    public class HandGrabberScript : MonoBehaviour {
-
-        [Header("Settings")] 
+namespace Characters.PlayerController.Scripts
+{
+    /// <summary>
+    /// HandGrabber: clear, robust implementation for two hands.
+    /// - global single item (_currentItem)
+    /// - per-hand walls
+    /// - managed coroutines (no self-stopping)
+    /// - consistent IGrabbableScript API usage
+    /// </summary>
+    public class HandGrabberScript : MonoBehaviour
+    {
+        [Header("Settings")]
         [SerializeField] private Transform leftGrabOrigin;
         [SerializeField] private Transform rightGrabOrigin;
-        public float itemGrabDistance = 2f; // how far you can grab
-        public float wallGrabDistance = 1f; // how far you can grab
-        public float grabSpeed = 3f;
-        public LayerMask grabbableMask;
-        public bool debug;
-        public bool useIndependentOrigins = false;
+        [SerializeField] private Transform camTransform;
+        [SerializeField] private bool useIndependentOrigins = false;
+        [SerializeField] private LayerMask grabbableMask;
+        [SerializeField] private float itemGrabDistance = 2f;
+        [SerializeField] private float wallGrabDistance = 2f;
+        [SerializeField] private float grabSpeed = 3f;
+        [SerializeField] private bool debug;
 
-        [Header("References")] [SerializeField]
-        private PlayerInputScript input;
+        [Header("References")]
+        [SerializeField] private PlayerInputScript input;
+        [SerializeField] private Rig grabRig; // optional, to blend weights
+        [SerializeField] private Rigidbody rb;
 
-        public Transform rightHandIKTarget;
-        public Rigidbody rightHandRb;
-        public Transform leftHandIKTarget;
-        public Rigidbody leftHandRb;
-        public Transform camTransform;
+        [Header("Left Hand")]
+        [SerializeField] private Transform leftHandIKTarget;
+        [SerializeField] private Rigidbody leftHandRb;
+        [SerializeField] private TwoBoneIKConstraint leftIKConstraint;
 
+        [Header("Right Hand")]
+        [SerializeField] private Transform rightHandIKTarget;
+        [SerializeField] private Rigidbody rightHandRb;
+        [SerializeField] private TwoBoneIKConstraint rightIKConstraint;
 
-        [Header("Rig Settings")] 
-        public Rig grabRig;
-        public TwoBoneIKConstraint rightIKConstraint;
-        public TwoBoneIKConstraint leftIKConstraint;
+        // --- internal state ---
+        private IGrabbableScript _currentItem = null;     // only one item in the world can be held at once
+        private HandData _itemHoldingHand = null;         // which hand holds the item
 
-        
-        private IGrabbableScript _leftWall;
-        private IGrabbableScript _rightWall;
-        private IGrabbableScript _currentItem;
-        
+        private HandData _leftHand;
+        private HandData _rightHand;
 
-        private Coroutine _grabCoroutine;
-        private Vector3 _leftLocalHomeIKTargetPosition;
-        private Vector3 _rightLocalHomeIKTargetPosition;
-        
-        private bool _prevLeftPressed = false;
-        private bool _prevRightPressed = false;
-        private bool _itemHeldByLeft = false;
+        // --- HandData encapsulates per-hand state ---
+        private class HandData
+        {
+            public Transform IKTarget;
+            public Rigidbody Rb;
+            public TwoBoneIKConstraint IKConstraint;
+            public Vector3 LocalHomePosition; // local to IKTarget.parent
+            public IGrabbableScript CurrentGrabbable; // wall grabbable when holding a wall
+            public Coroutine ActiveCoroutine;
+            public Vector3 CurrentTargetPos;
+            public bool PrevPressed;
 
+            public bool IsBusy => ActiveCoroutine != null;
+            public bool HoldingItem; // true if this hand currently holds the global item
 
-        private void Start() {
-            _leftLocalHomeIKTargetPosition = leftHandIKTarget.localPosition;
-            _rightLocalHomeIKTargetPosition = rightHandIKTarget.localPosition;
-
-            grabRig.weight = 1f;
-            leftIKConstraint.weight = 0f;
-            rightIKConstraint.weight = 0f;
+            public HandData(Transform ikTarget, Rigidbody rb, TwoBoneIKConstraint constraint, Vector3 homeLocal)
+            {
+                IKTarget = ikTarget;
+                Rb = rb;
+                IKConstraint = constraint;
+                LocalHomePosition = homeLocal;
+                CurrentTargetPos = ikTarget != null ? ikTarget.position : Vector3.zero;
+            }
         }
 
-        void Update() {
-            bool bothClicked = (input.LeftClickPressed && input.RightClickPressed);
-            bool clicked = (input.LeftClickPressed || input.RightClickPressed);
-            bool handAvailable = (_leftWall == null || _rightWall == null);
+        // -------------------------
+        // Unity lifecycle
+        // -------------------------
+        private void Start()
+        {
+            rb = GetComponent<Rigidbody>();
+            // initialize hand objects and home positions
+            var leftHome = leftHandIKTarget.localPosition;
+            var rightHome = rightHandIKTarget.localPosition;
 
-            // ===== ITEM GRAB / RELEASE =====
-            if (clicked && _currentItem == null && handAvailable) {
-                // try to grab an item if none is held
-                OnGrabPressed(input.LeftClickPressed);
+            _leftHand = new HandData(leftHandIKTarget, leftHandRb, leftIKConstraint, leftHome);
+            _rightHand = new HandData(rightHandIKTarget, rightHandRb, rightIKConstraint, rightHome);
+
+            // initialize current target positions so we don't snap to Vector3.zero
+            _leftHand.CurrentTargetPos = _leftHand.IKTarget.position;
+            _rightHand.CurrentTargetPos = _rightHand.IKTarget.position;
+
+            // ensure initial IK weights are correct
+            if (grabRig != null) grabRig.weight = 1f;
+            if (leftIKConstraint != null) leftIKConstraint.weight = 0f;
+            if (rightIKConstraint != null) rightIKConstraint.weight = 0f;
+        }
+
+        private void OnDisable()
+        {
+            // cleanup any running coroutines and release any grabbed objects
+            StopAndClearHand(_leftHand);
+            StopAndClearHand(_rightHand);
+
+            if (_currentItem != null)
+            {
+                // find which hand held it and release cleanly
+                if (_itemHoldingHand != null)
+                {
+                    _currentItem.Release();
+                    _itemHoldingHand.HoldingItem = false;
+                }
+                _currentItem = null;
+                _itemHoldingHand = null;
             }
+        }
 
-            if (!clicked && _currentItem != null) {
-                // release the current item when no grab input is held
+        private void Update()
+        {
+            // handle per-hand input edges
+            ProcessHandInput(_leftHand, input.LeftClickPressed);
+            ProcessHandInput(_rightHand, input.RightClickPressed);
+
+            // global release: if no buttons pressed and an item is held, release item
+            if (!input.LeftClickPressed && !input.RightClickPressed && _currentItem != null)
+            {
                 OnItemReleased();
             }
 
-            // ===== WALL GRAB / RELEASE =====
-            if (input.LeftClickPressed && _leftWall == null && _currentItem == null) {
-                OnGrabPressed(true);
-            }
-            else if (!input.LeftClickPressed && _leftWall != null) {
-                OnGrabReleased(true);  
-            }
-
-            if (input.RightClickPressed && _rightWall == null && _currentItem == null) {
-                OnGrabPressed(false); 
-            }
-            else if (!input.RightClickPressed && _rightWall != null) {
-                OnGrabReleased(false); 
-            }
-
-            // ===== IK WEIGHT RESET =====
-            if (_currentItem == null && _leftWall == null) {
-                leftIKConstraint.weight = Mathf.Lerp(leftIKConstraint.weight, 0f, Time.deltaTime * grabSpeed);
-            }
-
-            if (_currentItem == null && _rightWall == null) {
-                rightIKConstraint.weight = Mathf.Lerp(rightIKConstraint.weight, 0f, Time.deltaTime * grabSpeed);
-            }
+            // update IK target transforms and weights (visual smoothing)
+            UpdateIKWeightsAndTargets();
         }
 
-        /*void TryGrab(bool isLeftHand) {
-            RaycastHit hit;
-            Vector3 origin = camTransform.position;
-            Vector3 direction = camTransform.forward;
+        // -------------------------
+        // Core input / per-hand logic
+        // -------------------------
+        private void ProcessHandInput(HandData hand, bool isPressed)
+        {
+            // capture previous pressed inside HandData to avoid external flags
+            bool wasPressed = hand.PrevPressed;
 
-            if (Physics.Raycast(origin, direction, out hit, itemGrabDistance, grabbableMask)) {
-                GrabbableScript grabbable = hit.collider.GetComponent<GrabbableScript>();
-                if (grabbable) {
-                    ItemGrabTry(grabbable, hit.point, isLeftHand);
+            // handle press-down edge
+            if (isPressed && !wasPressed)
+            {
+                // only allow grab presses if the hand is not busy
+                if (!hand.IsBusy)
+                {
+                    TryGrab(hand);
+                }
+            }
 
-                    if (isLeftHand) {
-                        _leftHandAvailable = false;
-                    }
-                    else {
-                        _rightHandAvailable = false;
+            // handle release edge
+            if (!isPressed && wasPressed)
+            {
+                // If this hand holds the global item -> release the item
+                if (hand.HoldingItem && _currentItem != null)
+                {
+                    OnItemReleased();
+                }
+                // Otherwise, if this hand currently has a wall grabbable -> release it
+                else if (hand.CurrentGrabbable != null)
+                {
+                    ReleaseWall(hand);
+                }
+                // else, if the hand was moving back to home (coroutine), we may want to stop it and start return
+                else
+                {
+                    // if nothing, ensure IK returns home
+                    StartHandCoroutine(hand, ReachToHomeRoutine(hand));
+                }
+            }
+
+            // update prev state
+            hand.PrevPressed = isPressed;
+
+            // always ensure visual IK target is set
+            if (hand.IKTarget != null)
+                hand.IKTarget.position = hand.CurrentTargetPos;
+        }
+
+        // -------------------------
+        // TryGrab
+        // -------------------------
+        private void TryGrab(HandData hand)
+        {
+            Transform origin = useIndependentOrigins ? (hand == _leftHand ? leftGrabOrigin : rightGrabOrigin) : camTransform;
+            if (origin == null)
+            {
+                Debug.LogWarning("HandGrabber: origin is null.");
+                return;
+            }
+
+            // 1) Try item raycast (priority to items) using itemGrabDistance
+            if (Physics.Raycast(origin.position, origin.forward, out var hitItem, itemGrabDistance, grabbableMask))
+            {
+                var grabbable = hitItem.collider.GetComponent<IGrabbableScript>();
+                if (grabbable != null && IsItemGrabbable(grabbable))
+                {
+                    // only one item allowed
+                    if (_currentItem == null)
+                    {
+                        // stop any running hand coroutine and start grab flow
+                        StopAndClearHand(hand);
+
+                        hand.CurrentGrabbable = null; // clear wall slot for now
+                        StartHandCoroutine(hand, ItemGrabFlow(grabbable, hitItem.point, hand));
+                        // ItemGrabFlow will set _currentItem and hand.HoldingItem when grabbed
                     }
                     return;
                 }
             }
-            
-            if (Physics.Raycast(origin, direction, out hit, wallGrabDistance)) {
-                GrabbableScript grabbable = hit.collider.GetComponent<GrabbableScript>();
-                if (hit.collider.gameObject.CompareTag("Surface")) {
-                    SurfaceGrabTry(grabbable, hit.point, isLeftHand);
-                    if (isLeftHand) {
-                        _leftHandAvailable = false;
+
+            // 2) Try wall raycast (wallGrabDistance)
+            if (Physics.Raycast(origin.position, origin.forward, out var hitWall, wallGrabDistance, grabbableMask))
+            {
+                var grabbable = hitWall.collider.GetComponent<IGrabbableScript>();
+                if (grabbable != null && IsWallGrabbable(grabbable))
+                {
+                    // per-hand only if free
+                    if (hand.CurrentGrabbable == null)
+                    {
+                        StopAndClearHand(hand);
+                        StartHandCoroutine(hand, WallGrabFlow(grabbable, hitWall.point, hand));
                     }
-                    else {
-                        _rightHandAvailable = false;
-                    }
-                    return;
                 }
             }
-        }*/
-
-        // void ItemGrabTry(GrabbableScript item, Vector3 hitPoint, bool isLeftHand) {
-        //     Debug.Log("Grabbing Item");
-        //     _currentItem = item;
-        //     if (_grabCoroutine != null) {
-        //         StopCoroutine(_grabCoroutine);
-        //     }
-        //
-        //     _grabCoroutine = StartCoroutine(GrabItemSequence(item, hitPoint, isLeftHand));
-        // }
-
-        // void SurfaceGrabTry(GrabbableScript grabbable, Vector3 hitPoint, bool isLeftHand) {
-        //     Debug.Log("Grabbing Surface");
-        //
-        //     if (_grabCoroutine != null) {
-        //         StopCoroutine(_grabCoroutine);
-        //     }
-        //     
-        //     _grabCoroutine = StartCoroutine(GrabSurfaceSequence(grabbable, hitPoint, isLeftHand));
-        // }
-
-        private IEnumerator GrabSurfaceSequence(GrabbableScript grabbble, Vector3 hitPoint, bool isLeftHand) {
-            Transform ikTarget = isLeftHand ? leftHandIKTarget : rightHandIKTarget;
-            Rigidbody rb = isLeftHand ? leftHandRb : rightHandRb;
-            Vector3 currentHome = isLeftHand ? _leftLocalHomeIKTargetPosition : _rightLocalHomeIKTargetPosition;
-            TwoBoneIKConstraint currentConstraint = isLeftHand ? leftIKConstraint : rightIKConstraint;
-            
-            Vector3 start = ikTarget.position;
-            Vector3 target = hitPoint;
-            float elapsed = 0f;
-            
-            while (elapsed < 1f) {
-                elapsed += Time.deltaTime * grabSpeed; 
-                float progress = Mathf.Clamp01(elapsed);
-                LerpTargetFromTo(start, target, progress, isLeftHand);
-                currentConstraint.weight = Mathf.Lerp(currentConstraint.weight, 1f, Time.deltaTime * grabSpeed);
-                yield return null;
-            }
- 
-            if (isLeftHand) {
-                leftHandIKTarget.position = target;
-            }
-            else {
-                rightHandIKTarget.position = target;
-            }
-            
-            grabbble.Grab(rb, target);
         }
 
-        private IEnumerator GrabItemSequence(GrabbableScript grabbable, Vector3 hitPoint, bool isLeftHand) {
-            Transform ikTarget = isLeftHand ? leftHandIKTarget : rightHandIKTarget;
-            Rigidbody rb = isLeftHand ? leftHandRb : rightHandRb;
-            Vector3 currentHome = isLeftHand ? _leftLocalHomeIKTargetPosition : _rightLocalHomeIKTargetPosition;
-            TwoBoneIKConstraint currentConstraint = isLeftHand ? leftIKConstraint : rightIKConstraint;
-            
-            //reach out
-            Vector3 start = ikTarget.position;
-            Vector3 target = grabbable.grabPoint ? grabbable.grabPoint.position : hitPoint;
-            float elapsed = 0f;
-            while (elapsed < 1f) {
-                elapsed += Time.deltaTime * grabSpeed; 
-                float progress = Mathf.Clamp01(elapsed);
-                LerpTargetFromTo(start, target, progress, isLeftHand);
-                currentConstraint.weight = Mathf.Lerp(currentConstraint.weight, 1f, Time.deltaTime * grabSpeed);
-                yield return null;
-            }
-            
-            // clean the position
-            if (isLeftHand) {
-                leftHandIKTarget.position = target;
-            }
-            else {
-                rightHandIKTarget.position = target;
-            }
-            
-            grabbable.Grab(rb, Vector3.zero);
-            
-            // return to position
-            elapsed = 0f;
-            Vector3 newPos = ikTarget.position;
-            while (elapsed < 1f) {
-                elapsed += Time.deltaTime * grabSpeed; 
-                float progress = Mathf.Clamp01(elapsed);
-                LerpTargetFromTo(newPos, ikTarget.parent.TransformPoint(currentHome), progress, isLeftHand);
-                currentConstraint.weight = Mathf.Lerp(currentConstraint.weight, 0f, Time.deltaTime * grabSpeed);
-                yield return null;
-            }
-        }
-        
-        #region Public API
-
-        public void OnGrabPressed(bool isLeftHand)
+        // -------------------------
+        // Grab flows / coroutines
+        // -------------------------
+        // Managed Start wrapper - ensures ActiveCoroutine cleared at the end
+        private Coroutine StartHandCoroutine(HandData hand, IEnumerator routine)
         {
-            Transform origin = useIndependentOrigins ? 
-                (isLeftHand ? leftGrabOrigin : rightGrabOrigin) : camTransform;
-            if (isLeftHand)
-                TryGrab(leftHandRb, origin, ref _leftWall);
-            else
-                TryGrab(rightHandRb, origin, ref _rightWall);
+            // stop existing coroutine first
+            StopAndClearHand(hand);
+
+            IEnumerator Managed()
+            {
+                hand.ActiveCoroutine = StartCoroutine(routine);
+                // Wait until inner coroutine completes
+                yield return hand.ActiveCoroutine;
+                // clear reference (safe cleanup)
+                hand.ActiveCoroutine = null;
+            }
+
+            // Start the manager coroutine (so hand.ActiveCoroutine is set inside Managed)
+            hand.ActiveCoroutine = StartCoroutine(Managed());
+            return hand.ActiveCoroutine;
         }
 
-        public void OnGrabReleased(bool isLeftHand)
+        private void StopAndClearHand(HandData hand)
         {
-            if (isLeftHand)
-                ReleaseGrab(ref _leftWall, leftHandRb);
-            else
-                ReleaseGrab(ref _rightWall, rightHandRb);
+            if (hand.ActiveCoroutine != null)
+            {
+                StopCoroutine(hand.ActiveCoroutine);
+                hand.ActiveCoroutine = null;
+            }
+        }
+
+        // Item flow: reach -> attach object to hand (object side joint) -> return hand to home and release visual weight
+        private IEnumerator ItemGrabFlow(IGrabbableScript item, Vector3 hitPoint, HandData hand)
+        {
+            // reach to the item's handle or hit point
+            Vector3 grabPoint = item.GrabHandle != null ? item.GrabHandle.position : hitPoint;
+            yield return ReachToPointRoutine(grabPoint, hand, targetWeight: 1f);
+
+            // call grabbable API - connect object to hand
+            item.Grab(hand.Rb, grabPoint);
+
+            // register global item owner
+            _currentItem = item;
+            _itemHoldingHand = hand;
+            hand.HoldingItem = true;
+
+            // return hand to its home and reduce IK weight
+            yield return ReachToHomeRoutine(hand);
+
+            // Leave hand.HoldingItem true until OnItemReleased is called externally
+        }
+
+        // Wall flow: reach -> call grabbable grab (likely creates joint on hand/world) -> keep IK weight
+        private IEnumerator WallGrabFlow(IGrabbableScript wall, Vector3 hitPoint, HandData hand)
+        {
+            yield return ReachToPointRoutine(hitPoint, hand, targetWeight: 1f);
+
+            // attach wall - the grabbable decides how it anchors (it should create/destroy its own joint)
+            wall.Grab(rb, hitPoint);
+
+            // store per-hand grabbable so release knows which to call
+            hand.CurrentGrabbable = wall;
+
+            // keep hand IK weight at 1 while held; coroutine ends here (hand.ActiveCoroutine cleared by StartHandCoroutine manager)
+        }
+
+        // Reach helper (smoothly move IK target and IK weight)
+        private IEnumerator ReachToPointRoutine(Vector3 targetPoint, HandData hand, float targetWeight)
+        {
+            Vector3 startPos = hand.IKTarget.position;
+            float startWeight = hand.IKConstraint != null ? hand.IKConstraint.weight : 0f;
+            float elapsed = 0f;
+            while (elapsed < 1f)
+            {
+                elapsed += Time.deltaTime * grabSpeed;
+                float t = Mathf.Clamp01(elapsed);
+                hand.IKTarget.position = Vector3.Lerp(startPos, targetPoint, t);
+                if (hand.IKConstraint != null)
+                    hand.IKConstraint.weight = Mathf.Lerp(startWeight, targetWeight, t);
+                hand.CurrentTargetPos = hand.IKTarget.position;
+                yield return null;
+            }
+
+            // ensure final values
+            hand.IKTarget.position = targetPoint;
+            if (hand.IKConstraint != null) hand.IKConstraint.weight = targetWeight;
+            hand.CurrentTargetPos = targetPoint;
+        }
+
+        private IEnumerator ReachToHomeRoutine(HandData hand)
+        {
+            Vector3 homeWorld = hand.IKTarget.parent.TransformPoint(hand.LocalHomePosition);
+            yield return ReachToPointRoutine(homeWorld, hand, targetWeight: 0f);
+        }
+
+        // -------------------------
+        // Release helpers
+        // -------------------------
+        private void ReleaseWall(HandData hand)
+        {
+            // Stop any reach coroutines then release
+            StopAndClearHand(hand);
+
+            if (hand.CurrentGrabbable != null)
+            {
+                hand.CurrentGrabbable.Release();
+                hand.CurrentGrabbable = null;
+            }
+
+            // send hand back home visually
+            StartHandCoroutine(hand, ReachToHomeRoutine(hand));
         }
 
         public void OnItemReleased()
         {
-            if (_currentItem != null)
-            {
-                _currentItem.Release(null); // releasing from item
-                _currentItem = null;
-            }
-        }
-        
-        #endregion
-        
-        
-        private void TryGrab(Rigidbody handRb, Transform origin, ref IGrabbableScript wallSlot)
-        {
-            if (Physics.Raycast(origin.position, origin.forward, out var hit, itemGrabDistance, grabbableMask))
-            {
-                var grabbable = hit.collider.GetComponent<IGrabbableScript>();
-                if (grabbable == null) return;
+            if (_currentItem == null) return;
 
-                // items (only 1 globally allowed)
-                if (grabbable is ItemGrabbableScript) {
-                    if (_currentItem == null) {
-                        grabbable.Grab(handRb, hit.point);
-                        _currentItem = grabbable;
-                    }
-                }
-                else if (grabbable is WallGrabbableScript) {
-                    if (wallSlot == null) {
-                        grabbable.Grab(handRb, hit.point);
-                        wallSlot = grabbable;
-                    }
-                }
-            }
-        }
-        
-        private void ReleaseGrab(ref IGrabbableScript wallSlot, Rigidbody handRb)
-        {
-            if (wallSlot != null)
+            // find the hand that holds it
+            if (_itemHoldingHand != null)
             {
-                //wallSlot.Release(handRb);
-                wallSlot = null;
-            }
-        }
-        
-        private void LerpTargetFromTo(Vector3 start, Vector3 target, float progress, bool isLeftClick) {
-            if (isLeftClick) {
-                leftHandIKTarget.position = Vector3.Lerp(start, target, progress);
-            }
-            else {
-                rightHandIKTarget.position = Vector3.Lerp(start, target, progress);
-            }
-        }
-        
-        void OnDrawGizmos()
-        {
-            if (!debug || camTransform == null) return;
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawRay(camTransform.position, camTransform.forward * itemGrabDistance);
-            Gizmos.DrawRay(rightGrabOrigin.position, rightGrabOrigin.forward * itemGrabDistance);
-            Gizmos.DrawRay(leftGrabOrigin.position, leftGrabOrigin.forward * itemGrabDistance);
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(camTransform.position, camTransform.forward * wallGrabDistance);
+                // let grabbable handle release
+                _currentItem.Release();
 
+                // clear hand state
+                _itemHoldingHand.HoldingItem = false;
+                _itemHoldingHand = null;
+            }
+
+            _currentItem = null;
+        }
+
+        // -------------------------
+        // IK smoothing / visuals
+        // -------------------------
+        private void UpdateIKWeightsAndTargets()
+        {
+            // left
+            if (_leftHand.CurrentGrabbable == null && !_leftHand.HoldingItem && _leftHand.ActiveCoroutine == null)
+            {
+                if (_leftHand.IKConstraint != null)
+                    _leftHand.IKConstraint.weight = Mathf.Lerp(_leftHand.IKConstraint.weight, 0f, Time.deltaTime * grabSpeed);
+            }
+
+            // right
+            if (_rightHand.CurrentGrabbable == null && !_rightHand.HoldingItem && _rightHand.ActiveCoroutine == null)
+            {
+                if (_rightHand.IKConstraint != null)
+                    _rightHand.IKConstraint.weight = Mathf.Lerp(_rightHand.IKConstraint.weight, 0f, Time.deltaTime * grabSpeed);
+            }
+        }
+
+        // -------------------------
+        // Utilities
+        // -------------------------
+        private bool IsItemGrabbable(IGrabbableScript g)
+        {
+            return g is Items.Scripts.ItemGrabbableScript || g.IsItem; // try both patterns; if your IGrabbable has IsItem, use it
+        }
+
+        private bool IsWallGrabbable(IGrabbableScript g)
+        {
+            return g is Environment.Scripts.WallGrabbableScript || !IsItemGrabbable(g);
+        }
+
+        // OnDrawGizmos for debugging
+        private void OnDrawGizmos()
+        {
+            if (!debug) return;
+
+            if (camTransform != null)
+            {
+                Debug.DrawRay(camTransform.position, camTransform.forward * itemGrabDistance, Color.yellow);
+                Debug.DrawRay(camTransform.position, camTransform.forward * wallGrabDistance, Color.red);
+            }
+
+            if (leftGrabOrigin != null)
+            {
+                Debug.DrawRay(leftGrabOrigin.position, leftGrabOrigin.forward * itemGrabDistance, Color.cyan);
+            }
+
+            if (rightGrabOrigin != null)
+            {
+                Debug.DrawRay(rightGrabOrigin.position, rightGrabOrigin.forward * itemGrabDistance, Color.cyan);
+            }
         }
     }
 }

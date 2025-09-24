@@ -123,7 +123,7 @@ namespace Characters.PlayerController.Scripts
             //if (!photonView.IsMine) return;
 
             if (useCustomGravity) {
-                //ApplyCustomGravity(gravityScale);
+                ApplyCustomGravity(gravityScale);
             }
 
             Vector3 movementDir = CalculateMovementDirection();
@@ -222,7 +222,7 @@ namespace Characters.PlayerController.Scripts
 
         private void ApplyCustomGravity(float scale) {
             Vector3 grav = Physics.gravity * scale;
-            //_rb.AddForce(grav, ForceMode.Acceleration);
+            _rb.AddForce(grav, ForceMode.Acceleration);
         }
         
         #endregion
