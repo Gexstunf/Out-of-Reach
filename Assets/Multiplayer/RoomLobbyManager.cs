@@ -1,13 +1,12 @@
-using Photon.Pun;
-using Photon.Realtime;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System.Collections;
+using TMPro;
 using System.Collections.Generic;
+using System.Collections;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class RoomLobbyManager : MonoBehaviourPunCallbacks
+public class RoomLobbyManager : MonoBehaviour
 {
     [Header("UI Sala")]
     public GameObject lobbyUI;
@@ -23,23 +22,34 @@ public class RoomLobbyManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI loadingText;
 
     private Dictionary<int, GameObject> playerEntries = new Dictionary<int, GameObject>();
-    private AsyncOperation asyncLoad;
 
     void Start()
     {
-        PhotonNetwork.AutomaticallySyncScene = true;
+        if (PhotonNetwork.CurrentRoom == null)
+        {
+            Debug.LogError("No estás en ninguna sala");
+            return;
+        }
 
         roomNameText.text = "Room: " + PhotonNetwork.CurrentRoom.Name;
-        leaveRoomButton.onClick.AddListener(LeaveRoom);
 
+        // Botones
+        leaveRoomButton.onClick.AddListener(() => RoomLobbyNetworkController.Instance.LeaveRoom());
+        startGameButton.onClick.AddListener(() => StartCoroutine(LoadGameAsync()));
+
+        // Inicialmente ocultar loading
         loadingPanel.SetActive(false);
         lobbyUI.SetActive(true);
 
-        if (!PhotonNetwork.IsMasterClient)
-            startGameButton.gameObject.SetActive(false);
-        else
-            startGameButton.onClick.AddListener(() => StartCoroutine(LoadGameAsync()));
+        // Actualizar MasterClient
+        startGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
 
+        // Suscribirse a eventos del network controller
+        RoomLobbyNetworkController.Instance.OnPlayerJoined += OnPlayerJoined;
+        RoomLobbyNetworkController.Instance.OnPlayerLeft += OnPlayerLeft;
+        RoomLobbyNetworkController.Instance.OnMasterClientChanged += OnMasterClientChanged;
+
+        // Cargar jugadores actuales
         UpdatePlayerList();
     }
 
@@ -50,43 +60,38 @@ public class RoomLobbyManager : MonoBehaviourPunCallbacks
 
         playerEntries.Clear();
 
-        foreach (Player player in PhotonNetwork.PlayerList)
+        foreach (var player in PhotonNetwork.PlayerList)
         {
-            GameObject entry = Instantiate(playerEntryPrefab, playerListContainer.transform);
-            entry.GetComponent<TextMeshProUGUI>().text = player.NickName;
-            playerEntries[player.ActorNumber] = entry;
+            AddPlayerToUI(player);
         }
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
+    void AddPlayerToUI(Player player)
     {
-        UpdatePlayerList();
+        GameObject entry = Instantiate(playerEntryPrefab, playerListContainer.transform);
+        entry.GetComponent<TextMeshProUGUI>().text = player.NickName;
+        playerEntries[player.ActorNumber] = entry;
     }
 
-    public override void OnPlayerLeftRoom(Player otherPlayer)
+    // Eventos
+    void OnPlayerJoined(Player player) => AddPlayerToUI(player);
+    void OnPlayerLeft(Player player)
     {
-        UpdatePlayerList();
+        if (playerEntries.ContainsKey(player.ActorNumber))
+        {
+            Destroy(playerEntries[player.ActorNumber]);
+            playerEntries.Remove(player.ActorNumber);
+        }
     }
 
-    public override void OnMasterClientSwitched(Player newMasterClient)
+    void OnMasterClientChanged(Player newMaster)
     {
         startGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
-    }
-
-    void LeaveRoom()
-    {
-        PhotonNetwork.LeaveRoom();
-    }
-
-    public override void OnLeftRoom()
-    {
-        SceneManager.LoadScene("MainMenu");
     }
 
     IEnumerator LoadGameAsync()
     {
         lobbyUI.SetActive(false);
-
         loadingPanel.SetActive(true);
 
         loadingText.text = "Preparando datos...";
@@ -94,9 +99,10 @@ public class RoomLobbyManager : MonoBehaviourPunCallbacks
 
         loadingText.text = "Cargando escena...";
 
+        // Solo MasterClient inicia la carga
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.LoadLevel("RoomGeneration");
+            RoomLobbyNetworkController.Instance.StartGame("GameScene");
         }
     }
 }

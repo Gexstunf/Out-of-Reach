@@ -2824,6 +2824,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &854900709
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 854900711}
+  - component: {fileID: 854900710}
+  m_Layer: 0
+  m_Name: PhotonManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &854900710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 854900709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 181428e541578ff43ba378313b00a7f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &854900711
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 854900709}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 556.81024, y: 146.56432, z: -335.6716}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &883157161
 GameObject:
   m_ObjectHideFlags: 0
@@ -4836,11 +4880,11 @@ MonoBehaviour:
   loadingPanel: {fileID: 1611658712}
   progressBar: {fileID: 816087663}
   progressText: {fileID: 1595959765}
+  playerNameInput: {fileID: 2072149208}
   roomNameInput_Host: {fileID: 1910175183}
   passwordInput_Host: {fileID: 498384702}
   roomNameInput_Join: {fileID: 1868087164}
   passwordInput_Join: {fileID: 1386488565}
-  playerNameInput: {fileID: 2072149208}
 --- !u!4 &1487784296
 Transform:
   m_ObjectHideFlags: 0
@@ -6899,3 +6943,4 @@ SceneRoots:
   - {fileID: 661372293}
   - {fileID: 1205978323}
   - {fileID: 1487784296}
+  - {fileID: 854900711}

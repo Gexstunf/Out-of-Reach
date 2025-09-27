@@ -1,7 +1,7 @@
-﻿using Photon.Pun;
-using UnityEngine;
+﻿using UnityEngine;
+using Photon.Pun;
 
-public class GameManager : MonoBehaviourPunCallbacks
+public class GameManager : MonoBehaviour
 {
     [Header("Prefab del jugador")]
     public GameObject playerPrefab;
@@ -9,20 +9,32 @@ public class GameManager : MonoBehaviourPunCallbacks
     [Header("Puntos de spawn")]
     public Transform[] spawnPoints;
 
-    void Start()
+    private void Start()
     {
-        if (PhotonNetwork.InRoom)
+        if (!PhotonNetwork.InRoom)
         {
-            Debug.Log(" Ya estoy en una sala, spawneo jugador...");
-
-            int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
-            Transform spawnPoint = spawnPoints[playerIndex % spawnPoints.Length];
-
-            PhotonNetwork.Instantiate(playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
+            Debug.LogError("No estás en ninguna sala de juego, no se puede spawnear jugador.");
+            return;
         }
-        else
-        {
-            Debug.LogError(" No estás en ninguna sala, no se puede spawnear jugador.");
-        }
+
+        // Suscribirse al evento de spawn
+        GameNetworkController.Instance.OnPlayerSpawned += HandlePlayerSpawned;
+
+        // Spawnear el jugador local
+        SpawnLocalPlayer();
+    }
+
+    void SpawnLocalPlayer()
+    {
+        int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
+        Transform spawnPoint = spawnPoints[playerIndex % spawnPoints.Length];
+
+        GameNetworkController.Instance.SpawnLocalPlayer(playerPrefab, spawnPoint);
+    }
+
+    void HandlePlayerSpawned(Photon.Realtime.Player player)
+    {
+        Debug.Log($"Jugador listo en escena: {player.NickName}");
+        // Aquí podrías actualizar UI, inventario, cámaras, etc.
     }
 }
