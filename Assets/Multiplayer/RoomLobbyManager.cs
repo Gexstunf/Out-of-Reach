@@ -58,11 +58,6 @@ public class RoomLobbyManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public override void OnJoinedRoom()
-    {
-        UpdatePlayerList();
-    }
-
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         UpdatePlayerList();
@@ -91,13 +86,17 @@ public class RoomLobbyManager : MonoBehaviourPunCallbacks
     IEnumerator LoadGameAsync()
     {
         lobbyUI.SetActive(false);
+
         loadingPanel.SetActive(true);
+
+        loadingText.text = "Preparando datos...";
+        yield return new WaitForSeconds(1f);
 
         loadingText.text = "Cargando escena...";
 
         if (PhotonNetwork.IsMasterClient)
-            PhotonNetwork.LoadLevel("GameScene");
-
-        yield break;
+        {
+            PhotonNetwork.LoadLevel("RoomGeneration");
+        }
     }
 }

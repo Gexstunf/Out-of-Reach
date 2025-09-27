@@ -132,18 +132,17 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     // ===== CALLBACKS DE PHOTON =====
     public override void OnJoinedRoom()
     {
-        var roomPwd = (string)PhotonNetwork.CurrentRoom.CustomProperties["pwd"];
-        if (!string.IsNullOrEmpty(roomPwd) && passwordInput_Join.text != roomPwd)
-        {
-            Debug.LogWarning("❌ Contraseña incorrecta, saliendo de la sala.");
-            PhotonNetwork.LeaveRoom();
-            return;
-        }
-
-        Debug.Log("✅ Jugador unido a la sala correctamente.");
+        Debug.Log("Jugador unido a la sala correctamente.");
 
         if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("Es el Master Client. Cargando RoomLobby...");
             StartCoroutine(LoadSceneAsync("RoomLobby"));
+        }
+        else
+        {
+            Debug.Log("No es el Master Client.");
+        }
     }
 
     private IEnumerator LoadSceneAsync(string sceneName)
@@ -183,7 +182,6 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("Conectado a Photon Master Server.");
-        PhotonNetwork.JoinLobby(); // importante para poder crear/unirse a salas
     }
 
     public override void OnDisconnected(DisconnectCause cause)

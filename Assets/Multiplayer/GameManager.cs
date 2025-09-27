@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using Photon.Pun;
-using System.Collections;
+﻿using Photon.Pun;
+using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks
 {
     [Header("Prefab del jugador")]
     public GameObject playerPrefab;
@@ -12,20 +11,18 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(SpawnPlayerWhenReady());
-    }
+        if (PhotonNetwork.InRoom)
+        {
+            Debug.Log(" Ya estoy en una sala, spawneo jugador...");
 
-    IEnumerator SpawnPlayerWhenReady()
-    {
-        while (!PhotonNetwork.InRoom || PhotonWrapperInstantiatePlayer.Instance == null)
-            yield return null;
+            int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
+            Transform spawnPoint = spawnPoints[playerIndex % spawnPoints.Length];
 
-        int index = PhotonNetwork.LocalPlayer.ActorNumber - 1;
-        Transform spawnPoint = spawnPoints[index % spawnPoints.Length];
-
-        var player = PhotonWrapperInstantiatePlayer.Instance.SpawnPlayer(playerPrefab, spawnPoint);
-
-        if (player != null)
-            Debug.Log("[GameManager] Jugador instanciado correctamente: " + player.name);
+            PhotonNetwork.Instantiate(playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
+        }
+        else
+        {
+            Debug.LogError(" No estás en ninguna sala, no se puede spawnear jugador.");
+        }
     }
 }
