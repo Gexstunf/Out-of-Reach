@@ -3,6 +3,7 @@ using Photon.Pun;
 using UnityEngine;
 using UI;
 using Characters.PlayerController.Scripts.Input;
+using Multiplayer.Inventory;
 
 public class PlayerInventoryPhoton : MonoBehaviourPun
 {

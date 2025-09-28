@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Environment.Scripts.Debug {
+namespace Environment.Scripts.DebugScripts {
     public class SpinScript : MonoBehaviour, IMovingPlatform {
         public float rotationSpeed = 100f; 
         public Vector3 rotationAxis = Vector3.up;
