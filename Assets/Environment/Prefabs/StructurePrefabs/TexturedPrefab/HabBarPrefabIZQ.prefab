@@ -47,6 +47,8 @@ MonoBehaviour:
   exitID: 
   isActive: 1
   activationChance: 1
+  activeObject: {fileID: 0}
+  inactiveVisual: {fileID: 0}
 --- !u!1 &8525219668423997740
 GameObject:
   m_ObjectHideFlags: 0
@@ -59,6 +61,7 @@ GameObject:
   - component: {fileID: 8159648630796179722}
   - component: {fileID: 7613376731416345821}
   - component: {fileID: 1950356135825468676}
+  - component: {fileID: 7519832442619724873}
   m_Layer: 3
   m_Name: HabBarPrefabIZQ
   m_TagString: Indestructible
@@ -145,6 +148,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03b8744d405dffb42a9ecd231fc43294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7519832442619724873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8525219668423997740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01b8b13b0c4eac74b9773bbe58663661, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8929473024236706053

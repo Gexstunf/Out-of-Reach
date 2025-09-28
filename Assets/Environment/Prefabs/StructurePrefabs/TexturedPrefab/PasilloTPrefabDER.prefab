@@ -195,6 +195,7 @@ GameObject:
   - component: {fileID: 5505861468383688264}
   - component: {fileID: 8177507669460515503}
   - component: {fileID: 3030224802911856952}
+  - component: {fileID: 8175911096937533694}
   m_Layer: 3
   m_Name: PasilloTPrefabDER
   m_TagString: Untagged
@@ -285,6 +286,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &8175911096937533694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4950417639267779701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01b8b13b0c4eac74b9773bbe58663661, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1460787288197069294
 PrefabInstance:
   m_ObjectHideFlags: 0

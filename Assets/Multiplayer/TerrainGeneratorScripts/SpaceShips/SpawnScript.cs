@@ -99,7 +99,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                 if (!spawnedThisIteration || ExitScript.allExits.Count == 0)
                 {
                     Debug.LogWarning("No more active exits available or no spawning occurred, stopping generation");
-                    ReloadManager.ReloadScene("RoomGeneration");
+                    ReloadManager.RemoveStructures();
                 }
             }
     
@@ -107,7 +107,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
             {
                 Debug.LogWarning("Not enough rooms, Reloading Scene");
                 ReloadManager.ResetReloadFlag();
-                ReloadManager.ReloadScene("RoomGeneration");
+                ReloadManager.RemoveStructures();
             }
             
             foreach (var exit in ExitScript.allExits.Values.Skip(1))

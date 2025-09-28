@@ -47,7 +47,7 @@ MonoBehaviour:
   exitID: 
   isActive: 1
   activationChance: 1
-  activeVisual: {fileID: 6052110605029160835}
+  activeObject: {fileID: 0}
   inactiveVisual: {fileID: 0}
 --- !u!1 &3791255646465563467
 GameObject:
@@ -61,6 +61,7 @@ GameObject:
   - component: {fileID: 5122596054250648761}
   - component: {fileID: 1379781152491563441}
   - component: {fileID: 3581379840074180337}
+  - component: {fileID: 665087729457078544}
   m_Layer: 3
   m_Name: PasilloPrefab
   m_TagString: Untagged
@@ -149,6 +150,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 3065087254759496983, guid: a153d04609567be4aa5b453d55c48732, type: 3}
+--- !u!114 &665087729457078544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3791255646465563467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01b8b13b0c4eac74b9773bbe58663661, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4095967443404682065
 GameObject:
   m_ObjectHideFlags: 0
@@ -298,11 +311,6 @@ PrefabInstance:
 --- !u!4 &3257426644789683159 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2685013475286680658, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
-  m_PrefabInstance: {fileID: 610134128977602437}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6052110605029160835 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6596308107174760454, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
   m_PrefabInstance: {fileID: 610134128977602437}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8391667926168766535

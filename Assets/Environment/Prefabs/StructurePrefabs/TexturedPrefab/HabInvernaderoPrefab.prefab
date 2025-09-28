@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 9122222825340130878}
   - component: {fileID: 4208568413692538244}
   - component: {fileID: 5642003417432666921}
+  - component: {fileID: 8423732777270245292}
   m_Layer: 3
   m_Name: HabInvernaderoPrefab
   m_TagString: Indestructible
@@ -182,6 +183,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03b8744d405dffb42a9ecd231fc43294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8423732777270245292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8846650929021130192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01b8b13b0c4eac74b9773bbe58663661, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &2529836428615001567

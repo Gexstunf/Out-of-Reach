@@ -66,6 +66,7 @@ GameObject:
   - component: {fileID: 8870479802968787408}
   - component: {fileID: 3425888450882013640}
   - component: {fileID: -7074156836604390784}
+  - component: {fileID: 2743796884649313343}
   m_Layer: 3
   m_Name: HabAlmacenamientoPrefab
   m_TagString: Indestructible
@@ -155,6 +156,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03b8744d405dffb42a9ecd231fc43294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2743796884649313343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377035139366547631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01b8b13b0c4eac74b9773bbe58663661, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5536971390730342422
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,6 +215,8 @@ MonoBehaviour:
   exitID: 
   isActive: 1
   activationChance: 1
+  activeObject: {fileID: 0}
+  inactiveVisual: {fileID: 0}
 --- !u!1 &6438136454154907913
 GameObject:
   m_ObjectHideFlags: 0

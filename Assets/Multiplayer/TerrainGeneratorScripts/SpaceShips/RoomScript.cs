@@ -49,7 +49,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                     {
                         _reloadTriggered = true;
                         Debug.LogWarning($"Reloading due to overlap: {name} with {other.name}!!");
-                        ReloadManager.ReloadScene("RoomGeneration");
+                        ReloadManager.RemoveStructures();
                         yield break;
                     }
                 }
