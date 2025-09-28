@@ -160,6 +160,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NewActiveRagdoll Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4435028759415357092, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 5238199863296991060, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: sceneViewId
       value: 0
