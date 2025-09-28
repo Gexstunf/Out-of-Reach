@@ -7,7 +7,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 {
     public class SpawnScript : MonoBehaviour
     {
-        [SerializeField] public static string sceneName = "RoomGeneration";
+        [SerializeField] public static string SceneName = "RoomGeneration";
         public GameObject doorGameObject;
         public GameObject uniqueHall;
         public ExitScript exitScript; 

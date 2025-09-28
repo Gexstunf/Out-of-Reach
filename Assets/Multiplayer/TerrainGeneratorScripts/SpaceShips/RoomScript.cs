@@ -7,7 +7,6 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
     public class RoomScript : MonoBehaviour
     {
         private static bool _reloadTriggered = false;
-        [SerializeField] private static string _sceneName = "RoomGeneration";
 
         [RuntimeInitializeOnLoadMethod]
         private static void ResetOnSceneLoad()

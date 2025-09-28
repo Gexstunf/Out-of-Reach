@@ -132,7 +132,7 @@ MonoBehaviour:
   exitID: 
   isActive: 1
   activationChance: 1
-  activeVisual: {fileID: 7179427665582719459}
+  activeObject: {fileID: 7179427665582719459}
   inactiveVisual: {fileID: 0}
 --- !u!1 &2941368604328143080
 GameObject:
@@ -181,7 +181,7 @@ MonoBehaviour:
   exitID: 
   isActive: 1
   activationChance: 1
-  activeVisual: {fileID: 5750825191358474728}
+  activeObject: {fileID: 5750825191358474728}
   inactiveVisual: {fileID: 0}
 --- !u!1 &4950417639267779701
 GameObject:

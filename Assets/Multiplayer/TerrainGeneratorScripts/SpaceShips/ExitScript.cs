@@ -10,7 +10,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
         public string exitID;
         public bool isActive;
         public float activationChance;
-        public GameObject activeVisual;
+        public GameObject activeObject;
         public GameObject inactiveVisual;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -60,7 +60,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
         
         public void UpdateVisuals(bool active)
         {
-            if (activeVisual != null) activeVisual.SetActive(active);
+            if (activeObject != null) activeObject.SetActive(active);
             if (inactiveVisual != null) inactiveVisual.SetActive(!active);
         }
     

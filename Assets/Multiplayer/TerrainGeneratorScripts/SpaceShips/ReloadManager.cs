@@ -5,6 +5,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 {
     public static class ReloadManager
     {
+        
         private static bool _reloading = false;
         
         [RuntimeInitializeOnLoadMethod]
@@ -14,6 +15,11 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
             {
                 _reloading = false;
             };
+        }
+
+        public static void AddStructure()
+        {
+            
         }
         
         public static void ReloadScene(string sceneName)
