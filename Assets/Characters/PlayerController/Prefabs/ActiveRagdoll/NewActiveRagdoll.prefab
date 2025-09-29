@@ -1210,6 +1210,8 @@ MonoBehaviour:
   _rb: {fileID: 0}
   _playerCollider: {fileID: 0}
   _playerStateMachine: {fileID: 0}
+  useCustomGravity: 0
+  gravityScale: 1
   moveForce: 35
   runForce: 60
   playerDrag: 2.7
@@ -1226,7 +1228,7 @@ MonoBehaviour:
   _eyesTransform: {fileID: 5584611404305298706}
   eyesOffset: {x: 0, y: 0.35, z: 0.9}
   isGrounded: 1
-  gravity: 0
+  visualGravity: 0
 --- !u!114 &892568939044708005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1480,12 +1482,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04089f5d36cb14944b5da4d28e128472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabDistance: 4.5
+  leftGrabOrigin: {fileID: 0}
+  rightGrabOrigin: {fileID: 0}
+  itemGrabDistance: 2
+  wallGrabDistance: 1
   grabSpeed: 1
-  itemMask:
+  grabbableMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   debug: 1
+  useIndependentOrigins: 0
   input: {fileID: 5100631225743810992}
   rightHandIKTarget: {fileID: 8020916322953060700}
   rightHandRb: {fileID: 5132747489036644762}

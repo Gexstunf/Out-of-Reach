@@ -9,8 +9,8 @@ using UnityEngine.Serialization;
 
 namespace Characters.PlayerController.Scripts
 {
-    [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(CapsuleCollider))]
+    //[RequireComponent(typeof(Rigidbody))]
+    //[RequireComponent(typeof(CapsuleCollider))]
     [RequireComponent(typeof(PlayerInputScript))]
     [RequireComponent(typeof(PlayerStateMachineScript))]
     public class PlayerControllerScript : MonoBehaviourPun
@@ -45,6 +45,7 @@ namespace Characters.PlayerController.Scripts
         [Header("General settings")]
         public LayerMask groundLayer;
         public Vector3 groundCheckBoxSize = new Vector3(0.5f, 0.15f, 0.5f);
+        public bool useOtherRb = true;
 
         [Header("Look Settings")]
         [SerializeField] private float _lookSenseH = 10f;
@@ -65,12 +66,12 @@ namespace Characters.PlayerController.Scripts
         #region Startup logic
 
         private void Awake()
-        {
+        {   
+            if (!useOtherRb) _rb = GetComponent<Rigidbody>();
             _inputScript = GetComponent<PlayerInputScript>();
-            _rb = GetComponent<Rigidbody>();
             _playerCollider = GetComponent<CapsuleCollider>();
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
-
+            
             _rotator = gameObject.AddComponent<RotatorScript>();
             _cameraController = new CameraControllerScript();
             _cameraController.TieToTransform(_eyesTransform, eyesOffset);
@@ -81,6 +82,8 @@ namespace Characters.PlayerController.Scripts
             else {
                 _rb.useGravity = true;
             }
+
+            Validate();
         }
 
         private void Start()
@@ -224,7 +227,14 @@ namespace Characters.PlayerController.Scripts
             Vector3 grav = Physics.gravity * scale;
             _rb.AddForce(grav, ForceMode.Acceleration);
         }
-        
+
+        private void Validate() {
+            if (_rb == null) Debug.LogWarning("Missing _rb: " + _rb);
+            if (_inputScript == null) Debug.LogWarning("Missing _inputScript: " + _inputScript);
+            if (_playerCamera == null) Debug.LogWarning("Missing _camera: " + _cameraController);
+            if (_playerCollider == null) Debug.LogWarning("Missing _playerCollider: " + _playerCollider);
+        }
+
         #endregion
 
         #region Gizmo draw
