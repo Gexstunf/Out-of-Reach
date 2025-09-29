@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd30862700d3ab04c8502dfb46c13249, type: 3}
   m_Name: Farol
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 4316078606925847965, guid: e98e3557d5adb44449486fd5a71a67ad, type: 3}
   itemId: 
   worldPrefabName: 
   heldPrefabName: 
   icon: {fileID: 0}
   displayName: 
-  itemType: 0
-  itemSize: 0
+  itemType: 3
+  itemSize: 1
+  value: 40
   internalSlots:
   - {fileID: 0}
   - {fileID: 0}

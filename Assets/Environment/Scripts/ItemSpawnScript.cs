@@ -32,7 +32,7 @@ namespace Environment.Scripts {
                 Debug.Log("No data");
             }
             else {
-                Instantiate(_itemData.prefab);
+                Instantiate(_itemData.prefab, transform.position, transform.rotation);
             }
         }
         

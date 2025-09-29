@@ -12,6 +12,7 @@ namespace Multiplayer.Inventory {
         public string displayName;
         public ItemType itemType;
         public ItemSize itemSize;
+        public int value;
         public ItemSO[] internalSlots = new ItemSO[4];
     }
 

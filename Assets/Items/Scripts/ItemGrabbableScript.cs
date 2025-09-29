@@ -1,4 +1,5 @@
 using Characters.PlayerController.Scripts;
+using Multiplayer.Inventory;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -7,6 +8,7 @@ namespace Items.Scripts {
     {
         [Header("Settings")]
         public Transform grabHandle;
+        public ItemSO data;
         public float massScale = 1f;
         public float connectedMassScale = 1f;
         
@@ -23,9 +25,12 @@ namespace Items.Scripts {
         public Transform GrabHandle { get; set; }
 
         public void Grab(Rigidbody rb, Vector3 grabPoint) {
-            Debug.Log("Couldnt attach, already have a joint");
-            if (_joint) return; // already grabbed
+            if (_joint) {
+                Debug.Log("Couldnt attach, already has a joint");
+                return; // already grabbed
+            }
             
+
             // Move object so grabPoint aligns with hand
 
             if (grabHandle) {
