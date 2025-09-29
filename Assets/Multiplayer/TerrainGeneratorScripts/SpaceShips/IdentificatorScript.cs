@@ -1,10 +1,27 @@
-using Multiplayer.TerrainGeneratorScripts.SpaceShips;
+using System;
 using UnityEngine;
 
-public class IdentificatorScript : MonoBehaviour
+namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 {
-    void Start()
+    public class IdentificatorScript : MonoBehaviour
     {
-        ReloadManager.AddStructure(gameObject);
+        public string structureID;
+        private void Awake()
+        {
+            if (string.IsNullOrEmpty(structureID))
+                structureID = Guid.NewGuid().ToString();
+        }
+
+        void Start()
+        {
+            Debug.Log("Added "+ structureID);
+            ReloadManager.AllStructures.Add(structureID, this);
+        }
+
+        public void DestroySelf()
+        {
+            Destroy(gameObject);
+            ReloadManager.AllStructures.Remove(structureID);
+        }
     }
 }
