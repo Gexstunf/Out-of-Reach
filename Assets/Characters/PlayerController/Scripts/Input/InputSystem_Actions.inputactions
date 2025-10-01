@@ -113,6 +113,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Propel",
+                    "type": "Button",
+                    "id": "93e5c94a-14d0-4d30-9b80-0dca2b8d959e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -575,6 +584,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "GrabRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "001fff1e-191d-4f7c-93a3-ce04f34822ba",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Propel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

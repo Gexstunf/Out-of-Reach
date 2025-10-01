@@ -12,7 +12,7 @@ namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
 
         public override void EnterState() {
             //Debug.Log("Entering Falling state");
-            Context.Input.enabled = false;
+            //Context.Input.enabled = false;
             Context.Rb.linearDamping = 0f;
             Context.Coordinator.OnUnconsciousChanged += Context.HandleUnconsciousChange;
             //Context.EnvironmentInteractionStateMachine.enabled = false;
@@ -21,7 +21,7 @@ namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
         public override void ExitState() {
             //Debug.Log("Exiting Falling state");
             Context.PlayerController.ResetVariables();
-            Context.Input.enabled = true;
+            //Context.Input.enabled = true;
             Context.Coordinator.OnUnconsciousChanged -= Context.HandleUnconsciousChange;
             //Context.EnvironmentInteractionStateMachine.enabled = true;
         }

@@ -10,18 +10,39 @@ namespace Characters.PlayerController.Scripts {
         public Transform grabPoint;
         public float massScale = 1f;
         public float connectedMassScale = 1f;
+        [SerializeField] private GrabbableType grabbableType = GrabbableType.Item;
+
+        private enum GrabbableType
+        {
+            Item = 1,
+            Wall = 2
+        }
 
         void Awake()
         {
-            rb = GetComponent<Rigidbody>();
-            rb.interpolation = RigidbodyInterpolation.Interpolate;
-            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            //if (grabbableType == GrabbableType.Item) {
+                rb = GetComponent<Rigidbody>();
+                rb.interpolation = RigidbodyInterpolation.Interpolate;
+                rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            //}
         }
 
-        public void Grab(Rigidbody handRb)
+        public void Grab(Rigidbody handRb, Vector3 grabPoint)
         {
-            if (joint != null) return; // already grabbed
+            switch (grabbableType) {
+                case  GrabbableType.Item: 
+                    GrabAnItem(handRb);
+                    break;
+                case GrabbableType.Wall:
+                    GrabAWall(handRb, grabPoint);
+                    break;
+            }
 
+        }
+
+        void GrabAnItem(Rigidbody handRb) {
+            if (joint != null) return; // already grabbed
+            
             // Move object so grabPoint aligns with hand
             if (grabPoint != null)
             {
@@ -45,14 +66,32 @@ namespace Characters.PlayerController.Scripts {
             joint.massScale = massScale;
             joint.connectedMassScale = connectedMassScale;
         }
+        
+        void GrabAWall(Rigidbody handRb, Vector3 anchorPoint) {
+            ConfigurableJoint newJoint = handRb.gameObject.AddComponent<ConfigurableJoint>();
 
-        public void Release()
+            newJoint.yMotion = ConfigurableJointMotion.Locked;
+            newJoint.xMotion = ConfigurableJointMotion.Locked;
+            newJoint.zMotion = ConfigurableJointMotion.Locked;
+            
+            newJoint.angularXMotion = ConfigurableJointMotion.Free;
+            newJoint.angularYMotion = ConfigurableJointMotion.Free;
+            newJoint.angularZMotion = ConfigurableJointMotion.Free;
+            
+            newJoint.anchor = anchorPoint;
+        }
+
+        public void ReleaseItem()
         {
             if (joint != null)
             {
                 Destroy(joint);
                 joint = null;
             }
+        }
+        
+        public void ReleaseWall(Rigidbody handRb)
+        {
         }
 
     }

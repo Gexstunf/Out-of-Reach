@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Multiplayer.Inventory;
 using UnityEngine;
 
 public class ItemDatabase : MonoBehaviour

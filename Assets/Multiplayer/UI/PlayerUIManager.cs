@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Characters.LifeSupportSystem.PlayerLifeSupport;
 using static Characters.LifeSupportSystem.PlayerLifeSupport.PlayerLifeSupportScript;
 using Characters.LifeSupportSystem;
+using Multiplayer.Inventory;
 
 namespace UI
 {

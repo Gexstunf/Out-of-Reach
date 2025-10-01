@@ -14,7 +14,7 @@ namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
         public override void EnterState() {
             //Debug.Log("Entering Jumping State");
             Context.Rb.linearDamping = 0f;
-            Context.Input.enabled = false;
+            //Context.Input.enabled = false;
             Context.Coordinator.OnTiredChanged += Context.HandleTiredChange; 
             //Context.EnvironmentInteractionStateMachine.enabled = false;
         }
@@ -22,7 +22,7 @@ namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
         public override void ExitState() {
             //Debug.Log("Exiting Jumping State");
             Context.PlayerController.ResetVariables();;
-            Context.Input.enabled = true;
+            //Context.Input.enabled = true;
             Context.Coordinator.OnTiredChanged -= Context.HandleTiredChange;
             //Context.EnvironmentInteractionStateMachine.enabled = true;
         }

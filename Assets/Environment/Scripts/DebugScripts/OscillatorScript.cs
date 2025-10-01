@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Environment.Scripts.Debug {
+namespace Environment.Scripts.DebugScripts {
     public class OscillateScript : MonoBehaviour, IMovingPlatform {
         public float amplitude = 2f; 
         public float speed = 1f;   

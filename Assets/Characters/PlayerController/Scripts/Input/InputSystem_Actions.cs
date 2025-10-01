@@ -201,6 +201,15 @@ namespace Characters.PlayerController.Scripts.Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Propel"",
+                    ""type"": ""Button"",
+                    ""id"": ""93e5c94a-14d0-4d30-9b80-0dca2b8d959e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -663,6 +672,17 @@ namespace Characters.PlayerController.Scripts.Input
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""GrabRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""001fff1e-191d-4f7c-93a3-ce04f34822ba"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Propel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1262,6 +1282,7 @@ namespace Characters.PlayerController.Scripts.Input
             m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
             m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
             m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
+            m_Player_Propel = m_Player.FindAction("Propel", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1367,6 +1388,7 @@ namespace Characters.PlayerController.Scripts.Input
         private readonly InputAction m_Player_Sprint;
         private readonly InputAction m_Player_Inventory;
         private readonly InputAction m_Player_Drop;
+        private readonly InputAction m_Player_Propel;
         /// <summary>
         /// Provides access to input actions defined in input action map "Player".
         /// </summary>
@@ -1426,6 +1448,10 @@ namespace Characters.PlayerController.Scripts.Input
             /// Provides access to the underlying input action "Player/Drop".
             /// </summary>
             public InputAction @Drop => m_Wrapper.m_Player_Drop;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Propel".
+            /// </summary>
+            public InputAction @Propel => m_Wrapper.m_Player_Propel;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1488,6 +1514,9 @@ namespace Characters.PlayerController.Scripts.Input
                 @Drop.started += instance.OnDrop;
                 @Drop.performed += instance.OnDrop;
                 @Drop.canceled += instance.OnDrop;
+                @Propel.started += instance.OnPropel;
+                @Propel.performed += instance.OnPropel;
+                @Propel.canceled += instance.OnPropel;
             }
 
             /// <summary>
@@ -1535,6 +1564,9 @@ namespace Characters.PlayerController.Scripts.Input
                 @Drop.started -= instance.OnDrop;
                 @Drop.performed -= instance.OnDrop;
                 @Drop.canceled -= instance.OnDrop;
+                @Propel.started -= instance.OnPropel;
+                @Propel.performed -= instance.OnPropel;
+                @Propel.canceled -= instance.OnPropel;
             }
 
             /// <summary>
@@ -1919,6 +1951,13 @@ namespace Characters.PlayerController.Scripts.Input
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnDrop(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Propel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnPropel(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

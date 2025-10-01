@@ -5,11 +5,12 @@ using Characters.StateMachine.PlayerStateMachine;
 using Characters.Utils;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.Serialization;
 
 namespace Characters.PlayerController.Scripts
 {
-    [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(CapsuleCollider))]
+    //[RequireComponent(typeof(Rigidbody))]
+    //[RequireComponent(typeof(CapsuleCollider))]
     [RequireComponent(typeof(PlayerInputScript))]
     [RequireComponent(typeof(PlayerStateMachineScript))]
     public class PlayerControllerScript : MonoBehaviourPun
@@ -28,6 +29,8 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private PlayerStateMachineScript _playerStateMachine;
 
         [Header("Movement Settings")]
+        public bool useCustomGravity;
+        [Range(0f, 1f)] public float gravityScale = 1f;
         public float moveForce = 30f;
         public float runForce = 60f;
         public float playerDrag = 20f;
@@ -42,6 +45,7 @@ namespace Characters.PlayerController.Scripts
         [Header("General settings")]
         public LayerMask groundLayer;
         public Vector3 groundCheckBoxSize = new Vector3(0.5f, 0.15f, 0.5f);
+        public bool useOtherRb = true;
 
         [Header("Look Settings")]
         [SerializeField] private float _lookSenseH = 10f;
@@ -53,7 +57,7 @@ namespace Characters.PlayerController.Scripts
         [Header("Visualize Variables")]
         public bool isGrounded = true;
         public Vector3 CurrentForce { get; private set; }
-        public float gravity;
+        public float visualGravity;
         
         private float _groundCheckOffset;
 
@@ -62,16 +66,24 @@ namespace Characters.PlayerController.Scripts
         #region Startup logic
 
         private void Awake()
-        {
+        {   
+            if (!useOtherRb) _rb = GetComponent<Rigidbody>();
             _inputScript = GetComponent<PlayerInputScript>();
-            _rb = GetComponent<Rigidbody>();
             _playerCollider = GetComponent<CapsuleCollider>();
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
-
+            
             _rotator = gameObject.AddComponent<RotatorScript>();
             _cameraController = new CameraControllerScript();
             _cameraController.TieToTransform(_eyesTransform, eyesOffset);
-            gravity = Physics.gravity.y;
+
+            if (useCustomGravity) {
+                _rb.useGravity = false;
+            }   
+            else {
+                _rb.useGravity = true;
+            }
+
+            Validate();
         }
 
         private void Start()
@@ -113,6 +125,10 @@ namespace Characters.PlayerController.Scripts
         {
             //if (!photonView.IsMine) return;
 
+            if (useCustomGravity) {
+                ApplyCustomGravity(gravityScale);
+            }
+
             Vector3 movementDir = CalculateMovementDirection();
             Vector3 force = CalculateNewForce(movementDir);
             CurrentForce = force;
@@ -131,10 +147,13 @@ namespace Characters.PlayerController.Scripts
         private void LateUpdate()
         {
             //if (!photonView.IsMine) return;
+            
+            visualGravity = Physics.gravity.y;
+            if (useCustomGravity) visualGravity = Physics.gravity.y * gravityScale;
 
             Vector2 lookInput = _inputScript.LookInput;
             _rotator.RotateTransform(lookInput);
-            
+              
             float characterYaw = _rotator.GetYaw();
 
             _cameraController.UpdateCameraRotation(lookInput, _playerCamera, characterYaw);
@@ -203,7 +222,19 @@ namespace Characters.PlayerController.Scripts
 
             return hit;
         }
-        
+
+        private void ApplyCustomGravity(float scale) {
+            Vector3 grav = Physics.gravity * scale;
+            _rb.AddForce(grav, ForceMode.Acceleration);
+        }
+
+        private void Validate() {
+            if (_rb == null) Debug.LogWarning("Missing _rb: " + _rb);
+            if (_inputScript == null) Debug.LogWarning("Missing _inputScript: " + _inputScript);
+            if (_playerCamera == null) Debug.LogWarning("Missing _camera: " + _cameraController);
+            if (_playerCollider == null) Debug.LogWarning("Missing _playerCollider: " + _playerCollider);
+        }
+
         #endregion
 
         #region Gizmo draw
