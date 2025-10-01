@@ -3,7 +3,27 @@ guid: 033c21d0c9eae264395b9c7c31353e78
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Empuniadura
+    second: {fileID: 2100000, guid: 7d1886abb7519be4a853064d843c80d2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: 90c5840c5ef924e4aa340e00f2e0cb8b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.003
+    second: {fileID: 2100000, guid: 1d0f1f486d6cf4d4ca710eecf13067ab, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Hoja de Luz
+    second: {fileID: 2800000, guid: 7344be6d2e4dd8a4986926747bd170a0, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
