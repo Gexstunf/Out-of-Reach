@@ -14,14 +14,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 
         void Start()
         {
-            Debug.Log("Added "+ structureID);
             ReloadManager.AllStructures.Add(structureID, this);
-        }
-
-        public void DestroySelf()
-        {
-            Destroy(gameObject);
-            ReloadManager.AllStructures.Remove(structureID);
         }
     }
 }

@@ -7,7 +7,6 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 {
     public class SpawnScript : MonoBehaviour
     {
-        [SerializeField] public static string SceneName = "RoomGeneration";
         public GameObject doorGameObject;
         public GameObject uniqueHall;
         public ExitScript exitScript; 
@@ -37,12 +36,19 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                 DoorScript doorScript = doorGameObject.GetComponentInChildren<DoorScript>();
                 if (doorScript != null && doorScript.isActive)
                 {
+                    Debug.Log("1");
                     Vector3 pos = doorGameObject.transform.position;
+                    Debug.Log("2");
                     Quaternion rot = doorGameObject.transform.rotation;
+                    Debug.Log("3");
                     pos.x += 4;
+                    Debug.Log("4");
                     uniqueHall = Instantiate(entrance, pos, rot);
+                    Debug.Log("5");
                     exitScript = uniqueHall.GetComponentInChildren<ExitScript>();
+                    Debug.Log("6");
                     ToSetExitNumber();
+                    Debug.Log("7"); 
                 }
             }
         }
@@ -100,14 +106,15 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                 {
                     Debug.LogWarning("No more active exits available or no spawning occurred, stopping generation");
                     ReloadManager.RemoveStructures();
+                    ReloadManager.ReloadScene();
                 }
             }
     
             if (rooms < quantityOfRooms)
             {
                 Debug.LogWarning("Not enough rooms, Reloading Scene");
-                ReloadManager.ResetReloadFlag();
                 ReloadManager.RemoveStructures();
+                ReloadManager.ReloadScene();
             }
             
             foreach (var exit in ExitScript.allExits.Values.Skip(1))

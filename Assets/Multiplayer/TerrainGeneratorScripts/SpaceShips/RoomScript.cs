@@ -50,6 +50,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                         _reloadTriggered = true;
                         Debug.LogWarning($"Reloading due to overlap: {name} with {other.name}!!");
                         ReloadManager.RemoveStructures();
+                        ReloadManager.ReloadScene();
                         yield break;
                     }
                 }
