@@ -19,7 +19,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
         {
             allDoors.Clear();
         }
-        void Awake()
+        public void Awake()
         {
             spawn = FindAnyObjectByType<SpawnScript>();
 

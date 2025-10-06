@@ -8,7 +8,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
     public static class ReloadManager
     {
         public static Dictionary<string, IdentificatorScript> AllStructures = new();
-        public static SpawnScript Spawn;
+        public static DoorScript Door;
 
         public static void RemoveStructures()
         {
@@ -20,13 +20,15 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                 }
             }
             AllStructures.Clear();
+            ExitScript.ClearAllExits();
+            DoorScript.ClearAllDoors();
         }
         
         public static void ReloadScene()
         {
             Debug.Log("Reloading scene");
-            Spawn = Object.FindAnyObjectByType<SpawnScript>();
-            Spawn.SecondStart();
+            Door = Object.FindAnyObjectByType<DoorScript>();
+            Door.Awake();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
     {
         public GameObject doorGameObject;
         public GameObject uniqueHall;
-        public ExitScript exitScript; 
+        public ExitScript exitScript;
         public GameObject entrance;
         public GameObject [] intersectionsPossibles;
         public GameObject [] roomsPossibles;
@@ -36,19 +36,13 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                 DoorScript doorScript = doorGameObject.GetComponentInChildren<DoorScript>();
                 if (doorScript != null && doorScript.isActive)
                 {
-                    Debug.Log("1");
                     Vector3 pos = doorGameObject.transform.position;
-                    Debug.Log("2");
                     Quaternion rot = doorGameObject.transform.rotation;
-                    Debug.Log("3");
                     pos.x += 4;
-                    Debug.Log("4");
                     uniqueHall = Instantiate(entrance, pos, rot);
-                    Debug.Log("5");
                     exitScript = uniqueHall.GetComponentInChildren<ExitScript>();
-                    Debug.Log("6");
+                    
                     ToSetExitNumber();
-                    Debug.Log("7"); 
                 }
             }
         }
