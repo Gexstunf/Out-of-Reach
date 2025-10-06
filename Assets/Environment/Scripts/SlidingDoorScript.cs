@@ -11,13 +11,13 @@ namespace Environment.Scripts {
         public Transform maleDoor;
 
         [Header("Settings")] 
-        public float openOffset;
+        [SerializeField] private MovementAxis movementAxis = MovementAxis.Z;
+        public bool useDetection = true;
         public float detectionRadius = 4f;
         public LayerMask detectionLayerMask;
         public float doorSpeed = 0.2f;
         public bool open;
         public bool debug;
-        
         public float doorCrackOffset = 0.05f;
         
         [Header("Settings Failure")] 
@@ -35,10 +35,17 @@ namespace Environment.Scripts {
         private bool _isSlamming;
         private Vector3 _femaleTarget;
         private Vector3 _maleTarget;
-
+        
+        private enum MovementAxis {
+            X,
+            Y,
+            Z,
+        }
 
         private bool _isOpen;
         private Vector3 _closedPosOffset;
+        
+        //these initial pos have to be in the open position.
         private Vector3 _initialFemalePosition;
         private Vector3 _initialMalePosition;
         
@@ -66,7 +73,7 @@ namespace Environment.Scripts {
         }
 
         private void Update() {
-            if (!debug) {
+            if (!debug && useDetection) {
                 Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius, detectionLayerMask);
                 foreach (Collider c in hits) {
                     if (c.CompareTag("Player")) {
@@ -85,30 +92,9 @@ namespace Environment.Scripts {
                 HandleDoorFailure();
                 return;
             }
-
-
-            if (_isOpen) {
-                // initial pos is  open pos
-                femaleDoor.localPosition = Vector3.Lerp(femaleDoor.localPosition, (_initialFemalePosition ), doorSpeed * Time.deltaTime);
-                maleDoor.localPosition = Vector3.Lerp(maleDoor.localPosition, (_initialMalePosition ), doorSpeed * Time.deltaTime);
-            }
-            else {
-                _closedPosOffset = new Vector3(0f, 0f, doorCrackOffset);
-
-                femaleDoor.localPosition = Vector3.Lerp(femaleDoor.localPosition, Vector3.zero + _closedPosOffset, doorSpeed * Time.deltaTime);
-                maleDoor.localPosition = Vector3.Lerp(maleDoor.localPosition, Vector3.zero - _closedPosOffset, doorSpeed * Time.deltaTime);
-            }
+            
+            HandleDoor(doorSpeed);
         }
-        
-        // private void BounceDoor(Vector3 femaleTarget, Vector3 maleTarget) {
-        //     float bounce = Mathf.Sin(Time.time * bounceAgressiveness) * openGapFailure; // oscillation
-        //     Vector3 femaleOffset = new Vector3(0f, 0f, bounce);
-        //     Vector3 maleOffset   = new Vector3(0f, 0f, -bounce);
-        //
-        //     femaleDoor.localPosition = Vector3.Lerp(femaleDoor.localPosition, femaleTarget + femaleOffset, doorSpeed * Time.deltaTime);
-        //     maleDoor.localPosition   = Vector3.Lerp(maleDoor.localPosition, maleTarget   + maleOffset,   doorSpeed * Time.deltaTime);
-        // }
-
 
         private void HandleDoorFailure() {
             switch (doorMode) {
@@ -127,9 +113,41 @@ namespace Environment.Scripts {
                     break;
             }   
         }
+
+        private void SetClosedOffsetPositionAlongAxis(ref Vector3 position, float offset) {
+            switch (movementAxis) {
+                case MovementAxis.X:
+                    position = new Vector3(offset, 0f, 0f);
+                    break;
+                case MovementAxis.Y:
+                    position = new Vector3(0f, offset, 0f);
+                    break;
+                case MovementAxis.Z:
+                    position = new Vector3(0f, 0f, offset);
+                    break;
+            }
+        }
+        
+        private Vector3 AddOffsetPositionAlongAxis(Vector3 position, float offset, bool positive = true) {
+            Vector3 newPos = position;
+            float offsetWithSign = positive ? offset : -offset;
+            
+            switch (movementAxis) {
+                case MovementAxis.X:
+                    newPos += new Vector3(offsetWithSign, 0f, 0f);
+                    return newPos;
+                case MovementAxis.Y:
+                    newPos += new Vector3(0f, offsetWithSign, 0f);
+                    return newPos;                
+                case MovementAxis.Z:
+                    newPos += new Vector3(0f, 0f, offsetWithSign);
+                    return newPos;      
+            }
+            return default;
+        }
         
         private void OnDrawGizmos() {  
-            if (!debug) return;
+            if (!debug || !useDetection) return;
             Gizmos.color = _isOpen ? Color.green : Color.red;
             Gizmos.DrawWireSphere(transform.position, detectionRadius);
         }
@@ -141,7 +159,7 @@ namespace Environment.Scripts {
                 maleDoor.localPosition = Vector3.Lerp(maleDoor.localPosition, (_initialMalePosition ), speed * Time.deltaTime);
             }
             else {
-                _closedPosOffset = new Vector3(0f, 0f, doorCrackOffset);
+                SetClosedOffsetPositionAlongAxis(ref _closedPosOffset, doorCrackOffset);
 
                 femaleDoor.localPosition = Vector3.Lerp(femaleDoor.localPosition, Vector3.zero + _closedPosOffset, speed * Time.deltaTime);
                 maleDoor.localPosition = Vector3.Lerp(maleDoor.localPosition, Vector3.zero - _closedPosOffset, speed * Time.deltaTime);
@@ -157,8 +175,9 @@ namespace Environment.Scripts {
             _isSlamming = true;
             float slamDistance = openSlam ? slamDistanceOpen : slamDistanceClosed;
             // overshoot target like it's trying to break through
-            Vector3 femaleOvershoot = femaleTarget + new Vector3(0, 0, slamDistance);
-            Vector3 maleOvershoot   = maleTarget   - new Vector3(0, 0, slamDistance);
+
+            Vector3 femaleOvershoot = AddOffsetPositionAlongAxis(femaleTarget, slamDistance);
+            Vector3 maleOvershoot = AddOffsetPositionAlongAxis(maleTarget, slamDistance, false);
 
             // slam forward
             float t = 0f;
@@ -182,6 +201,10 @@ namespace Environment.Scripts {
             yield return new WaitForSeconds(randomDelay);
             
             _isSlamming = false;
+        }
+
+        public void SwitchDoorState() {
+            _isOpen = !_isOpen;
         }
 
     }

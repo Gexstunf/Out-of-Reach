@@ -1,3 +1,4 @@
+using Characters.Enemies.Scripts;
 using Characters.LifeSupportSystem.PlayerLifeSupport.Utils;
 using UnityEngine;
 
@@ -41,7 +42,26 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
             // Actualizamos solo si cambia
             Context.SetUnconscious(IsUnconscious);
         }
-        
+
+        public override void OnTriggerEnter(Collider other) {
+            if (other.gameObject.CompareTag("Enemy")) {
+                AttackScript attackScript = other.gameObject.GetComponent<AttackScript>();
+
+                if (attackScript != null) {
+                    AttackDamageSO damageSO = attackScript.currentAttackSO;
+                    DamageLife(damageSO.damage);
+                }
+            }
+        }
+
+        public override void OnTriggerExit(Collider other) {
+            //throw new System.NotImplementedException();
+        }
+
+        public override void OnTriggerStay(Collider other) {
+            //throw new System.NotImplementedException();
+        }
+
         public override void UpdateVital() {
             
             if (VitalUtil.RegenTimer < 0f) {

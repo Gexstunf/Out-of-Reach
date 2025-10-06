@@ -13,5 +13,8 @@ namespace Characters.LifeSupportSystem {
         public abstract void UpdateVital();
         public abstract void SetupVital();
         public abstract void UpdateModifiers();
+        public abstract void OnTriggerEnter(Collider other);
+        public abstract void OnTriggerExit(Collider other);
+        public abstract void OnTriggerStay(Collider other);
     }
 }

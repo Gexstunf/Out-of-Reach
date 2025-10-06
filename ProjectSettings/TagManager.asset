@@ -8,6 +8,7 @@ TagManager:
   - Item
   - MovingPlatform
   - Surface
+  - Enemy
   layers:
   - Default
   - TransparentFX

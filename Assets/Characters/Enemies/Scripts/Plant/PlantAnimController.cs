@@ -1,7 +1,8 @@
+using Characters.Animation;
 using UnityEngine;
 
 namespace Characters.Enemies.Scripts.Plant {
-    public class PlantAnimController : MonoBehaviour
+    public class PlantAnimController : AnimationControllerManagerScript<PlantAnimController.EPlantStates>
     {
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         [Header("References")]
@@ -10,18 +11,36 @@ namespace Characters.Enemies.Scripts.Plant {
         [Header("Visualize")]
         public bool attack;
         
-        private static readonly int Attack = Animator.StringToHash("Attack");
-
-        // Update is called once per frame
-        void Update()
+        private static readonly int MediumAttack = Animator.StringToHash("Attack");
+        
+        public enum EPlantStates
         {
-            if (attack) {
-                attack = false;
-                plantAnimator.SetTrigger(Attack);
+            LightAttack,
+            MediumAttack,
+            HeavyAttack,
+            Alive,
+            Dead,
+            Idle,
+        }
+        
+        protected override void SetAnimatorBool(EPlantStates plantState, bool value) {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void SetAnimatorTrigger(EPlantStates plantState) {
+            switch (plantState) {
+                case EPlantStates.LightAttack:
+                    break;
+                case EPlantStates.MediumAttack:
+                    plantAnimator.SetTrigger(MediumAttack);
+                    break; 
+                case EPlantStates.HeavyAttack:
+                    break;
             }
-            else {
-                plantAnimator.ResetTrigger(Attack);
-            }
+        }
+
+        protected override void SetAnimatorFloat(EPlantStates plantState, float value) {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 0}
   maxItemSize: 3
   allowedTypes: 00000000010000000200000003000000
   isOccupied: 0
@@ -163,6 +164,7 @@ Transform:
   - {fileID: 8269725745576451335}
   - {fileID: 2325087342410443093}
   - {fileID: 1850052252973421343}
+  - {fileID: 8919694775969955210}
   - {fileID: 3209259761946142961}
   - {fileID: 8470232773061841535}
   - {fileID: 1988749682781357908}
@@ -247,6 +249,53 @@ MonoBehaviour:
   - {fileID: 6781558227153761533}
   - {fileID: 6130108121566576777}
   slidingDoorPrefab: {fileID: 9100137002563764354, guid: 94e2d33e98ded0d4189a712f0d30643d, type: 3}
+--- !u!1 &8844549289866379324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8919694775969955210}
+  - component: {fileID: 6055415206871171180}
+  m_Layer: 3
+  m_Name: DoorSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8919694775969955210
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8844549289866379324}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7955747525249215874}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6055415206871171180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8844549289866379324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f25e10be9b034d42b6cf7f8671a36e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPoints:
+  - {fileID: 8919694775969955210}
+  slidingDoorPrefab: {fileID: 2252369882159667411, guid: c7591899a5e81554f95916cda53d3acc, type: 3}
 --- !u!1 &8967713739282905269
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,6 +597,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 62257835945078775, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 62257835945078775, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 62257835945078775, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
       propertyPath: m_Name
       value: HabCompuerta
@@ -561,18 +622,14 @@ PrefabInstance:
       value: Indestructible
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: -1621897838066422251, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
+    - {fileID: -3104592082243601818, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8406424324638402407}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4414233349647419755}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6640724045506466787}
   m_SourcePrefab: {fileID: 100100000, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
 --- !u!1 &2864927546232894027 stripped
 GameObject:
@@ -601,50 +658,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 5609841915462563165, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
---- !u!64 &4414233349647419755
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2864927546232894027}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 1
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -9222063561499418146, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
---- !u!64 &6640724045506466787
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2864927546232894027}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 1
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -3612576095284729600, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}
 --- !u!4 &3209259761946142961 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4243c33c47f34f449b64d1127dfd9096, type: 3}

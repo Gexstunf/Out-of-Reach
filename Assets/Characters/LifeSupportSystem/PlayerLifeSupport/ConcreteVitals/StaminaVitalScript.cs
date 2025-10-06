@@ -49,6 +49,15 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
             Context.SetTired(!HasStamina);
         }
 
+        public override void OnTriggerEnter(Collider other) {
+        }
+
+        public override void OnTriggerExit(Collider other) {
+        }
+
+        public override void OnTriggerStay(Collider other) {
+        }
+
         public override void UpdateVital()
         {
             Context.UIManager.DisplayStamina(_stamina);
