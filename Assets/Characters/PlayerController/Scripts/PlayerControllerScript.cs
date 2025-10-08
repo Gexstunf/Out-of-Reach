@@ -91,75 +91,11 @@ public class PlayerControllerScript : MonoBehaviourPun
         _groundCheckOffset = _playerCollider.radius + 0.1f;
     }
 
-    private void Update()
-    {
-        HandleJumping(jumpForce);
-        HandleGroundState();
-    }
-
-    private void FixedUpdate()
-    {
-        Vector3 movementDir = CalculateMovementDirection();
-        Vector3 force = CalculateNewForce(movementDir);
-        CurrentForce = force;
-        _rb.AddForce(force, ForceMode.Force);
-
-        float yRotation = _inputScript.LookInput.x * _lookSenseH;
-        Quaternion deltaRotation = Quaternion.Euler(0f, yRotation, 0f);
-        _rb.MoveRotation(_rb.rotation * deltaRotation);
-    }
-
-    private void LateUpdate()
-    {
-        Vector2 lookInput = _inputScript.LookInput;
-        _rotator.RotateTransform(lookInput);
-        float characterYaw = _rotator.GetYaw();
-        _cameraController.UpdateCameraRotation(lookInput, _playerCamera, characterYaw);
-    }
-
-    private Vector3 CalculateMovementDirection()
-    {
-        Vector3 forwardCam = _playerCamera.transform.forward;
-        Vector3 rightCam = _playerCamera.transform.right;
-
-        Vector3 camForwardXZ = new Vector3(forwardCam.x, 0f, forwardCam.z).normalized;
-        Vector3 camRightXZ = new Vector3(rightCam.x, 0f, rightCam.z).normalized;
-
-        return camRightXZ * _inputScript.MoveInput.x + camForwardXZ * _inputScript.MoveInput.y;
-    }
-
-    private Vector3 CalculateNewForce(Vector3 movementDirection)
-    {
-        float currentForce = _playerStateMachine.IsRunning ? runForce : moveForce;
-        return movementDirection * currentForce;
-    }
-
-    private void HandleJumping(float force)
-    {
-        if (_inputScript.JumpPressed && isGrounded && !_playerStateMachine.Context.IsTired)
-        {
-            _rb.AddForce(Vector3.up * force, ForceMode.Impulse);
-            _rb.AddForce(transform.forward * forwardJumpForce, ForceMode.Impulse);
-            isGrounded = false;
-        }
-    }
-
-    private void HandleGroundState()
-    {
-        isGrounded = IsGrounded();
-    }
-
     private bool IsGrounded()
     {
         Vector3 pos = transform.TransformPoint(_playerCollider.center) - new Vector3(0f, _playerCollider.radius, 0f);
         return Physics.CheckBox(pos, groundCheckBoxSize, Quaternion.identity, groundLayer);
     }
-
-    public void ResetVariables()
-    {
-        _rb.linearDamping = playerDrag;
-    }
-
 
     #region Update logic
 
@@ -206,7 +142,6 @@ public class PlayerControllerScript : MonoBehaviourPun
         _rotator.RotateTransform(lookInput);
             
         float characterYaw = _rotator.GetYaw();
-
         _cameraController.UpdateCameraRotation(lookInput, _playerCamera, characterYaw);
     }
 

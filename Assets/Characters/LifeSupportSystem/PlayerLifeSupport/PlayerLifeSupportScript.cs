@@ -52,7 +52,8 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
         {
             if (photonView.IsMine)
             {
-                _uiManager = GetComponentInChildren<PlayerUIManager>(true);
+                //_uiManager = GetComponentInChildren<PlayerUIManager>(true);
+                _uiManager = GetComponent<PlayerUIManager>();
 
                 if (_uiManager != null)
                 {
@@ -112,14 +113,9 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
 
         private void ValidateReferences()
         {
-            Debug.Assert(_rb != null, "Rigidbody is not assigned.");
-            Debug.Assert(_uiManager != null, "UI Manager is not assigned.");
-            Debug.Assert(_playerInputScript != null, "PlayerInputScript is not assigned.");
-
-            if (_uiManager == null)
-                Debug.LogError("❌ No se encontró PlayerUIManager/UIManagerScript en " + gameObject.name);
-            else
-                Debug.Log("✅ PlayerUIManager/UIManagerScript encontrado en " + gameObject.name);
+            Debug.Assert(_rb != null, "Rigidbody is not assigned. " + gameObject.name);
+            Debug.Assert(_uiManager != null, "UI Manager is not assigned. " + gameObject.name);
+            Debug.Assert(_playerInputScript != null, "PlayerInputScript is not assigned. " + gameObject.name);
         }
     }
 }

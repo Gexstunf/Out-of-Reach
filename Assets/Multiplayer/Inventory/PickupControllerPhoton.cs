@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using Multiplayer.Inventory;
+using Photon.Pun;
 using UnityEngine;
 using UI;
 

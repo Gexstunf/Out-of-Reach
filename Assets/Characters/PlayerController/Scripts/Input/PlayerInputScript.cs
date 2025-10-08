@@ -1,4 +1,5 @@
 using System;
+using Multiplayer.Inventory;
 using UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -119,7 +120,7 @@ namespace Characters.PlayerController.Scripts.Input
             var ui = FindFirstObjectByType<PlayerUIManager>();
             if (ui == null) return;
 
-            // Si mochila está equipada en slot 4 y seleccionada
+            // Si mochila estï¿½ equipada en slot 4 y seleccionada
             if (inv.backpackObj != null && inv.slots[3] != null && inv.activeSlot == 3)
             {
                 ui.ToggleBackpackInventory(inv.backpackObj.GetComponent<BackpackData>(), inv);
