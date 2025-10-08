@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd30862700d3ab04c8502dfb46c13249, type: 3}
-  m_Name: ArmaRota
+  m_Name: SableLaser
   m_EditorClassIdentifier: 
-  prefab: {fileID: 226995063728355445, guid: 60ff2ea7a686bfd4ca3e739d9c5fcd38, type: 3}
+  prefab: {fileID: 1423597036341179202, guid: 141d6879663bd6d4985a023388396644, type: 3}
   itemId: 
   worldPrefabName: 
   heldPrefabName: 
   icon: {fileID: 0}
   displayName: 
   itemType: 0
-  itemSize: 0
-  spawnChance: 0.3
-  value: 200
+  itemSize: 2
+  spawnChance: 0.2
+  value: 1000
   internalSlots:
   - {fileID: 0}
   - {fileID: 0}

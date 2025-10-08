@@ -257,6 +257,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   yOffset: 2
+  stationary: 1
   debug: 1
 --- !u!114 &5478443227735347549
 MonoBehaviour:
@@ -275,6 +276,17 @@ MonoBehaviour:
   currentAttackSO: {fileID: 11400000, guid: 6cf3761a424d34547b233cdc7f798cd7, type: 2}
   allAttacksSO:
   - {fileID: 11400000, guid: 6cf3761a424d34547b233cdc7f798cd7, type: 2}
+  limbColliders:
+  - {fileID: 3767114022304771846}
+  - {fileID: 5651455926504372435}
+  - {fileID: 8937597991302876381}
+  - {fileID: 3928241957023390236}
+  - {fileID: 8199746015858610126}
+  - {fileID: 170736115232047930}
+  - {fileID: 3571564281185059849}
+  - {fileID: 447725144063694090}
+  - {fileID: 5530369984699528609}
+  - {fileID: 2154919922427266035}
   attackCooldownTime: 5
 --- !u!114 &697985179614628486
 MonoBehaviour:
@@ -499,6 +511,10 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 2.2
       objectReference: {fileID: 0}
+    - target: {fileID: 498424417009886892, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 546261796440886702, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_AngularXMotion
       value: 2
@@ -506,6 +522,10 @@ PrefabInstance:
     - target: {fileID: 546261796440886702, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_AngularZMotion
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 650548926800301276, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 1272039245143813907, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_Mass
@@ -527,6 +547,10 @@ PrefabInstance:
       propertyPath: m_AngularYZDrive.positionSpring
       value: 5000
       objectReference: {fileID: 0}
+    - target: {fileID: 1395455841688964024, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 1464570398065795938, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_Mass
       value: 1.4
@@ -543,9 +567,17 @@ PrefabInstance:
       propertyPath: m_AngularZMotion
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2329873687985724199, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 2386614206225293296, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_Mass
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2584390326462302727, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 2733033467210579659, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_AngularXMotion
@@ -562,6 +594,10 @@ PrefabInstance:
     - target: {fileID: 2913021818706134374, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_Mass
       value: 2.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3429286950754535845, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 3546218532888932174, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_Mass
@@ -583,6 +619,10 @@ PrefabInstance:
       propertyPath: m_AngularZMotion
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3742356485834356963, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 3837033883126321250, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_Mass
       value: 1.7
@@ -599,9 +639,17 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4072489478484825021, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 4127398310213387261, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_AngularYMotion
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4182891536445860241, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 4394931435029981397, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_AngularXMotion
@@ -619,6 +667,14 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 2.4
       objectReference: {fileID: 0}
+    - target: {fileID: 5455561925836749040, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5829962169070622529, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 6120428425019829918, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_AngularXMotion
       value: 2
@@ -631,6 +687,10 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6268886277691325613, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 6298519779831387630, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_AngularXMotion
       value: 2
@@ -638,6 +698,10 @@ PrefabInstance:
     - target: {fileID: 6298519779831387630, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_AngularZMotion
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6358099165509690190, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 6425255325903053145, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_AngularXMotion
@@ -687,6 +751,14 @@ PrefabInstance:
       propertyPath: m_AngularZMotion
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7932318092119932931, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 8050465724785980440, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 8393691257740699615, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_Mass
       value: 2.4
@@ -695,6 +767,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: PhysicalRig
       objectReference: {fileID: 0}
+    - target: {fileID: 8508022673662604371, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 8853862902172300087, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 8891736499013053611, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_AngularXMotion
       value: 2
@@ -702,6 +782,14 @@ PrefabInstance:
     - target: {fileID: 8891736499013053611, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
       propertyPath: m_AngularZMotion
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900836227703632315, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 9055995223149028159, guid: d9ec98afea5d3934d9bafa8cc7dcf3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

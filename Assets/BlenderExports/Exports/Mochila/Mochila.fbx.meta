@@ -13,12 +13,12 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Mochila Color
-    second: {fileID: 2800000, guid: ea0cd752ec6dd344784da5053a1ca92c, type: 3}
+    second: {fileID: 2800000, guid: 67a402f396cc9ea40a57b9b8e5834750, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Mochila Roughness
-    second: {fileID: 2800000, guid: 94637d3fd97d6294e90e56b6c179221b, type: 3}
+    second: {fileID: 2800000, guid: 6c733ad1ffb36c243b926a3f1fce9096, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

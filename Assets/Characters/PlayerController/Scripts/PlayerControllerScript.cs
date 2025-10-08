@@ -46,6 +46,7 @@ namespace Characters.PlayerController.Scripts
         public LayerMask groundLayer;
         public Vector3 groundCheckBoxSize = new Vector3(0.5f, 0.15f, 0.5f);
         public bool useOtherRb = true;
+        public bool inZeroG = false;
 
         [Header("Look Settings")]
         [SerializeField] private float _lookSenseH = 10f;
@@ -205,7 +206,7 @@ namespace Characters.PlayerController.Scripts
 
         #region Helper funcs
         
-        public void ResetVariables()
+        public void ResetDrag()
         {
             _rb.linearDamping = playerDrag;
         }

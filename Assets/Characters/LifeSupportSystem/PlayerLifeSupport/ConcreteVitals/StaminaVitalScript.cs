@@ -49,6 +49,9 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
             Context.SetTired(!HasStamina);
         }
 
+        public override void OnCollisionEnter(Collision other) {
+        }
+
         public override void OnTriggerEnter(Collider other) {
         }
 

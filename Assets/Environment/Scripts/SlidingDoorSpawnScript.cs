@@ -6,11 +6,12 @@ namespace Environment.Scripts {
         [Header("References")]
         public Transform[] spawnPoints;
         public GameObject slidingDoorPrefab;
+        public GameObject slidingDoorInstance;
         
         void Start()
         {
             foreach (Transform spawnPoint in spawnPoints) {
-                Instantiate(slidingDoorPrefab, spawnPoint.position, spawnPoint.rotation);
+                slidingDoorInstance = Instantiate(slidingDoorPrefab, spawnPoint.position, spawnPoint.rotation);
             }
         }
     }

@@ -24,8 +24,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                     if (Physics.ComputePenetration(
                             myCol, transform.position, transform.rotation,
                             other, other.transform.position, other.transform.rotation,
-                            out dir, out distance))
-                    {
+                            out dir, out distance)) {
                         if (other.CompareTag("Indestructible"))
                         {
                             if (distance > 0.1f)

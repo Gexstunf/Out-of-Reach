@@ -9,6 +9,7 @@ TagManager:
   - MovingPlatform
   - Surface
   - Enemy
+  - Limb
   layers:
   - Default
   - TransparentFX

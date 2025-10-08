@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Multiplayer.Inventory {
     [CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/Item")]
@@ -12,6 +13,7 @@ namespace Multiplayer.Inventory {
         public string displayName;
         public ItemType itemType;
         public ItemSize itemSize;
+        [Range(0f, 1f)] public float spawnChance = 0.8f;
         public int value;
         public ItemSO[] internalSlots = new ItemSO[4];
     }

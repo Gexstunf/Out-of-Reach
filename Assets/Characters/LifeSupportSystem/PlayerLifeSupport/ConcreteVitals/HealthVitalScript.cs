@@ -43,15 +43,19 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
             Context.SetUnconscious(IsUnconscious);
         }
 
-        public override void OnTriggerEnter(Collider other) {
+        public override void OnCollisionEnter(Collision other) {
             if (other.gameObject.CompareTag("Enemy")) {
-                AttackScript attackScript = other.gameObject.GetComponent<AttackScript>();
-
-                if (attackScript != null) {
-                    AttackDamageSO damageSO = attackScript.currentAttackSO;
+                LimbDamageScript limbScript = other.gameObject.GetComponent<LimbDamageScript>();
+                if (limbScript != null) {
+                    AttackDamageSO damageSO = limbScript.attackScript.currentAttackSO;
+                    Debug.Log("WAS HIT!");
                     DamageLife(damageSO.damage);
                 }
             }
+        }
+
+        public override void OnTriggerEnter(Collider other) {
+
         }
 
         public override void OnTriggerExit(Collider other) {

@@ -12,8 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd30862700d3ab04c8502dfb46c13249, type: 3}
   m_Name: Cristal
   m_EditorClassIdentifier: 
+  prefab: {fileID: 0}
   itemId: 1
   worldPrefabName: '"Resources/PhotonPrefabs/Items/World_Cristal"'
   heldPrefabName: '"Resources/PhotonPrefabs/Items/Held_Cristal"'
   icon: {fileID: 21300000, guid: 792e6ea0316fff4478cf7f1a6264e518, type: 3}
   displayName: Cristal
+  itemType: 0
+  itemSize: 1
+  spawnChance: 0.5
+  value: 300
+  internalSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

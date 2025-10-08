@@ -16,9 +16,11 @@ namespace Environment.Scripts {
         public float detectionRadius = 4f;
         public LayerMask detectionLayerMask;
         public float doorSpeed = 0.2f;
-        public bool open;
-        public bool debug;
         public float doorCrackOffset = 0.05f;
+        
+        [Header("Debug")]
+        [SerializeField] private bool open;
+        public bool debug;
         
         [Header("Settings Failure")] 
         public float doorFailureChance = 0.4f;
@@ -56,6 +58,8 @@ namespace Environment.Scripts {
             Slowed,
             JammedOpen,
         }
+        
+        public bool IsOpen => _isOpen;
         
         void Start() {
             _initialFemalePosition = femaleDoor.localPosition;

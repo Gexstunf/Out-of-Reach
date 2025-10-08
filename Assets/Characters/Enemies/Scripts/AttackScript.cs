@@ -2,7 +2,9 @@ using System;
 using Characters.Animation;
 using Characters.Enemies.Scripts.Plant;
 using Characters.LifeSupportSystem;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Characters.Enemies.Scripts {
     public class AttackScript : MonoBehaviour {
@@ -15,6 +17,7 @@ namespace Characters.Enemies.Scripts {
         [Header("Settings")]
         public AttackDamageSO currentAttackSO;
         [SerializeField] private AttackDamageSO[] allAttacksSO;
+        [SerializeField] private Collider[] limbColliders;
         public float attackCooldownTime = 2f;
 
         private float _cooldownTimer;
@@ -25,6 +28,12 @@ namespace Characters.Enemies.Scripts {
             if (animatorManager == null)
             {
                 Debug.LogError("Missing an - AnimationControllerManagerScript<PlantAnimController.EPlantStates> - component on this GameObject!");
+            }
+
+            foreach (var col in limbColliders) {
+                Debug.Log("Adding limb damage to: " + col.name);
+                var limb = col.gameObject.AddComponent<LimbDamageScript>();
+                limb.attackScript = this;
             }
         }
 

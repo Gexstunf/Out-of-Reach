@@ -14,6 +14,8 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals {
         public override void UpdateModifiers() { }
         
         
+        public override void OnCollisionEnter(Collision other) { }
+        
         public override void OnTriggerEnter(Collider other) { }
         public override void OnTriggerExit(Collider other) { }
         public override void OnTriggerStay(Collider other) { }

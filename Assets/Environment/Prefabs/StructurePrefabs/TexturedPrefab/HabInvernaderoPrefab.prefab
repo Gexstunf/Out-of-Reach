@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemDatabase: {fileID: 0}
-  maxItemSize: 1
+  maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
   isOccupied: 0
 --- !u!1 &3625650278181346340
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemDatabase: {fileID: 0}
-  maxItemSize: 1
+  maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
   isOccupied: 0
 --- !u!1 &6437936929108771199
@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemDatabase: {fileID: 0}
-  maxItemSize: 1
+  maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
   isOccupied: 0
 --- !u!1 &6589599371118072917
@@ -301,7 +301,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemDatabase: {fileID: 0}
-  maxItemSize: 1
+  maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
   isOccupied: 0
 --- !u!1 &7466108815168087139
@@ -349,7 +349,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemDatabase: {fileID: 0}
-  maxItemSize: 1
+  maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
   isOccupied: 0
 --- !u!1 &8047717168448314802
