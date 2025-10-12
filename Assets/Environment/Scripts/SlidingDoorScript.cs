@@ -33,6 +33,9 @@ namespace Environment.Scripts {
         [SerializeField] private float slamSpeed = 5f;       
         [SerializeField] private float minDelay = 0.3f;           // shortest pause
         [SerializeField] private float maxDelay = 1.5f;   
+        
+        [Header("Visualize")]
+        [SerializeField] private bool doorIsNowOpen;
 
         private bool _isSlamming;
         private Vector3 _femaleTarget;
@@ -77,7 +80,7 @@ namespace Environment.Scripts {
         }
 
         private void Update() {
-            if (!debug && useDetection) {
+            if (!debug && useDetection && doorMode == DoorFailureMode.None) {
                 Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius, detectionLayerMask);
                 foreach (Collider c in hits) {
                     if (c.CompareTag("Player")) {
@@ -91,6 +94,7 @@ namespace Environment.Scripts {
                 _isOpen = open;
             }
 
+            doorIsNowOpen = _isOpen;
 
             if (doorMode != DoorFailureMode.None) {
                 HandleDoorFailure();
@@ -103,6 +107,7 @@ namespace Environment.Scripts {
         private void HandleDoorFailure() {
             switch (doorMode) {
                 case DoorFailureMode.JammedOpen:
+                    _isOpen = true;
                     return;
 
                 case DoorFailureMode.FailsToOpen:
@@ -110,6 +115,7 @@ namespace Environment.Scripts {
                     break;
 
                 case DoorFailureMode.FailsToClose:
+                    _isOpen = true;
                     SlamDoor(_initialFemalePosition, _initialMalePosition, false);
                     break;
                 case DoorFailureMode.Slowed:
@@ -182,6 +188,7 @@ namespace Environment.Scripts {
 
             Vector3 femaleOvershoot = AddOffsetPositionAlongAxis(femaleTarget, slamDistance);
             Vector3 maleOvershoot = AddOffsetPositionAlongAxis(maleTarget, slamDistance, false);
+            //_isOpen = openSlam;
 
             // slam forward
             float t = 0f;
@@ -200,7 +207,8 @@ namespace Environment.Scripts {
                 maleDoor.localPosition   = Vector3.Lerp(maleDoor.localPosition,   maleTarget,   t);
                 yield return null;
             }
-            
+            //_isOpen = !openSlam;
+
             float randomDelay = UnityEngine.Random.Range(minDelay, maxDelay);
             yield return new WaitForSeconds(randomDelay);
             

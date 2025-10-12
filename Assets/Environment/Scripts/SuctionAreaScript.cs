@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Multiplayer.TerrainGeneratorScripts.SpaceShips;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -25,11 +26,15 @@ namespace Environment.Scripts {
         
         private List<GameObject> _suckedCharacters = new List<GameObject>();
         
+        private SlidingDoorScript _doorScript;
+        private SlidingDoorSpawnScript _doorSpawnScript;
+        
         
         private SlidingDoorSpawnScript DoorSpawnScript {
             get {
                 if (!doorSpawnScript && useDoorScript && useThisDoorScript) {
                     doorSpawnScript = GetComponent<SlidingDoorSpawnScript>();
+                    _doorSpawnScript = doorSpawnScript;
                     Debug.Log("Suction script cached Door SPAWN script");
                 }
                 return doorSpawnScript;
@@ -40,6 +45,7 @@ namespace Environment.Scripts {
             get {
                 if (doorSpawnScript && useDoorScript && useThisDoorScript && !doorScript) {
                     doorScript = doorSpawnScript.slidingDoorInstance.GetComponent<SlidingDoorScript>();
+                    _doorScript = doorScript;
                     Debug.Log("Suction script cached Door script");
                 }
                 return doorScript;
@@ -49,6 +55,9 @@ namespace Environment.Scripts {
         private void Start() {
             if (useThisTransform)
                 suctionPosition = transform;
+            
+            var doorSpawn = DoorSpawnScript;
+            var door = DoorScript;
         }
 
         private void Update() {
@@ -104,6 +113,12 @@ namespace Environment.Scripts {
             
             Gizmos.color = _isAttractingACharacter ? Color.green : Color.red;
 
+            if (_doorScript) {
+                if (!_doorScript.IsOpen) {
+                    return; //jus leave this ( it throws error in editor mode if the _doorScript dont exist before accessing )
+                }
+            }
+            
             if (useThisTransform)
                 Gizmos.DrawWireSphere(transform.position, suctionRadius);
             else 
