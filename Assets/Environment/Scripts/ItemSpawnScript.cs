@@ -19,6 +19,9 @@ namespace Environment.Scripts {
         private ItemSpawnManagerScript _itemManager;
         private ItemSO _itemData;
         
+        private bool _hasData = true;
+        private bool _failedSpawnChance;
+        
         public void Awake() {
             itemDatabase = Resources.Load<ItemDatabaseSO>("Databases/ItemDatabase");
             _itemManager = new ItemSpawnManagerScript(itemDatabase);
@@ -29,10 +32,18 @@ namespace Environment.Scripts {
             _itemData = _itemManager.ChooseItem(maxItemSize, allowedTypes);
 
             if (_itemData == null) {
-                Debug.Log("No data");
+                _hasData = false;
+                return;
+            }
+            
+            float spawnRandomNum = UnityEngine.Random.Range(0f, 1f);
+
+            if (spawnRandomNum < _itemData.spawnChance) {
+                Instantiate(_itemData.prefab, transform.position, transform.rotation);
             }
             else {
-                Instantiate(_itemData.prefab, transform.position, transform.rotation);
+                Debug.Log("Failed spawn chance");
+                _failedSpawnChance = true;
             }
         }
         
@@ -40,5 +51,11 @@ namespace Environment.Scripts {
             allowedTypes = new ItemType[] { ItemType.Weapon, ItemType.Consumable };
         }
 
+        private void OnDrawGizmos() {
+            if (_hasData && !_failedSpawnChance) return;
+            
+            Gizmos.color = _failedSpawnChance ? Color.yellow : Color.red;
+            Gizmos.DrawWireSphere(transform.position, 0.4f);
+        }
     }
 }

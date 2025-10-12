@@ -72,11 +72,16 @@ public class PlayerControllerScript : MonoBehaviourPun
         _rotator = gameObject.AddComponent<RotatorScript>();
         _cameraController = new CameraControllerScript();
         _cameraController.TieToTransform(_eyesTransform, eyesOffset);
+        
+        //_rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
-        if (useCustomGravity) {
+
+        if (useCustomGravity)
+        {
             _rb.useGravity = false;
-        }   
-        else {
+        }
+        else
+        {
             _rb.useGravity = true;
         }
 
@@ -203,7 +208,7 @@ public class PlayerControllerScript : MonoBehaviourPun
 
     #region Helper funcs
     
-    public void ResetVariables()
+    public void ResetDrag()
     {
         _rb.linearDamping = playerDrag;
     }

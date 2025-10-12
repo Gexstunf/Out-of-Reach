@@ -22,5 +22,12 @@ namespace Characters.LifeSupportSystem {
                 currentVital.UpdateVital();
             }
         }
+
+        public void OnCollisionEnter(Collision other) {
+            foreach (var vital in Vitals) {
+                BaseVitalScript<EVitals> currentVital = vital.Value;
+                currentVital.OnCollisionEnter(other);
+            }
+        }
     }
 }

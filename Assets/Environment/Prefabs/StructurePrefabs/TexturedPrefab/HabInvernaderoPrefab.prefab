@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6926712898450755089}
+  - component: {fileID: 8641244560129769754}
   m_Layer: 3
   m_Name: Enemy-spawn
   m_TagString: Untagged
@@ -25,12 +26,25 @@ Transform:
   m_GameObject: {fileID: 870713419728719709}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.78, y: -3.751, z: 0}
+  m_LocalPosition: {x: 1.78, y: -3.283, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7500236061927494659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8641244560129769754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870713419728719709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 712808e223ec33f49b559212a3fc617b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 6113814242317541465, guid: 18498b340c7c305428ac2643a21ced2e, type: 3}
 --- !u!1 &2174446359702248473
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +120,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxItemSize: 1
+  itemDatabase: {fileID: 0}
+  maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
   isOccupied: 0
 --- !u!1 &3625650278181346340
@@ -153,7 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxItemSize: 1
+  itemDatabase: {fileID: 0}
+  maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
   isOccupied: 0
 --- !u!1 &6437936929108771199
@@ -200,7 +216,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxItemSize: 1
+  itemDatabase: {fileID: 0}
+  maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
   isOccupied: 0
 --- !u!1 &6589599371118072917
@@ -283,7 +300,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxItemSize: 1
+  itemDatabase: {fileID: 0}
+  maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
   isOccupied: 0
 --- !u!1 &7466108815168087139
@@ -330,7 +348,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxItemSize: 1
+  itemDatabase: {fileID: 0}
+  maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
   isOccupied: 0
 --- !u!1 &8047717168448314802

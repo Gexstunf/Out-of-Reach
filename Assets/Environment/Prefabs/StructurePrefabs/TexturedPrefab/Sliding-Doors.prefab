@@ -48,7 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   femaleDoor: {fileID: 3254266269733609133}
   maleDoor: {fileID: 4974988958439523561}
-  openOffset: 2.25
+  movementAxis: 2
+  useDetection: 1
   detectionRadius: 5.5
   detectionLayerMask:
     serializedVersion: 2
@@ -57,6 +58,14 @@ MonoBehaviour:
   open: 0
   debug: 0
   doorCrackOffset: 0.05
+  doorFailureChance: 0.2
+  doorMode: 0
+  slamDistanceOpen: 2
+  slamDistanceClosed: -1
+  slowDoorSpeed: 2
+  slamSpeed: 5
+  minDelay: 0.3
+  maxDelay: 1.5
 --- !u!1001 &3072511109643417926
 PrefabInstance:
   m_ObjectHideFlags: 0

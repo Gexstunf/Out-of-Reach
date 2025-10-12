@@ -20,6 +20,7 @@ MonoBehaviour:
   displayName: 
   itemType: 3
   itemSize: 1
+  spawnChance: 0.3
   value: 40
   internalSlots:
   - {fileID: 0}

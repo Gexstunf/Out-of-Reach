@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Linq;
+using Environment.Scripts;
 
 namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 {
@@ -16,6 +17,10 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
         public GameObject [] roomsPossibles;
         public int rooms;
         public int quantityOfRooms;
+        public AINavMeshScript navMeshScript;
+        
+        
+        
         private int _roomHallwayIntersection;
         private readonly int _maxOfRoomSpawn = 9;
         private readonly int _minOfRoomSpawn = 5;
@@ -120,6 +125,9 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
             {
                 Debug.LogError("Hit maximum iterations in SpawnHallWaysUntilRooms - prevented infinite loop");
             }
+            
+            navMeshScript.BuildNavMesh();
+            
         }
 
 
