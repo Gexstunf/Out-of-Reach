@@ -13,16 +13,20 @@ namespace Characters.StateMachine.PlayerStateMachine.ConcreteStates
 
         public override void EnterState() {
             //Debug.Log("Entering Jumping State");
+            
+            if (!Context.PlayerController.inZeroG) {
+                Context.Input.enabled = false;
+            }
+            
             Context.Rb.linearDamping = 0f;
-            //Context.Input.enabled = false;
             Context.Coordinator.OnTiredChanged += Context.HandleTiredChange; 
             //Context.EnvironmentInteractionStateMachine.enabled = false;
         }
 
         public override void ExitState() {
             //Debug.Log("Exiting Jumping State");
-            Context.PlayerController.ResetVariables();;
-            //Context.Input.enabled = true;
+            Context.PlayerController.ResetDrag();
+            Context.Input.enabled = true;
             Context.Coordinator.OnTiredChanged -= Context.HandleTiredChange;
             //Context.EnvironmentInteractionStateMachine.enabled = true;
         }
