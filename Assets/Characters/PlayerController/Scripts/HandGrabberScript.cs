@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Characters.PlayerController.Scripts.Input;
+using Items.Scripts;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -31,6 +32,7 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private PlayerInputScript input;
         [SerializeField] private Rig grabRig; // optional, to blend weights
         [SerializeField] private Rigidbody rb;
+        [SerializeField] private PlayerInventoryPhoton inventory;
 
         [Header("Left Hand")]
         [SerializeField] private Transform leftHandIKTarget;
@@ -284,6 +286,13 @@ namespace Characters.PlayerController.Scripts
             _currentItem = item;
             _itemHoldingHand = hand;
             hand.HoldingItem = true;
+
+            if (inventory != null && item is ItemGrabbableScript grabbableItem)
+            {
+                inventory.tempHeldObj = grabbableItem.gameObject;
+                inventory.tempItemData = grabbableItem.data;
+                Debug.Log($"[HandGrabber] Agarrado temporalmente {grabbableItem.data.displayName}");
+            }
 
             // return hand to its home and reduce IK weight
             yield return ReachToHomeRoutine(hand);

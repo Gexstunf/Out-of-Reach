@@ -24,6 +24,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
         [SerializeField] private float _staminaRegenRate = 2f;
         [SerializeField] private float _staminaRegenDelay = 5f;
 
+        private bool _isLocalPlayer;
         public PlayerLifeSupportContextScript Context { get; private set; }
 
         public enum EVitals
@@ -50,7 +51,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
 
         private new void Start()
         {
-            if (photonView.IsMine)
+            if (!_isLocalPlayer)
             {
                 //_uiManager = GetComponentInChildren<PlayerUIManager>(true);
                 _uiManager = GetComponent<PlayerUIManager>();
@@ -82,7 +83,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
 
         private void Update()
         {
-            if (!photonView.IsMine) return;
+            if (!_isLocalPlayer) return;
 
             foreach (var vital in Vitals.Values)
                 vital.UpdateModifiers();
@@ -97,6 +98,30 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
             }
         }
 
+        public void Initialize(bool isLocalPlayer)
+        {
+            _isLocalPlayer = isLocalPlayer;
+
+            if (isLocalPlayer)
+            {
+                _uiManager = GetComponent<PlayerUIManager>();
+                if (_uiManager != null)
+                {
+                    Context.SetUIManager(_uiManager);
+                    _uiManager.SetTarget(Context, Vitals);
+                    _uiManager.InitInventory(_inventory);
+                }
+            }
+            else
+            {
+                var uiCanvas = GetComponentInChildren<Canvas>(true);
+                if (uiCanvas != null)
+                    uiCanvas.gameObject.SetActive(false);
+            }
+
+            ValidateReferences();
+        }
+
         private void InitializeVitals()
         {
             Vitals.Add(EVitals.Weight, new WeightVitalScript(Context, EVitals.Weight));
@@ -104,7 +129,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
             Vitals.Add(EVitals.Hunger, new HungerVitalScript(Context, EVitals.Hunger));
             Vitals.Add(EVitals.Health, new HealthVitalScript(Context, EVitals.Health));
 
-            // ⚡ Setup inmediatamente
+            // Setup inmediatamente
             foreach (var vital in Vitals.Values)
                 vital.SetupVital();
 

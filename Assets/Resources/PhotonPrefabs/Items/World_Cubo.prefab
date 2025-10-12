@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: 157976563425968555}
   - component: {fileID: 5861013648618186889}
   - component: {fileID: 7942904390338129471}
-  m_Layer: 7
+  - component: {fileID: 2339242969878710964}
+  m_Layer: 6
   m_Name: World_Cubo
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -137,6 +138,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: bcc905355785a7d47ab54c8832fce1cc, type: 2}
+--- !u!114 &2339242969878710964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2475242948903691023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8dcb26be4a601845885b14a8dd66ad3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabHandle: {fileID: 0}
+  data: {fileID: 0}
+  massScale: 1
+  connectedMassScale: 1
 --- !u!1 &5644797159812453284
 GameObject:
   m_ObjectHideFlags: 0
@@ -149,7 +166,7 @@ GameObject:
   - component: {fileID: 891335205121136377}
   - component: {fileID: 4621126817523245025}
   - component: {fileID: 3306643046950922575}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

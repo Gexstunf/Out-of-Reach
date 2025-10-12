@@ -49,7 +49,7 @@ public class PickupControllerPhoton : MonoBehaviourPun
                     Debug.Log($"[Pickup] Click detectado sobre '{netItem.name}' con ViewID {pv.ViewID}");
                     Debug.Log($"[Pickup] Solicitud de pickup enviada para item '{netItem.name}'");
 
-                    inventory.RequestPickupOnClosest(pv);
+                    //inventory.RequestPickupOnClosest(pv);
                 }
             }
         }

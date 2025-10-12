@@ -41,7 +41,7 @@ public class PlayerControllerScript : MonoBehaviourPun
     [Header("General settings")]
     public LayerMask groundLayer;
     public Vector3 groundCheckBoxSize = new Vector3(0.5f, 0.15f, 0.5f);
-    public bool useOtherRb = true;
+    public bool useOtherRb = false;
 
 
     [Header("Look Settings")]
@@ -58,10 +58,13 @@ public class PlayerControllerScript : MonoBehaviourPun
     
     private float _groundCheckOffset;
 
+    private bool _isLocalPlayer = false;
+
 
     private void Awake()
     {
         if (!useOtherRb) _rb = GetComponent<Rigidbody>();
+        
         _inputScript = GetComponent<PlayerInputScript>();
         _playerCollider = GetComponent<CapsuleCollider>();
         _playerStateMachine = GetComponent<PlayerStateMachineScript>();
@@ -97,11 +100,20 @@ public class PlayerControllerScript : MonoBehaviourPun
         return Physics.CheckBox(pos, groundCheckBoxSize, Quaternion.identity, groundLayer);
     }
 
+    #region IsLocal
+
+    public void SetAsLocalPlayer(bool value)
+    {
+        _isLocalPlayer = value;
+    }
+
+    #endregion
+
     #region Update logic
 
     private void Update()
     {
-        if (!photonView.IsMine) return;
+        if (!_isLocalPlayer) return;
 
         HandleJumping(jumpForce);
         HandleGroundState();
@@ -109,7 +121,7 @@ public class PlayerControllerScript : MonoBehaviourPun
 
     private void FixedUpdate()
     {
-        if (!photonView.IsMine) return;
+        if (!_isLocalPlayer) return;
 
         if (useCustomGravity) {
             ApplyCustomGravity(gravityScale);
@@ -132,8 +144,8 @@ public class PlayerControllerScript : MonoBehaviourPun
 
     private void LateUpdate()
     {
-        if (!photonView.IsMine) return;
-        
+        if (!_isLocalPlayer) return;
+
         visualGravity = Physics.gravity.y;
         if (useCustomGravity) visualGravity = Physics.gravity.y * gravityScale;
 
