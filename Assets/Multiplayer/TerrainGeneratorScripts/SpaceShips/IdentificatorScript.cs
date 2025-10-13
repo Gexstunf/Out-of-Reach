@@ -5,6 +5,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 {
     public class IdentificatorScript : MonoBehaviour
     {
+        public static float PriorityNum;
         public string structureID;
         private void Awake()
         {
