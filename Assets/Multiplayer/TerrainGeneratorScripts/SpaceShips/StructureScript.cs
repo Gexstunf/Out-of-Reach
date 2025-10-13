@@ -4,6 +4,8 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
 {
     public class StructureScript : MonoBehaviour
     {
+        public IdentificatorScript idScript;
+        public IdentificatorScript otherIdScript;
         void Start()
         {
             Collider myCol = GetComponent<Collider>();
@@ -20,13 +22,15 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                 {
                     Vector3 dir;
                     float distance;
+                    idScript = myCol.GetComponent<IdentificatorScript>();
+                    otherIdScript = other.GetComponent<IdentificatorScript>();
                     
                     if (Physics.ComputePenetration(
                             myCol, transform.position, transform.rotation,
                             other, other.transform.position, other.transform.rotation,
                             out dir, out distance))
                     {
-                        if (other.CompareTag("Indestructible"))
+                        if (idScript.uniquePriority > otherIdScript.uniquePriority)
                         {
                             if (distance > 0.1f)
                             {
@@ -34,10 +38,6 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                                 return;
                             }
                         }
-                    }
-                    else
-                    {
-                        gameObject.tag = "Indestructible";
                     }
                 }
             }
