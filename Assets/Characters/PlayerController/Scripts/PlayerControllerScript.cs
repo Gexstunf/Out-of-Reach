@@ -42,6 +42,7 @@ public class PlayerControllerScript : MonoBehaviourPun
     public LayerMask groundLayer;
     public Vector3 groundCheckBoxSize = new Vector3(0.5f, 0.15f, 0.5f);
     public bool useOtherRb = false;
+    public bool inZeroG = false;
 
 
     [Header("Look Settings")]
