@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using Characters.PlayerController.Scripts.Input;
 using Items.Scripts;
@@ -289,10 +289,14 @@ namespace Characters.PlayerController.Scripts
 
             if (inventory != null && item is ItemGrabbableScript grabbableItem)
             {
-                inventory.tempHeldObj = grabbableItem.gameObject;
-                inventory.tempItemData = grabbableItem.data;
-                Debug.Log($"[HandGrabber] Agarrado temporalmente {grabbableItem.data.displayName}");
+                inventory.NotifyItemGrabbed(grabbableItem.data, grabbableItem.gameObject);
+                Debug.Log($" [HandGrabber] Item '{grabbableItem.data.name}' notificado al inventario.");
             }
+            else
+            {
+                Debug.LogWarning("[HandGrabber] No se encontró inventario o ItemGrabbable válido.");
+            }
+
 
             // return hand to its home and reduce IK weight
             yield return ReachToHomeRoutine(hand);

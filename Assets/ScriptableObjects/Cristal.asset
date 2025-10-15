@@ -16,7 +16,7 @@ MonoBehaviour:
   itemId: 1
   worldPrefabName: PhotonPrefabs/Items/World_Cristal
   heldPrefabName: PhotonPrefabs/Items/Held_Cristal
-  icon: {fileID: 21300000, guid: 792e6ea0316fff4478cf7f1a6264e518, type: 3}
+  icon: {fileID: 21300000, guid: 047169ab8816bc64ba4fadbd89dc2ac1, type: 3}
   displayName: Cristal
   itemType: 3
   itemSize: 1

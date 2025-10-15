@@ -16,7 +16,7 @@ MonoBehaviour:
   itemId: 
   worldPrefabName: 
   heldPrefabName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 358ab8b5730ead7429604953c11a9319, type: 3}
   displayName: 
   itemType: 3
   itemSize: 1

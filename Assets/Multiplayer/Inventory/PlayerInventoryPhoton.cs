@@ -76,59 +76,71 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
     [PunRPC]
     public void RPC_SpawnTempHeld(string heldPrefabName, string[] backpackIds)
     {
-        if (!photonView.IsMine) return;
+        Debug.Log($"📥 [RPC_SpawnTempHeld] Recibido RPC en {gameObject.name}, prefab={heldPrefabName}");
 
-        tempHeldPrefabName = heldPrefabName;
-        tempBackpackIds = backpackIds;
-        tempItemData = ItemDatabase.FindByHeldPrefabName(heldPrefabName);
-
-        if (tempItemData == null)
+        if (!photonView.IsMine)
         {
-            Debug.LogError("[TempHeld] No se encontró ItemSO para " + heldPrefabName);
+            Debug.Log($"🚫 [RPC_SpawnTempHeld] Ignorado porque no es mío ({gameObject.name})");
             return;
         }
 
-        Debug.Log($"[TempHeld] Spawning local preview of '{heldPrefabName}'");
+        if (string.IsNullOrEmpty(heldPrefabName))
+        {
+            Debug.LogError("❌ [RPC_SpawnTempHeld] heldPrefabName vacío");
+            return;
+        }
 
+        tempItemData = ItemDatabase.FindByHeldPrefabName(heldPrefabName);
+        if (tempItemData == null)
+        {
+            Debug.LogError($"❌ [RPC_SpawnTempHeld] No se encontró ItemSO para {heldPrefabName}");
+            return;
+        }
+
+        // Busca el prefab en Resources (asegurate que esté ahí)
         GameObject prefab = Resources.Load<GameObject>(heldPrefabName);
         if (prefab == null)
         {
-            Debug.LogError("[TempHeld] No prefab found in Resources with name " + heldPrefabName);
+            Debug.LogError($"❌ [RPC_SpawnTempHeld] No se encontró prefab en Resources: {heldPrefabName}");
             return;
         }
 
-        tempHeldObj = Instantiate(prefab, handSlot.position, handSlot.rotation);
-        tempHeldObj.transform.SetParent(handSlot, false);
+        Debug.Log($"🧱 [RPC_SpawnTempHeld] Instanciando temporal local '{prefab.name}'");
+
+        tempHeldObj = Instantiate(prefab, handSlot.position, handSlot.rotation, handSlot);
         tempHeldObj.transform.localPosition = Vector3.zero;
         tempHeldObj.transform.localRotation = Quaternion.identity;
 
-        var pv = tempHeldObj.GetComponent<PhotonView>();
-        if (pv != null) Destroy(pv);
+        Debug.Log($"✅ [RPC_SpawnTempHeld] Prefab temporal instanciado y parentado a {handSlot.name}");
 
-        var rb = tempHeldObj.GetComponent<Rigidbody>();
-        if (rb != null) { rb.isKinematic = true; rb.useGravity = false; }
-
-        var bd = tempHeldObj.GetComponent<BackpackData>() ?? tempHeldObj.AddComponent<BackpackData>();
-        if (tempBackpackIds != null && tempBackpackIds.Length > 0)
-            bd.SetFromIds(tempBackpackIds);
-        else if (tempItemData.internalSlots != null)
-            bd.internalSlots = tempItemData.internalSlots;
-
-        Debug.Log("[TempHeld] Local temp held setup complete");
-
-        // **Si es mochila, guardamos en slot 4 y lo equipamos**
         if (tempItemData.itemType == ItemType.Backpack)
         {
             slots[3] = tempItemData;
             backpackObj = tempHeldObj;
             activeSlot = 3;
-            Debug.Log("[Inventory] Mochila guardada en slot 4 y equipada en la mano");
+            Debug.Log("💾 [Inventory] Mochila guardada en slot 4 y equipada en la mano");
         }
+
+        Debug.Log("✅ [RPC_SpawnTempHeld] Finalizado correctamente");
     }
+
 
 
     public void PlaceTempHeldInSlot(int slotIndex)
     {
+        Debug.Log($"📦 [PlaceTempHeldInSlot] Intentando guardar tempHeld en slot {slotIndex}");
+        if (tempHeldObj == null)
+        {
+            Debug.LogError("❌ [PlaceTempHeldInSlot] tempHeldObj es null");
+            return;
+        }
+
+        if (tempItemData == null)
+        {
+            Debug.LogError("❌ [PlaceTempHeldInSlot] tempItemData es null");
+            return;
+        }
+
         if (tempHeldObj == null || tempItemData == null) return;
 
         if (tempItemData.itemType == ItemType.Backpack) slotIndex = 3;
@@ -376,16 +388,46 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
 
     public void NotifyItemGrabbed(ItemSO itemData, GameObject worldObj)
     {
-        if (!photonView.IsMine) return;
-        if (tempHeldObj != null) return; // ya hay un temporal
+        Debug.Log($"[NotifyItemGrabbed] photonView.IsMine={photonView.IsMine} para {gameObject.name}");
+        if (!photonView.IsMine)
+        {
+            Debug.LogWarning("[NotifyItemGrabbed] No es mío, se ignora.");
+            return;
+        }
+
+        if (tempHeldObj != null)
+        {
+            Debug.LogWarning("[NotifyItemGrabbed] Ya hay un objeto temporal, se cancela.");
+            return;
+        }
+
+        if (itemData == null || worldObj == null)
+        {
+            Debug.LogError("[NotifyItemGrabbed] Parámetros inválidos (itemData o worldObj nulos)");
+            return;
+        }
+
+        Debug.Log($"[NotifyItemGrabbed] Ejecutando para {itemData.name}, prefab={itemData.heldPrefabName}");
 
         tempItemData = itemData;
         tempHeldObj = worldObj;
 
-        // Desactiva el objeto físico localmente (sin destruirlo aún)
-        worldObj.SetActive(false);
+        // Desactiva localmente el objeto del mundo (sin destruirlo todavía)
+        if (worldObj.activeSelf)
+        {
+            worldObj.SetActive(false);
+            Debug.Log($"[NotifyItemGrabbed] Objeto físico desactivado: {worldObj.name}");
+        }
 
-        // Envía la orden a todos los clientes para spawnear la versión temporal local
+        // Enviar el RPC correctamente con un array vacío
         photonView.RPC(nameof(RPC_SpawnTempHeld), RpcTarget.AllBuffered, itemData.heldPrefabName, new string[0]);
+
+        // Si el jugador es el dueño del objeto físico en Photon, destruirlo en red
+        PhotonView objPV = worldObj.GetComponent<PhotonView>();
+        if (objPV != null && objPV.IsMine)
+        {
+            PhotonNetwork.Destroy(worldObj);
+            Debug.Log($"[NotifyItemGrabbed] Destruido objeto del mundo en red: {worldObj.name}");
+        }
     }
 }
