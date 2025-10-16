@@ -43,7 +43,7 @@ namespace Characters.Enemies.Scripts {
                 }
             }
             else {
-                
+                // non stationary enemy logic
             }
         }
 

@@ -11,11 +11,9 @@ namespace Characters.Enemies.Scripts.Plant {
         [Header("Visualize")]
         public bool attack;
         
-        private static readonly int MediumAttack = Animator.StringToHash("Attack");
-        
         public enum EPlantStates
         {
-            LightAttack,
+            SweepAttack,
             MediumAttack,
             HeavyAttack,
             Alive,
@@ -24,23 +22,15 @@ namespace Characters.Enemies.Scripts.Plant {
         }
         
         protected override void SetAnimatorBool(EPlantStates plantState, bool value) {
-            throw new System.NotImplementedException();
+            plantAnimator.SetBool(plantState.ToString(), value);
         }
 
         protected override void SetAnimatorTrigger(EPlantStates plantState) {
-            switch (plantState) {
-                case EPlantStates.LightAttack:
-                    break;
-                case EPlantStates.MediumAttack:
-                    plantAnimator.SetTrigger(MediumAttack);
-                    break; 
-                case EPlantStates.HeavyAttack:
-                    break;
-            }
+            plantAnimator.SetTrigger(plantState.ToString());
         }
 
         protected override void SetAnimatorFloat(EPlantStates plantState, float value) {
-            throw new System.NotImplementedException();
+            plantAnimator.SetFloat(plantState.ToString(), value);
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Environment.Scripts {
         public LayerMask detectionLayerMask;
         public float doorSpeed = 0.2f;
         public float doorCrackOffset = 0.05f;
+        public bool shouldOpenForEnemies = true;
         
         [Header("Debug")]
         [SerializeField] private bool open;
@@ -82,11 +83,23 @@ namespace Environment.Scripts {
         private void Update() {
             if (!debug && useDetection && doorMode == DoorFailureMode.None) {
                 Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius, detectionLayerMask);
+
+                if (hits == null || hits.Length == 0) {
+                    _isOpen = false;
+                }
+                
                 foreach (Collider c in hits) {
                     if (c.CompareTag("Player")) {
                         _isOpen = true;
                         break;
                     }
+                    
+                    if (c.CompareTag("Enemy") && shouldOpenForEnemies) {
+                        _isOpen = true;
+                        Debug.Log("Enemyyy");
+                        break;
+                    }
+                    
                     _isOpen = false;
                 }
             } 

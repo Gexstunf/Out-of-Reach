@@ -2,8 +2,9 @@ using Characters.ActiveRagdollSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Characters.Enemies.Scripts.Plant {
-    public class PlantActiveRagdollScript : MonoBehaviour {
+namespace Characters.Enemies.Scripts.Bat {
+    public class BatActiveRagdollScript : MonoBehaviour
+    {
     
         [Header("References")] 
         [SerializeField] private ActiveRagdollCoreScript _arCoreScript;
@@ -40,9 +41,9 @@ namespace Characters.Enemies.Scripts.Plant {
                         UseClearance = false,
                         Damper = _lockDamper,
                         Duration = _smoothLockDuration,
-                        AngularXEnd = ConfigurableJointMotion.Locked,
-                        AngularYEnd = ConfigurableJointMotion.Locked,
-                        AngularZEnd = ConfigurableJointMotion.Locked,
+                        AngularXEnd = ConfigurableJointMotion.Free,
+                        AngularYEnd = ConfigurableJointMotion.Free,
+                        AngularZEnd = ConfigurableJointMotion.Free,
                         YMotionStart = ConfigurableJointMotion.Locked,
                     };
                 
