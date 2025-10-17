@@ -97,6 +97,9 @@ namespace Characters.PlayerController.Scripts
             if (grabRig != null) grabRig.weight = 1f;
             if (leftIKConstraint != null) leftIKConstraint.weight = 0f;
             if (rightIKConstraint != null) rightIKConstraint.weight = 0f;
+
+            if (inventory == null)
+                inventory = GetComponent<PlayerInventoryPhoton>();
         }
 
         private void OnDisable()
