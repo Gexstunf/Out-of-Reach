@@ -73,8 +73,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -959.8, y: -619.2}
-  m_SizeDelta: {x: 160, y: 50.5}
+  m_AnchoredPosition: {x: -550, y: -619}
+  m_SizeDelta: {x: 1055.57, y: 50.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &555367571643855928
 CanvasRenderer:
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 36
-  m_CharacterLimit: 0
+  m_CharacterLimit: 60
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -208,15 +208,15 @@ MonoBehaviour:
   m_ReadOnly: 0
   m_RichText: 1
   m_GlobalFontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_OnFocusSelectAll: 1
-  m_ResetOnDeActivation: 1
+  m_OnFocusSelectAll: 0
+  m_ResetOnDeActivation: 0
   m_KeepTextSelectionVisible: 0
   m_RestoreOriginalTextOnEscape: 1
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   isAlert: 0
   m_InputValidator: {fileID: 0}
-  m_ShouldActivateOnSelect: 1
+  m_ShouldActivateOnSelect: 0
 --- !u!1 &3008250207540780995
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,7 +336,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outputText: {fileID: 8137292888411273269}
   inputField: {fileID: 23718815033969572}
-  prefixText: {fileID: 7072006786535311334}
+  prefixText: '>'
+  cursorChar: '|'
+  cursorBlinkRate: 0.5
+  userName: root
+  dir: /.
 --- !u!1 &4364133301170762054
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,7 +407,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enter text...
+  m_text: '
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -927,8 +933,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1088, y: -385}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -169, y: 611}
+  m_SizeDelta: {x: 2025, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8455491532983309634
 CanvasRenderer:
@@ -958,9 +964,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'output
-
-'
+  m_text: type "help" for instructions
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
