@@ -25,17 +25,14 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                     Vector3 dir;
                     float distance;
                     
+                    otherIdScript = other.GetComponent<IdentificatorScript>();
+                    
                     if (Physics.ComputePenetration(
                             myCol, transform.position, transform.rotation,
                             other, other.transform.position, other.transform.rotation, 
                             out dir, out distance))
-                            otherIdScript = other.GetComponent<IdentificatorScript>();
                     {
-                        if (idScript.uniquePriority > otherIdScript.uniquePriority && distance > 0.1f)
-                        {
-                            Destroy(gameObject);
-                            return;
-                        }
+                        
                     }
                 }
             }
