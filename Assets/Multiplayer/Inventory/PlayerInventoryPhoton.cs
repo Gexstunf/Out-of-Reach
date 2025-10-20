@@ -4,6 +4,7 @@ using UnityEngine;
 using UI;
 using Characters.PlayerController.Scripts.Input;
 using Multiplayer.Inventory;
+using Characters.PlayerController.Scripts;
 
 public class PlayerInventoryPhoton : MonoBehaviourPun
 {
@@ -50,7 +51,7 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
 
     private void SpawnHeldItem(string prefabName, Transform parentSlot)
     {
-        if (string.IsNullOrEmpty(prefabName) || parentSlot == null) return;
+        if (string.IsNullOrEmpty(prefabName)) return;
 
         if (currentHeldNetworkObj != null)
         {
@@ -59,19 +60,49 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             currentHeldNetworkObj = null;
         }
 
-        GameObject held = PhotonNetwork.Instantiate(prefabName, parentSlot.position, parentSlot.rotation);
+        // spawn ligeramente delante del jugador
+        Vector3 spawnPos = transform.position + transform.forward * 0.7f + Vector3.up * 1.3f;
+        Quaternion spawnRot = transform.rotation;
+
+        GameObject held = PhotonNetwork.Instantiate(prefabName, spawnPos, spawnRot);
         currentHeldNetworkObj = held;
-        currentHeldViewId = held.GetComponent<PhotonView>().ViewID;
+        var pv = held.GetComponent<PhotonView>();
+        currentHeldViewId = pv != null ? pv.ViewID : -1;
 
-        held.transform.SetParent(parentSlot, false);
-        held.transform.localPosition = Vector3.zero;
-        held.transform.localRotation = Quaternion.identity;
+        // Si vienen solicitud para parentar a la "espalda", lo parentamos; para "mano" NO parentamos
+        if (parentSlot != null && parentSlot == backSlot)
+        {
+            held.transform.SetParent(parentSlot, false);
+            held.transform.localPosition = Vector3.zero;
+            held.transform.localRotation = Quaternion.identity;
+            // sincroniza RPC indicando back
+            photonView.RPC(nameof(RPC_AttachItemToPlayer), RpcTarget.AllBuffered, currentHeldViewId, photonView.ViewID, "back");
+        }
+        else
+        {
+            // no parentear en mano: sólo avisamos en red que el item está "en mano" para representación si hace falta
+            photonView.RPC(nameof(RPC_AttachItemToPlayer), RpcTarget.AllBuffered, currentHeldViewId, photonView.ViewID, "hand");
+        }
 
+        // Asegurarse que tenga Rigidbody interactivo (no kinematic) para que HandGrabber pueda crear joint y moverlo
         var rb = held.GetComponent<Rigidbody>();
-        if (rb != null) { rb.isKinematic = true; rb.useGravity = false; }
+        if (rb != null) { rb.isKinematic = false; rb.useGravity = true; }
 
-        photonView.RPC(nameof(RPC_AttachItemToPlayer), RpcTarget.AllBuffered, currentHeldViewId, photonView.ViewID, parentSlot == handSlot ? "hand" : "back");
+        // Actualizar UI
+        playerUI?.UpdateInventoryUI();
+
+        // --- HANDGRABBER HOOK: pedir al grabber que lo agarre físicamente ---
+        var grabber = GetComponent<HandGrabberScript>();
+        if (grabber != null)
+        {
+            var grabbable = held.GetComponent<IGrabbableScript>();
+            if (grabbable != null)
+            {
+                grabber.GrabNetworkedObject(held);
+            }
+        }
     }
+
 
     [PunRPC]
     public void RPC_SpawnTempHeld(string heldPrefabName, string[] backpackIds)
@@ -97,7 +128,6 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             return;
         }
 
-        // Busca el prefab en Resources (asegurate que esté ahí)
         GameObject prefab = Resources.Load<GameObject>(heldPrefabName);
         if (prefab == null)
         {
@@ -105,44 +135,25 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             return;
         }
 
-        Debug.Log($"🧱 [RPC_SpawnTempHeld] Instanciando temporal local '{prefab.name}'");
+        // Determinar posición de spawn cerca de la mano
+        Vector3 handHeight = transform.position + Vector3.up * 1.0f; // ajustar según tu rig
+        Vector3 spawnPos = handHeight + transform.forward * 0.5f;
 
-        tempHeldObj = Instantiate(prefab, handSlot.position, handSlot.rotation, handSlot);
-        tempHeldObj.transform.localPosition = Vector3.zero;
-        tempHeldObj.transform.localRotation = Quaternion.identity;
+        tempHeldObj = Instantiate(prefab, spawnPos, transform.rotation);
 
-        Debug.Log($"✅ [RPC_SpawnTempHeld] Prefab temporal instanciado y parentado a {handSlot.name}");
-
-        if (tempItemData.itemType == ItemType.Backpack)
+        // Lo agarra físicamente el HandGrabber usando el flujo networked
+        var grabber = GetComponent<HandGrabberScript>();
+        if (grabber != null)
         {
-            slots[3] = tempItemData;
-            backpackObj = tempHeldObj;
-            activeSlot = 3;
-            Debug.Log("💾 [Inventory] Mochila guardada en slot 4 y equipada en la mano");
+            grabber.GrabNetworkedObject(tempHeldObj);
         }
 
-        Debug.Log("✅ [RPC_SpawnTempHeld] Finalizado correctamente");
+        Debug.Log($"✅ [RPC_SpawnTempHeld] Prefab temporal instanciado y agarrado físicamente ({prefab.name})");
     }
-
-
 
     public void PlaceTempHeldInSlot(int slotIndex)
     {
-        Debug.Log($"📦 [PlaceTempHeldInSlot] Intentando guardar tempHeld en slot {slotIndex}");
-        if (tempHeldObj == null)
-        {
-            Debug.LogError("❌ [PlaceTempHeldInSlot] tempHeldObj es null");
-            return;
-        }
-
-        if (tempItemData == null)
-        {
-            Debug.LogError("❌ [PlaceTempHeldInSlot] tempItemData es null");
-            return;
-        }
-
         if (tempHeldObj == null || tempItemData == null) return;
-
         if (tempItemData.itemType == ItemType.Backpack) slotIndex = 3;
 
         if (slots[slotIndex] != null) DropCurrent(slotIndex);
@@ -152,13 +163,13 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         if (tempItemData.itemType == ItemType.Backpack)
         {
             DestroyTempHeldLocal();
-            SpawnHeldItem(tempItemData.heldPrefabName, backSlot);
+            SpawnHeldItem(tempItemData.heldPrefabName, null);
             backpackObj = currentHeldNetworkObj;
         }
         else
         {
             DestroyTempHeldLocal();
-            SpawnHeldItem(tempItemData.heldPrefabName, handSlot);
+            SpawnHeldItem(tempItemData.heldPrefabName, null);
             activeSlot = slotIndex;
         }
 
@@ -235,7 +246,7 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             return;
         }
 
-        SpawnHeldItem(itemData.heldPrefabName, handSlot);
+        SpawnHeldItem(itemData.heldPrefabName, null);
         activeSlot = slotIndex;
         playerUI?.UpdateInventoryUI();
     }
@@ -255,28 +266,8 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
-        Vector3 dropPos = handSlot.position + transform.forward * 1.2f + Vector3.up * 0.3f;
+        Vector3 dropPos = transform.position + transform.forward * 1.2f + Vector3.up * 0.3f;
 
-        // Mochila en mano
-        if (backpackObj != null && backpackObj.transform.parent == handSlot)
-        {
-            ItemSO itemData = slots[3];
-            var bd = backpackObj.GetComponent<BackpackData>();
-            string[] ids = bd != null ? bd.GetItemIds() : new string[4];
-
-            PhotonNetwork.Destroy(backpackObj);
-            backpackObj = null;
-
-            GameObject worldObj = PhotonNetwork.Instantiate(itemData.worldPrefabName, dropPos, Quaternion.identity);
-            worldObj.GetComponent<PhotonView>()?.RPC("RPC_InitContents", RpcTarget.AllBuffered, (object)ids);
-
-            slots[3] = null;
-            activeSlot = -1;
-            playerUI?.UpdateInventoryUI();
-            return;
-        }
-
-        // Item normal
         if (currentHeldNetworkObj != null)
         {
             ItemSO itemData = slots[slotIndex];
@@ -293,6 +284,13 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             slots[slotIndex] = null;
             activeSlot = -1;
             playerUI?.UpdateInventoryUI();
+
+            // Soltar físicamente
+            var grabber = GetComponent<Characters.PlayerController.Scripts.HandGrabberScript>();
+            if (grabber != null)
+            {
+                grabber.OnItemReleased();
+            }
         }
     }
 
@@ -359,7 +357,7 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
     [PunRPC]
     void RPC_AttachItemToPlayer(int itemViewID, int playerViewID, string slot)
     {
-        StartCoroutine(AttachWhenReady(itemViewID, playerViewID, slot));
+        StartCoroutine(AttachWhenReady(itemViewID, playerViewID, "hand"));
     }
 
     private IEnumerator AttachWhenReady(int itemViewID, int playerViewID, string slot)
@@ -375,16 +373,27 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         });
 
         var inv = playerPV.GetComponent<PlayerInventoryPhoton>();
-        Transform parent = slot == "hand" ? inv.handSlot : inv.backSlot;
-
-        if (parent != null)
+        if (inv == null)
         {
-            itemPV.transform.SetParent(parent, false);
+            yield break;
+        }
+
+        // Si es "back", parentamos al backSlot para la representación en espalda.
+        if (slot == "back" && inv.backSlot != null)
+        {
+            itemPV.transform.SetParent(inv.backSlot, false);
             itemPV.transform.localPosition = Vector3.zero;
             itemPV.transform.localRotation = Quaternion.identity;
-            Debug.Log($"[AttachItem] {itemPV.name} parented to {slot} of {playerPV.name}");
+            Debug.Log($"[AttachItem] {itemPV.name} parented to back of {playerPV.name}");
+        }
+        else
+        {
+            // Si es "hand" NO parentear; mantener en mundo. El HandGrabber local del player debe ya haber agarrado
+            // la instancia local o la instancia puede ser agarrada por el grabber cuando sea necesario.
+            Debug.Log($"[AttachItem] {itemPV.name} left unparented for hand on {playerPV.name}");
         }
     }
+
 
     public void NotifyItemGrabbed(ItemSO itemData, GameObject worldObj)
     {

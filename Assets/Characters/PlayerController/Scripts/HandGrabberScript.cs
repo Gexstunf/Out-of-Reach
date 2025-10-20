@@ -386,6 +386,41 @@ namespace Characters.PlayerController.Scripts
             _currentItem = null;
         }
 
+        /// <summary>
+        /// Pide al HandGrabber que agarre una instancia ya existente en escena (por ejemplo, creada por Photon).
+        /// Usa la mano más cercana al objeto (o la derecha por defecto) y lanza el flujo de ItemGrabFlow
+        /// para que la mano haga el reach & grab exactamente como si el jugador la hubiera tomado desde el mundo.
+        /// </summary>
+        public void GrabNetworkedObject(GameObject networkedObject)
+        {
+            if (networkedObject == null) return;
+            var grabbable = networkedObject.GetComponent<IGrabbableScript>();
+            if (grabbable == null) return;
+
+            // decidir mano: preferencia por la mano que esté libre y más cercana al objeto
+            HandData chosen = null;
+            float leftDist = (_leftHand != null && _leftHand.IKTarget != null) ? Vector3.Distance(_leftHand.IKTarget.position, networkedObject.transform.position) : float.MaxValue;
+            float rightDist = (_rightHand != null && _rightHand.IKTarget != null) ? Vector3.Distance(_rightHand.IKTarget.position, networkedObject.transform.position) : float.MaxValue;
+
+            // preferir mano más cercana si está libre, si no, la otra
+            if (_rightHand != null && !_rightHand.IsBusy && !_rightHand.HoldingItem) chosen = _rightHand;
+            if (chosen == null && _leftHand != null && !_leftHand.IsBusy && !_leftHand.HoldingItem) chosen = _leftHand;
+
+            // si ambas ocupadas, escoger la más cercana
+            if (chosen == null)
+            {
+                chosen = (leftDist <= rightDist) ? _leftHand : _rightHand;
+            }
+
+            // Si sigue nulo, fallback a derecha
+            if (chosen == null) chosen = _rightHand ?? _leftHand;
+
+            // Asegurarse de parar cualquier cosa y arrancar el flujo como si el jugador hubiera reachado al objeto
+            StopAndClearHand(chosen);
+            StartHandCoroutine(chosen, ItemGrabFlow(grabbable, networkedObject.transform.position, chosen));
+        }
+
+
         // -------------------------
         // IK smoothing / visuals
         // -------------------------
