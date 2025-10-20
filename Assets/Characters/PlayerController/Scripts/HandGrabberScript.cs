@@ -45,7 +45,7 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private TwoBoneIKConstraint rightIKConstraint;
 
         // --- internal state ---
-        private IGrabbableScript _currentItem = null;     // only one item in the world can be held at once
+        public IGrabbableScript currentItem = null;     // only one item in the world can be held at once
         private HandData _itemHoldingHand = null;         // which hand holds the item
 
         private HandData _leftHand;
@@ -108,15 +108,15 @@ namespace Characters.PlayerController.Scripts
             StopAndClearHand(_leftHand);
             StopAndClearHand(_rightHand);
 
-            if (_currentItem != null)
+            if (currentItem != null)
             {
                 // find which hand held it and release cleanly
                 if (_itemHoldingHand != null)
                 {
-                    _currentItem.Release();
+                    currentItem.Release();
                     _itemHoldingHand.HoldingItem = false;
                 }
-                _currentItem = null;
+                currentItem = null;
                 _itemHoldingHand = null;
             }
         }
@@ -128,7 +128,7 @@ namespace Characters.PlayerController.Scripts
             ProcessHandInput(_rightHand, input.RightClickPressed);
 
             // global release: if no buttons pressed and an item is held, release item
-            if (!input.LeftClickPressed && !input.RightClickPressed && _currentItem != null)
+            if (!input.LeftClickPressed && !input.RightClickPressed && currentItem != null)
             {
                 OnItemReleased();
             }
@@ -170,7 +170,7 @@ namespace Characters.PlayerController.Scripts
             if (!isPressed && wasPressed)
             {
                 // If this hand holds the global item -> release the item
-                if (hand.HoldingItem && _currentItem != null)
+                if (hand.HoldingItem && currentItem != null)
                 {
                     OnItemReleased();
                 }
@@ -214,7 +214,7 @@ namespace Characters.PlayerController.Scripts
                 if (grabbable != null && IsItemGrabbable(grabbable))
                 {
                     // only one item allowed
-                    if (_currentItem == null)
+                    if (currentItem == null)
                     {
                         // stop any running hand coroutine and start grab flow
                         StopAndClearHand(hand);
@@ -286,7 +286,7 @@ namespace Characters.PlayerController.Scripts
             item.Grab(hand.Rb, grabPoint);
 
             // register global item owner
-            _currentItem = item;
+            currentItem = item;
             _itemHoldingHand = hand;
             hand.HoldingItem = true;
 
@@ -370,20 +370,20 @@ namespace Characters.PlayerController.Scripts
 
         public void OnItemReleased()
         {
-            if (_currentItem == null) return;
+            if (currentItem == null) return;
 
             // find the hand that holds it
             if (_itemHoldingHand != null)
             {
                 // let grabbable handle release
-                _currentItem.Release();
+                currentItem.Release();
 
                 // clear hand state
                 _itemHoldingHand.HoldingItem = false;
                 _itemHoldingHand = null;
             }
 
-            _currentItem = null;
+            currentItem = null;
         }
 
         /// <summary>

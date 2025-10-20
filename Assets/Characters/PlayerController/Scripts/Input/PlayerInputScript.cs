@@ -25,6 +25,9 @@ namespace Characters.PlayerController.Scripts.Input
         public bool LeftClickPressed { get; private set; }
         public bool RightClickPressed { get; private set; }
 
+        public bool InventoryInteraction {  get; private set; }
+        public int InventoryIndex { get; private set; }
+
         #endregion
         
         #region Awake logic
@@ -52,6 +55,7 @@ namespace Characters.PlayerController.Scripts.Input
         void LateUpdate()
         {
             JumpPressed = false;
+            InventoryInteraction = false;
         }
 
         #endregion
@@ -189,21 +193,36 @@ namespace Characters.PlayerController.Scripts.Input
 
             if (Keyboard.current.digit1Key.wasPressedThisFrame)
             {
+
+                InventoryInteraction = true;
+                InventoryIndex = 0;
+
                 if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(0);
                 else inv.EquipFromSlot(0);
             }
             else if (Keyboard.current.digit2Key.wasPressedThisFrame)
             {
+                InventoryInteraction = true;
+                InventoryIndex = 1;
+
                 if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(1);
                 else inv.EquipFromSlot(1);
             }
             else if (Keyboard.current.digit3Key.wasPressedThisFrame)
             {
+
+                InventoryInteraction = true;
+                InventoryIndex = 2;
+
                 if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(2);
                 else inv.EquipFromSlot(2);
             }
             else if (Keyboard.current.digit4Key.wasPressedThisFrame)
             {
+
+                InventoryInteraction = true;
+                InventoryIndex = 3;
+
                 if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(3);
                 else inv.EquipFromSlot(3);
             }
