@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace UI.Scripts {
     public class TerminalControllerScript : MonoBehaviour
@@ -20,22 +21,30 @@ namespace UI.Scripts {
 
         
         [Header("Settings")] 
-        public string userName = "unknown_user";
-        public string dir = "/???/.";
+        public string userName = "subject_5";
+        public string dir = "Z:/project_61/exp_4";
+        
+        public List<CommandSO> allCommandSOs;
 
-        private List<string> _commandHistory = new List<string>();
+        [SerializeField] private bool _hasToSpecialCommand;
+        
+        public List<string> CommandHistory { get; private set; } = new List<string>();
         private int _historyIndex = -1;
-        private Dictionary<string, System.Action<string[]>> _commands = new Dictionary<string, System.Action<string[]>>();
+        
+        private Dictionary<string, CommandSO> _availableCommands = new Dictionary<string, CommandSO>();
+        [SerializeField] private Dictionary<string, CommandSO> _specialCommands = new Dictionary<string, CommandSO>();
+
 
         private void Start()
         {
             Debug.Log("Starting TerminalControllerScript");
 
-            _commands.Add("help", Cmd_Help);
-            _commands.Add("clear", Cmd_Clear);
-            _commands.Add("list", Cmd_List);
-            _commands.Add("exit", Cmd_Exit);
-            _commands.Add("buy", Cmd_Buy);
+            if (allCommandSOs != null) {
+                foreach (var cmd in allCommandSOs) {
+                    _availableCommands.Add(cmd.commandName, cmd);
+                    Debug.Log(_availableCommands[cmd.commandName].commandName);
+                }
+            }
             
             inputField.text = "";
         }
@@ -114,25 +123,39 @@ namespace UI.Scripts {
             
             input = RemoveCursor(input);
 
-            _commandHistory.Add(input);
-            _historyIndex = _commandHistory.Count;
+            CommandHistory.Add(input);
+            _historyIndex = CommandHistory.Count;
 
-            AppendOutput($"{prefixText}{userName}{dir}: {input}", false);
-
+            AppendOutput($"\n{prefixText}{dir}: {input}", false);
+            
+            input = input.ToLower();
             string[] parts = input.Split(' ');
-            string cmd = parts[0].ToLower();
+            
+            string cmd = parts[0];
             string[] args = parts.Skip(1).ToArray();
 
-            if (_commands.ContainsKey(cmd))
-                _commands[cmd].Invoke(args);
-            else
-                AppendOutput($"Unknown command: {cmd}", false);
-        }
+            bool success;
 
+            if (_hasToSpecialCommand) {
+                success = ExecuteSpecialCommand(cmd, args); 
+                Debug.Log(success ? "Successfully executed special command." : "Failed to execute special command.");
+            }
+            else {
+                success = ExecuteNormalCommand(cmd, args);  
+            }
+            
+
+            if (!success) {
+                Debug.Log($"input string: {input}");
+                string state = _hasToSpecialCommand ? "Invalid" : "Unknown";
+                AppendOutput($"{state} command: {cmd}", false);
+                return;
+            }
+        }
 
         private string RemoveCursor(string input) {
             if (input.Contains(cursorChar)) {
-                return input = input.Replace(cursorChar, ""); // only remove visual cursor
+                return input.Replace(cursorChar, ""); // only remove visual cursor
             }
             
             return input;
@@ -141,7 +164,7 @@ namespace UI.Scripts {
         private void AutoComplete()
         {
             string current = inputField.text.ToLower();
-            var matches = _commands.Keys.Where(k => k.StartsWith(current)).ToList();
+            var matches = _availableCommands.Keys.Where(k => k.StartsWith(current)).ToList();
 
             if (matches.Count >= 1)
             {
@@ -152,15 +175,47 @@ namespace UI.Scripts {
 
         private void NavigateHistory(int direction)
         {
-            _historyIndex = Mathf.Clamp(_historyIndex + direction, 0, _commandHistory.Count - 1);
-            if (_commandHistory.Count > 0)
+            _historyIndex = Mathf.Clamp(_historyIndex + direction, 0, CommandHistory.Count - 1);
+            if (CommandHistory.Count > 0)
             {
-                inputField.text = _commandHistory[_historyIndex];
+                inputField.text = CommandHistory[_historyIndex];
                 inputField.caretPosition = inputField.text.Length;
             }
         }
 
-        private void AppendOutput(string text, bool indent = true)
+        public void CloseTerminal() { }
+
+        private bool ExecuteNormalCommand(string cmd, string[] args ) {
+            if (_availableCommands.ContainsKey(cmd)) {
+                _availableCommands[cmd].Execute(args, this);
+                Debug.Log("Executing normal command...");
+                return true;
+            }
+            Debug.Log("Could not find normal command...");
+            return false;
+        }
+
+        private bool ExecuteSpecialCommand(string cmd, string[] args) {
+
+            if (_specialCommands.ContainsKey(cmd)) {
+                _specialCommands[cmd].Execute(args, this);
+                Debug.Log("Executing special command...");
+                CleanUpSpecialCommands();
+                return true;
+            }
+            Debug.Log("Could not find special command...");
+            return false;
+        }
+
+        private void CleanUpSpecialCommands() {
+            foreach (var specialCmd in _specialCommands) {
+                specialCmd.Value.commandItemsPrefabs = null;
+            }
+            _specialCommands.Clear();
+            _hasToSpecialCommand = false;
+        }
+
+        public void AppendOutput(string text, bool indent = true)
         {
             if (indent) {
                 outputText.text += "\n   " + text;
@@ -170,10 +225,20 @@ namespace UI.Scripts {
             }
         }
 
-        private void Cmd_Help(string[] args) => AppendOutput("Available: " + string.Join(", ", _commands.Keys));
-        private void Cmd_Clear(string[] args) => outputText.text = "";
-        private void Cmd_List(string[] args) => AppendOutput("Items: pistol($100), ammo($20), medkit($50)");
-        private void Cmd_Exit(string[] args) => AppendOutput("Closing terminal...");
-        private void Cmd_Buy(string[] args) => AppendOutput(args.Length == 0 ? "Usage: buy <item>" : $"Attempting purchase: {args[0]}");
+        public void AddSpecialCommand(string commandName, CommandSO command) {
+            _specialCommands.Add(commandName, command);
+        }
+
+        public void ClearOutput() {
+            outputText.text = "";
+        }
+
+        public void SetRequiredCommandState(bool shouldDoSpecialCommand) {
+            _hasToSpecialCommand = shouldDoSpecialCommand;
+        }
+        
+        public List<CommandSO> AllAvailableCommands() {
+            return allCommandSOs;
+        }
     }
 }
