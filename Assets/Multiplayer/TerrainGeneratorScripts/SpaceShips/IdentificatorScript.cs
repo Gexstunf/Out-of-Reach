@@ -14,7 +14,6 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                 structureID = Guid.NewGuid().ToString();
             PriorityNum += 0.1f;
             uniquePriority = PriorityNum;
-            Debug.Log(uniquePriority);
         }
 
         void Start()

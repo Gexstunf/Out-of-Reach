@@ -15,6 +15,8 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                 myCol.bounds.extents,
                 transform.rotation
             );
+            
+            idScript = myCol.GetComponent<IdentificatorScript>();
 
             foreach (Collider other in others)
             {
@@ -22,21 +24,17 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                 {
                     Vector3 dir;
                     float distance;
-                    idScript = myCol.GetComponent<IdentificatorScript>();
-                    otherIdScript = other.GetComponent<IdentificatorScript>();
                     
                     if (Physics.ComputePenetration(
                             myCol, transform.position, transform.rotation,
-                            other, other.transform.position, other.transform.rotation,
+                            other, other.transform.position, other.transform.rotation, 
                             out dir, out distance))
+                            otherIdScript = other.GetComponent<IdentificatorScript>();
                     {
-                        if (idScript.uniquePriority > otherIdScript.uniquePriority)
+                        if (idScript.uniquePriority > otherIdScript.uniquePriority && distance > 0.1f)
                         {
-                            if (distance > 0.1f)
-                            {
-                                Destroy(gameObject);
-                                return;
-                            }
+                            Destroy(gameObject);
+                            return;
                         }
                     }
                 }
