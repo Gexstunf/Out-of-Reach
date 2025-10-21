@@ -4,15 +4,17 @@ using Items.Scripts;
 using UnityEngine;
 using Photon.Pun;
 using Multiplayer.Inventory;
+using System.Collections.Generic;
 
 public class InventoryControllerScript : MonoBehaviourPun
 {
     [Header("References")]
-    [SerializeField] private HandGrabberScript handGrabber;
+    [SerializeField] private HandGrabberScript _handGrabber;
+    [SerializeField] private PhotonObjectManagerScript _photonObjManager;
 
     public PlayerInputScript input;
     public GameObject[] inventory;
-    public ItemSO[] itemSOs;
+    public Dictionary<GameObject, ItemSO> itemSOs;
 
 
     private PhotonView _photonView;
@@ -20,7 +22,7 @@ public class InventoryControllerScript : MonoBehaviourPun
     public void Awake()
     {
         _photonView = GetComponent<PhotonView>();
-        handGrabber = GetComponent<HandGrabberScript>();
+        _handGrabber = GetComponent<HandGrabberScript>();
         input = GetComponent<PlayerInputScript>();
     }
 
@@ -28,12 +30,12 @@ public class InventoryControllerScript : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
-        if (input.InventoryInteraction && handGrabber.currentItem != null)
+        if (input.InventoryInteraction && _handGrabber.currentItem != null)
         {
             // handGrabber.currentItem =   IGrabbableScript  ( a generic grabbable class )
             //ItemGrabbableScript itemGrabbable = GetComponent<>();
 
-            ItemGrabbableScript itemGrabbable = handGrabber.currentItem as ItemGrabbableScript;
+            ItemGrabbableScript itemGrabbable = _handGrabber.currentItem as ItemGrabbableScript;
 
             if (!itemGrabbable) return;
 
@@ -45,6 +47,7 @@ public class InventoryControllerScript : MonoBehaviourPun
                 {
                     //save a reference to the inventory for later instantiation.
                     inventory[i] = itemObject;
+                    itemSOs.Add(itemObject, itemGrabbable.data);
                     DestroyObject(itemObject);
                 }
             }
@@ -65,11 +68,7 @@ public class InventoryControllerScript : MonoBehaviourPun
 
     private void DestroyObject(GameObject obj)
     {
-        if (obj == null) return;
-
-
-        //DestroyObjectRPC();
-        //  destroy
+        _photonObjManager.DestroyObjectForAll(obj);
     }
 
     private void InstantiateObject(GameObject obj)
@@ -79,19 +78,13 @@ public class InventoryControllerScript : MonoBehaviourPun
             if (inventory[i] == obj)
             {
                 inventory[i] = null;
+                if (!itemSOs[obj]) return;
+                _photonObjManager.InstantiateObjectForAll(
+                    itemSOs[obj].prefab.name,
+                    transform.InverseTransformPoint(transform.localPosition),
+                    transform.rotation
+                );
             }
         }
-
-        //InstantiateObjectRPC()  
-        //  instantiate
-    }
-
-    private void InstantiateObjectRPC()
-    {
-        //photonView.RPC()    Instantiate this "obj" for all players.
-    }
-    private void DestroyObjectRPC()
-    {
-        //photonView.RPC()    Destroy this "obj" for all players.
     }
 }

@@ -45,6 +45,8 @@ MonoBehaviour:
   - RPC_AttachItemToPlayer
   - RPC_SpawnTempHeld
   - RPC_InitContents
+  - RPC_DestroyForTarget
+  - RPC_InstantiateForTarget
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
