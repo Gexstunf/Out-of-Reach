@@ -5,7 +5,7 @@ namespace UI.Scripts.Commands {
     public class HelpCommandSO : CommandSO {
         public override void Execute(string[] arguments, TerminalControllerScript terminal) {
 
-            var chosenStyle = terminal.GetStyleText(TerminalControllerScript.StyleText.EStyle.Slow);
+            var chosenStyle = terminal.GetStyleText(TerminalControllerScript.StyleText.EStyle.Fast);
             Debug.Log("Using this text style: " + chosenStyle.typeStyle);
             terminal.AppendOutput("Available Commands:", false, type:true, chosenStyle);
 

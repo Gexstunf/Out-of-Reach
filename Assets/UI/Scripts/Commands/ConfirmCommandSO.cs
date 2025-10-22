@@ -20,8 +20,6 @@ namespace UI.Scripts.Commands {
             else {
                 Debug.LogWarning($"The: {item.displayName} item doesn't have a prefab in its ItemSO!");
             }
-            
-            commandItemsPrefabs = null; // clean up
         }
     }
 }

@@ -8,7 +8,6 @@ namespace UI.Scripts.Commands {
         
         public override void Execute(string[] arguments, TerminalControllerScript terminal) {
             terminal.AppendOutput("Canceled operation.");
-            commandItemsPrefabs = null; // clean up
         }
     }
 }

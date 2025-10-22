@@ -25,11 +25,11 @@ namespace UI.Scripts.Commands {
                         terminal.AppendOutput($"purchase: {quantity} {objName} for ${item.value * quantity}?", false, type:true, style:chosenStyle);
                         terminal.SetRequiredCommandState(true);
                         terminal.AppendOutput($"type:", false, type:true);
-                        
                         // Adding special options (deny-confirm)
                         foreach (var specialCmd in specialCommands) {
-                            specialCmd.commandItemsPrefabs.Add(item);
+                            Debug.Log("Adding special Command to the terminal: " + specialCmd.commandName);
                             terminal.AppendOutput($"- {specialCmd.commandName}", type:true);
+                            specialCmd.commandItemsPrefabs.Insert(0, item);
                             terminal.AddSpecialCommand(specialCmd.commandName, specialCmd);
                         }
                         

@@ -26,14 +26,12 @@ namespace UI.Scripts {
         [Header("Settings")] 
         public string userName = "subject_5";
         public string dir = "Z:/project_61/exp_4";
-        public StyleText[] Styles;
-        public List<CommandSO> allCommandSOs;
         public bool keyBeep = false;
         public AudioClip typingSoundClip;
         public AudioSource audioSource;
-        
         public bool goSlower = false;
-        
+        public StyleText[] Styles;
+        public List<CommandSO> allCommandSOs;
         [SerializeField] private bool _hasToSpecialCommand;
         
         public List<string> CommandHistory { get; private set; } = new List<string>();
@@ -270,8 +268,6 @@ namespace UI.Scripts {
                 yield return new WaitForSeconds(speed);
             }
             
-            UnityEngine.Debug.Log("Typed at speed: " + speed);
-            
             _isTyping = false;
             outputText.text += "\n ";
             _typingCoroutines.RemoveAt(0);
@@ -348,9 +344,11 @@ namespace UI.Scripts {
         
         private void CleanUpSpecialCommands() {
             foreach (var specialCmd in _specialCommands) {
-                specialCmd.Value.commandItemsPrefabs = null;
+                Debug.Log("Clearing: " + specialCmd.Key + ": " + specialCmd.Value);
+                CommandSO cmd = specialCmd.Value;
+                cmd.commandItemsPrefabs.Clear(); // we clear the list of items for the special command
             }
-            _specialCommands.Clear();
+            _specialCommands.Clear(); // we clear the list of special commands
             _hasToSpecialCommand = false;
         }
 
