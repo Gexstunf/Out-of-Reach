@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +22,11 @@ namespace UI.Scripts {
 
         private bool _cursorVisible = true;
         private float _cursorTimer = 0f;
+        
 
         
         [Header("Settings")] 
+        public bool isOpen = false;
         public string userName = "subject_5";
         public string dir = "Z:/project_61/exp_4";
         public bool keyBeep = false;
@@ -40,8 +43,8 @@ namespace UI.Scripts {
         private Dictionary<string, CommandSO> _availableCommands = new Dictionary<string, CommandSO>();
         [SerializeField] private Dictionary<string, CommandSO> _specialCommands = new Dictionary<string, CommandSO>();
         
-        private List<IEnumerator> _typingCoroutines = new List<IEnumerator>();
-        private bool _isTyping = false;
+        private List<IEnumerator> _queueCoroutines = new List<IEnumerator>();
+        private bool _isBusy = false;
         
         private StyleText _defaultStyle;
         
@@ -89,19 +92,39 @@ namespace UI.Scripts {
         }
 
         #region Starting logic
-        private void Start()
-        {
-            UnityEngine.Debug.Log("Starting TerminalControllerScript");
+
+        private void Awake() {
+            audioSource = GetComponent<AudioSource>();
+            _defaultStyle = GetStyleText(StyleText.EStyle.Normal);
+        }
+
+        private void Start() {
 
             if (allCommandSOs != null) {
                 foreach (var cmd in allCommandSOs) {
                     _availableCommands.Add(cmd.commandName, cmd);
-                    UnityEngine.Debug.Log(_availableCommands[cmd.commandName].commandName);
+                    //UnityEngine.Debug.Log(_availableCommands[cmd.commandName].commandName);
                 }
             }
+
+            var fastTextStyle = GetStyleText(StyleText.EStyle.Fast);
+            ClearOutput(); // we clear at the start
+
+            AppendOutput("Booting terminal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . OK", false);
+            AppendOutput("System Status . . . . . . OK");
+            AppendOutput("Shop Status . . . . OK");
+            AppendOutput("Secure Status . . . . OK");
+            AppendOutput("Finished.", style: fastTextStyle);
+            AppendOutput("                       "); // a sort of "waiting"
+
+
+            AddMethodToIEnumeratorList(ClearOutputIEnumerator());
+
+                        
+            AppendOutput("Type 'HELP' for instructions", false);
             
-            audioSource = GetComponent<AudioSource>();
-            _defaultStyle = GetStyleText(StyleText.EStyle.Normal);
+            UnityEngine.Debug.Log("Started TerminalControllerScript");
+            
             inputField.text = "";
             
             if (keyBeep && audioSource) audioSource.PlayOneShot(typingSoundClip);
@@ -112,7 +135,7 @@ namespace UI.Scripts {
         private void Update()
         {
             // Always ensure the input field is focused
-            if (!inputField.isFocused)
+            if (!inputField.isFocused && isOpen)
                 inputField.ActivateInputField();
 
             ProcessTypingList();
@@ -138,12 +161,10 @@ namespace UI.Scripts {
         {
             // Store the current caret position (real user caret)
             int caretPos = inputField.caretPosition;
-
             string text = inputField.text;
 
             // Remove previous cursor if present
             text = RemoveCursor(text);
-
 
             // Insert visual cursor at the caret position
             if (_cursorVisible)
@@ -186,6 +207,7 @@ namespace UI.Scripts {
             // some formatting
             input = RemoveCursor(input);
             input = input.ToLower();
+            Debug.Log($"Input: {input}");
             
             // here we get some helpful vars (deconstruct input)
             string[] parts = input.Split(' ');
@@ -197,6 +219,7 @@ namespace UI.Scripts {
             string processedInput = $"{autoCompletedCmd} {argString}";
             bool success = false;
             
+            Debug.Log($"cmd: {cmd} and automcompleted: {autoCompletedCmd}");
             CommandHistory.Add(processedInput);
             _historyIndex = CommandHistory.Count;
 
@@ -220,8 +243,8 @@ namespace UI.Scripts {
         }
 
         private void ProcessTypingList() {
-            if (_typingCoroutines.Count > 0 && !_isTyping) {
-                StartCoroutine(_typingCoroutines[0]);
+            if (_queueCoroutines.Count > 0 && !_isBusy) {
+                StartCoroutine(_queueCoroutines[0]);
             }
         }
         
@@ -249,7 +272,7 @@ namespace UI.Scripts {
         private IEnumerator TypeText(string text, StyleText style) {
             float speed = 0.1f;
             string styledText = text; 
-            _isTyping = true;
+            _isBusy = true;
 
             if (style != null) {
                 styledText = style.ApplyStyle(text);
@@ -268,9 +291,9 @@ namespace UI.Scripts {
                 yield return new WaitForSeconds(speed);
             }
             
-            _isTyping = false;
+            _isBusy = false;
             outputText.text += "\n ";
-            _typingCoroutines.RemoveAt(0);
+            _queueCoroutines.RemoveAt(0);
         }
 
         private void NavigateHistory(int direction)
@@ -320,7 +343,7 @@ namespace UI.Scripts {
             
             if (type) {
                 var txtStyle = style ?? _defaultStyle;
-                AddTextToTypingList(text, txtStyle);
+                AddMethodToIEnumeratorList(TypeText(text, txtStyle));
             }
             else {
                 outputText.text += text + "\n ";
@@ -328,12 +351,12 @@ namespace UI.Scripts {
         }
 
         #region Helpers
-
-        private void AddTextToTypingList(string text, StyleText style) {
-            var newCoroutine = TypeText(text, style);
-            _typingCoroutines.Add(newCoroutine);
+        
+        private void AddMethodToIEnumeratorList(IEnumerator method) {
+            var newCoroutine = method;
+            _queueCoroutines.Add(newCoroutine);
         }
-
+        
         public void AddSpecialCommand(string commandName, CommandSO command) {
             _specialCommands.Add(commandName, command);
         }
@@ -354,6 +377,14 @@ namespace UI.Scripts {
 
         public void ClearOutput() {
             outputText.text = "";
+        }
+
+        public IEnumerator ClearOutputIEnumerator() {
+            _isBusy = true;
+            outputText.text = "";
+            _isBusy = false;
+            _queueCoroutines.RemoveAt(0);
+            yield break;
         }
         
         private string RemoveCursor(string input) {
