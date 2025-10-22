@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections;
-using Characters.PlayerController.Scripts.Input;
+﻿using Characters.PlayerController.Scripts.Input;
 using Items.Scripts;
+using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.XR;
+using static UnityEditor.Progress;
 
 namespace Characters.PlayerController.Scripts
 {
@@ -17,8 +20,8 @@ namespace Characters.PlayerController.Scripts
     public class HandGrabberScript : MonoBehaviour
     {
         [Header("Settings")]
-        [SerializeField] private Transform leftGrabOrigin;
-        [SerializeField] private Transform rightGrabOrigin;
+        public Transform leftGrabOrigin;
+        public Transform rightGrabOrigin;
         [SerializeField] private Transform camTransform;
         [SerializeField] private bool useIndependentOrigins = false;
         [SerializeField] private LayerMask grabbableMask;
@@ -45,14 +48,14 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private TwoBoneIKConstraint rightIKConstraint;
 
         // --- internal state ---
-        public IGrabbableScript currentItem = null;     // only one item in the world can be held at once
-        private HandData _itemHoldingHand = null;         // which hand holds the item
+        public ItemGrabbableScript currentItem = null;     // only one item in the world can be held at once
+        public HandData itemHoldingHand = null;         // which hand holds the item
 
         private HandData _leftHand;
         private HandData _rightHand;
 
         // --- HandData encapsulates per-hand state ---
-        private class HandData
+        public class HandData
         {
             public Transform IKTarget;
             public Rigidbody Rb;
@@ -111,13 +114,13 @@ namespace Characters.PlayerController.Scripts
             if (currentItem != null)
             {
                 // find which hand held it and release cleanly
-                if (_itemHoldingHand != null)
+                if (itemHoldingHand != null)
                 {
                     currentItem.Release();
-                    _itemHoldingHand.HoldingItem = false;
+                    itemHoldingHand.HoldingItem = false;
                 }
                 currentItem = null;
-                _itemHoldingHand = null;
+                itemHoldingHand = null;
             }
         }
 
@@ -282,29 +285,29 @@ namespace Characters.PlayerController.Scripts
             Vector3 grabPoint = item.GrabHandle != null ? item.GrabHandle.position : hitPoint;
             yield return ReachToPointRoutine(grabPoint, hand, targetWeight: 1f);
 
-            // call grabbable API - connect object to hand
             item.Grab(hand.Rb, grabPoint);
 
-            // register global item owner
-            currentItem = item;
-            _itemHoldingHand = hand;
-            hand.HoldingItem = true;
-
-            if (inventory != null && item is ItemGrabbableScript grabbableItem)
-            {
-                inventory.NotifyItemGrabbed(grabbableItem.data, grabbableItem.gameObject);
-                Debug.Log($" [HandGrabber] Item '{grabbableItem.data.name}' notificado al inventario.");
-            }
-            else
-            {
-                Debug.LogWarning("[HandGrabber] No se encontró inventario o ItemGrabbable válido.");
-            }
-
+            // register global item owner             
+            // call grabbable API - connect object to hand
+            RegisterAndGrabItem(item as ItemGrabbableScript, hand, grabPoint);
 
             // return hand to its home and reduce IK weight
             yield return ReachToHomeRoutine(hand);
 
             // Leave hand.HoldingItem true until OnItemReleased is called externally
+        }
+
+        public void RegisterAndGrabItem(ItemGrabbableScript item, HandData hand, Vector3 grabPoint)
+        {
+            item.Grab(hand.Rb, grabPoint);
+            RegisterItemGrab(item as ItemGrabbableScript, hand);
+        }
+
+        private void RegisterItemGrab(ItemGrabbableScript item, HandData hand)
+        {
+            currentItem = item as ItemGrabbableScript;
+            itemHoldingHand = hand;
+            hand.HoldingItem = true;
         }
 
         // Wall flow: reach -> call grabbable grab (likely creates joint on hand/world) -> keep IK weight
@@ -373,14 +376,14 @@ namespace Characters.PlayerController.Scripts
             if (currentItem == null) return;
 
             // find the hand that holds it
-            if (_itemHoldingHand != null)
+            if (itemHoldingHand != null)
             {
                 // let grabbable handle release
                 currentItem.Release();
 
                 // clear hand state
-                _itemHoldingHand.HoldingItem = false;
-                _itemHoldingHand = null;
+                itemHoldingHand.HoldingItem = false;
+                itemHoldingHand = null;
             }
 
             currentItem = null;

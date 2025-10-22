@@ -88,11 +88,12 @@ public class InventoryControllerScript : MonoBehaviourPun
 
         // Instantiate in hand
         string prefabName = itemData.worldPrefabName; // or heldPrefabName if you use separate prefab
-        Vector3 spawnPos = handSlot.position;
-        Quaternion spawnRot = handSlot.rotation;
+        Vector3 spawnPos = _handGrabber.leftGrabOrigin.position;
+        Quaternion spawnRot = _handGrabber.leftGrabOrigin.rotation;
 
-        currentHeldItem = _photonObjManager.InstantiateObjectForAll(prefabName, spawnPos, spawnRot);
-        currentHeldItem.transform.SetParent(handSlot);
+        var obj = _photonObjManager.InstantiateObjectForAll(prefabName, spawnPos, spawnRot);
+        _handGrabber.currentItem = obj.GetComponent<ItemGrabbableScript>();
+        _handGrabber.RegisterAndGrabItem(_handGrabber.currentItem, _handGrabber.itemHoldingHand, spawnPos);
 
         // Clear slot
         inventory[slotIndex] = null;
