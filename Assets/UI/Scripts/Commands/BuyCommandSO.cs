@@ -13,24 +13,25 @@ namespace UI.Scripts.Commands {
                 int quantity = 1;
                 string objName = arguments[0];
 
-                if (arguments.Length == 2) {
-                    quantity = int.Parse(arguments[1]);
+                if (arguments.Length > 1) {
+                    var num = int.Parse(arguments[1]);
+                    quantity = Mathf.Abs(num);
                 }
                 
 
                 foreach (var item in commandItemsPrefabs) {
                     if (item.displayName.ToLower() == objName && quantity > 0) {
-                        terminal.AppendOutput($"purchase: {quantity} {objName} for ${item.value * quantity}?", false);
+                        var chosenStyle = terminal.GetStyleText(TerminalControllerScript.StyleText.EStyle.Normal);
+                        terminal.AppendOutput($"purchase: {quantity} {objName} for ${item.value * quantity}?", false, type:true, style:chosenStyle);
                         terminal.SetRequiredCommandState(true);
-                        terminal.AppendOutput($"type:", false);
+                        terminal.AppendOutput($"type:", false, type:true);
                         
                         // Adding special options (deny-confirm)
                         foreach (var specialCmd in specialCommands) {
                             specialCmd.commandItemsPrefabs.Add(item);
-                            terminal.AppendOutput($"- {specialCmd.commandName}");
+                            terminal.AppendOutput($"- {specialCmd.commandName}", type:true);
                             terminal.AddSpecialCommand(specialCmd.commandName, specialCmd);
                         }
-                        
                         
                         return;
                     }

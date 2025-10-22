@@ -8,7 +8,8 @@ namespace UI.Scripts.Commands {
         public override void Execute(string[] arguments, TerminalControllerScript terminal) {
             foreach (var item in commandItemsPrefabs) {
                 var objName = item.displayName != "" ? item.displayName : "?";
-                terminal.AppendOutput($"- {objName}: ${item.value}");
+                var chosenStyle = terminal.GetStyleText(TerminalControllerScript.StyleText.EStyle.Normal);
+                terminal.AppendOutput($"- {objName}: ${item.value}", type:true, style:chosenStyle);
             }
         }
     }

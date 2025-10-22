@@ -14,8 +14,13 @@ namespace UI.Scripts.Commands {
             Debug.Log("ITEM BOUGHT: " + item.displayName);
             Debug.Log("ITEM PREFAB: " + item.prefab);
 
-            Instantiate(item.prefab);
-
+            if (item.prefab) {
+                Instantiate(item.prefab);
+            }
+            else {
+                Debug.LogWarning($"The: {item.displayName} item doesn't have a prefab in its ItemSO!");
+            }
+            
             commandItemsPrefabs = null; // clean up
         }
     }
