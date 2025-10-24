@@ -165,7 +165,7 @@ namespace Characters.PlayerController.Scripts.Input
             if (context.performed)
             {
                 ItemSlot = Mathf.Max(0, ItemSlot - 1);
-                Debug.Log("Slot anterior: " + ItemSlot);
+                //Debug.Log("Slot anterior: " + ItemSlot);
             }
         }
 
@@ -174,7 +174,7 @@ namespace Characters.PlayerController.Scripts.Input
             if (context.performed)
             {
                 ItemSlot++;
-                Debug.Log("Slot siguiente: " + ItemSlot);
+                //Debug.Log("Slot siguiente: " + ItemSlot);
             }
         }
 

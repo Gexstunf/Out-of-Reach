@@ -582,9 +582,6 @@ PrefabInstance:
       addedObject: {fileID: 449199267510590813}
     - targetCorrespondingSourceObject: {fileID: 2661264703239125937, guid: af6065566f6442d46a928f200c6e56e5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7508038400950614781}
-    - targetCorrespondingSourceObject: {fileID: 2661264703239125937, guid: af6065566f6442d46a928f200c6e56e5, type: 3}
-      insertIndex: -1
       addedObject: {fileID: -1563234085835221795}
     - targetCorrespondingSourceObject: {fileID: 2661264703239125937, guid: af6065566f6442d46a928f200c6e56e5, type: 3}
       insertIndex: -1
@@ -592,6 +589,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2661264703239125937, guid: af6065566f6442d46a928f200c6e56e5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4537814646164376954}
+    - targetCorrespondingSourceObject: {fileID: 2661264703239125937, guid: af6065566f6442d46a928f200c6e56e5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -7618965186985080737}
   m_SourcePrefab: {fileID: 100100000, guid: af6065566f6442d46a928f200c6e56e5, type: 3}
 --- !u!1 &319387619057270314 stripped
 GameObject:
@@ -644,35 +644,6 @@ MonoBehaviour:
   backpackOpen: 0
   backpackSlotUI: []
   backpackSlotIcons: []
---- !u!114 &7508038400950614781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 319387619057270314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a7a2ba1e12b56745a5664077e6b6b7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputScript: {fileID: 0}
-  playerUI: {fileID: 0}
-  handSlot: {fileID: 5259114936761833392}
-  backSlot: {fileID: 7757046888792584629}
-  itemLayer:
-    serializedVersion: 2
-    m_Bits: 192
-  dropForce: 3
-  slots:
-  - {fileID: 11400000, guid: bcc905355785a7d47ab54c8832fce1cc, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  activeSlot: -1
-  backpackObj: {fileID: 0}
-  tempHeldObj: {fileID: 0}
-  tempItemData: {fileID: 0}
 --- !u!114 &-1563234085835221795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -724,6 +695,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6704e06a69f8e584496a2c5f8d2a2b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-7618965186985080737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319387619057270314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf77eac89e7ef8744b1741d88dbf8817, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _handGrabber: {fileID: 0}
+  _photonObjManager: {fileID: 0}
+  handSlot: {fileID: 0}
+  _uiManager: {fileID: 0}
+  input: {fileID: 0}
+  inventory:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  debug: 0
 --- !u!54 &2595571559410374645 stripped
 Rigidbody:
   m_CorrespondingSourceObject: {fileID: 325761011322294894, guid: af6065566f6442d46a928f200c6e56e5, type: 3}

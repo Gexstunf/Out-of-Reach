@@ -28,7 +28,7 @@ namespace UI
         public GameObject[] slotUI;
         public Image[] slotIcons;
 
-        private PlayerInventoryPhoton inventory;
+        private InventoryControllerScript _inventoryController;
         private bool _initialized = false;
 
         [Header("Inventario Mochila")]
@@ -38,12 +38,10 @@ namespace UI
         public Image[] backpackSlotIcons;
 
         private BackpackData currentBackpackWorld;
-        private PlayerInventoryPhoton currentInv;
 
         // NUEVO: jugador objetivo
         private PlayerLifeSupportContextScript _context;
         private Dictionary<PlayerLifeSupportScript.EVitals, BaseVitalScript<PlayerLifeSupportScript.EVitals>> _vitals;
-        private PlayerInventoryPhoton _inventory;
 
         public void Start()
         {
@@ -113,10 +111,10 @@ namespace UI
             Debug.Log("[UIManager] ✅ InitUI completado.");
         }
 
-        public void InitInventory(PlayerInventoryPhoton inv)
+        public void InitInventory(InventoryControllerScript invController)
         {
-            inventory = inv;
-            Debug.Log(inventory != null
+            _inventoryController = invController;
+            Debug.Log(_inventoryController != null
                 ? "[UIManager] ✅ Inventario asignado correctamente."
                 : "[UIManager] ⚠️ Inventario NULL al inicializar.");
             Debug.Log("[UIManager] Inventario inicializado");
@@ -153,20 +151,33 @@ namespace UI
 
         public void UpdateInventoryUI()
         {
-            if (inventory == null)
+            if (_inventoryController == null)
             {
                 Debug.LogWarning("[UIManager] ⚠️ UpdateInventoryUI llamado pero Inventario es NULL.");
                 return;
             }
 
+            var inventory = _inventoryController.inventory;
+            var itemSOs = _inventoryController.itemSOs;
+            var input = _inventoryController.input;
+
             for (int i = 0; i < slotUI.Length; i++)
             {
-                bool hasItem = (i < inventory.slots.Length && inventory.slots[i] != null);
+                bool hasItem = (i < inventory.Length && inventory[i] != null);
 
                 if (hasItem)
                 {
-                    slotIcons[i].sprite = inventory.slots[i].icon;
-                    slotIcons[i].enabled = true;
+                    GameObject itemObj = inventory[i];
+                    if (itemSOs.TryGetValue(itemObj, out ItemSO itemData))
+                    {
+                        slotIcons[i].sprite = itemData.icon;
+                        slotIcons[i].enabled = true;
+                    }
+                    else
+                    {
+                        slotIcons[i].sprite = null;
+                        slotIcons[i].enabled = false;
+                    }
                 }
                 else
                 {
@@ -177,20 +188,20 @@ namespace UI
                 Image slotBg = slotUI[i].GetComponent<Image>();
                 if (slotBg != null)
                 {
-                    slotBg.color = (i == inventory.activeSlot) ? Color.yellow : Color.white;
+                    slotBg.color = (i == input.InventoryIndex) ? Color.yellow : Color.white;
                 }
             }
         }
 
         public void OnSlotClicked(int slotIndex)
         {
-            if (inventory == null)
+            if (_inventoryController == null)
             {
                 Debug.LogWarning("[UIManager] ⚠️ OnSlotClicked llamado pero Inventario es NULL.");
                 return;
             }
 
-            inventory.EquipFromSlot(slotIndex);
+            _inventoryController.EquipItemFromSlot(slotIndex);
             UpdateInventoryUI();
         }
 
@@ -204,7 +215,7 @@ namespace UI
             {
                 ShowBackpackInventory(bd, inv);
                 currentBackpackWorld = bd;
-                currentInv = inv;
+                //currentInv = inv;
             }
         }
 

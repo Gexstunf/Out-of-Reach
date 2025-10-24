@@ -1,4 +1,4 @@
-using Characters.PlayerController.Scripts;
+﻿using Characters.PlayerController.Scripts;
 using Characters.PlayerController.Scripts.Input;
 using Items.Scripts;
 using UnityEngine;
@@ -18,36 +18,57 @@ public class InventoryControllerScript : MonoBehaviourPun
 
     public PlayerInputScript input;
     public GameObject[] inventory;
-    public Dictionary<GameObject, ItemSO> itemSOs;
+    public Dictionary<GameObject, ItemSO> itemSOs = new Dictionary<GameObject, ItemSO>();
 
     private GameObject currentHeldItem;
 
     private PhotonView _photonView;
 
+    [Header("Debug")]
+    public bool debug = true;
+
     public void Awake()
     {
         _photonView = GetComponent<PhotonView>();
-        _uiManager = GetComponent<PlayerUIManager>();
         _handGrabber = GetComponent<HandGrabberScript>();
         input = GetComponent<PlayerInputScript>();
+
+        if (_uiManager == null)
+            _uiManager = GetComponent<PlayerUIManager>();
+
+        if (_uiManager != null)
+            _uiManager.InitInventory(this);
+
+        if (debug) Debug.Log($"[Inventory] Awake(): references -> " +
+            $"PhotonView={_photonView != null}, " +
+            $"HandGrabber={_handGrabber != null}, " +
+            $"Input={input != null}, " +
+            $"UI={_uiManager != null}");
     }
 
     private void Update()
     {
         if (!photonView.IsMine) return;
 
-        // Store grabbed item in inventory
+        // Debug the index
+        if (debug && input.InventoryInteraction)
+            Debug.Log($"[Inventory] InventoryInteraction triggered. Index = {input.InventoryIndex}, " +
+                      $"CurrentItem = {_handGrabber.currentItem}, " +
+                      $"IsMine = {photonView.IsMine}");
+
+        // Store grabbed item
         if (input.InventoryInteraction && _handGrabber.currentItem != null)
         {
             TryStoreCurrentItem();
         }
-
-        // Equip item from inventory to hand
-        if (input.InventoryInteraction)
+        // Equip from slot
+        else if (input.InventoryInteraction)
         {
             int index = input.InventoryIndex;
             if (index >= 0 && index < inventory.Length)
                 EquipItemFromSlot(index);
+            else if (debug)
+                Debug.LogWarning($"[Inventory] Invalid index ({index}) - can't equip.");
         }
     }
 
@@ -56,133 +77,115 @@ public class InventoryControllerScript : MonoBehaviourPun
     private void TryStoreCurrentItem()
     {
         var grabbable = _handGrabber.currentItem as ItemGrabbableScript;
-        if (grabbable == null) return;
+        if (grabbable == null)
+        {
+            Debug.LogWarning("[Inventory] Item grabbable is null, can't try to store.");
+            return;
+        }
 
         int slotIndex = input.InventoryIndex;
-        if (slotIndex < 0 || slotIndex >= inventory.Length) return;
-        if (inventory[slotIndex] != null) return; // slot full
+        if (slotIndex < 0 || slotIndex >= inventory.Length)
+        {
+            Debug.LogWarning($"[Inventory] Slot index {slotIndex} out of range.");
+            return;
+        }
+
+        if (inventory[slotIndex] != null)
+        {
+            Debug.LogWarning($"[Inventory] Inventory slot {slotIndex} already occupied by {inventory[slotIndex].name}");
+            return;
+        }
+
+        Debug.Log($"[Inventory] Storing item '{grabbable.gameObject.name}' with data '{grabbable.data?.name ?? "NULL DATA"}' at slot {slotIndex}");
 
         // Store item
         inventory[slotIndex] = grabbable.gameObject;
-        itemSOs[grabbable.gameObject] = grabbable.data;
+        try
+        {
+            itemSOs[grabbable.gameObject] = grabbable.data;
+            Debug.Log($"[Inventory] Added {grabbable.gameObject.name} -> {grabbable.data?.name ?? "NULL"} to itemSOs dictionary. Total count: {itemSOs.Count}");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[Inventory] Failed to add to dictionary: {e.Message}");
+        }
 
-        // Remove it from the world
-        _photonObjManager.DestroyObjectForAll(grabbable.gameObject);
+        // Remove from world
+        if (_photonObjManager != null)
+        {
+            Debug.Log($"[Inventory] Destroying world object for {grabbable.name}");
+            _photonObjManager.DestroyObjectForAll(grabbable.gameObject);
+        }
+        else
+        {
+            Debug.LogError("[Inventory] _photonObjManager is NULL! Cannot destroy object.");
+        }
 
         _uiManager?.UpdateInventoryUI();
     }
 
-    private void EquipItemFromSlot(int slotIndex)
+    public void EquipItemFromSlot(int slotIndex)
     {
         GameObject itemObject = inventory[slotIndex];
-        if (itemObject == null) return;
+        if (itemObject == null)
+        {
+            Debug.LogWarning($"[Inventory] Tried to equip slot {slotIndex} but it’s empty.");
+            return;
+        }
 
-        if (!itemSOs.TryGetValue(itemObject, out ItemSO itemData)) return;
+        Debug.Log($"[Inventory] Attempting to equip slot {slotIndex}, item = {itemObject.name}");
 
-        // Destroy any currently held item first
+        if (!itemSOs.TryGetValue(itemObject, out ItemSO itemData))
+        {
+            Debug.LogError($"[Inventory] No ItemSO found for {itemObject.name}! itemSOs.Count = {itemSOs.Count}");
+            return;
+        }
+
+        // Destroy current held item
         if (currentHeldItem != null)
         {
+            Debug.Log($"[Inventory] Destroying current held item {currentHeldItem.name}");
             _photonObjManager.DestroyObjectForAll(currentHeldItem);
             currentHeldItem = null;
         }
 
-        // Instantiate in hand
-        string prefabName = itemData.worldPrefabName; // or heldPrefabName if you use separate prefab
+        string prefabName = itemData.worldPrefabName ?? itemData.heldPrefabName;
+        Debug.Log($"[Inventory] Spawning prefab: {prefabName}");
+
+        if (string.IsNullOrEmpty(prefabName))
+        {
+            Debug.LogError($"[Inventory] Prefab name is null for {itemData.name}");
+            return;
+        }
+
+        if (_handGrabber == null || _handGrabber.leftGrabOrigin == null)
+        {
+            Debug.LogError("[Inventory] HandGrabber or its grab origin is null.");
+            return;
+        }
+
         Vector3 spawnPos = _handGrabber.leftGrabOrigin.position;
         Quaternion spawnRot = _handGrabber.leftGrabOrigin.rotation;
 
         var obj = _photonObjManager.InstantiateObjectForAll(prefabName, spawnPos, spawnRot);
-        _handGrabber.currentItem = obj.GetComponent<ItemGrabbableScript>();
-        _handGrabber.RegisterAndGrabItem(_handGrabber.currentItem, _handGrabber.itemHoldingHand, spawnPos);
-
-        // Clear slot
-        inventory[slotIndex] = null;
-        itemSOs.Remove(itemObject);
-
-        _uiManager?.UpdateInventoryUI();
-    }
-
-    public void DropCurrentHeld()
-    {
-        if (currentHeldItem == null) return;
-
-        // Re-spawn in world
-        if (itemSOs.TryGetValue(currentHeldItem, out ItemSO itemData))
+        if (obj == null)
         {
-            Vector3 dropPos = transform.position + transform.forward * 1f;
-            _photonObjManager.InstantiateObjectForAll(itemData.worldPrefabName, dropPos, Quaternion.identity);
+            Debug.LogError($"[Inventory] Failed to instantiate {prefabName}");
+            return;
         }
 
-        _photonObjManager.DestroyObjectForAll(currentHeldItem);
-        currentHeldItem = null;
+        _handGrabber.currentItem = obj.GetComponent<ItemGrabbableScript>();
+        if (_handGrabber.currentItem == null)
+            Debug.LogError($"[Inventory] Spawned object {prefabName} missing ItemGrabbableScript!");
 
+        _handGrabber.RegisterAndGrabItem(_handGrabber.currentItem, _handGrabber.itemHoldingHand, spawnPos);
+
+        Debug.Log($"[Inventory] Equipped {itemData.displayName ?? itemData.name} to hand.");
+
+        inventory[slotIndex] = null;
+        itemSOs.Remove(itemObject);
         _uiManager?.UpdateInventoryUI();
     }
 
     #endregion
 }
-
-/*
-    public void Update()
-    {
-        if (!photonView.IsMine) return;
-
-        if (input.InventoryInteraction && _handGrabber.currentItem != null)
-        {
-            // handGrabber.currentItem =   IGrabbableScript  ( a generic grabbable class )
-            //ItemGrabbableScript itemGrabbable = GetComponent<>();
-
-            ItemGrabbableScript itemGrabbable = _handGrabber.currentItem as ItemGrabbableScript;
-
-            if (!itemGrabbable) return;
-
-            GameObject itemObject = itemGrabbable.gameObject;
-
-            for (int i = 0; i < inventory.Length; i++) {
-                // bring in logic
-                if (input.InventoryIndex == i && inventory[i] == null)
-                {
-                    //save a reference to the inventory for later instantiation.
-                    inventory[i] = itemObject;
-                    itemSOs.Add(itemObject, itemGrabbable.data);
-                    DestroyObject(itemObject);
-                }
-            }
-        }
-
-        if (input.InventoryInteraction)
-        {
-            for (int i = 0; i < inventory.Length; i++)
-            {
-
-                if (input.InventoryIndex == i && inventory[i] != null)
-                {
-                    // bring out logic
-                }
-            }
-        }
-    }
-
-    private void DestroyObject(GameObject obj)
-    {
-        _photonObjManager.DestroyObjectForAll(obj);
-    }
-
-    private void InstantiateObject(GameObject obj)
-    {
-        for (int i = 0; i < inventory.Length; i++)
-        {
-            if (inventory[i] == obj)
-            {
-                inventory[i] = null;
-                if (!itemSOs[obj]) return;
-                _photonObjManager.InstantiateObjectForAll(
-                    itemSOs[obj].prefab.name,
-                    transform.InverseTransformPoint(transform.localPosition),
-                    transform.rotation
-                );
-            }
-        }
-    }
-}
-*/

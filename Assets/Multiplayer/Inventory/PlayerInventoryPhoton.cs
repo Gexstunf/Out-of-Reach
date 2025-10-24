@@ -42,8 +42,8 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             if (playerUI == null)
                 playerUI = GetComponentInChildren<PlayerUIManager>();
 
-            if (playerUI != null)
-                playerUI.InitInventory(this);
+            if (playerUI != null) ;
+            //playerUI.InitInventory(this);
             else
                 Debug.LogWarning("[Inventory] No se encontró PlayerUIManager en la jerarquía del jugador!");
         }
