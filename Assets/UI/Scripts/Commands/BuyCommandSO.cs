@@ -25,6 +25,8 @@ namespace UI.Scripts.Commands {
                         terminal.AppendOutput($"purchase: {quantity} {objName} for ${item.value * quantity}?", false, type:true, style:chosenStyle);
                         terminal.SetRequiredCommandState(true);
                         terminal.AppendOutput($"type:", false, type:true);
+                        terminal.AppendOutput("");
+
                         // Adding special options (deny-confirm)
                         foreach (var specialCmd in specialCommands) {
                             Debug.Log("Adding special Command to the terminal: " + specialCmd.commandName);

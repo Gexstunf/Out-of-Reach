@@ -31,6 +31,7 @@ namespace UI.Scripts {
         public string dir = "Z:/project_61/exp_4";
         public bool keyBeep = false;
         public AudioClip typingSoundClip;
+        public AudioClip endOfLineSoundClip;
         public AudioSource audioSource;
         public bool goSlower = false;
         public StyleText[] Styles;
@@ -47,6 +48,7 @@ namespace UI.Scripts {
         private bool _isBusy = false;
         
         private StyleText _defaultStyle;
+        private StyleText _fastStyle;
         
         #endregion
         
@@ -96,8 +98,9 @@ namespace UI.Scripts {
         private void Awake() {
             audioSource = GetComponent<AudioSource>();
             _defaultStyle = GetStyleText(StyleText.EStyle.Normal);
+            _fastStyle = GetStyleText(StyleText.EStyle.Fast);
         }
-
+        
         private void Start() {
 
             if (allCommandSOs != null) {
@@ -110,10 +113,13 @@ namespace UI.Scripts {
             var fastTextStyle = GetStyleText(StyleText.EStyle.Fast);
             ClearOutput(); // we clear at the start
 
-            AppendOutput("Booting terminal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . OK", false);
-            AppendOutput("System Status . . . . . . OK");
-            AppendOutput("Shop Status . . . . OK");
-            AppendOutput("Secure Status . . . . OK");
+            AppendOutput("Booting terminal . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . OK", false, playEndSound:true);
+            AppendOutput("  ");
+            AppendOutput("System Status . . . . . . OK", playEndSound:true);
+            AppendOutput("Connection Status . . . . OK", playEndSound:true);
+            AppendOutput("Secure Status . . . . OK", playEndSound:true);
+            AppendOutput("  ");
+            AppendOutput("  ");
             AppendOutput("Finished.", style: fastTextStyle);
             AppendOutput("                       "); // a sort of "waiting"
 
@@ -207,6 +213,11 @@ namespace UI.Scripts {
             // some formatting
             input = RemoveCursor(input);
             input = input.ToLower();
+
+            if (input.All(char.IsWhiteSpace)) {
+                return;
+            }
+            
             Debug.Log($"Input: {input}");
             
             // here we get some helpful vars (deconstruct input)
@@ -217,13 +228,13 @@ namespace UI.Scripts {
             string[] args = parts.Skip(1).ToArray();
             string argString = string.Join(" ", args);
             string processedInput = $"{autoCompletedCmd} {argString}";
-            bool success = false;
+            bool success;
             
             Debug.Log($"cmd: {cmd} and automcompleted: {autoCompletedCmd}");
-            CommandHistory.Add(processedInput);
+            CommandHistory.Add(processedInput);  
             _historyIndex = CommandHistory.Count;
-
-            AppendOutput($"\n{prefixText}{dir}: {autoCompletedCmd} {argString}", false, true, GetStyleText(StyleText.EStyle.Fast));
+            
+            AppendOutput($"\n{prefixText}{dir}: {processedInput}", false);
 
 
             if (_hasToSpecialCommand) {
@@ -269,7 +280,7 @@ namespace UI.Scripts {
             return "";
         }
         
-        private IEnumerator TypeText(string text, StyleText style) {
+        private IEnumerator TypeText(string text, StyleText style, bool playEndSound) {
             float speed = 0.1f;
             string styledText = text; 
             _isBusy = true;
@@ -284,10 +295,14 @@ namespace UI.Scripts {
             
             speed = goSlower? speed + 1f : speed;
             
-            foreach (char c in styledText)
+            for (int i = 0; i < styledText.Length; i++)
             {
+                char c = styledText[i];
                 outputText.text += c;
+                                                                                                        
                 if (keyBeep && c != " "[0]) audioSource.PlayOneShot(typingSoundClip);
+                if (i == styledText.Length - 1 && endOfLineSoundClip && playEndSound) audioSource.PlayOneShot(endOfLineSoundClip);
+                
                 yield return new WaitForSeconds(speed);
             }
             
@@ -334,7 +349,7 @@ namespace UI.Scripts {
         
         #endregion
         
-        public void AppendOutput(string text, bool indent = true, bool type = true, StyleText style = null)
+        public void AppendOutput(string text, bool indent = true, bool type = true, StyleText style = null, bool playEndSound = false)
         {
             
             if (indent) {
@@ -343,7 +358,7 @@ namespace UI.Scripts {
             
             if (type) {
                 var txtStyle = style ?? _defaultStyle;
-                AddMethodToIEnumeratorList(TypeText(text, txtStyle));
+                AddMethodToIEnumeratorList(TypeText(text, txtStyle, playEndSound));
             }
             else {
                 outputText.text += text + "\n ";

@@ -9,13 +9,17 @@ namespace Characters.PlayerController.Scripts {
         [Header("References")]
         [SerializeField] private HandGrabberScript handGrabberScript;
         [SerializeField] private WorldUIManagerScript worldUIManagerScript;
-        [SerializeField] private Transform uiInteractionOrigin;
+        public Transform uiInteractionOrigin;
         
         [Header("Settings")]
-        [SerializeField] private float uiInteractionDistance = 5f;
-        [SerializeField] private LayerMask uiInteractionLayer;
+        public float uiInteractionDistance = 5f;
+        public LayerMask uiInteractionLayer;
 
         private bool _openedUi;
+        private IGrabbableScript _grabbableCache;
+        private UIInteractableScript _interactableCache;
+                   
+        
         private void Start() {
             handGrabberScript = GetComponent<HandGrabberScript>();
             
@@ -27,20 +31,49 @@ namespace Characters.PlayerController.Scripts {
 
         public void Update() {
             if (Physics.Raycast(uiInteractionOrigin.position, uiInteractionOrigin.forward, out RaycastHit hit, uiInteractionDistance, uiInteractionLayer)) {
-                var grabbable = hit.collider.gameObject.GetComponent<IGrabbableScript>();
-                if (grabbable != null) {
-                    if (handGrabberScript.IsItemGrabbable(grabbable)) {
-                        var item = hit.collider.gameObject.GetComponent<ItemGrabbableScript>();
-                        _openedUi = true;
-                        worldUIManagerScript.ShowPrice(hit.collider.transform, item.data.value);
-                    }
-                }
+                HandleGrabbable(hit);
+                HandleInteractable(hit);
             }
             else {
                 if (_openedUi) {
                     _openedUi = false;
-                    worldUIManagerScript.HidePrice();
+                    HideUIAndCleanCache();
                 }
+            }
+        }
+
+        private void HideUIAndCleanCache() {
+            worldUIManagerScript.HidePrice();
+            worldUIManagerScript.HideInteractable();
+            _grabbableCache = null;
+            _interactableCache = null;
+        }
+        
+        private void HandleGrabbable(RaycastHit hit) {
+            if (_grabbableCache == null) {
+                var grabbable = hit.collider.gameObject.GetComponent<IGrabbableScript>();
+                _grabbableCache = grabbable;
+            }
+
+            if (_grabbableCache != null) {
+                if (handGrabberScript.IsItemGrabbable(_grabbableCache) && !_openedUi) {
+                    var item = hit.collider.gameObject.GetComponent<ItemGrabbableScript>();
+                    _openedUi = true;
+                    worldUIManagerScript.ShowPrice(hit.collider.transform, item.data.value);
+                }
+            }
+        }
+        
+        private void HandleInteractable(RaycastHit hit) {
+
+            if (!_interactableCache) {
+                var interactable = hit.collider.gameObject.GetComponent<UIInteractableScript>();
+                _interactableCache = interactable;
+            }
+
+            if (_interactableCache && !_openedUi) {
+                _openedUi = true;
+                worldUIManagerScript.ShowInteractable(_interactableCache.anchorTransform, _interactableCache.interactText);
             }
         }
     }

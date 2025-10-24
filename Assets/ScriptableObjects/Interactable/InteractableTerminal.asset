@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11d5c6932d8c02b41876d64c41391963, type: 3}
-  m_Name: GlobalBank
+  m_Script: {fileID: 11500000, guid: 8f281f2e75d02894eb4a3f244ec4e81e, type: 3}
+  m_Name: InteractableTerminal
   m_EditorClassIdentifier: 
-  balance: 1560
+  mainCamera: {fileID: 0}

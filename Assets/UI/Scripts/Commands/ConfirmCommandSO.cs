@@ -9,11 +9,12 @@ namespace UI.Scripts.Commands {
         
         public override void Execute(string[] arguments, TerminalControllerScript terminal) {
             ItemSO item = commandItemsPrefabs[0];
-            terminal.AppendOutput("Bought!");
+            terminal.AppendOutput("");
+            terminal.AppendOutput("Bought!", playEndSound:true);
             
             Debug.Log("ITEM BOUGHT: " + item.displayName);
             Debug.Log("ITEM PREFAB: " + item.prefab);
-
+            
             if (item.prefab) {
                 Instantiate(item.prefab);
             }

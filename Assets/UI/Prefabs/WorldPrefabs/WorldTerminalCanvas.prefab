@@ -535,11 +535,12 @@ MonoBehaviour:
   prefixText: '>'
   cursorChar: '|'
   cursorBlinkRate: 0.5
-  isOpen: 1
+  isOpen: 0
   userName: subj_2
   dir: Z:/project_61/exp_1
   keyBeep: 1
   typingSoundClip: {fileID: 8300000, guid: f95a9c2cc6a31c141b6c962561b5a777, type: 3}
+  endOfLineSoundClip: {fileID: 8300000, guid: 3539e0aff04897e48b923c65a671b2b3, type: 3}
   audioSource: {fileID: 0}
   goSlower: 0
   Styles:

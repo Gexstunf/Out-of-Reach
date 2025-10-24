@@ -7,7 +7,7 @@ namespace UI.Scripts.Commands {
     {
         
         public override void Execute(string[] arguments, TerminalControllerScript terminal) {
-            terminal.AppendOutput("Canceled operation.");
+            terminal.AppendOutput("Canceled operation.", playEndSound:true);
         }
     }
 }

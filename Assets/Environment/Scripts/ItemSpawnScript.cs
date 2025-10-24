@@ -20,7 +20,7 @@ namespace Environment.Scripts {
         private ItemSO _itemData;
         
         private bool _hasData = true;
-        private bool _failedSpawnChance;
+        private bool _failedSpawn;
         
         public void Awake() {
             itemDatabase = Resources.Load<ItemDatabaseSO>("Databases/ItemDatabase");
@@ -42,8 +42,8 @@ namespace Environment.Scripts {
                 Instantiate(_itemData.prefab, transform.position, transform.rotation);
             }
             else {
-                Debug.Log("Failed spawn chance");
-                _failedSpawnChance = true;
+                //Debug.Log("Failed spawn chance");
+                _failedSpawn = true;
             }
         }
         
@@ -52,9 +52,9 @@ namespace Environment.Scripts {
         }
 
         private void OnDrawGizmos() {
-            if (_hasData && !_failedSpawnChance) return;
+            if (_hasData && !_failedSpawn) return;
             
-            Gizmos.color = _failedSpawnChance ? Color.yellow : Color.red;
+            Gizmos.color = _failedSpawn ? Color.yellow : Color.red;
             Gizmos.DrawWireSphere(transform.position, 0.4f);
         }
     }

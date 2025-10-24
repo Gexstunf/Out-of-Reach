@@ -8,9 +8,16 @@ namespace UI.Scripts.Commands {
             var chosenStyle = terminal.GetStyleText(TerminalControllerScript.StyleText.EStyle.Fast);
             Debug.Log("Using this text style: " + chosenStyle.typeStyle);
             terminal.AppendOutput("Available Commands:", false, type:true, chosenStyle);
+            terminal.AppendOutput("");
 
-            foreach (var cmd in terminal.AllAvailableCommands()) {
-                terminal.AppendOutput($" - {cmd.commandName}: {cmd.commandDescription}", type:true, style:chosenStyle);
+            var allCommands = terminal.AllAvailableCommands();
+            foreach (var cmd in allCommands ) {
+                if (cmd == allCommands[^1]) {
+                    terminal.AppendOutput($" - {cmd.commandName}: {cmd.commandDescription}", type:true, style:chosenStyle, playEndSound:true);
+                }
+                else {
+                    terminal.AppendOutput($" - {cmd.commandName}: {cmd.commandDescription}", type:true, style:chosenStyle);
+                }
             }
         }
     }

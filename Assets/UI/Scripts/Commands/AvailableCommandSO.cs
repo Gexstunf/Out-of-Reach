@@ -9,7 +9,11 @@ namespace UI.Scripts.Commands {
             foreach (var item in commandItemsPrefabs) {
                 var objName = item.displayName != "" ? item.displayName : "?";
                 var chosenStyle = terminal.GetStyleText(TerminalControllerScript.StyleText.EStyle.Normal);
-                terminal.AppendOutput($"- {objName}: ${item.value}", type:true, style:chosenStyle);
+
+                if (item == commandItemsPrefabs[^1]) 
+                    terminal.AppendOutput($"- {objName}: ${item.value}", type:true, style:chosenStyle, playEndSound:true); 
+                else 
+                    terminal.AppendOutput($"- {objName}: ${item.value}", type:true, style:chosenStyle );
             }
         }
     }
