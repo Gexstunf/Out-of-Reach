@@ -32,6 +32,7 @@ public class InventoryControllerScript : MonoBehaviourPun
         _photonView = GetComponent<PhotonView>();
         _handGrabber = GetComponent<HandGrabberScript>();
         input = GetComponent<PlayerInputScript>();
+        _photonObjManager = PhotonObjectManagerScript.Instance;
 
         if (_uiManager == null)
             _uiManager = GetComponent<PlayerUIManager>();
@@ -45,32 +46,27 @@ public class InventoryControllerScript : MonoBehaviourPun
             $"Input={input != null}, " +
             $"UI={_uiManager != null}");
     }
-
     private void Update()
     {
-        if (!photonView.IsMine) return;
+        if (_photonView == null || !_photonView.IsMine || input == null)
+            return;
 
-        // Debug the index
-        if (debug && input.InventoryInteraction)
-            Debug.Log($"[Inventory] InventoryInteraction triggered. Index = {input.InventoryIndex}, " +
-                      $"CurrentItem = {_handGrabber.currentItem}, " +
-                      $"IsMine = {photonView.IsMine}");
+        if (!input.InventoryInteraction)
+            return; // Nada que hacer este frame
 
-        // Store grabbed item
         if (input.InventoryInteraction && _handGrabber.currentItem != null)
         {
             TryStoreCurrentItem();
         }
-        // Equip from slot
         else if (input.InventoryInteraction)
         {
-            int index = input.InventoryIndex;
-            if (index >= 0 && index < inventory.Length)
-                EquipItemFromSlot(index);
-            else if (debug)
-                Debug.LogWarning($"[Inventory] Invalid index ({index}) - can't equip.");
+            EquipItemFromSlot(input.InventoryIndex);
         }
+
+        // Muy importante: consumir el input después de usarlo
+        input.ConsumeInventoryInput();
     }
+
 
     #region Inventory Actions
 

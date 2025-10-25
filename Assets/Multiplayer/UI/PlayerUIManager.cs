@@ -37,6 +37,9 @@ namespace UI
         public GameObject[] backpackSlotUI;
         public Image[] backpackSlotIcons;
 
+        [Header("Debug")]
+        public bool debug = true;
+
         private BackpackData currentBackpackWorld;
 
         // NUEVO: jugador objetivo
@@ -46,8 +49,8 @@ namespace UI
         public void Start()
         {
             backpackPanel.SetActive(false);
-            Debug.Log("[UIManager] Panel de mochila inicializado como oculto.");
-            Debug.Log($"[UIManager] Start en {gameObject.name}");
+            Log("[UIManager] Panel de mochila inicializado como oculto.");
+            Log($"[UIManager] Start en {gameObject.name}");
             InitUI();
         }
 
@@ -62,14 +65,14 @@ namespace UI
         {
             if (_initialized)
             {
-                Debug.Log("[UIManager] Ya estaba inicializado, se salta InitUI.");
+                Log("[UIManager] Ya estaba inicializado, se salta InitUI.");
                 return;
             }
 
             if (staminaBar == null)
             {
                 staminaBar = GameObject.Find("Canvas/StaminaBar")?.GetComponent<Image>();
-                Debug.Log(staminaBar != null
+                Log(staminaBar != null
                     ? "[UIManager] ✅ StaminaBar encontrado dinámicamente."
                     : "[UIManager] ⚠️ No se encontró StaminaBar dinámicamente.");
             }
@@ -77,7 +80,7 @@ namespace UI
             if (healthContainer == null)
             {
                 healthContainer = GameObject.Find("Canvas/HealthContainer")?.transform;
-                Debug.Log(healthContainer != null
+                Log(healthContainer != null
                     ? "[UIManager] ✅ HealthContainer encontrado dinámicamente."
                     : "[UIManager] ⚠️ No se encontró HealthContainer dinámicamente.");
             }
@@ -90,7 +93,7 @@ namespace UI
                     Image img = child.GetComponent<Image>();
                     if (img != null) healthTicks.Add(img);
                 }
-                Debug.Log($"[UIManager] Health ticks cargados: {healthTicks.Count}");
+                Log($"[UIManager] Health ticks cargados: {healthTicks.Count}");
             }
 
             DisplayHealth(maxHealth);
@@ -103,21 +106,21 @@ namespace UI
                 if (btn != null)
                 {
                     btn.onClick.AddListener(() => OnSlotClicked(index));
-                    Debug.Log($"[UIManager] Listener agregado a slot {i}");
+                    Log($"[UIManager] Listener agregado a slot {i}");
                 }
             }
 
             _initialized = true;
-            Debug.Log("[UIManager] ✅ InitUI completado.");
+            Log("[UIManager] ✅ InitUI completado.");
         }
 
         public void InitInventory(InventoryControllerScript invController)
         {
             _inventoryController = invController;
-            Debug.Log(_inventoryController != null
+            Log(_inventoryController != null
                 ? "[UIManager] ✅ Inventario asignado correctamente."
                 : "[UIManager] ⚠️ Inventario NULL al inicializar.");
-            Debug.Log("[UIManager] Inventario inicializado");
+            Log("[UIManager] Inventario inicializado");
             UpdateInventoryUI();
         }
 
@@ -127,11 +130,11 @@ namespace UI
             _context = context;
             _vitals = vitals;
 
-            Debug.Log(_context != null
+            Log(_context != null
                 ? "[UIManager] ✅ Context asignado correctamente."
                 : "[UIManager] ⚠️ Context es NULL!");
 
-            Debug.Log(_vitals != null
+            Log(_vitals != null
                 ? $"[UIManager] ✅ Vitals asignados: {_vitals.Count}"
                 : "[UIManager] ⚠️ Vitals es NULL!");
         }
@@ -140,7 +143,7 @@ namespace UI
         {
             if (_context == null)
             {
-                Debug.LogWarning("[UIManager] ⚠️ UpdateUI llamado pero Context es NULL.");
+                LogWarning("[UIManager] ⚠️ UpdateUI llamado pero Context es NULL.");
                 return;
             }
 
@@ -153,7 +156,7 @@ namespace UI
         {
             if (_inventoryController == null)
             {
-                Debug.LogWarning("[UIManager] ⚠️ UpdateInventoryUI llamado pero Inventario es NULL.");
+                LogWarning("[UIManager] ⚠️ UpdateInventoryUI llamado pero Inventario es NULL.");
                 return;
             }
 
@@ -197,7 +200,7 @@ namespace UI
         {
             if (_inventoryController == null)
             {
-                Debug.LogWarning("[UIManager] ⚠️ OnSlotClicked llamado pero Inventario es NULL.");
+                LogWarning("[UIManager] ⚠️ OnSlotClicked llamado pero Inventario es NULL.");
                 return;
             }
 
@@ -333,6 +336,16 @@ namespace UI
                     healthTicks[i].color = c;
                 }
             }
+        }
+
+        private void Log(string message)
+        {
+            if (debug) Debug.Log(message);
+        }
+
+        private void LogWarning(string message)
+        {
+            if (debug) Debug.LogWarning(message);
         }
     }
 }

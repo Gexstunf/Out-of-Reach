@@ -644,6 +644,7 @@ MonoBehaviour:
   backpackOpen: 0
   backpackSlotUI: []
   backpackSlotIcons: []
+  debug: 0
 --- !u!114 &-1563234085835221795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -717,7 +718,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  debug: 0
+  debug: 1
 --- !u!54 &2595571559410374645 stripped
 Rigidbody:
   m_CorrespondingSourceObject: {fileID: 325761011322294894, guid: af6065566f6442d46a928f200c6e56e5, type: 3}

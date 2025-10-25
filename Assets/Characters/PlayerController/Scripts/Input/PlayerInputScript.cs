@@ -187,46 +187,27 @@ namespace Characters.PlayerController.Scripts.Input
             }
         }
 
-        public void OnInventory(InputAction.CallbackContext context) {
-            if (!context.performed) return;
-            var inv = GetComponent<PlayerInventoryPhoton>();
-            if (inv == null) return;
+        public void OnInventory(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
 
-            if (Keyboard.current.digit1Key.wasPressedThisFrame)
-            {
+            // Detecta cuál número se presionó
+            if (Keyboard.current.digit1Key.wasPressedThisFrame) InventoryIndex = 0;
+            else if (Keyboard.current.digit2Key.wasPressedThisFrame) InventoryIndex = 1;
+            else if (Keyboard.current.digit3Key.wasPressedThisFrame) InventoryIndex = 2;
+            else if (Keyboard.current.digit4Key.wasPressedThisFrame) InventoryIndex = 3;
+            else InventoryIndex = -1;
 
+            if (InventoryIndex != -1)
                 InventoryInteraction = true;
-                InventoryIndex = 0;
+        }
 
-                if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(0);
-                else inv.EquipFromSlot(0);
-            }
-            else if (Keyboard.current.digit2Key.wasPressedThisFrame)
-            {
-                InventoryInteraction = true;
-                InventoryIndex = 1;
-
-                if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(1);
-                else inv.EquipFromSlot(1);
-            }
-            else if (Keyboard.current.digit3Key.wasPressedThisFrame)
-            {
-
-                InventoryInteraction = true;
-                InventoryIndex = 2;
-
-                if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(2);
-                else inv.EquipFromSlot(2);
-            }
-            else if (Keyboard.current.digit4Key.wasPressedThisFrame)
-            {
-
-                InventoryInteraction = true;
-                InventoryIndex = 3;
-
-                if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(3);
-                else inv.EquipFromSlot(3);
-            }
+        // Método llamado por el InventoryController después de procesar el input
+        public void ConsumeInventoryInput()
+        {
+            InventoryInteraction = false;
+            InventoryIndex = -1;
         }
 
         public void OnDrop(InputAction.CallbackContext context)
