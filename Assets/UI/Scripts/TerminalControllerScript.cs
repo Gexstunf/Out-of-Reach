@@ -26,7 +26,6 @@ namespace UI.Scripts {
 
         
         [Header("Settings")] 
-        public bool isOpen = false;
         public string userName = "subject_5";
         public string dir = "Z:/project_61/exp_4";
         public bool keyBeep = false;
@@ -46,9 +45,12 @@ namespace UI.Scripts {
         
         private List<IEnumerator> _queueCoroutines = new List<IEnumerator>();
         private bool _isBusy = false;
+        private bool _isOpen = false;
+
         
         private StyleText _defaultStyle;
         private StyleText _fastStyle;
+        
         
         #endregion
         
@@ -141,7 +143,7 @@ namespace UI.Scripts {
         private void Update()
         {
             // Always ensure the input field is focused
-            if (!inputField.isFocused && isOpen)
+            if (!inputField.isFocused && _isOpen)
                 inputField.ActivateInputField();
 
             ProcessTypingList();
@@ -321,7 +323,9 @@ namespace UI.Scripts {
             }
         }
 
-        public void CloseTerminal() { }
+        public void CloseTerminal() {
+            _isOpen = false;
+        }
 
         private bool ExecuteNormalCommand(string cmd, string[] args ) {
             if (_availableCommands.ContainsKey(cmd)) {
@@ -431,6 +435,11 @@ namespace UI.Scripts {
             UnityEngine.Debug.Log("Returning default text style...");
             return defaultStyle;
         }
+
+        public void OpenTerminal() {
+            _isOpen = true;
+        }
+        
         #endregion
     }
 }

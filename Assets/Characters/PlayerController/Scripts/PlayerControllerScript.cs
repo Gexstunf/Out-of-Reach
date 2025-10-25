@@ -210,7 +210,11 @@ namespace Characters.PlayerController.Scripts
         {
             _rb.linearDamping = playerDrag;
         }
-        
+
+        public void SetKinematic(bool kinematic) {
+            _rb.isKinematic = kinematic;
+        }
+
         private bool IsGroundedWhileGrounded() {
             Vector3 pos = transform.TransformPoint(_playerCollider.center) - new Vector3(0f, _playerCollider.radius, 0f);
             
