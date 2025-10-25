@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: BuyCommand
   m_EditorClassIdentifier: 
   commandName: buy
-  commandDescription: used to buy items.
-  quantity: 1000
+  commandDescription: buy items.
+  quantity: 1
   commandItemsPrefabs:
   - {fileID: 11400000, guid: 10581c8a3f53f9e41b85b1ff3b2f3b2d, type: 2}
   - {fileID: 11400000, guid: 7d72c12c13191654580ede329588e30f, type: 2}

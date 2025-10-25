@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: HelpCommand
   m_EditorClassIdentifier: 
   commandName: help
-  commandDescription: used to view all commands available
+  commandDescription: view all commands available
+  quantity: 1
   commandItemsPrefabs: []
   specialCommands: []

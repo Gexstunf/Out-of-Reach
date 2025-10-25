@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: DenyCommand
   m_EditorClassIdentifier: 
   commandName: deny
-  commandDescription: used to deny operations
-  quantity: 100
-  commandItemsPrefabs:
-  - {fileID: 11400000, guid: 10581c8a3f53f9e41b85b1ff3b2f3b2d, type: 2}
+  commandDescription: deny operations
+  quantity: 1
+  commandItemsPrefabs: []
   specialCommands: []

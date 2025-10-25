@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ClearCommand
   m_EditorClassIdentifier: 
   commandName: clear
-  commandDescription: used to clear the terminal output.
+  commandDescription: clear the terminal output.
+  quantity: 1
   commandItemsPrefabs: []
   specialCommands: []

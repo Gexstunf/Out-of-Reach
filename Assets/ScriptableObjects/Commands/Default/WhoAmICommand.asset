@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: WhoAmICommand
   m_EditorClassIdentifier: 
   commandName: whoami
-  commandDescription: Used to display current session user
+  commandDescription: display current session user
+  quantity: 1
   commandItemsPrefabs: []
   specialCommands: []

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ExitCommand
   m_EditorClassIdentifier: 
   commandName: exit
-  commandDescription: used to exit the terminal.
+  commandDescription: exit the terminal.
+  quantity: 1
   commandItemsPrefabs: []
   specialCommands: []

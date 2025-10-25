@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: HistoryCommand
   m_EditorClassIdentifier: 
   commandName: history
-  commandDescription: Used to display session history
+  commandDescription: display session history
+  quantity: 1
   commandItemsPrefabs: []
   specialCommands: []
