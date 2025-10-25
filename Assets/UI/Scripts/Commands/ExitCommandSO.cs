@@ -7,5 +7,9 @@ namespace UI.Scripts {
             terminal.AppendOutput("Closing terminal...", false);
             terminal.CloseTerminal(); 
         }
+
+        public override void Reset() {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -12,5 +12,6 @@ namespace UI.Scripts {
         public CommandSO[] specialCommands;
         
         public abstract void Execute(string[] arguments, TerminalControllerScript terminal);
+        public abstract void Reset();
     }
 }

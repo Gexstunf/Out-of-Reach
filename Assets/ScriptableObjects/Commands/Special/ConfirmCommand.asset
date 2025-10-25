@@ -14,5 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   commandName: confirm
   commandDescription: used to confirm operations
-  commandItemsPrefabs: []
+  quantity: 100
+  commandItemsPrefabs:
+  - {fileID: 11400000, guid: 10581c8a3f53f9e41b85b1ff3b2f3b2d, type: 2}
   specialCommands: []
+  globalBankSO: {fileID: 11400000, guid: 5d14a5c06ed2f0d4ba6dfb3d2c859850, type: 2}

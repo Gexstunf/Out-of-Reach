@@ -58,6 +58,10 @@ namespace UI.Scripts.Commands {
             }
         }
 
+        public override void Reset() {
+            throw new System.NotImplementedException();
+        }
+
         private bool CanBuy(ItemSO item) {
             var price = quantity * item.value;
             if (price <= globalBank.Balance) {

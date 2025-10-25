@@ -16,5 +16,9 @@ namespace UI.Scripts.Commands {
                     terminal.AppendOutput($"- {objName}: ${item.value}", type:true, style:chosenStyle );
             }
         }
+
+        public override void Reset() {
+            throw new System.NotImplementedException();
+        }
     }
 }

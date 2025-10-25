@@ -28,5 +28,9 @@ namespace UI.Scripts.Commands {
                     Debug.LogWarning($"The: {item.displayName} item doesn't have a prefab in its ItemSO!");
                 }
             }
-    }
+
+            public override void Reset() {
+                throw new System.NotImplementedException();
+            }
+      }
 }

@@ -8,5 +8,9 @@ namespace UI.Scripts.Commands {
         {
             terminal.AppendOutput(terminal.userName, false);
         }
+
+        public override void Reset() {
+            throw new System.NotImplementedException();
+        }
     }
 }

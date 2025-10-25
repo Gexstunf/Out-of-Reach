@@ -30,5 +30,9 @@ namespace UI.Scripts.Commands {
                 }
             }
         }
+
+        public override void Reset() {
+            throw new System.NotImplementedException();
+        }
     }
 }
