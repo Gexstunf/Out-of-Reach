@@ -373,21 +373,31 @@ namespace Characters.PlayerController.Scripts
 
         public void OnItemReleased()
         {
-            if (currentItem == null) return;
+            if (currentItem == null)
+            {
+                Debug.Log("[HandGrabber] OnItemReleased: currentItem ya es null");
+                return;
+            }
 
-            // find the hand that holds it
+            Debug.Log($"[HandGrabber] OnItemReleased: liberando {currentItem.name}");
+
             if (itemHoldingHand != null)
             {
-                // let grabbable handle release
+                Debug.Log($"[HandGrabber] Hand que lo sostiene: {itemHoldingHand.IKTarget.name}");
                 currentItem.Release();
-
-                // clear hand state
                 itemHoldingHand.HoldingItem = false;
+                itemHoldingHand.PrevPressed = false; // reset click simulado
                 itemHoldingHand = null;
+            }
+            else
+            {
+                Debug.LogWarning("[HandGrabber] OnItemReleased: itemHoldingHand ya era null!");
             }
 
             currentItem = null;
+            Debug.Log("[HandGrabber] currentItem ahora es null");
         }
+
 
         /// <summary>
         /// Pide al HandGrabber que agarre una instancia ya existente en escena (por ejemplo, creada por Photon).
@@ -421,6 +431,36 @@ namespace Characters.PlayerController.Scripts
             // Asegurarse de parar cualquier cosa y arrancar el flujo como si el jugador hubiera reachado al objeto
             StopAndClearHand(chosen);
             StartHandCoroutine(chosen, ItemGrabFlow(grabbable, networkedObject.transform.position, chosen));
+        }
+
+        public void GrabNetworkedObjectFromInventory(GameObject obj)
+        {
+            if (obj == null)
+            {
+                Debug.LogWarning("[HandGrabber] GrabNetworkedObjectFromInventory: obj es null");
+                return;
+            }
+
+            var grabbable = obj.GetComponent<IGrabbableScript>();
+            if (grabbable == null)
+            {
+                Debug.LogWarning("[HandGrabber] GrabNetworkedObjectFromInventory: el objeto no tiene IGrabbableScript");
+                return;
+            }
+
+            HandData chosen = null;
+            if (!_rightHand.HoldingItem && !_rightHand.IsBusy) chosen = _rightHand;
+            else if (!_leftHand.HoldingItem && !_leftHand.IsBusy) chosen = _leftHand;
+            else chosen = (_leftHand != null) ? _leftHand : _rightHand;
+
+            Debug.Log($"[HandGrabber] Mano elegida para agarrar {obj.name}: {chosen.IKTarget.name}");
+
+            StopAndClearHand(chosen);
+
+            chosen.PrevPressed = true; // simula click presionado
+
+            StartHandCoroutine(chosen, ItemGrabFlow(grabbable, obj.transform.position, chosen));
+            Debug.Log($"[HandGrabber] Iniciado ItemGrabFlow para {obj.name}");
         }
 
 

@@ -7,6 +7,7 @@ using Multiplayer.Inventory;
 using System.Collections.Generic;
 using Photon.Pun.Demo.PunBasics;
 using UI;
+using System.Collections;
 
 public class InventoryControllerScript : MonoBehaviourPun
 {
@@ -29,7 +30,7 @@ public class InventoryControllerScript : MonoBehaviourPun
     [System.Serializable]
     public class InventorySlot {
         public ItemSO itemData;
-        public GameObject itemObject; // null when stored, set when equipped
+        [HideInInspector] public GameObject itemObject;
     }
     
     public void Awake()
@@ -88,16 +89,13 @@ public class InventoryControllerScript : MonoBehaviourPun
         if (!IsValidStoreAttempt(grabbable, slotIndex))
             return;
 
-        // Store only data — not GameObject
+        // ✅ Guardamos solo el ItemSO, nunca el GameObject físico
         inventory[slotIndex].itemData = grabbable.data;
         inventory[slotIndex].itemObject = null;
 
-        Debug.Log($"[Inventory] Stored '{grabbable.data?.name ?? "NULL DATA"}' at slot {slotIndex}");
-
-        // Destroy world object
         if (_photonObjManager)
         {
-            Debug.Log($"[Inventory] Destroying world object for {grabbable.name}");
+            if (debug) Debug.Log($"[Inventory] Destroying world object for {grabbable.name}");
             _photonObjManager.DestroyObjectForAll(grabbable.gameObject);
         }
         else
@@ -105,7 +103,11 @@ public class InventoryControllerScript : MonoBehaviourPun
             Debug.LogError("[Inventory] _photonObjManager is NULL! Cannot destroy object.");
         }
 
+        currentHeldItem = null; // Liberamos referencia global
+
         _uiManager?.UpdateInventoryUI();
+
+        if (debug) Debug.Log($"[Inventory] Stored '{grabbable.data?.name ?? "NULL DATA"}' at slot {slotIndex}");
     }
 
     public void EquipItemFromSlot(int slotIndex)
@@ -119,39 +121,32 @@ public class InventoryControllerScript : MonoBehaviourPun
         if (!IsValidEquipAttempt(slot, slotIndex))
             return;
 
+        if (debug) Debug.Log($"[Inventory] Equipando slot {slotIndex}: {itemData.displayName ?? itemData.name}");
+
+        // Instanciamos un nuevo objeto para el item
         Vector3 spawnPos = _handGrabber.leftGrabOrigin.position;
         Quaternion spawnRot = _handGrabber.leftGrabOrigin.rotation;
 
         string prefabName = itemData.worldPrefabName ?? itemData.heldPrefabName;
-
-        Debug.Log($"[Inventory] Attempting to equip slot {slotIndex}, item = {itemData.displayName ?? itemData.name}");
-
-        // Destroy current held item
-        if (currentHeldItem)
-        {
-            Debug.Log($"[Inventory] Destroying current held item {currentHeldItem.name}");
-            _photonObjManager.DestroyObjectForAll(currentHeldItem);
-            currentHeldItem = null;
-        }
-
-        // Spawn and grab new item
-        Debug.Log($"[Inventory] Spawning prefab: {prefabName}");
         var obj = _photonObjManager.InstantiateObjectForAll(prefabName, spawnPos, spawnRot);
-        _handGrabber.currentItem = obj.GetComponent<ItemGrabbableScript>();
-        _handGrabber.RegisterAndGrabItem(_handGrabber.currentItem, _handGrabber.itemHoldingHand, spawnPos);
+        _photonObjManager.TransferOwnership(obj, PhotonNetwork.LocalPlayer);
+
+        // HandGrabber lo agarra
+        _handGrabber.GrabNetworkedObjectFromInventory(obj);
 
         currentHeldItem = obj;
-        Debug.Log($"[Inventory] Equipped {itemData.displayName ?? itemData.name} to hand.");
 
-        // Clear slot (item is now equipped)
+        // ✅ Limpiamos el slot, sin tocar otros objetos
         slot.itemData = null;
         slot.itemObject = null;
 
         _uiManager?.UpdateInventoryUI();
+
+        if (debug) Debug.Log($"[Inventory] Equipped {itemData.displayName ?? itemData.name} via HandGrabber inventory flow.");
     }
-    
+
     #endregion
-    
+
     #region Helpers 
     private bool IsValidStoreAttempt(ItemGrabbableScript grabbable, int slotIndex)
     {

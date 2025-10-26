@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 3800820789230250861}
   - component: {fileID: 1191089246638974326}
   - component: {fileID: 4365286375610609256}
+  - component: {fileID: 3725826892312465752}
   m_Layer: 7
   m_Name: World_DronRoto
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115,6 +116,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: a65cf39056672ea4b9a53b8f5e926df4, type: 2}
+--- !u!114 &3725826892312465752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5443926683285994446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8dcb26be4a601845885b14a8dd66ad3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabHandle: {fileID: 0}
+  data: {fileID: 11400000, guid: a65cf39056672ea4b9a53b8f5e926df4, type: 2}
+  massScale: 1
+  connectedMassScale: 1
 --- !u!1001 &5589198813277129292
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -56259,10 +56259,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3800820789230250861, guid: 22955a5a48a76944d93a65f9b06f36bb, type: 3}
-      propertyPath: sceneViewId
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 5443926683285994446, guid: 22955a5a48a76944d93a65f9b06f36bb, type: 3}
       propertyPath: m_Name
       value: World_DronRoto

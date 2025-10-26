@@ -27,6 +27,8 @@ public class PhotonObjectManagerScript : MonoBehaviourPun
 
         if (view != null)
         {
+            // asegúrate de que el nombre del objeto sea único
+            obj.name = $"{prefabName}_ViewID_{view.ViewID}";
             trackedObjects[view.ViewID] = obj;
         }
 
