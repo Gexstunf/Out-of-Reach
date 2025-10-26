@@ -56,7 +56,6 @@ namespace Characters.PlayerController.Scripts.Input
         {
             JumpPressed = false;
             InventoryInteraction = false;
-            InventoryIndex = -1;
         }
 
         #endregion

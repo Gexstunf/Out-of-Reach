@@ -170,8 +170,8 @@ namespace UI
 
                 if (hasItem)
                 {
-                    GameObject itemObj = inventory[i];
-                    if (itemSOs.TryGetValue(itemObj, out ItemSO itemData))
+                    ItemSO itemData = inventory[i].itemData;
+                    if (itemData)
                     {
                         slotIcons[i].sprite = itemData.icon;
                         slotIcons[i].enabled = true;
