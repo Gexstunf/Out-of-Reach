@@ -63,8 +63,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1474997286500611468}
-  - component: {fileID: 325162800195859173}
-  - component: {fileID: 9168835775679528493}
+  - component: {fileID: 2426096655129781595}
   m_Layer: 3
   m_Name: Exit
   m_TagString: Untagged
@@ -87,7 +86,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3639394321372430678}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!114 &325162800195859173
+--- !u!114 &2426096655129781595
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,35 +95,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1360542851232552746}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc89bc7c3d8d606409e4bc2e00cf67ab, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f6d8f69c1cf2dc4484e9d4ba27b7fe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitID: 
-  isActive: 1
-  activationChance: 1
-  activeVisual: {fileID: 6507020407021716126}
-  inactiveVisual: {fileID: 0}
---- !u!65 &9168835775679528493
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1360542851232552746}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 2}
 --- !u!1 &2362897153453241785
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,10 +140,10 @@ GameObject:
   - component: {fileID: 3639394321372430678}
   - component: {fileID: 2159092596608871846}
   - component: {fileID: 8448889730241548898}
-  - component: {fileID: 6324268874213675828}
+  - component: {fileID: 2741275348536948749}
   m_Layer: 3
   m_Name: PasilloLPrefabDER
-  m_TagString: Untagged
+  m_TagString: Intersection
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -244,7 +217,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &6324268874213675828
+--- !u!114 &2741275348536948749
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -253,9 +226,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6677434570533079222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07e7128d98dda90449d444956c921198, type: 3}
+  m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
 --- !u!1001 &128176478399566488
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -320,11 +294,6 @@ PrefabInstance:
 --- !u!4 &2631309808472987338 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2685013475286680658, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
-  m_PrefabInstance: {fileID: 128176478399566488}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6507020407021716126 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6596308107174760454, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
   m_PrefabInstance: {fileID: 128176478399566488}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9068368923619426452

@@ -55,7 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5170823984737146726}
   m_Layer: 3
-  m_Name: EntryPoint
+  m_Name: Entry
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -417,11 +417,11 @@ GameObject:
   - component: {fileID: 7500236061927494659}
   - component: {fileID: 9122222825340130878}
   - component: {fileID: 4208568413692538244}
-  - component: {fileID: 5642003417432666921}
   - component: {fileID: 7509871071489529589}
+  - component: {fileID: 3861006628702492060}
   m_Layer: 3
   m_Name: HabInvernaderoPrefab
-  m_TagString: Indestructible
+  m_TagString: Room
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -496,18 +496,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4766090231595631520, guid: 65aff32bfa92c324da1ed8c12f3ec0d5, type: 3}
---- !u!114 &5642003417432666921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8846650929021130192}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03b8744d405dffb42a9ecd231fc43294, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7509871071489529589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -523,6 +511,20 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 7895797808354090002}
   slidingDoorPrefab: {fileID: 9100137002563764354, guid: 94e2d33e98ded0d4189a712f0d30643d, type: 3}
+  slidingDoorInstance: {fileID: 0}
+--- !u!114 &3861006628702492060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8846650929021130192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
 --- !u!1001 &2529836428615001567
 PrefabInstance:
   m_ObjectHideFlags: 0

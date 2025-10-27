@@ -10,6 +10,9 @@ TagManager:
   - Surface
   - Enemy
   - Limb
+  - Hallway
+  - Intersection
+  - Room
   layers:
   - Default
   - TransparentFX

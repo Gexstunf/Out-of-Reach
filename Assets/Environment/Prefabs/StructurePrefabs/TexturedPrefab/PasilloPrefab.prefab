@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5750995032441679566}
-  - component: {fileID: 8427875458170678076}
+  - component: {fileID: 3954886702947776670}
   m_Layer: 3
   m_Name: Exit
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 232215804705230934}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8427875458170678076
+--- !u!114 &3954886702947776670
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,14 +41,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4265439488098800}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc89bc7c3d8d606409e4bc2e00cf67ab, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f6d8f69c1cf2dc4484e9d4ba27b7fe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitID: 
-  isActive: 1
-  activationChance: 1
-  activeVisual: {fileID: 6052110605029160835}
-  inactiveVisual: {fileID: 0}
 --- !u!1 &3096484470341604994
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,11 +87,11 @@ GameObject:
   m_Component:
   - component: {fileID: 232215804705230934}
   - component: {fileID: 5122596054250648761}
-  - component: {fileID: 1379781152491563441}
   - component: {fileID: 3581379840074180337}
+  - component: {fileID: 6036489624563685488}
   m_Layer: 3
   m_Name: PasilloPrefab
-  m_TagString: Untagged
+  m_TagString: Hallway
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -149,18 +144,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &1379781152491563441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3791255646465563467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07e7128d98dda90449d444956c921198, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!64 &3581379840074180337
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -183,6 +166,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 3065087254759496983, guid: a153d04609567be4aa5b453d55c48732, type: 3}
+--- !u!114 &6036489624563685488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3791255646465563467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
 --- !u!1 &4095967443404682065
 GameObject:
   m_ObjectHideFlags: 0
@@ -258,6 +254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 0}
   maxItemSize: 0
   allowedTypes: 0100000003000000
   isOccupied: 0
@@ -359,6 +356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 0}
   maxItemSize: 0
   allowedTypes: 0100000003000000
   isOccupied: 0
@@ -426,11 +424,6 @@ PrefabInstance:
 --- !u!4 &3257426644789683159 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2685013475286680658, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
-  m_PrefabInstance: {fileID: 610134128977602437}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6052110605029160835 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6596308107174760454, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
   m_PrefabInstance: {fileID: 610134128977602437}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8391667926168766535

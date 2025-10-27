@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 0}
   maxItemSize: 1
   allowedTypes: 000000000100000003000000
   isOccupied: 0
@@ -91,6 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 0}
   maxItemSize: 1
   allowedTypes: 000000000100000003000000
   isOccupied: 0
@@ -138,6 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 0}
   maxItemSize: 1
   allowedTypes: 000000000100000003000000
   isOccupied: 0
@@ -185,6 +188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 0}
   maxItemSize: 1
   allowedTypes: 000000000100000003000000
   isOccupied: 0
@@ -269,6 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 0}
   maxItemSize: 1
   allowedTypes: 000000000100000003000000
   isOccupied: 0
@@ -281,7 +286,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6853398451803945505}
-  - component: {fileID: 1539828236738453246}
+  - component: {fileID: 8971250112256217417}
   m_Layer: 3
   m_Name: Exit
   m_TagString: Indestructible
@@ -304,7 +309,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9009231210767436806}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!114 &1539828236738453246
+--- !u!114 &8971250112256217417
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -313,14 +318,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7235556399280416332}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc89bc7c3d8d606409e4bc2e00cf67ab, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f6d8f69c1cf2dc4484e9d4ba27b7fe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitID: 
-  isActive: 1
-  activationChance: 1
-  activeVisual: {fileID: 0}
-  inactiveVisual: {fileID: 0}
 --- !u!1 &7549306424818159059
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,6 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 0}
   maxItemSize: 1
   allowedTypes: 000000000100000003000000
   isOccupied: 0
@@ -379,11 +380,11 @@ GameObject:
   - component: {fileID: 9009231210767436806}
   - component: {fileID: 8159648630796179722}
   - component: {fileID: 7613376731416345821}
-  - component: {fileID: 1950356135825468676}
   - component: {fileID: 3465315258962499388}
+  - component: {fileID: 6298220975046327126}
   m_Layer: 3
   m_Name: HabBarPrefabIZQ
-  m_TagString: Indestructible
+  m_TagString: Room
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -458,18 +459,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &1950356135825468676
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8525219668423997740}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03b8744d405dffb42a9ecd231fc43294, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3465315258962499388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,6 +475,20 @@ MonoBehaviour:
   - {fileID: 5959681148050329226}
   - {fileID: 222803029127462028}
   slidingDoorPrefab: {fileID: 9100137002563764354, guid: 94e2d33e98ded0d4189a712f0d30643d, type: 3}
+  slidingDoorInstance: {fileID: 0}
+--- !u!114 &6298220975046327126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8525219668423997740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
 --- !u!1 &8929473024236706053
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,7 +499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3124067020732381342}
   m_Layer: 3
-  m_Name: EntryPoint
+  m_Name: Entry
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
