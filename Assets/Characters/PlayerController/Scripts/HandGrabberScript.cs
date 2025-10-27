@@ -5,6 +5,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.Serialization;
 using UnityEngine.XR;
 using static UnityEditor.Progress;
 
@@ -30,7 +31,8 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private float itemGrabDistance = 2f;
         [SerializeField] private float wallGrabDistance = 2f;
         [SerializeField] private float grabSpeed = 3f;
-        [SerializeField] private float pushForce = 5f;                   
+        [SerializeField] private float pushForce = 5f;
+        [SerializeField] private bool shouldInteractWithGrabbable;
         [SerializeField] private bool debug;
 
         [Header("References")]
@@ -136,7 +138,7 @@ namespace Characters.PlayerController.Scripts
             ProcessHandInput(_rightHand, input.RightClickPressed);
 
             // global release: if no buttons pressed and an item is held, release item
-            if (!input.LeftClickPressed && !input.RightClickPressed && currentItem != null)
+            if (!input.LeftClickPressed && !input.RightClickPressed && currentItem && !shouldInteractWithGrabbable)
             {
                 OnItemReleased();
             }
@@ -168,42 +170,41 @@ namespace Characters.PlayerController.Scripts
             // capture previous pressed inside HandData to avoid external flags
             bool wasPressed = hand.PrevPressed;
 
-            // handle press-down edge
-            if (isPressed && !wasPressed)
-            {
-                // only allow grab presses if the hand is not busy
-                if (!hand.IsBusy)
-                {
-                    TryGrab(hand);
+            if (shouldInteractWithGrabbable) {
+                InteractWithCurrentGrabbable(hand, isPressed);
+            } else {
+                
+                // handle press-down edge
+                if (isPressed && !wasPressed) {
+                    // only allow grab presses if the hand is not busy
+                    if (!hand.IsBusy) {
+                        TryGrab(hand);
+                    }
+                }
+                
+                // handle release edge
+                if (!isPressed && wasPressed) {
+                    // If this hand holds the global item -> release the item
+                    if (hand.HoldingItem && currentItem) {
+                        OnItemReleased();
+                    }
+                    // Otherwise, if this hand currently has a wall grabbable -> release it
+                    else if (hand.CurrentGrabbable != null) {
+                        ReleaseWall(hand);
+                    }
+                    // else, if the hand was moving back to home (coroutine), we may want to stop it and start return
+                    else {
+                        // if nothing, ensure IK returns home
+                        StartHandCoroutine(hand, ReachToHomeRoutine(hand));
+                    }
                 }
             }
-
-            // handle release edge
-            if (!isPressed && wasPressed)
-            {
-                // If this hand holds the global item -> release the item
-                if (hand.HoldingItem && currentItem != null)
-                {
-                    OnItemReleased();
-                }
-                // Otherwise, if this hand currently has a wall grabbable -> release it
-                else if (hand.CurrentGrabbable != null)
-                {
-                    ReleaseWall(hand);
-                }
-                // else, if the hand was moving back to home (coroutine), we may want to stop it and start return
-                else
-                {
-                    // if nothing, ensure IK returns home
-                    StartHandCoroutine(hand, ReachToHomeRoutine(hand));
-                }
-            }
-
+            
             // update prev state
             hand.PrevPressed = isPressed;
 
             // always ensure visual IK target is set
-            if (hand.IKTarget != null)
+            if (hand.IKTarget)
                 hand.IKTarget.position = hand.CurrentTargetPos;
         }
 
@@ -223,11 +224,9 @@ namespace Characters.PlayerController.Scripts
             if (Physics.Raycast(origin.position, origin.forward, out var hitItem, itemGrabDistance, grabbableMask))
             {
                 var grabbable = hitItem.collider.GetComponent<IGrabbableScript>();
-                if (grabbable != null && IsItemGrabbable(grabbable))
-                {
+                if (grabbable != null && IsItemGrabbable(grabbable)) {
                     // only one item allowed
-                    if (currentItem == null)
-                    {
+                    if (!currentItem) {
                         // stop any running hand coroutine and start grab flow
                         StopAndClearHand(hand);
 
@@ -243,15 +242,19 @@ namespace Characters.PlayerController.Scripts
             if (Physics.Raycast(origin.position, origin.forward, out var hitWall, wallGrabDistance, grabbableMask))
             {
                 var grabbable = hitWall.collider.GetComponent<IGrabbableScript>();
-                if (grabbable != null && IsWallGrabbable(grabbable))
-                {
+                if (grabbable != null && IsWallGrabbable(grabbable)) {
                     // per-hand only if free
-                    if (hand.CurrentGrabbable == null)
-                    {
+                    if (hand.CurrentGrabbable == null) {
                         StopAndClearHand(hand);
                         StartHandCoroutine(hand, WallGrabFlow(grabbable, hitWall.point, hand));
                     }
                 }
+            }
+        }
+
+        private void InteractWithCurrentGrabbable(HandData hand, bool isPressed) {
+            if (isPressed) {
+                currentItem.Interact();
             }
         }
         
@@ -457,6 +460,10 @@ namespace Characters.PlayerController.Scripts
         private bool IsWallGrabbable(IGrabbableScript g)
         {
             return g is Environment.Scripts.WallGrabbableScript || !IsItemGrabbable(g);
+        }
+
+        public void SetInteractWithGrabbable(bool interact) {
+            shouldInteractWithGrabbable = interact; // so that the script enters "interact" mode (maintaining click to hold grabbable is no longer required)
         }
 
         #region Gizmos

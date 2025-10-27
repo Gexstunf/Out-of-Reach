@@ -9,20 +9,23 @@ namespace Items.Scripts {
         [Header("Settings")]
         public Transform grabHandle;
         public ItemSO data;
+        public ItemInteractionScript interactionScript;
         public float massScale = 1f;
         public float connectedMassScale = 1f;
         
+        public Transform GrabHandle { get; set; } 
+        public bool IsItem { get; } = true;
+
         private ConfigurableJoint _joint;
         private Rigidbody _rb;
-
         
         void Awake()
         {
             _rb = GetComponent<Rigidbody>();
             _rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            interactionScript = GetComponent<ItemInteractionScript>();
         }
 
-        public Transform GrabHandle { get; set; }
 
         public void Grab(Rigidbody rb, Vector3 grabPoint) {
             if (_joint) {
@@ -64,6 +67,10 @@ namespace Items.Scripts {
             }
         }
 
-        public bool IsItem { get; } = true;
+        public void Interact() {
+            if (interactionScript) {
+                interactionScript.Interact();
+            };
+        }
     }
 }

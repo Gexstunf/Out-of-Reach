@@ -92,6 +92,7 @@ namespace Characters.PlayerController.Scripts.Inventory {
             inventory[slotIndex].itemData = grabbable.data;
             inventory[slotIndex].itemObject = grabbable.gameObject;
             inventory[slotIndex].itemGrabbableScript = grabbable;
+            _handGrabber.SetInteractWithGrabbable(false);
 
             if (_photonObjManager)
             {
@@ -103,9 +104,8 @@ namespace Characters.PlayerController.Scripts.Inventory {
             {
                 Debug.LogError("[Inventory] _photonObjManager is NULL! Cannot destroy object.");
             }
-
+            
             currentHeldItem = null; // Liberamos referencia global
-
             _uiManager?.UpdateInventoryUI();
 
             //if (debug) Debug.Log($"[Inventory] Stored '{grabbable.data?.name ?? "NULL DATA"}' at slot {slotIndex}");
@@ -135,6 +135,7 @@ namespace Characters.PlayerController.Scripts.Inventory {
             // HandGrabber lo agarra
             _handGrabber.currentItem = slot.itemGrabbableScript;
             ShowItem(slot.itemObject, spawnPos);
+            _handGrabber.SetInteractWithGrabbable(true);
             _handGrabber.RegisterAndGrabItemLeftHand(slot.itemGrabbableScript, spawnPos);
             
             //_handGrabber.GrabNetworkedObjectFromInventory(obj);

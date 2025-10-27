@@ -714,13 +714,17 @@ MonoBehaviour:
   _uiManager: {fileID: 0}
   input: {fileID: 0}
   inventory:
-  - itemData: {fileID: 0}
+  - itemGrabbableScript: {fileID: 0}
+    itemData: {fileID: 0}
     itemObject: {fileID: 0}
-  - itemData: {fileID: 0}
+  - itemGrabbableScript: {fileID: 0}
+    itemData: {fileID: 0}
     itemObject: {fileID: 0}
-  - itemData: {fileID: 0}
+  - itemGrabbableScript: {fileID: 0}
+    itemData: {fileID: 0}
     itemObject: {fileID: 0}
-  - itemData: {fileID: 0}
+  - itemGrabbableScript: {fileID: 0}
+    itemData: {fileID: 0}
     itemObject: {fileID: 0}
   debug: 1
 --- !u!54 &2595571559410374645 stripped

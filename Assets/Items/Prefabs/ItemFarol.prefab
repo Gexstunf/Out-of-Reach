@@ -97,6 +97,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabHandle: {fileID: 5874828001378974869}
+  data: {fileID: 11400000, guid: 31046f305d4f10e44ba278211d0fb3ec, type: 2}
+  interactionScript: {fileID: 0}
   massScale: 1
   connectedMassScale: 1
 --- !u!1 &6315172768989141192
