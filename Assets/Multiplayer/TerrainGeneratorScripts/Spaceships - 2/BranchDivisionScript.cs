@@ -6,6 +6,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
     public class BranchDivisionScript : MonoBehaviour
     {
         public Dictionary<string, InfoScript> Rama = new();
+        public Dictionary<string, InfoScript> EntreRama = new();
 
         public void AccionRama(bool choco)
         {

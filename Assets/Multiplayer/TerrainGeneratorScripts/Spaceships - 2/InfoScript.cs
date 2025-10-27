@@ -13,20 +13,42 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
             branchDivision = GetComponent<BranchDivisionScript>();
             if (gameObject.CompareTag("Hallway"))
             {
-                if (!branchDivision.Rama.ContainsKey(estructuraID))
+                if (!branchDivision.Rama.ContainsKey(estructuraID) && estructuraID != "")
                 {
                     branchDivision.Rama.Add(estructuraID, this);
                 }
                 else
                 {
-                    estructuraID = System.Guid.NewGuid().ToString();
+                    estructuraID = Guid.NewGuid().ToString();
                     branchDivision.Rama.Add(estructuraID, this);
                 }
             }
             else if (gameObject.CompareTag("Intersection"))
+            {
                 branchDivision.AccionRama(false);
+                if (!branchDivision.EntreRama.ContainsKey(estructuraID) && estructuraID != "")
+                {
+                    branchDivision.EntreRama.Add(estructuraID, this);
+                }
+                else
+                {
+                    estructuraID = Guid.NewGuid().ToString();
+                    branchDivision.EntreRama.Add(estructuraID, this);
+                }
+            }
             else if (gameObject.CompareTag("Room"))
+            {
                 branchDivision.AccionRama(false);
+                if (!branchDivision.EntreRama.ContainsKey(estructuraID))
+                {
+                    branchDivision.EntreRama.Add(estructuraID, this);
+                }
+                else
+                {
+                    estructuraID = Guid.NewGuid().ToString();
+                    branchDivision.EntreRama.Add(estructuraID, this);
+                }
+            }
         }
     }
 }
