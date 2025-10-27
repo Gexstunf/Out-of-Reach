@@ -19,6 +19,8 @@ namespace Characters.PlayerController.Scripts
     /// </summary>
     public class HandGrabberScript : MonoBehaviour
     {
+        
+        #region Variables
         [Header("Settings")]
         public Transform leftGrabOrigin;
         public Transform rightGrabOrigin;
@@ -78,7 +80,10 @@ namespace Characters.PlayerController.Scripts
                 CurrentTargetPos = ikTarget != null ? ikTarget.position : Vector3.zero;
             }
         }
+        
+        #endregion
 
+        #region Unity Methods
         // -------------------------
         // Unity lifecycle
         // -------------------------
@@ -150,7 +155,11 @@ namespace Characters.PlayerController.Scripts
                 rb.AddForce(pushDir * pushForce, ForceMode.Acceleration);
             }
         }
+        
+        #endregion
 
+        #region Main Logic
+        
         // -------------------------
         // Core input / per-hand logic
         // -------------------------
@@ -206,7 +215,7 @@ namespace Characters.PlayerController.Scripts
             Transform origin = useIndependentOrigins ? (hand == _leftHand ? leftGrabOrigin : rightGrabOrigin) : camTransform;
             if (origin == null)
             {
-                Debug.LogWarning("HandGrabber: origin is null.");
+                //Debug.LogWarning("HandGrabber: origin is null.");
                 return;
             }
 
@@ -245,6 +254,20 @@ namespace Characters.PlayerController.Scripts
                 }
             }
         }
+        
+        #endregion
+        
+        private void StopAndClearHand(HandData hand)
+        {
+            if (hand.ActiveCoroutine != null)
+            {
+                StopCoroutine(hand.ActiveCoroutine);
+                hand.ActiveCoroutine = null;
+            }
+        }
+
+        #region Flows / Coroutines
+        
 
         // -------------------------
         // Grab flows / coroutines
@@ -269,14 +292,6 @@ namespace Characters.PlayerController.Scripts
             return hand.ActiveCoroutine;
         }
 
-        private void StopAndClearHand(HandData hand)
-        {
-            if (hand.ActiveCoroutine != null)
-            {
-                StopCoroutine(hand.ActiveCoroutine);
-                hand.ActiveCoroutine = null;
-            }
-        }
 
         // Item flow: reach -> attach object to hand (object side joint) -> return hand to home and release visual weight
         private IEnumerator ItemGrabFlow(IGrabbableScript item, Vector3 hitPoint, HandData hand)
@@ -296,20 +311,8 @@ namespace Characters.PlayerController.Scripts
 
             // Leave hand.HoldingItem true until OnItemReleased is called externally
         }
-
-        public void RegisterAndGrabItem(ItemGrabbableScript item, HandData hand, Vector3 grabPoint)
-        {
-            item.Grab(hand.Rb, grabPoint);
-            RegisterItemGrab(item as ItemGrabbableScript, hand);
-        }
-
-        private void RegisterItemGrab(ItemGrabbableScript item, HandData hand)
-        {
-            currentItem = item as ItemGrabbableScript;
-            itemHoldingHand = hand;
-            hand.HoldingItem = true;
-        }
-
+        
+        
         // Wall flow: reach -> call grabbable grab (likely creates joint on hand/world) -> keep IK weight
         private IEnumerator WallGrabFlow(IGrabbableScript wall, Vector3 hitPoint, HandData hand)
         {
@@ -323,7 +326,7 @@ namespace Characters.PlayerController.Scripts
 
             // keep hand IK weight at 1 while held; coroutine ends here (hand.ActiveCoroutine cleared by StartHandCoroutine manager)
         }
-
+        
         // Reach helper (smoothly move IK target and IK weight)
         private IEnumerator ReachToPointRoutine(Vector3 targetPoint, HandData hand, float targetWeight)
         {
@@ -352,6 +355,33 @@ namespace Characters.PlayerController.Scripts
             Vector3 homeWorld = hand.IKTarget.parent.TransformPoint(hand.LocalHomePosition);
             yield return ReachToPointRoutine(homeWorld, hand, targetWeight: 0f);
         }
+        
+        #endregion
+
+        private void RegisterAndGrabItem(ItemGrabbableScript item, HandData hand, Vector3 grabPoint)
+        {
+            item.Grab(hand.Rb, grabPoint);
+            Debug.Log("Grabbed item");
+            RegisterItemGrab(item, hand);
+        }
+        
+        public void RegisterAndGrabItemLeftHand(ItemGrabbableScript item, Vector3 grabPoint)
+        {
+            RegisterAndGrabItem(item, _leftHand, grabPoint);
+        }
+        
+        public void RegisterAndGrabItemRightHand(ItemGrabbableScript item, Vector3 grabPoint)
+        {
+            RegisterAndGrabItem(item, _rightHand, grabPoint);
+        }
+
+        private void RegisterItemGrab(ItemGrabbableScript item, HandData hand)
+        {
+            currentItem = item;
+            itemHoldingHand = hand;
+            hand.HoldingItem = true;
+        }
+        
 
         // -------------------------
         // Release helpers
@@ -373,96 +403,28 @@ namespace Characters.PlayerController.Scripts
 
         public void OnItemReleased()
         {
-            if (currentItem == null)
+            if (!currentItem)
             {
-                Debug.Log("[HandGrabber] OnItemReleased: currentItem ya es null");
+                //Debug.Log("[HandGrabber] OnItemReleased: currentItem ya es null");
                 return;
             }
 
-            Debug.Log($"[HandGrabber] OnItemReleased: liberando {currentItem.name}");
+            //Debug.Log($"[HandGrabber] OnItemReleased: liberando {currentItem.name}");
 
             if (itemHoldingHand != null)
             {
-                Debug.Log($"[HandGrabber] Hand que lo sostiene: {itemHoldingHand.IKTarget.name}");
+                Debug.Log($"Releasing item");
                 currentItem.Release();
                 itemHoldingHand.HoldingItem = false;
                 itemHoldingHand.PrevPressed = false; // reset click simulado
                 itemHoldingHand = null;
-            }
-            else
-            {
+            } else {
                 Debug.LogWarning("[HandGrabber] OnItemReleased: itemHoldingHand ya era null!");
             }
 
             currentItem = null;
-            Debug.Log("[HandGrabber] currentItem ahora es null");
+            //Debug.Log("[HandGrabber] currentItem ahora es null");
         }
-
-
-        /// <summary>
-        /// Pide al HandGrabber que agarre una instancia ya existente en escena (por ejemplo, creada por Photon).
-        /// Usa la mano más cercana al objeto (o la derecha por defecto) y lanza el flujo de ItemGrabFlow
-        /// para que la mano haga el reach & grab exactamente como si el jugador la hubiera tomado desde el mundo.
-        /// </summary>
-        public void GrabNetworkedObject(GameObject networkedObject)
-        {
-            if (networkedObject == null) return;
-            var grabbable = networkedObject.GetComponent<IGrabbableScript>();
-            if (grabbable == null) return;
-
-            // decidir mano: preferencia por la mano que esté libre y más cercana al objeto
-            HandData chosen = null;
-            float leftDist = (_leftHand != null && _leftHand.IKTarget != null) ? Vector3.Distance(_leftHand.IKTarget.position, networkedObject.transform.position) : float.MaxValue;
-            float rightDist = (_rightHand != null && _rightHand.IKTarget != null) ? Vector3.Distance(_rightHand.IKTarget.position, networkedObject.transform.position) : float.MaxValue;
-
-            // preferir mano más cercana si está libre, si no, la otra
-            if (_rightHand != null && !_rightHand.IsBusy && !_rightHand.HoldingItem) chosen = _rightHand;
-            if (chosen == null && _leftHand != null && !_leftHand.IsBusy && !_leftHand.HoldingItem) chosen = _leftHand;
-
-            // si ambas ocupadas, escoger la más cercana
-            if (chosen == null)
-            {
-                chosen = (leftDist <= rightDist) ? _leftHand : _rightHand;
-            }
-
-            // Si sigue nulo, fallback a derecha
-            if (chosen == null) chosen = _rightHand ?? _leftHand;
-
-            // Asegurarse de parar cualquier cosa y arrancar el flujo como si el jugador hubiera reachado al objeto
-            StopAndClearHand(chosen);
-            StartHandCoroutine(chosen, ItemGrabFlow(grabbable, networkedObject.transform.position, chosen));
-        }
-
-        public void GrabNetworkedObjectFromInventory(GameObject obj)
-        {
-            if (obj == null)
-            {
-                Debug.LogWarning("[HandGrabber] GrabNetworkedObjectFromInventory: obj es null");
-                return;
-            }
-
-            var grabbable = obj.GetComponent<IGrabbableScript>();
-            if (grabbable == null)
-            {
-                Debug.LogWarning("[HandGrabber] GrabNetworkedObjectFromInventory: el objeto no tiene IGrabbableScript");
-                return;
-            }
-
-            HandData chosen = null;
-            if (!_rightHand.HoldingItem && !_rightHand.IsBusy) chosen = _rightHand;
-            else if (!_leftHand.HoldingItem && !_leftHand.IsBusy) chosen = _leftHand;
-            else chosen = (_leftHand != null) ? _leftHand : _rightHand;
-
-            Debug.Log($"[HandGrabber] Mano elegida para agarrar {obj.name}: {chosen.IKTarget.name}");
-
-            StopAndClearHand(chosen);
-
-            chosen.PrevPressed = true; // simula click presionado
-
-            StartHandCoroutine(chosen, ItemGrabFlow(grabbable, obj.transform.position, chosen));
-            Debug.Log($"[HandGrabber] Iniciado ItemGrabFlow para {obj.name}");
-        }
-
 
         // -------------------------
         // IK smoothing / visuals
@@ -497,6 +459,7 @@ namespace Characters.PlayerController.Scripts
             return g is Environment.Scripts.WallGrabbableScript || !IsItemGrabbable(g);
         }
 
+        #region Gizmos
         // OnDrawGizmos for debugging
         private void OnDrawGizmos()
         {
@@ -518,5 +481,6 @@ namespace Characters.PlayerController.Scripts
                 Debug.DrawRay(rightGrabOrigin.position, rightGrabOrigin.forward * itemGrabDistance, Color.cyan);
             }
         }
+        #endregion
     }
 }

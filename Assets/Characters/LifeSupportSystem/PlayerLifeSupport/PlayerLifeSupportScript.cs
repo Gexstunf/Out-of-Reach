@@ -1,5 +1,6 @@
 ﻿using Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals;
 using Characters.PlayerController.Scripts.Input;
+using Characters.PlayerController.Scripts.Inventory;
 using UI;
 using UnityEngine;
 

@@ -98,7 +98,7 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             var grabbable = held.GetComponent<IGrabbableScript>();
             if (grabbable != null)
             {
-                grabber.GrabNetworkedObject(held);
+                //grabber.GrabNetworkedObject(held);
             }
         }
     }
@@ -145,7 +145,7 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         var grabber = GetComponent<HandGrabberScript>();
         if (grabber != null)
         {
-            grabber.GrabNetworkedObject(tempHeldObj);
+            //grabber.GrabNetworkedObject(tempHeldObj);
         }
 
         Debug.Log($"✅ [RPC_SpawnTempHeld] Prefab temporal instanciado y agarrado físicamente ({prefab.name})");
