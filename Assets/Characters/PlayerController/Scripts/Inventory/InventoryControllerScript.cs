@@ -28,8 +28,9 @@ namespace Characters.PlayerController.Scripts.Inventory {
         [System.Serializable]
         public class InventorySlot {
             public ItemGrabbableScript itemGrabbableScript;
+            public ItemInteractionScript itemInteractionScript;
             public ItemSO itemData;
-            [HideInInspector] public GameObject itemObject;
+            public GameObject itemObject;
         }
     
         public void Awake()
@@ -92,12 +93,18 @@ namespace Characters.PlayerController.Scripts.Inventory {
             inventory[slotIndex].itemData = grabbable.data;
             inventory[slotIndex].itemObject = grabbable.gameObject;
             inventory[slotIndex].itemGrabbableScript = grabbable;
-            _handGrabber.SetInteractWithGrabbable(false);
+            inventory[slotIndex].itemInteractionScript = grabbable.interactionScript;
+
+            if (grabbable.interactionScript)
+            {
+                _handGrabber.SetInteractWithGrabbable(false);
+            }
 
             if (_photonObjManager)
             {
                 //if (debug) Debug.Log($"[Inventory] Destroying world object for {grabbable.name}");
                 //_photonObjManager.DestroyObjectForAll(grabbable.gameObject);
+                //_handGrabber.currentItem = null;
                 HideItem(grabbable.gameObject);
             }
             else
@@ -145,6 +152,7 @@ namespace Characters.PlayerController.Scripts.Inventory {
             // ✅ Limpiamos el slot, sin tocar otros objetos
             slot.itemData = null;
             slot.itemObject = null;
+            slot.itemInteractionScript = null;
 
             _uiManager?.UpdateInventoryUI();
 
