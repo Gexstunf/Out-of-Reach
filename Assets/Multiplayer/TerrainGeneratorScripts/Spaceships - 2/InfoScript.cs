@@ -39,7 +39,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
             else if (gameObject.CompareTag("Room"))
             {
                 branchDivision.AccionRama(false);
-                if (!branchDivision.EntreRama.ContainsKey(estructuraID))
+                if (!branchDivision.EntreRama.ContainsKey(estructuraID) && estructuraID != "")
                 {
                     branchDivision.EntreRama.Add(estructuraID, this);
                 }
