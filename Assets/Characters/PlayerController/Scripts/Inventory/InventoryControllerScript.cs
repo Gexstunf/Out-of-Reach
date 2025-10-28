@@ -94,11 +94,8 @@ namespace Characters.PlayerController.Scripts.Inventory {
             inventory[slotIndex].itemObject = grabbable.gameObject;
             inventory[slotIndex].itemGrabbableScript = grabbable;
             inventory[slotIndex].itemInteractionScript = grabbable.interactionScript;
-
-            if (grabbable.interactionScript)
-            {
-                _handGrabber.SetInteractWithGrabbable(false);
-            }
+            _handGrabber.SetInteractWithGrabbable(false);
+            
 
             if (_photonObjManager)
             {
@@ -141,10 +138,11 @@ namespace Characters.PlayerController.Scripts.Inventory {
 
             // HandGrabber lo agarra
             _handGrabber.currentItem = slot.itemGrabbableScript;
-            ShowItem(slot.itemObject, spawnPos);
-            _handGrabber.SetInteractWithGrabbable(true);
-            _handGrabber.RegisterAndGrabItemLeftHand(slot.itemGrabbableScript, spawnPos);
+            ShowItem(slot.itemObject, spawnPos, transform.rotation);
             
+            if (slot.itemInteractionScript) _handGrabber.SetInteractWithGrabbable(true);
+            
+            _handGrabber.RegisterAndGrabItemLeftHand(slot.itemGrabbableScript, spawnPos);
             //_handGrabber.GrabNetworkedObjectFromInventory(obj);
         
             //currentHeldItem = obj;
@@ -207,8 +205,9 @@ namespace Characters.PlayerController.Scripts.Inventory {
             item.SetActive(false);
         }
         
-        private void ShowItem(GameObject item, Vector3 showPosition) {
+        private void ShowItem(GameObject item, Vector3 showPosition, Quaternion rotation) {
             item.transform.position = showPosition;
+            item.transform.rotation = rotation;
             item.SetActive(true);
         }
         

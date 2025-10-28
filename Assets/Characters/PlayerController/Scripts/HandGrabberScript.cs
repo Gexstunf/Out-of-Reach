@@ -253,7 +253,7 @@ namespace Characters.PlayerController.Scripts
         }
 
         private void InteractWithCurrentGrabbable(HandData hand, bool isPressed) {
-            if (isPressed) {
+            if (isPressed && !hand.PrevPressed) {
                 currentItem.Interact();
             }
         }

@@ -715,15 +715,19 @@ MonoBehaviour:
   input: {fileID: 0}
   inventory:
   - itemGrabbableScript: {fileID: 0}
+    itemInteractionScript: {fileID: 0}
     itemData: {fileID: 0}
     itemObject: {fileID: 0}
   - itemGrabbableScript: {fileID: 0}
+    itemInteractionScript: {fileID: 0}
     itemData: {fileID: 0}
     itemObject: {fileID: 0}
   - itemGrabbableScript: {fileID: 0}
+    itemInteractionScript: {fileID: 0}
     itemData: {fileID: 0}
     itemObject: {fileID: 0}
   - itemGrabbableScript: {fileID: 0}
+    itemInteractionScript: {fileID: 0}
     itemData: {fileID: 0}
     itemObject: {fileID: 0}
   debug: 1
