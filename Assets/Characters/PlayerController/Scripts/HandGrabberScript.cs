@@ -38,15 +38,20 @@ namespace Characters.PlayerController.Scripts
         [Header("References")]
         [SerializeField] private PlayerInputScript input;
         [SerializeField] private Rig grabRig; // optional, to blend weights
+        [SerializeField] private Rig holdRig; // optional, to blend weights
         [SerializeField] private Rigidbody rb;
         [SerializeField] private PlayerInventoryPhoton inventory;
 
-        [Header("Left Hand")]
+        [Header("Left Hand Hold Rig")]
+        [SerializeField] private Transform leftHandIKTargetHold;
+        [SerializeField] private TwoBoneIKConstraint leftIKConstraintHold;
+
+        [Header("Left Hand Grab Rig")]
         [SerializeField] private Transform leftHandIKTarget;
         [SerializeField] private Rigidbody leftHandRb;
         [SerializeField] private TwoBoneIKConstraint leftIKConstraint;
 
-        [Header("Right Hand")]
+        [Header("Right Hand Grab Rig")]
         [SerializeField] private Transform rightHandIKTarget;
         [SerializeField] private Rigidbody rightHandRb;
         [SerializeField] private TwoBoneIKConstraint rightIKConstraint;
@@ -61,8 +66,10 @@ namespace Characters.PlayerController.Scripts
         // --- HandData encapsulates per-hand state ---
         public class HandData
         {
+            public Transform IKHoldTarget;
             public Transform IKTarget;
             public Rigidbody Rb;
+            public TwoBoneIKConstraint IKHoldConstraint;
             public TwoBoneIKConstraint IKConstraint;
             public Vector3 LocalHomePosition; // local to IKTarget.parent
             public IGrabbableScript CurrentGrabbable; // wall grabbable when holding a wall
@@ -73,13 +80,16 @@ namespace Characters.PlayerController.Scripts
             public bool IsBusy => ActiveCoroutine != null;
             public bool HoldingItem; // true if this hand currently holds the global item
 
-            public HandData(Transform ikTarget, Rigidbody rb, TwoBoneIKConstraint constraint, Vector3 homeLocal)
+            public HandData(Transform ikTarget, Rigidbody rb, TwoBoneIKConstraint constraint, Vector3 homeLocal, 
+                Transform iKHoldTarget, TwoBoneIKConstraint iKHoldConstraint)
             {
                 IKTarget = ikTarget;
                 Rb = rb;
                 IKConstraint = constraint;
                 LocalHomePosition = homeLocal;
                 CurrentTargetPos = ikTarget != null ? ikTarget.position : Vector3.zero;
+                IKHoldTarget = iKHoldTarget;
+                IKHoldConstraint = iKHoldConstraint;
             }
         }
         
@@ -96,8 +106,8 @@ namespace Characters.PlayerController.Scripts
             var leftHome = leftHandIKTarget.localPosition;
             var rightHome = rightHandIKTarget.localPosition;
 
-            _leftHand = new HandData(leftHandIKTarget, leftHandRb, leftIKConstraint, leftHome);
-            _rightHand = new HandData(rightHandIKTarget, rightHandRb, rightIKConstraint, rightHome);
+            _leftHand = new HandData(leftHandIKTarget, leftHandRb, leftIKConstraint, leftHome, leftHandIKTargetHold, leftIKConstraintHold);
+            _rightHand = new HandData(rightHandIKTarget, rightHandRb, rightIKConstraint, rightHome, leftHandIKTargetHold, leftIKConstraintHold);
 
             // initialize current target positions so we don't snap to Vector3.zero
             _leftHand.CurrentTargetPos = _leftHand.IKTarget.position;
@@ -331,25 +341,28 @@ namespace Characters.PlayerController.Scripts
         }
         
         // Reach helper (smoothly move IK target and IK weight)
-        private IEnumerator ReachToPointRoutine(Vector3 targetPoint, HandData hand, float targetWeight)
+        private IEnumerator ReachToPointRoutine(Vector3 targetPoint, HandData hand, float targetWeight, bool isHoldRig = false)
         {
-            Vector3 startPos = hand.IKTarget.position;
-            float startWeight = hand.IKConstraint != null ? hand.IKConstraint.weight : 0f;
+            Transform ikTar = isHoldRig ? hand.IKHoldTarget : hand.IKTarget;
+            TwoBoneIKConstraint ikCon = isHoldRig ? hand.IKHoldConstraint : hand.IKConstraint;
+
+            Vector3 startPos = ikTar.position;
+            float startWeight = ikCon != null ? ikCon.weight : 0f;
             float elapsed = 0f;
             while (elapsed < 1f)
             {
                 elapsed += Time.deltaTime * grabSpeed;
                 float t = Mathf.Clamp01(elapsed);
-                hand.IKTarget.position = Vector3.Lerp(startPos, targetPoint, t);
-                if (hand.IKConstraint != null)
-                    hand.IKConstraint.weight = Mathf.Lerp(startWeight, targetWeight, t);
-                hand.CurrentTargetPos = hand.IKTarget.position;
+                ikTar.position = Vector3.Lerp(startPos, targetPoint, t);
+                if (ikCon != null)
+                    ikCon.weight = Mathf.Lerp(startWeight, targetWeight, t);
+                hand.CurrentTargetPos = ikTar.position;
                 yield return null;
             }
 
             // ensure final values
-            hand.IKTarget.position = targetPoint;
-            if (hand.IKConstraint != null) hand.IKConstraint.weight = targetWeight;
+            ikTar.position = targetPoint;
+            if (ikCon != null) ikCon.weight = targetWeight;
             hand.CurrentTargetPos = targetPoint;
         }
 
@@ -370,6 +383,7 @@ namespace Characters.PlayerController.Scripts
         
         public void RegisterAndGrabItemLeftHand(ItemGrabbableScript item, Vector3 grabPoint)
         {
+            StartCoroutine(ReachToPointRoutine(grabPoint, _leftHand, 1f));
             RegisterAndGrabItem(item, _leftHand, grabPoint);
         }
         
