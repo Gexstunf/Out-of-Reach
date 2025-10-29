@@ -383,7 +383,7 @@ namespace Characters.PlayerController.Scripts
         
         public void RegisterAndGrabItemLeftHand(ItemGrabbableScript item, Vector3 grabPoint)
         {
-            StartCoroutine(ReachToPointRoutine(grabPoint, _leftHand, 1f));
+            //StartCoroutine(ReachToPointRoutine(grabPoint, _leftHand, 1f));
             RegisterAndGrabItem(item, _leftHand, grabPoint);
         }
         
