@@ -288,7 +288,7 @@ GameObject:
   - component: {fileID: 6853398451803945505}
   - component: {fileID: 8971250112256217417}
   m_Layer: 3
-  m_Name: Exit
+  m_Name: Exit_1
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -321,9 +321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f6d8f69c1cf2dc4484e9d4ba27b7fe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawner: {fileID: 0}
   salidaID: 
-  isActive: 1
 --- !u!1 &7549306424818159059
 GameObject:
   m_ObjectHideFlags: 0

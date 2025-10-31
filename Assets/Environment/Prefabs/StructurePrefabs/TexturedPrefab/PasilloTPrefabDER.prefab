@@ -95,7 +95,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6217418732768802288}
   m_Layer: 3
-  m_Name: Exit
+  m_Name: Exit_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,7 +126,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7519969877332821702}
   m_Layer: 3
-  m_Name: Exit
+  m_Name: Exit_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

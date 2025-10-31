@@ -10,54 +10,56 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
         public GameObject hallWay;
         public GameObject [] interSectionPossible;
         public GameObject [] roomPossible;
-        
-        public void SpawnStructure(Transform target)
-        { 
-            if (_rooms < maxRooms)
-            {
-                _structureType = Random.Range(1, 16);
+        public GameObject primeraSalida;
 
-                if (_structureType is >= 1 and <= 11)
-                {
-                    FuncionInstanciar(hallWay, target);
-                }
-                else if (_structureType is >= 12 and <= 13)
-                {
-                    FuncionInstanciar(interSectionPossible[Random.Range(0,interSectionPossible.Length)], target);
-                }
-                else if (_structureType is >= 14 and <= 15)
-                {
-                    FuncionInstanciar(roomPossible[Random.Range(0,roomPossible.Length)], target);
-                    _rooms++;
-                }
-            }
-            else
-            {
-                Debug.Log("Maximum rooms reached");
-            }
-        }
-
-        public void FuncionInstanciar(GameObject prefab, Transform targetExit)
+        private void Awake()
         {
-            if (prefab != null && targetExit != null)
+            primeraSalida = GameObject.Find("Exit_1");
+            maxRooms = Random.Range(7,10);
+            Debug.Log(maxRooms);
+            SpawnStructure(primeraSalida.transform);
+        }
+        
+        public void SpawnStructure(Transform targetExit)
+        {
+            if (_rooms >= maxRooms)
+                return;
+
+            GameObject prefabToSpawn;
+
+            int t = Random.Range(1, 16);
+            if (t <= 12) prefabToSpawn = hallWay;
+            else if (t <= 14) prefabToSpawn = interSectionPossible[Random.Range(0, interSectionPossible.Length)];
+            else { prefabToSpawn = roomPossible[Random.Range(0, roomPossible.Length)]; _rooms++; }
+
+            GameObject spawned = FuncionInstanciar(prefabToSpawn, targetExit);
+            if (spawned == null) return;
+            
+            Transform[] exits = spawned.GetComponentsInChildren<Transform>();
+            foreach (Transform exit in exits)
             {
-                GameObject spawnedObject = Instantiate(prefab);
-
-                Transform entry = spawnedObject.transform.Find("Entry");
-                if (entry == null)
+                if (exit.name.StartsWith("Exit"))
                 {
-                    Debug.LogWarning(prefab.name + " no tiene un Entry definido.");
-                    Destroy(spawnedObject);
-                    return;
+                    SpawnStructure(exit);
                 }
-
-                // Alinear la rotación
-                spawnedObject.transform.rotation = targetExit.rotation * Quaternion.Inverse(entry.localRotation);
-
-                // Alinear la posición
-                Vector3 offset = spawnedObject.transform.position - entry.position;
-                spawnedObject.transform.position = targetExit.position + offset;
             }
         }
+        
+        public GameObject FuncionInstanciar(GameObject prefab, Transform targetExit)
+        {
+            GameObject spawned = Instantiate(prefab);
+
+            Transform entry = spawned.transform.Find("Entry");
+            if (entry == null)
+            {
+                Debug.LogError(prefab.name + " no tiene Entry.");
+                Destroy(spawned);
+                return null;
+            }
+            spawned.transform.rotation = targetExit.rotation * Quaternion.Inverse(entry.localRotation);
+            spawned.transform.position += targetExit.position - entry.position;
+            return spawned;
+        }
+
     }
 }
