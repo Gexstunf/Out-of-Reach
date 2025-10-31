@@ -206,6 +206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42b0f8b6702077e4dbb887613212743e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxRooms: 0
   hallWay: {fileID: 3791255646465563467, guid: 77922a2cae706654f873abce6fe30345, type: 3}
   interSectionPossible:
   - {fileID: 6677434570533079222, guid: dc6486f5e381d6947bf62af3d849ec17, type: 3}
@@ -226,6 +227,7 @@ MonoBehaviour:
   - {fileID: 8525219668423997740, guid: 53e2ed81dbeeaf34198bf991ab375ca2, type: 3}
   - {fileID: 1377035139366547631, guid: e5796f6983b2c5f4ca80c6777fe0ce11, type: 3}
   - {fileID: 1377035139366547631, guid: e5796f6983b2c5f4ca80c6777fe0ce11, type: 3}
+  primeraSalida: {fileID: 0}
 --- !u!114 &331845162 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5646519857202889512, guid: 35ea85bdf7c93814cb9c15c826d29b01, type: 3}
@@ -277,6 +279,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 451592628}
+  - component: {fileID: 451592629}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Indestructible
@@ -302,6 +305,27 @@ Transform:
   - {fileID: 1971868342}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &451592629
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 451592627}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 34.983707, y: 34.111244, z: 98.517044}
+  m_Center: {x: -0.99910545, y: -0.20218754, z: -2.1165314}
 --- !u!1 &491943558 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -6594947417462969353, guid: 67b2171012ce845c6b744aece951231f, type: 3}
@@ -2022,7 +2046,7 @@ PrefabInstance:
       objectReference: {fileID: 1592100312}
     - target: {fileID: 309884231760621863, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
       propertyPath: m_VersionIndex
-      value: 4853
+      value: 4868
       objectReference: {fileID: 0}
     - target: {fileID: 3524389350849481084, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2070,7 +2094,7 @@ PrefabInstance:
       objectReference: {fileID: 983614160}
     - target: {fileID: 3712515911256221845, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
       propertyPath: m_VersionIndex
-      value: 3845
+      value: 3860
       objectReference: {fileID: 0}
     - target: {fileID: 3744369573376307765, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
       propertyPath: m_Mesh
