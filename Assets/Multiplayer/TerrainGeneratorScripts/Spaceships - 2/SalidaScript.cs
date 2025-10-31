@@ -9,10 +9,17 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
         [SerializeField] SpawnerScript spawner;
         public string salidaID;
         public bool isActive = true;
+        private static bool _firstTime = true;
 
         void Awake()
         {
             spawner = FindAnyObjectByType<SpawnerScript>();
+            if (_firstTime)
+            {
+                spawner.maxRooms = Random.Range(7,10);
+                _firstTime = false;
+                Debug.Log(spawner.maxRooms);
+            }
             if (!MuchasSalidas.ContainsKey(salidaID) && salidaID != "")
             {
                 MuchasSalidas.Add(salidaID, this);
@@ -25,6 +32,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 
             if (isActive)
             {
+                Debug.Log(gameObject.transform.position);
                 spawner.SpawnStructure(gameObject.transform);
                 isActive = false;
             }

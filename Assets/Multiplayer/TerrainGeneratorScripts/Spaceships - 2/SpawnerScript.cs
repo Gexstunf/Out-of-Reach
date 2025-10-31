@@ -5,24 +5,23 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
     public class SpawnerScript : MonoBehaviour
     {
         private int _structureType;
-        private int _rooms = 0;
-        private int _maxRooms;
+        private int _rooms;
+        public int maxRooms;
         public GameObject hallWay;
         public GameObject [] interSectionPossible;
         public GameObject [] roomPossible;
         
         public void SpawnStructure(Transform target)
-        {
-            _maxRooms = Random.Range(7,10);
-            if (_rooms < _maxRooms)
+        { 
+            if (_rooms < maxRooms)
             {
                 _structureType = Random.Range(1, 16);
 
-                if (_structureType is >= 1 and <= 12)
+                if (_structureType is >= 1 and <= 11)
                 {
                     FuncionInstanciar(hallWay, target);
                 }
-                else if (_structureType is >= 13 and <= 14)
+                else if (_structureType is >= 12 and <= 13)
                 {
                     FuncionInstanciar(interSectionPossible[Random.Range(0,interSectionPossible.Length)], target);
                 }
@@ -47,16 +46,17 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                 Transform entry = spawnedObject.transform.Find("Entry");
                 if (entry == null)
                 {
-                    Debug.LogError(prefab.name + " no tiene un Entry definido.");
+                    Debug.LogWarning(prefab.name + " no tiene un Entry definido.");
                     Destroy(spawnedObject);
                     return;
                 }
 
-                Quaternion rotationOffset = targetExit.rotation * Quaternion.Inverse(entry.rotation);
-                spawnedObject.transform.rotation = rotationOffset * spawnedObject.transform.rotation;
+                // Alinear la rotación
+                spawnedObject.transform.rotation = targetExit.rotation * Quaternion.Inverse(entry.localRotation);
 
-                Vector3 positionOffset = targetExit.position - entry.position;
-                spawnedObject.transform.position += positionOffset;
+                // Alinear la posición
+                Vector3 offset = spawnedObject.transform.position - entry.position;
+                spawnedObject.transform.position = targetExit.position + offset;
             }
         }
     }
