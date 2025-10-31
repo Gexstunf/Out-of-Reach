@@ -5,24 +5,36 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
     public class SpawnerScript : MonoBehaviour
     {
         private int _structureType;
+        private int _rooms = 0;
+        private int _maxRooms;
         public GameObject hallWay;
         public GameObject [] interSectionPossible;
         public GameObject [] roomPossible;
-        public void SpawnStructure()
+        
+        public void SpawnStructure(Transform target)
         {
-            _structureType = Random.Range(1, 16);
+            _maxRooms = Random.Range(7,10);
+            if (_rooms < _maxRooms)
+            {
+                _structureType = Random.Range(1, 16);
 
-            if (_structureType is >= 1 and <= 12)
-            {
-                FuncionInstanciar(hallWay, gameObject.transform);
+                if (_structureType is >= 1 and <= 12)
+                {
+                    FuncionInstanciar(hallWay, target);
+                }
+                else if (_structureType is >= 13 and <= 14)
+                {
+                    FuncionInstanciar(interSectionPossible[Random.Range(0,interSectionPossible.Length)], target);
+                }
+                else if (_structureType is >= 14 and <= 15)
+                {
+                    FuncionInstanciar(roomPossible[Random.Range(0,roomPossible.Length)], target);
+                    _rooms++;
+                }
             }
-            else if (_structureType is >= 13 and <= 14)
+            else
             {
-                FuncionInstanciar(interSectionPossible[Random.Range(0,interSectionPossible.Length)], gameObject.transform);
-            }
-            else if (_structureType is >= 14 and <= 15)
-            {
-                FuncionInstanciar(roomPossible[Random.Range(0,roomPossible.Length)], gameObject.transform);
+                Debug.Log("Maximum rooms reached");
             }
         }
 

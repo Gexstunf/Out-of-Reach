@@ -6,13 +6,13 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
     public class SalidaScript : MonoBehaviour
     {
         public static Dictionary<string, SalidaScript> MuchasSalidas = new();
-        public SpawnerScript spawner;
+        [SerializeField] SpawnerScript spawner;
         public string salidaID;
         public bool isActive = true;
 
         void Awake()
         {
-            spawner = GetComponent<SpawnerScript>();
+            spawner = FindAnyObjectByType<SpawnerScript>();
             if (!MuchasSalidas.ContainsKey(salidaID) && salidaID != "")
             {
                 MuchasSalidas.Add(salidaID, this);
@@ -25,7 +25,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 
             if (isActive)
             {
-                spawner.SpawnStructure();
+                spawner.SpawnStructure(gameObject.transform);
                 isActive = false;
             }
         }

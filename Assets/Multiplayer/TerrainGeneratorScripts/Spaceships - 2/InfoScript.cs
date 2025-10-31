@@ -5,12 +5,12 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 {
     public class InfoScript : MonoBehaviour
     {
-        private BranchDivisionScript branchDivision;
+        [SerializeField] BranchDivisionScript branchDivision;
         public string estructuraID;
         public bool collision;
         private void Awake()
         {
-            branchDivision = GetComponent<BranchDivisionScript>();
+            branchDivision = FindAnyObjectByType<BranchDivisionScript>();
             if (gameObject.CompareTag("Hallway"))
             {
                 if (!branchDivision.Rama.ContainsKey(estructuraID) && estructuraID != "")
