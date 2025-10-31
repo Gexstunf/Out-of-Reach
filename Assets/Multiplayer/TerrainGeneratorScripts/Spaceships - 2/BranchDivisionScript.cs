@@ -30,5 +30,4 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 /* Me falta:
     Collisionador
     Detector de colisiones
-    Limitador de maximos rooms
 */
