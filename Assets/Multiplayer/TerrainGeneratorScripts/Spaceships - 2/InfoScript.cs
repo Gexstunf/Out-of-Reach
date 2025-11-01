@@ -6,48 +6,33 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
     public class InfoScript : MonoBehaviour
     {
         [SerializeField] BranchDivisionScript branchDivision;
-        public string estructuraID;
-        private void Start()
+        public int ramaID = -1;
+
+        private void Awake()
         {
             branchDivision = FindAnyObjectByType<BranchDivisionScript>();
-            if (gameObject.CompareTag("Hallway"))
+        }
+
+        private void Start()
+        {
+            if (ramaID == -1)
+                ramaID = branchDivision.CrearRama();
+            branchDivision.AgregarAHilo(ramaID, this);
+
+            if (gameObject.CompareTag("Intersection"))
             {
-                if (!branchDivision.Rama.ContainsKey(estructuraID) && estructuraID != "")
-                {
-                    branchDivision.Rama.Add(estructuraID, this);
-                }
-                else
-                {
-                    estructuraID = Guid.NewGuid().ToString();
-                    branchDivision.Rama.Add(estructuraID, this);
-                }
-            }
-            else if (gameObject.CompareTag("Intersection"))
-            {
-                if (!branchDivision.EntreRama.ContainsKey(estructuraID) && estructuraID != "")
-                {
-                    branchDivision.EntreRama.Add(estructuraID, this);
-                }
-                else
-                {
-                    estructuraID = Guid.NewGuid().ToString();
-                    branchDivision.EntreRama.Add(estructuraID, this);
-                }
-                branchDivision.AccionRama(false);
+                branchDivision.CerrarRama(ramaID, false);
             }
             else if (gameObject.CompareTag("Room"))
             {
-                if (!branchDivision.EntreRama.ContainsKey(estructuraID) && estructuraID != "")
-                {
-                    branchDivision.EntreRama.Add(estructuraID, this);
-                }
-                else
-                {
-                    estructuraID = Guid.NewGuid().ToString();
-                    branchDivision.EntreRama.Add(estructuraID, this);
-                }
-                branchDivision.AccionRama(false);
+                branchDivision.CerrarRama(ramaID, false);
             }
         }
+        
+        private void OnTriggerEnter(Collider other)
+        {
+            branchDivision.CerrarRama(ramaID, true);
+        }
+
     }
 }

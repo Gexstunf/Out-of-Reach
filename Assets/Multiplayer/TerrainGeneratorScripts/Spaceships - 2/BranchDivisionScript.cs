@@ -5,29 +5,35 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 {
     public class BranchDivisionScript : MonoBehaviour
     {
-        public Dictionary<string, InfoScript> Rama = new();
-        public Dictionary<string, InfoScript> EntreRama = new();
+        public Dictionary<int, List<InfoScript>> Ramas = new();
 
-        public void AccionRama(bool choco)
+        private int nextRamaID = 0;
+
+        public int CrearRama()
         {
-            Debug.Log(Rama.Count);
+            Ramas.Add(nextRamaID, new List<InfoScript>());
+            return nextRamaID++;
+        }
+
+        public void AgregarAHilo(int ramaID, InfoScript estructura)
+        {
+            Ramas[ramaID].Add(estructura);
+        }
+
+        public void CerrarRama(int ramaID, bool choco)
+        {
+            if (!Ramas.ContainsKey(ramaID)) return;
+
             if (choco)
             {
-                foreach (var estructura in Rama.Values)
+                foreach (var estructura in Ramas[ramaID])
                 {
-                    Destroy(estructura.gameObject);
+                    if (estructura != null)
+                        Destroy(estructura.gameObject);
                 }
-                Rama.Clear();
             }
-            else
-            {
-                Rama.Clear();
-            }
+
+            Ramas.Remove(ramaID);
         }
     }
 }
-
-/* Me falta:
-    Collisionador
-    Detector de colisiones
-*/
