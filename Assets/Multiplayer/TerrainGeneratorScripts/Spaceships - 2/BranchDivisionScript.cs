@@ -10,6 +10,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 
         public void AccionRama(bool choco)
         {
+            Debug.Log(Rama.Count);
             if (choco)
             {
                 foreach (var estructura in Rama.Values)
@@ -25,7 +26,6 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
         }
     }
 }
-
 
 /* Me falta:
     Collisionador

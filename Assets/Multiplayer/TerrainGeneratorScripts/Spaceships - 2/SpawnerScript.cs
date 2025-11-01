@@ -7,7 +7,6 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
     {
         private int _rooms;
         public int maxRooms;
-
         public GameObject hallWay;
         public GameObject[] interSectionPossible;
         public GameObject[] roomPossible;

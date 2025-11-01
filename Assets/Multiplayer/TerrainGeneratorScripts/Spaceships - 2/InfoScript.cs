@@ -7,15 +7,8 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
     {
         [SerializeField] BranchDivisionScript branchDivision;
         public string estructuraID;
-        private void Awake()
+        private void Start()
         {
-            Collider myCol = GetComponent<Collider>();
-            Collider[] others = Physics.OverlapBox(
-                myCol.bounds.center,
-                myCol.bounds.extents,
-                transform.rotation
-            );
-            
             branchDivision = FindAnyObjectByType<BranchDivisionScript>();
             if (gameObject.CompareTag("Hallway"))
             {
@@ -27,25 +20,6 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                 {
                     estructuraID = Guid.NewGuid().ToString();
                     branchDivision.Rama.Add(estructuraID, this);
-                }
-                foreach (Collider other in others)
-                {
-                    if (other != myCol)
-                    {
-                        Vector3 dir;
-                        float distance;
-                    
-                        if (Physics.ComputePenetration(
-                                myCol, transform.position, transform.rotation,
-                                other, other.transform.position, other.transform.rotation,
-                                out dir, out distance)) 
-                        {
-                            if (distance > 0.5f)
-                            {
-                                branchDivision.AccionRama(true);
-                            }
-                        }
-                    }
                 }
             }
             else if (gameObject.CompareTag("Intersection"))
@@ -59,33 +33,10 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                     estructuraID = Guid.NewGuid().ToString();
                     branchDivision.EntreRama.Add(estructuraID, this);
                 }
-                foreach (Collider other in others)
-                {
-                    if (other != myCol)
-                    {
-                        Vector3 dir;
-                        float distance;
-                    
-                        if (Physics.ComputePenetration(
-                                myCol, transform.position, transform.rotation,
-                                other, other.transform.position, other.transform.rotation,
-                                out dir, out distance)) 
-                        {
-                            if (distance > 0.5f)
-                            {
-                                branchDivision.AccionRama(true);
-                            }
-                            else
-                            {
-                                branchDivision.AccionRama(false);
-                            }
-                        }
-                    }
-                }
+                branchDivision.AccionRama(false);
             }
             else if (gameObject.CompareTag("Room"))
             {
-                branchDivision.AccionRama(false);
                 if (!branchDivision.EntreRama.ContainsKey(estructuraID) && estructuraID != "")
                 {
                     branchDivision.EntreRama.Add(estructuraID, this);
@@ -95,29 +46,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                     estructuraID = Guid.NewGuid().ToString();
                     branchDivision.EntreRama.Add(estructuraID, this);
                 }
-                foreach (Collider other in others)
-                {
-                    if (other != myCol)
-                    {
-                        Vector3 dir;
-                        float distance;
-                    
-                        if (Physics.ComputePenetration(
-                                myCol, transform.position, transform.rotation,
-                                other, other.transform.position, other.transform.rotation,
-                                out dir, out distance)) 
-                        {
-                            if (distance > 0.5f)
-                            {
-                                branchDivision.AccionRama(true);
-                            }
-                            else
-                            {
-                                branchDivision.AccionRama(false);
-                            }
-                        }
-                    }
-                }
+                branchDivision.AccionRama(false);
             }
         }
     }
