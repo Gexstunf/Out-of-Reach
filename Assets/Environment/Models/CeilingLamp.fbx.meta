@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 70a3ee14173b7de41ae2fea5bb0a06c7
+guid: b4f880aec0ac0d34897b248f94641d03
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,53 +7,23 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Black
-    second: {fileID: 2100000, guid: 670d134bd351a4a45a38fa839f356ecf, type: 2}
+      name: Glass
+    second: {fileID: 2100000, guid: 8719aeb77ee1afd42b83810f67a0c06c, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: LegMat
-    second: {fileID: 2100000, guid: 92b02bb88f6cddd4ab3500218d0de3ae, type: 2}
+      name: Metal
+    second: {fileID: 2100000, guid: 2a66cf9b66fc3594f9f4a463a15e02d8, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: 1fb800a32cc82c54f800e8801cb63b4b, type: 2}
+      name: Transparent
+    second: {fileID: 2100000, guid: b69532ac64fba274699baecac981b18a, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Rubber
-    second: {fileID: 2100000, guid: 4318d01aa969e974d8a3d367894e7e3a, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: RubberBlack
-    second: {fileID: 2100000, guid: c7b0af45fcb03f041802166d8953d2e0, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Screw
-    second: {fileID: 2100000, guid: a86f0c08fc8664c499ae1c253d677a69, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Sticker Electric
-    second: {fileID: 2100000, guid: 39879f1ebe66e6440bdaf37a9dce6ea8, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Sticker Warning
-    second: {fileID: 2100000, guid: 588eac6aa7a9c054c8d8deb59ad83b4a, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: image-removebg-preview
-    second: {fileID: 2800000, guid: b5d7cca9ecadf6540ba28af8338def29, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: image_2025-10-31_223025266-removebg-preview
-    second: {fileID: 2800000, guid: d968177bd2ce9ee4097d2e18a586cfa1, type: 3}
+      name: White
+    second: {fileID: 2100000, guid: ee1876d4272f6ca4680f23e6708978ab, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -83,7 +53,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.2
+    globalScale: 0.3
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -138,7 +108,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.2
+    globalScale: 0.3
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

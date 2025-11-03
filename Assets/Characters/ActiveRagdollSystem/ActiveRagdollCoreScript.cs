@@ -16,8 +16,8 @@ namespace Characters.ActiveRagdollSystem {
         [SerializeField] private float _interpolationScaler = 1f;
         [SerializeField] private float _stabilizerSpring = 60f;
 
-
         public BoneMap[] boneMaps;
+        public bool Alive => _targetAlive;
         
         public enum StabilizerMode {
             Normal,
@@ -45,9 +45,12 @@ namespace Characters.ActiveRagdollSystem {
             public float angularDriveSpring;
             public bool isStabilizer;
             public Rigidbody rb;
+            public Collider collider;
             [HideInInspector] public float startSpring;
             [HideInInspector] public float targetSpring;
         }
+        
+
 
         void Start()
         {

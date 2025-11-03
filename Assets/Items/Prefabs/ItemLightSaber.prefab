@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4833790539005572998}
-  - component: {fileID: 7116505325307771098}
-  - component: {fileID: 2183320711019302102}
   - component: {fileID: 470345422036536137}
+  - component: {fileID: 8559135283685325729}
+  - component: {fileID: 1718793521921650528}
+  - component: {fileID: 2167287164721634065}
   m_Layer: 6
   m_Name: ItemLightSaber
   m_TagString: Item
@@ -36,7 +37,23 @@ Transform:
   - {fileID: 4132599153258131173}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &7116505325307771098
+--- !u!114 &470345422036536137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423597036341179202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8dcb26be4a601845885b14a8dd66ad3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabHandle: {fileID: 4132599153258131173}
+  data: {fileID: 11400000, guid: 10581c8a3f53f9e41b85b1ff3b2f3b2d, type: 2}
+  massScale: 1
+  connectedMassScale: 1
+--- !u!54 &8559135283685325729
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,7 +63,7 @@ Rigidbody:
   serializedVersion: 5
   m_Mass: 1.5
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -63,7 +80,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &2183320711019302102
+--- !u!136 &1718793521921650528
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -82,26 +99,33 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.15
-  m_Height: 4.69
+  m_Radius: 0.17
+  m_Height: 1.82
   m_Direction: 1
-  m_Center: {x: 0, y: 2.17, z: 0}
---- !u!114 &470345422036536137
-MonoBehaviour:
+  m_Center: {x: 0, y: -1.41, z: 0}
+--- !u!136 &2167287164721634065
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1423597036341179202}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8dcb26be4a601845885b14a8dd66ad3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grabHandle: {fileID: 4132599153258131173}
-  data: {fileID: 11400000, guid: 10581c8a3f53f9e41b85b1ff3b2f3b2d, type: 2}
-  massScale: 1
-  connectedMassScale: 1
+  serializedVersion: 2
+  m_Radius: 0.085
+  m_Height: 2.93
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.02, z: 0}
 --- !u!1 &7968666709595990603
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,7 +151,7 @@ Transform:
   m_GameObject: {fileID: 7968666709595990603}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.588, z: 0}
+  m_LocalPosition: {x: 0, y: -1.479, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -151,7 +175,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 033c21d0c9eae264395b9c7c31353e78, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -2.04
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 033c21d0c9eae264395b9c7c31353e78, type: 3}
       propertyPath: m_LocalPosition.z

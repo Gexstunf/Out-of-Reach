@@ -96,7 +96,6 @@ namespace Environment.Scripts {
                     
                     if (c.CompareTag("Enemy") && shouldOpenForEnemies) {
                         _isOpen = true;
-                        Debug.Log("Enemyyy");
                         break;
                     }
                     
@@ -183,7 +182,7 @@ namespace Environment.Scripts {
             }
             else {
                 SetClosedOffsetPositionAlongAxis(ref _closedPosOffset, doorCrackOffset);
-
+  
                 femaleDoor.localPosition = Vector3.Lerp(femaleDoor.localPosition, Vector3.zero + _closedPosOffset, speed * Time.deltaTime);
                 maleDoor.localPosition = Vector3.Lerp(maleDoor.localPosition, Vector3.zero - _closedPosOffset, speed * Time.deltaTime);
             }

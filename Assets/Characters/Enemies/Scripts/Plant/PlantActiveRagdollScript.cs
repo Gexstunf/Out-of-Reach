@@ -15,8 +15,9 @@ namespace Characters.Enemies.Scripts.Plant {
         [SerializeField] private float _initialClearance = 2f;
 
     
-        [Header("Visualize")]
-        public bool alive = true;
+        [Header("Visualize & debug")]
+        [Tooltip("This HAS to be true for these options to work.")] public bool debug = true;
+        public bool debugAlive = true;
     
         private bool _previousAlive = true;
         private RevivalParams _revivalParams;
@@ -32,10 +33,19 @@ namespace Characters.Enemies.Scripts.Plant {
         }
 
         void FixedUpdate() {
-            if (_previousAlive != alive) {
-                ActiveRagdollCoreScript.StabilizerMode mode = alive ? ActiveRagdollCoreScript.StabilizerMode.Reviving : ActiveRagdollCoreScript.StabilizerMode.Dead;
+            if (debug) {
+                HandlePlantLifeState(debugAlive);
+            }
+            else {
+                HandlePlantLifeState(_arCoreScript.Alive);
+            }
+        }
 
-                if (alive) {
+        void HandlePlantLifeState(bool currentAlive) {
+            if (_previousAlive != currentAlive) {
+                ActiveRagdollCoreScript.StabilizerMode mode = debugAlive ? ActiveRagdollCoreScript.StabilizerMode.Reviving : ActiveRagdollCoreScript.StabilizerMode.Dead;
+
+                if (debugAlive) {
                     _revivalParams = new RevivalParams {
                         UseClearance = false,
                         Damper = _lockDamper,
@@ -51,7 +61,7 @@ namespace Characters.Enemies.Scripts.Plant {
                 else {
                     _arCoreScript.SetStabilizerMode(mode, _deathParams);
                 }
-                _previousAlive = alive;
+                _previousAlive = currentAlive;
             } 
         }
     }
