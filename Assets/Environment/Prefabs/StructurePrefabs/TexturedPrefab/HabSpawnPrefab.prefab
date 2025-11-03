@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
-  estructuraID: 
+  ramaID: 0
 --- !u!1001 &4442798167223649811
 PrefabInstance:
   m_ObjectHideFlags: 0

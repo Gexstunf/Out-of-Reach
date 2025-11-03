@@ -6,7 +6,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
     public class InfoScript : MonoBehaviour
     {
         [SerializeField] BranchDivisionScript branchDivision;
-        public int ramaID = -1;
+        public static int RamaID = -1;
 
         private void Awake()
         {
@@ -15,24 +15,19 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 
         private void Start()
         {
-            if (ramaID == -1)
-                ramaID = branchDivision.CrearRama();
-            branchDivision.AgregarAHilo(ramaID, this);
-
+            Debug.Log(RamaID);
             if (gameObject.CompareTag("Intersection"))
             {
-                branchDivision.CerrarRama(ramaID, false);
+                branchDivision.CerrarRama(RamaID, false);
+                RamaID = branchDivision.CrearRama();
+                branchDivision.AgregarAHilo(RamaID, this);
             }
             else if (gameObject.CompareTag("Room"))
             {
-                branchDivision.CerrarRama(ramaID, false);
+                branchDivision.CerrarRama(RamaID, false);
+                RamaID = branchDivision.CrearRama();
+                branchDivision.AgregarAHilo(RamaID, this);
             }
         }
-        
-        private void OnTriggerEnter(Collider other)
-        {
-            branchDivision.CerrarRama(ramaID, true);
-        }
-
     }
 }

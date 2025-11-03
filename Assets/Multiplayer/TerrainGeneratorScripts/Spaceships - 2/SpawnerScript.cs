@@ -68,13 +68,6 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
             spawned.transform.rotation = targetExit.rotation * Quaternion.Inverse(entry.localRotation);
             spawned.transform.position += targetExit.position - entry.position;
 
-            // ✅ Transferir la rama del padre al hijo
-            InfoScript padreInfo = targetExit.GetComponentInParent<InfoScript>();
-            InfoScript hijoInfo = spawned.GetComponent<InfoScript>();
-
-            if (hijoInfo != null && padreInfo != null)
-                hijoInfo.ramaID = padreInfo.ramaID;
-
             return spawned;
         }
 

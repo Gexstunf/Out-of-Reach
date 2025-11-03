@@ -476,7 +476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
-  estructuraID: 
+  ramaID: 0
 --- !u!1 &8929473024236706053
 GameObject:
   m_ObjectHideFlags: 0
