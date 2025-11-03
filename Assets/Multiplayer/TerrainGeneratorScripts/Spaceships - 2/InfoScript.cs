@@ -14,7 +14,6 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 
         private void Start()
         {
-            Debug.Log(RamaID);
             if (gameObject.CompareTag("Intersection"))
             {
                 branchDivision.CerrarRama(RamaID, false);
@@ -27,6 +26,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                 RamaID = branchDivision.CrearRama();
                 branchDivision.AgregarAHilo(RamaID, this);
             }
+            Debug.Log(RamaID);
         }
     }
 }
