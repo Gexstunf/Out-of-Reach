@@ -233,18 +233,27 @@ namespace Characters.PlayerController.Scripts
             // 1) Try item raycast (priority to items) using itemGrabDistance
             if (Physics.Raycast(origin.position, origin.forward, out var hitItem, itemGrabDistance, grabbableMask))
             {
+                Debug.Log("Detected item");
                 var grabbable = hitItem.collider.GetComponent<IGrabbableScript>();
                 if (grabbable != null && IsItemGrabbable(grabbable)) {
+                    Debug.Log("Trying to grab the item...");
                     // only one item allowed
                     if (!currentItem) {
+                        Debug.Log("Grabbing item since we have free hands");
                         // stop any running hand coroutine and start grab flow
                         StopAndClearHand(hand);
 
                         hand.CurrentGrabbable = null; // clear wall slot for now
                         StartHandCoroutine(hand, ItemGrabFlow(grabbable, hitItem.point, hand));
                         // ItemGrabFlow will set _currentItem and hand.HoldingItem when grabbed
+                    } else {
+                        Debug.Log("Cant grab...");
                     }
                     return;
+                } 
+                else
+                {
+                    Debug.Log($"Couldnt even attempt to grab item, grabbable: {grabbable}, isItemGrabbable: {IsItemGrabbable(grabbable)}");
                 }
             }
 
