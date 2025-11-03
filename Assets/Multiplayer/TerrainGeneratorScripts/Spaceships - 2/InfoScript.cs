@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
