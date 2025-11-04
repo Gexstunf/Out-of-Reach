@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8559135283685325729}
   - component: {fileID: 1718793521921650528}
   - component: {fileID: 2167287164721634065}
+  - component: {fileID: 2936740649187990619}
   m_Layer: 6
   m_Name: ItemLightSaber
   m_TagString: Item
@@ -126,6 +127,20 @@ CapsuleCollider:
   m_Height: 2.93
   m_Direction: 1
   m_Center: {x: 0, y: 1.02, z: 0}
+--- !u!114 &2936740649187990619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423597036341179202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14ebcfb222afc949928cb9d919c9937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemData: {fileID: 0}
+  damage: 2
 --- !u!1 &7968666709595990603
 GameObject:
   m_ObjectHideFlags: 0
