@@ -217,7 +217,7 @@ GameObject:
   - component: {fileID: 2688458356117339520}
   - component: {fileID: 4993928902799989321}
   - component: {fileID: 30948037164470333}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: HabReactorPrefab
   m_TagString: Room
   m_Icon: {fileID: 0}
@@ -330,7 +330,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
-  ramaID: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &2100021777683816407
 PrefabInstance:
   m_ObjectHideFlags: 0

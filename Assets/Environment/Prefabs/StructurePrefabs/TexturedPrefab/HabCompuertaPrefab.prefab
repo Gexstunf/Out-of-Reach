@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 972005482293578842}
   - component: {fileID: 1571672937999569202}
   - component: {fileID: 7040308841712336759}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: HabCompuertaPrefab
   m_TagString: Room
   m_Icon: {fileID: 0}
@@ -265,7 +265,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
-  ramaID: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &8844549289866379324
 GameObject:
   m_ObjectHideFlags: 0

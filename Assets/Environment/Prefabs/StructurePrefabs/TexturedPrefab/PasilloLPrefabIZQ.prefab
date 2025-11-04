@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 2159092596608871846}
   - component: {fileID: 8448889730241548898}
   - component: {fileID: 9071562450328711305}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: PasilloLPrefabIZQ
   m_TagString: Intersection
   m_Icon: {fileID: 0}
@@ -217,7 +217,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
-  ramaID: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &1274044498807441851
 PrefabInstance:
   m_ObjectHideFlags: 0

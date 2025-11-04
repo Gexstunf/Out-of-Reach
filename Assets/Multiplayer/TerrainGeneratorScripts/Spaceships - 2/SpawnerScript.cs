@@ -11,7 +11,6 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
         public GameObject[] interSectionPossible;
         public GameObject[] roomPossible;
         public Transform primeraSalida;
-
         private List<Transform> pendingExits = new();
 
         private void Awake()

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
@@ -7,7 +6,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
     {
         [SerializeField] BranchDivisionScript branchDivision;
         public static int RamaID = -1;
-        public LayerMask layerMask = LayerMask.GetMask("Terrain");
+        public LayerMask layerMask = LayerMask.GetMask("Structure"); 
 
         private void Awake()
         {
@@ -16,48 +15,59 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
         
         private void Start()
         {
-            Collider myCol = GetComponent<Collider>();
-            
-            if (gameObject.CompareTag("Intersection") && !IsOverlapping(layerMask, myCol.bounds.extents))
+            if (gameObject.CompareTag("Intersection") && !IsOverlapping())
             {
+                Debug.Log("No ta overlappeando");
                 branchDivision.CerrarRama(RamaID, false);
                 RamaID = branchDivision.CrearRama();
                 branchDivision.AgregarAHilo(RamaID, this);
             }
-            else if (gameObject.CompareTag("Room") && !IsOverlapping(layerMask, myCol.bounds.extents))
+            else if (gameObject.CompareTag("Room") && !IsOverlapping())
             {
+                Debug.Log("No ta overlappeando");
                 branchDivision.CerrarRama(RamaID, false);
                 RamaID = branchDivision.CrearRama();
                 branchDivision.AgregarAHilo(RamaID, this);
             }
-            else if (IsOverlapping(layerMask, myCol.bounds.extents))
+            else if (IsOverlapping())
             {
                 Debug.Log("Ta overlappeando");
                 branchDivision.CerrarRama(RamaID, true);
             }
         }
-        private bool IsOverlapping(LayerMask layer, Vector3 halfExtents)
+        private bool IsOverlapping()
         {
-            Collider[] hits = Physics.OverlapBox(
-                transform.position,
-                halfExtents,
-                transform.rotation,
-                layer
+            Collider myCol = GetComponent<Collider>();
+            
+            Collider[] others = Physics.OverlapBox(
+                myCol.bounds.center,
+                myCol.bounds.extents,
+                transform.rotation
             );
             
-            Debug.Log(hits.Length);
-            
-            foreach (var hit in hits)
+            foreach (var other in others)
             {
-                if (hit.gameObject == gameObject)
-                    continue;
-                
-                if (hit.CompareTag("Room") || hit.CompareTag("Hallway") || hit.CompareTag("Intersection"))
+                if (other != myCol)
                 {
-                    return true;
+                    Vector3 dir;
+                    float distance;
+                    if (other.CompareTag("Room") || other.CompareTag("Hallway") || other.CompareTag("Intersection"))
+                    {
+                        if (Physics.ComputePenetration(
+                                myCol, transform.position, transform.rotation,
+                                other, other.transform.position, other.transform.rotation,
+                                out dir, out distance))
+                        {
+                            if (distance < 0.1f)
+                            {
+                                return true;
+                            }
+                            //Cambiar los prefabs para que queden perfectos
+                        }
+                    }
                 }
             }
-            return hits.Length > 0;
+            return false;
         }
     }
 }

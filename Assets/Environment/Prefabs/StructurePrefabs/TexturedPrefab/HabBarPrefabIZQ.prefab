@@ -369,7 +369,7 @@ GameObject:
   - component: {fileID: 7613376731416345821}
   - component: {fileID: 3465315258962499388}
   - component: {fileID: 6298220975046327126}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: HabBarPrefabIZQ
   m_TagString: Room
   m_Icon: {fileID: 0}
@@ -476,7 +476,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
-  ramaID: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &8929473024236706053
 GameObject:
   m_ObjectHideFlags: 0
