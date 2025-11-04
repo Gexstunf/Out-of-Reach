@@ -17,7 +17,7 @@ MonoBehaviour:
   worldPrefabName: 
   heldPrefabName: 
   icon: {fileID: 0}
-  displayName: 
+  displayName: Farol
   itemType: 3
   itemSize: 1
   spawnChance: 0.3

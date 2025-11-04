@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24110741176cc03418215cd7a4a60535, type: 3}
+  m_Name: ConfirmCommand
+  m_EditorClassIdentifier: 
+  commandName: confirm
+  commandDescription: confirm operations
+  quantity: 1
+  commandItemsPrefabs: []
+  specialCommands: []
+  globalBankSO: {fileID: 11400000, guid: 5d14a5c06ed2f0d4ba6dfb3d2c859850, type: 2}

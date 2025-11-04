@@ -85,7 +85,7 @@ public class PlayerControllerScript : MonoBehaviourPun
         {
             _rb.useGravity = true;
         }
-
+        
         Validate();
     }
 

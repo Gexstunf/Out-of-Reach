@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e14f49677833d814f8f2dff1908bea43, type: 3}
+  m_Name: BuyCommand
+  m_EditorClassIdentifier: 
+  commandName: buy
+  commandDescription: buy items.
+  quantity: 1
+  commandItemsPrefabs:
+  - {fileID: 11400000, guid: 10581c8a3f53f9e41b85b1ff3b2f3b2d, type: 2}
+  - {fileID: 11400000, guid: 7d72c12c13191654580ede329588e30f, type: 2}
+  - {fileID: 11400000, guid: a7d40fe87a36ee9419fe018d923981fa, type: 2}
+  - {fileID: 11400000, guid: 31046f305d4f10e44ba278211d0fb3ec, type: 2}
+  - {fileID: 11400000, guid: 4d15e77f374e5934890017ba8d06f88b, type: 2}
+  specialCommands:
+  - {fileID: 11400000, guid: 77e69cbc900706b40b1b15cfd431c2a2, type: 2}
+  - {fileID: 11400000, guid: 25ec139570c559048bea923531d94fc7, type: 2}
+  globalBank: {fileID: 11400000, guid: 5d14a5c06ed2f0d4ba6dfb3d2c859850, type: 2}

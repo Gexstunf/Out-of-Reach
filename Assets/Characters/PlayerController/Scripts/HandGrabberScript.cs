@@ -3,6 +3,8 @@ using Items.Scripts;
 using System;
 using System.Collections;
 using Unity.VisualScripting;
+using Characters.PlayerController.Scripts.Input;
+using UI.Scripts;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.Serialization;
@@ -27,8 +29,8 @@ namespace Characters.PlayerController.Scripts
         public Transform rightGrabOrigin;
         [SerializeField] private Transform camTransform;
         [SerializeField] private bool useIndependentOrigins = false;
-        [SerializeField] private LayerMask grabbableMask;
-        [SerializeField] private float itemGrabDistance = 2f;
+        public LayerMask grabbableMask;
+        public float itemGrabDistance = 2f;
         [SerializeField] private float wallGrabDistance = 2f;
         [SerializeField] private float grabSpeed = 3f;
         [SerializeField] private float pushForce = 5f;
@@ -475,12 +477,12 @@ namespace Characters.PlayerController.Scripts
         // -------------------------
         // Utilities
         // -------------------------
-        private bool IsItemGrabbable(IGrabbableScript g)
+        public bool IsItemGrabbable(IGrabbableScript g)
         {
             return g is Items.Scripts.ItemGrabbableScript || g.IsItem; // try both patterns; if your IGrabbable has IsItem, use it
         }
 
-        private bool IsWallGrabbable(IGrabbableScript g)
+        public bool IsWallGrabbable(IGrabbableScript g)
         {
             return g is Environment.Scripts.WallGrabbableScript || !IsItemGrabbable(g);
         }

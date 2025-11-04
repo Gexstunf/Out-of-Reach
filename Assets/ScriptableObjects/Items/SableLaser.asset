@@ -17,7 +17,7 @@ MonoBehaviour:
   worldPrefabName: 
   heldPrefabName: 
   icon: {fileID: 0}
-  displayName: 
+  displayName: Light_saber
   itemType: 0
   itemSize: 2
   spawnChance: 0.2
