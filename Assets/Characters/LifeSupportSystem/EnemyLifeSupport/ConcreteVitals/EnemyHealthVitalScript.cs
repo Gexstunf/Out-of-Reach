@@ -19,6 +19,7 @@ namespace Characters.LifeSupportSystem.EnemyLifeSupport.ConcreteVitals {
 
             if (IsUnconscious) {
                 Context.ArCoreScript.Kill();
+                Context.DisableLivingFunctionalities();
                 _wasUnconscious = true;
             }
             else if (_wasUnconscious) {
@@ -26,16 +27,13 @@ namespace Characters.LifeSupportSystem.EnemyLifeSupport.ConcreteVitals {
                 _wasUnconscious = false;
             }
 
-            foreach (var bone in Context.ArCoreScript.boneMaps) {
-                /*
-                if (bone.collider has collided with a gameobject with tag "item") {
-                    HurtingObjectScript hurtScript = other.gameObject.GetComponent<HurtingObjectScript>();
-                    if (!hurtScript) {
-                        Debug.Log("(enemy) I WAS HIT!");
-                        DamageLife(hurtScript.damage);
-                    }
-                } 
-                */
+            if (Context.NervousSystemScript.NervesTriggered) {
+                var script = Context.NervousSystemScript.HurtingScript;
+                if (script) {
+                    Debug.Log("(enemy) I WAS HIT!");
+                    DamageLife(script.damage);
+                    Context.NervousSystemScript.ResetNerves();
+                }
             }
         }
 
@@ -48,13 +46,7 @@ namespace Characters.LifeSupportSystem.EnemyLifeSupport.ConcreteVitals {
         }
 
         public override void OnCollisionEnter(Collision other) {
-            if (other.gameObject.CompareTag("Item")) {
-                HurtingObjectScript hurtScript = other.gameObject.GetComponent<HurtingObjectScript>();
-                if (!hurtScript) {
-                    Debug.Log("(enemy) I WAS HIT!");
-                    DamageLife(hurtScript.damage);
-                }
-            }
+
         }
 
         public override void OnTriggerEnter(Collider other) {

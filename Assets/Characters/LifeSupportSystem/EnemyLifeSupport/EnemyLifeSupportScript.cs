@@ -1,4 +1,5 @@
 using Characters.ActiveRagdollSystem;
+using Characters.Enemies.Scripts;
 using Characters.LifeSupportSystem.EnemyLifeSupport.ConcreteVitals;
 using UnityEngine;
 
@@ -8,7 +9,9 @@ namespace Characters.LifeSupportSystem.EnemyLifeSupport {
         [Header("Life support settings")] 
         [SerializeField] private float _maxHealth = 100f;
         [SerializeField] private ActiveRagdollCoreScript _arCoreScript;
-        
+        [SerializeField] private NervousSystemScript _nervousSystemScript;
+        [SerializeField] private AttackScript _attackScript;
+        [SerializeField] private TargetingScript _targetingScript;
         
         public EnemyLifeSupportContextScript Context { get; private set; }
 
@@ -19,7 +22,11 @@ namespace Characters.LifeSupportSystem.EnemyLifeSupport {
         
         private void Awake() {
             _arCoreScript = GetComponent<ActiveRagdollCoreScript>();
-            Context = new EnemyLifeSupportContextScript(_maxHealth, _arCoreScript);
+            _nervousSystemScript = GetComponent<NervousSystemScript>();
+            _attackScript = GetComponent<AttackScript>();
+            _targetingScript = GetComponent<TargetingScript>();
+            
+            Context = new EnemyLifeSupportContextScript(_maxHealth, _arCoreScript, _nervousSystemScript, _targetingScript, _attackScript);
             ValidateReferences();
             InitializeVitals();
         }
@@ -34,6 +41,10 @@ namespace Characters.LifeSupportSystem.EnemyLifeSupport {
         {
             if (!_arCoreScript) {
                 Debug.Log("[EnemyLifeSupportScript] No ActiveRagdollCoreScript found!");
+            }
+            
+            if (!_nervousSystemScript) {
+                Debug.Log("[EnemyLifeSupportScript] No NervousSystemScript found!");
             }
         }
     }
