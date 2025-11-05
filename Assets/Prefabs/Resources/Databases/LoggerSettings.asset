@@ -16,4 +16,4 @@ MonoBehaviour:
   logInfo: 1
   logWarnings: 1
   logErrors: 1
-  includeTimestamp: 1
+  includeTimestamp: 0
