@@ -54,6 +54,7 @@ public class PickupControllerPhoton : MonoBehaviourPun
             }
         }
 
+        /*
         // Detectar "E" para abrir mochila (en mano o del mundo)
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -88,5 +89,6 @@ public class PickupControllerPhoton : MonoBehaviourPun
                 }
             }
         }
+        */
     }
 }

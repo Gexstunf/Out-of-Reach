@@ -1,5 +1,7 @@
 using System;
+using GlobalUtils;
 using Multiplayer.Inventory;
+using Multiplayer.UI;
 using UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,6 +12,7 @@ namespace Characters.PlayerController.Scripts.Input
     {
         private PlayerLocomotionScript _playerLocomotionScript;
         private readonly bool _toggleSprint = false;
+        private LoggerSO _logger;
         
         #region Exposed Variables
         public Vector2 MoveInput { get; private set; }
@@ -33,6 +36,7 @@ namespace Characters.PlayerController.Scripts.Input
         #region Awake logic
         private void Awake()
         {
+            _logger = LoggerSO.Instance;
             _playerLocomotionScript = new PlayerLocomotionScript();
             _playerLocomotionScript.Enable();
 
@@ -86,7 +90,7 @@ namespace Characters.PlayerController.Scripts.Input
         {
             if (context.performed)
             {
-                Debug.Log("Jump press");
+                _logger.LogMinor("Jump press");
                 JumpPressed = true;
             }
         }
@@ -127,7 +131,7 @@ namespace Characters.PlayerController.Scripts.Input
             // Si mochila est� equipada en slot 4 y seleccionada
             if (inv.backpackObj != null && inv.slots[3] != null && inv.activeSlot == 3)
             {
-                ui.ToggleBackpackInventory(inv.backpackObj.GetComponent<BackpackData>(), inv);
+                //ui.ToggleBackpackInventory(inv.backpackObj.GetComponent<BackpackData>(), inv);
                 return;
             }
 
@@ -141,7 +145,7 @@ namespace Characters.PlayerController.Scripts.Input
                     var bd = netItem.GetComponent<BackpackData>();
                     if (bd != null)
                     {
-                        ui.ToggleBackpackInventory(bd, inv);
+                        //ui.ToggleBackpackInventory(bd, inv);
                     }
                     break;
                 }
@@ -153,7 +157,7 @@ namespace Characters.PlayerController.Scripts.Input
         {
             if (context.performed) {
                 CrouchPressed = true;
-                Debug.Log("Crouch press");
+                _logger.LogMinor("Crouch press");
             } else if (context.canceled) {
                 CrouchPressed = false;
             }
@@ -180,7 +184,7 @@ namespace Characters.PlayerController.Scripts.Input
         public void OnSprint(InputAction.CallbackContext context) {
             if (context.performed) {
                 RunningPressed = true;
-                Debug.Log("Sprint press!");
+                _logger.LogMinor("Sprint press!");
             } else if (context.canceled) {
                 RunningPressed = false;
             }
@@ -219,7 +223,7 @@ namespace Characters.PlayerController.Scripts.Input
                  inv.DropCurrent(inv.activeSlot);
             
                  var ui = FindFirstObjectByType<PlayerUIManager>();
-                 if (ui != null) ui.UpdateInventoryUI();
+                 if (ui != null) ui.UpdateHotbarUI();
             }
         }
 

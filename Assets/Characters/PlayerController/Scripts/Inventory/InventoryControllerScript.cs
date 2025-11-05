@@ -2,6 +2,7 @@
 using Characters.PlayerController.Scripts.Input;
 using Items.Scripts;
 using Multiplayer.Inventory;
+using Multiplayer.UI;
 using Photon.Pun;
 using UI;
 using UnityEngine;
@@ -12,7 +13,6 @@ namespace Characters.PlayerController.Scripts.Inventory {
         [Header("References")]
         [SerializeField] private HandGrabberScript _handGrabber;
         [SerializeField] private PhotonObjectManagerScript _photonObjManager;
-        [SerializeField] private Transform handSlot;
         [SerializeField] private PlayerUIManager _uiManager;
 
         public PlayerInputScript input;
@@ -42,9 +42,6 @@ namespace Characters.PlayerController.Scripts.Inventory {
 
             if (_uiManager == null)
                 _uiManager = GetComponent<PlayerUIManager>();
-
-            if (_uiManager != null)
-                _uiManager.InitInventory(this);
 
             // if (debug) Debug.Log($"[Inventory] Awake(): references -> " +
             //                      $"PhotonView={_photonView != null}, " +
@@ -110,7 +107,7 @@ namespace Characters.PlayerController.Scripts.Inventory {
             }
             
             currentHeldItem = null; // Liberamos referencia global
-            _uiManager?.UpdateInventoryUI();
+            _uiManager?.UpdateHotbarUI();
 
             //if (debug) Debug.Log($"[Inventory] Stored '{grabbable.data?.name ?? "NULL DATA"}' at slot {slotIndex}");
         }
@@ -152,7 +149,7 @@ namespace Characters.PlayerController.Scripts.Inventory {
             slot.itemObject = null;
             slot.itemInteractionScript = null;
 
-            _uiManager?.UpdateInventoryUI();
+            _uiManager?.UpdateHotbarUI();
 
             //if (debug) Debug.Log($"[Inventory] Equipped {itemData.displayName ?? itemData.name} via HandGrabber inventory flow.");
         }

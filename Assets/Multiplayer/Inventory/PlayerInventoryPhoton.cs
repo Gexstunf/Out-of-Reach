@@ -5,6 +5,7 @@ using UI;
 using Characters.PlayerController.Scripts.Input;
 using Multiplayer.Inventory;
 using Characters.PlayerController.Scripts;
+using Multiplayer.UI;
 
 public class PlayerInventoryPhoton : MonoBehaviourPun
 {
@@ -89,7 +90,7 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         if (rb != null) { rb.isKinematic = false; rb.useGravity = true; }
 
         // Actualizar UI
-        playerUI?.UpdateInventoryUI();
+        playerUI?.UpdateHotbarUI();
 
         // --- HANDGRABBER HOOK: pedir al grabber que lo agarre físicamente ---
         var grabber = GetComponent<HandGrabberScript>();
@@ -178,7 +179,7 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         tempHeldPrefabName = null;
         tempBackpackIds = null;
 
-        playerUI?.UpdateInventoryUI();
+        playerUI?.UpdateHotbarUI();
     }
 
     private void DestroyTempHeldLocal()
@@ -213,7 +214,7 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             else HolsterCurrent();
 
             activeSlot = -1;
-            playerUI?.UpdateInventoryUI();
+            playerUI?.UpdateHotbarUI();
             return;
         }
 
@@ -242,13 +243,13 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
             }
 
             activeSlot = 3; // siempre queda como slot activo
-            playerUI?.UpdateInventoryUI();
+            playerUI?.UpdateHotbarUI();
             return;
         }
 
         SpawnHeldItem(itemData.heldPrefabName, null);
         activeSlot = slotIndex;
-        playerUI?.UpdateInventoryUI();
+        playerUI?.UpdateHotbarUI();
     }
 
     public void HolsterCurrent()
@@ -283,7 +284,7 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
 
             slots[slotIndex] = null;
             activeSlot = -1;
-            playerUI?.UpdateInventoryUI();
+            playerUI?.UpdateHotbarUI();
 
             // Soltar físicamente
             var grabber = GetComponent<Characters.PlayerController.Scripts.HandGrabberScript>();
@@ -314,6 +315,7 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
     }
 
 
+    /*
     public void OpenBackpack()
     {
         if (backpackObj == null || slots[3] == null) return;
@@ -321,7 +323,8 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
         if (bd == null) return;
         playerUI?.ShowBackpackInventory(bd, this);
     }
-
+*/
+    /*
     public void StoreInBackpack(BackpackData backpack, ItemSO item, int slotIndex)
     {
         if (backpack == null || item == null || slotIndex < 0 || slotIndex >= backpack.internalSlots.Length) return;
@@ -334,7 +337,9 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
 
         playerUI?.UpdateBackpackUI(backpack.internalSlots);
     }
+    */
 
+    /*
     public void DropFromBackpack(BackpackData backpack, int slotIndex)
     {
         if (backpack == null || slotIndex < 0 || slotIndex >= backpack.internalSlots.Length) return;
@@ -353,7 +358,8 @@ public class PlayerInventoryPhoton : MonoBehaviourPun
 
         playerUI?.UpdateBackpackUI(backpack.internalSlots);
     }
-
+    */
+    
     [PunRPC]
     void RPC_AttachItemToPlayer(int itemViewID, int playerViewID, string slot)
     {

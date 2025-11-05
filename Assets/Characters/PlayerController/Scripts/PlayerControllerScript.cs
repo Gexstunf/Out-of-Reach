@@ -41,7 +41,6 @@ public class PlayerControllerScript : MonoBehaviourPun
     [Header("General settings")]
     public LayerMask groundLayer;
     public Vector3 groundCheckBoxSize = new Vector3(0.5f, 0.15f, 0.5f);
-    public bool useOtherRb = false;
     public bool inZeroG = false;
 
 
@@ -64,17 +63,17 @@ public class PlayerControllerScript : MonoBehaviourPun
 
     private void Awake()
     {
-        if (!useOtherRb) _rb = GetComponent<Rigidbody>();
-        
+        _rb = GetComponent<Rigidbody>();
         _inputScript = GetComponent<PlayerInputScript>();
         _playerCollider = GetComponent<CapsuleCollider>();
         _playerStateMachine = GetComponent<PlayerStateMachineScript>();
         
         _rotator = gameObject.AddComponent<RotatorScript>();
+        
         _cameraController = new CameraControllerScript();
         _cameraController.TieToTransform(_eyesTransform, eyesOffset);
         
-        //_rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        _rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
 
         if (useCustomGravity)
@@ -95,15 +94,9 @@ public class PlayerControllerScript : MonoBehaviourPun
         _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
 
 
-        _rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        //_rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         _rb.linearDamping = playerDrag;
         _groundCheckOffset = _playerCollider.radius + 0.1f;
-    }
-
-    private bool IsGrounded()
-    {
-        Vector3 pos = transform.TransformPoint(_playerCollider.center) - new Vector3(0f, _playerCollider.radius, 0f);
-        return Physics.CheckBox(pos, groundCheckBoxSize, Quaternion.identity, groundLayer);
     }
 
     #region IsLocal
@@ -119,7 +112,7 @@ public class PlayerControllerScript : MonoBehaviourPun
 
     private void Update()
     {
-        if (!_isLocalPlayer) return;
+        //if (!_isLocalPlayer) return;
 
         HandleJumping(jumpForce);
         HandleGroundState();
@@ -127,7 +120,7 @@ public class PlayerControllerScript : MonoBehaviourPun
 
     private void FixedUpdate()
     {
-        if (!_isLocalPlayer) return;
+        //if (!_isLocalPlayer) return;
 
         if (useCustomGravity) {
             ApplyCustomGravity(gravityScale);
@@ -150,7 +143,7 @@ public class PlayerControllerScript : MonoBehaviourPun
 
     private void LateUpdate()
     {
-        if (!_isLocalPlayer) return;
+        //if (!_isLocalPlayer) return;
 
         visualGravity = Physics.gravity.y;
         if (useCustomGravity) visualGravity = Physics.gravity.y * gravityScale;
@@ -212,6 +205,10 @@ public class PlayerControllerScript : MonoBehaviourPun
     public void ResetDrag()
     {
         _rb.linearDamping = playerDrag;
+    }
+
+    public void SetKinematic(bool isKinematic) {
+        _rb.isKinematic = isKinematic;
     }
     
     private bool IsGroundedWhileGrounded() {

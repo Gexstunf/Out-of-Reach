@@ -1,6 +1,7 @@
 ﻿using Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals;
 using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.Inventory;
+using Multiplayer.UI;
 using UI;
 using UnityEngine;
 
@@ -19,6 +20,9 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
         [Header("Life support settings")]
         [SerializeField] private float _maxHealth = 100f;
         [SerializeField] private float _maxStamina = 100f;
+        
+        public float MaxHealth => _maxHealth;
+        public float MaxStamina => _maxStamina;
 
         [Header("Stamina settings")]
         [SerializeField] private float _staminaUseRate = 5f;
@@ -38,18 +42,19 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
 
         private void Awake()
         {
-            _rb = _rb ?? GetComponent<Rigidbody>();
-            _playerInputScript = _playerInputScript ?? GetComponent<PlayerInputScript>();
-            _inventory = _inventory ?? GetComponent<InventoryControllerScript>();
+            _rb =  GetComponent<Rigidbody>();
+            _playerInputScript = GetComponent<PlayerInputScript>();
+            _inventory = GetComponent<InventoryControllerScript>();
+            _uiManager = GetComponent<PlayerUIManager>();
 
             Context = new PlayerLifeSupportContextScript(
                 _rb, _maxHealth, _maxStamina, _staminaUseRate,
-                _staminaRegenRate, _staminaRegenDelay, null, _playerInputScript
+                _staminaRegenRate, _staminaRegenDelay, _uiManager, _playerInputScript
             );
 
-            Debug.Log("[PlayerLifeSupportScript] Awake completed. UIManager null: " + (_uiManager == null));
+            //Debug.Log("[PlayerLifeSupportScript] Awake completed. UIManager null: " + (_uiManager == null));
         }
-
+        
         private new void Start()
         {
             if (!_isLocalPlayer)
@@ -61,9 +66,9 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
                 {
                     Debug.Log("[PlayerLifeSupportScript] UIManager found in Start(): " + _uiManager.name);
                     Context.SetUIManager(_uiManager);
-                    _uiManager.SetTarget(Context, Vitals);
-                    if (_inventory != null)
-                        _uiManager.InitInventory(_inventory);
+                    //_uiManager.SetTarget(Context, Vitals);
+                    //if (_inventory != null)
+                    //    _uiManager.InitInventory(_inventory);
                 }
                 else
                 {
@@ -78,10 +83,10 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
             }
 
             InitializeVitals();
-
             ValidateReferences();
         }
 
+        /*
         private void Update()
         {
             if (!_isLocalPlayer) return;
@@ -98,7 +103,8 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
                 _uiManager.DisplayHealth(Context.Health);
             }
         }
-
+        */
+        /*
         public void Initialize(bool isLocalPlayer)
         {
             _isLocalPlayer = isLocalPlayer;
@@ -122,7 +128,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
 
             ValidateReferences();
         }
-
+        */
         private void InitializeVitals()
         {
             Vitals.Add(EVitals.Weight, new WeightVitalScript(Context, EVitals.Weight));

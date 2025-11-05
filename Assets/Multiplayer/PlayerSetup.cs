@@ -26,6 +26,7 @@ namespace Multiplayer
             _lifeSupport = GetComponent<PlayerLifeSupportScript>();
         }
 
+        /*
         void Start()
         {
             bool isLocal = IsLocalPlayer;
@@ -49,5 +50,6 @@ namespace Multiplayer
                 if (rb != null) rb.isKinematic = true;
             }
         }
+        */
     }
 }
