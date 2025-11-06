@@ -52,6 +52,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabHandle: {fileID: 4132599153258131173}
   data: {fileID: 11400000, guid: 10581c8a3f53f9e41b85b1ff3b2f3b2d, type: 2}
+  interactionScript: {fileID: 0}
   massScale: 1
   connectedMassScale: 1
 --- !u!54 &8559135283685325729
@@ -74,7 +75,7 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
+  m_ImplicitCom: 0
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0

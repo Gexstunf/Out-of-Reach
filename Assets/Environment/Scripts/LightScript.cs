@@ -8,9 +8,10 @@ namespace Environment.Scripts {
     public class LightScript : MonoBehaviour {
         [Header("References")] 
         public GameObject lightObject;
-        private Light _lightComp;
+        public GameObject vsfObject;
 
         [Header("Settings")] 
+        public bool useSparkEffect = true;
         public float blinkTime = 2f;
         public float minTime = 0.2f;
         public float maxTime = 2.25f;
@@ -25,6 +26,9 @@ namespace Environment.Scripts {
 
         private float _normalIntensity;
         
+        private Light _lightComp;
+        private ParticleSystem _particleSystem;
+        
         public enum ELightMode {
             On,       
             Intermittent,
@@ -37,10 +41,11 @@ namespace Environment.Scripts {
 
         private void Start() {
             _lightComp = lightObject.GetComponent<Light>();
+            if (vsfObject) _particleSystem = vsfObject.GetComponent<ParticleSystem>();
             _normalIntensity = _lightComp.intensity;
             if (UnityEngine.Random.value < failureChance) {
                 // pick a random failure mode, but not "On"
-                _lightMode = (ELightMode)UnityEngine.Random.Range(1, Enum.GetValues(typeof(ELightMode)).Length);
+                _lightMode = (ELightMode) UnityEngine.Random.Range(1, Enum.GetValues(typeof(ELightMode)).Length);
             } else {
                 _lightMode = ELightMode.On;
             }
@@ -52,14 +57,16 @@ namespace Environment.Scripts {
 
         private void Update() {
             if (_currentRoutine != null) return;
-            
+            bool shouldTryEffect = false;
             switch (_lightMode) {
                 case ELightMode.On:
                     break;
                 case ELightMode.Intermittent:
+                    shouldTryEffect = true;
                     StartLightRoutine(SwitchLightAfterTime(_isOff));
                     break;
                 case ELightMode.Blinking:
+                    shouldTryEffect = true;
                     StartLightRoutine(BlinkLight(_isOff));
                     break;
                 case ELightMode.Off:
@@ -79,6 +86,8 @@ namespace Environment.Scripts {
                 default:
                     break;
             }
+
+            if (useSparkEffect && shouldTryEffect) HandleSparkEffect();
         }
 
         private void StartLightRoutine(IEnumerator routine) {
@@ -100,7 +109,7 @@ namespace Environment.Scripts {
         }
 
         private IEnumerator SetLightIntensityAndWait(bool isOff, float waitTime, float intensity) {
-            _lightComp.intensity = isOff ? intensity : 0f;
+            _lightComp.intensity = !isOff ? intensity : 0f;
             yield return new WaitForSeconds(waitTime);
         }
 
@@ -115,6 +124,15 @@ namespace Environment.Scripts {
         public void ChangeLightMode(ELightMode newMode) {
             _lightMode = newMode;
             _isOff = false;
+        }
+
+        private void HandleSparkEffect() {
+            if (!_isOff && _particleSystem) return; 
+            if (_particleSystem.isPlaying) {
+                _particleSystem.Stop();
+            }
+            
+            _particleSystem.Play();
         }
 
         public void TurnOff() {
