@@ -76,7 +76,9 @@ namespace Characters.StateMachine.PlayerStateMachine
         # region  Exposed vars
 
         public EPlayerStates StateKey => CurrentState.StateKey;
-        
+
+
+        public bool isUnconscious => Context.IsUnconscious;
         public bool IsFalling => StateKey == EPlayerStates.Falling;
         public bool IsJumping => StateKey == EPlayerStates.Jumping;
         public bool IsRunning => StateKey == EPlayerStates.Running;

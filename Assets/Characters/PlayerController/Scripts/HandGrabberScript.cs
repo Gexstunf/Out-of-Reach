@@ -3,13 +3,11 @@ using Items.Scripts;
 using System;
 using System.Collections;
 using Unity.VisualScripting;
-using Characters.PlayerController.Scripts.Input;
 using UI.Scripts;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.Serialization;
 using UnityEngine.XR;
-using static UnityEditor.Progress;
 
 namespace Characters.PlayerController.Scripts
 {
