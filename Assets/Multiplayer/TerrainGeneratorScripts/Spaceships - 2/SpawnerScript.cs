@@ -94,17 +94,10 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
             Physics.SyncTransforms();
 
             // Aquí podrías obtener InfoScript y setear RamaID actual si vas a usar BranchDivision
-            // var info = spawned.GetComponent<InfoScript>();
-            // if (info != null) info.RamaID = currentRama; // (si implementás el tracking de rama)
+                                                                                                               // var info = spawned.GetComponent<InfoScript>();
+                                                                                                               // if (info != null) info.RamaID = currentRama; // (si implementás el tracking de rama)
             
             return spawned;
         }
     }
 }
-
-/*
- Colisiones / destrucción: si FuncionInstanciar devuelve null (p. ej. por falta de Entry o 
- porque decidiste destruirla al detectar overlap desde otro script), la rama termina silenciosamente
- y no agrega salidas. Si querés comportamiento distinto (ej: reintentar o marcar rama como fallida),
- implementalo en FuncionInstanciar o antes de añadir nextRoots.
- */
