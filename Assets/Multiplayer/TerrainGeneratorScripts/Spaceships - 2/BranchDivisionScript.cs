@@ -7,7 +7,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
     {
         public Dictionary<int, List<InfoScript>> Ramas = new();
 
-        private int _nextRamaID = -1;
+        private static int _nextRamaID = -1;
 
         public int CrearRama()
         {
@@ -32,7 +32,6 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                         Destroy(estructura.gameObject);
                 }
             }
-
             Ramas.Remove(ramaID);
         }
     }

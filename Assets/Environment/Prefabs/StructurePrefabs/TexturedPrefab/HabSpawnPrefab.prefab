@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 6240170037873614540}
   m_Layer: 11
   m_Name: HabSpawnPrefab
-  m_TagString: Room
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -119,9 +119,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!1001 &4442798167223649811
 PrefabInstance:
   m_ObjectHideFlags: 0

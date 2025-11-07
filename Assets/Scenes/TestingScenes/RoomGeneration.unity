@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 451592630}
   m_Layer: 0
   m_Name: Ship
-  m_TagString: Indestructible
+  m_TagString: Room
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2083,7 +2083,7 @@ PrefabInstance:
       objectReference: {fileID: 1592100312}
     - target: {fileID: 309884231760621863, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
       propertyPath: m_VersionIndex
-      value: 4889
+      value: 4919
       objectReference: {fileID: 0}
     - target: {fileID: 3524389350849481084, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2131,7 +2131,7 @@ PrefabInstance:
       objectReference: {fileID: 983614160}
     - target: {fileID: 3712515911256221845, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
       propertyPath: m_VersionIndex
-      value: 3881
+      value: 3911
       objectReference: {fileID: 0}
     - target: {fileID: 3744369573376307765, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
       propertyPath: m_Mesh

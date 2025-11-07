@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2381517754763504076}
-  - component: {fileID: 7688797232831172929}
   m_Layer: 3
   m_Name: mesh
   m_TagString: Untagged
@@ -32,28 +31,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3639394321372430678}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &7688797232831172929
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 871148982601434044}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 1
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -6994709727800719442, guid: 65e63f2ea6c80904981fe8ba7f3e8a6c, type: 3}
 --- !u!1 &1360542851232552746
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,6 +103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3639394321372430678}
   - component: {fileID: 2159092596608871846}
+  - component: {fileID: 591973835099223526}
   - component: {fileID: 8448889730241548898}
   - component: {fileID: 2741275348536948749}
   m_Layer: 11
@@ -177,6 +155,28 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -6994709727800719442, guid: 65e63f2ea6c80904981fe8ba7f3e8a6c, type: 3}
+--- !u!64 &591973835099223526
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6677434570533079222}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -6994709727800719442, guid: 65e63f2ea6c80904981fe8ba7f3e8a6c, type: 3}
 --- !u!54 &8448889730241548898
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -217,9 +217,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!1001 &128176478399566488
 PrefabInstance:
   m_ObjectHideFlags: 0
