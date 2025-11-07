@@ -9,6 +9,7 @@ namespace Multiplayer
     {
         private Camera _playerCamera;
         private AudioListener _audioListener;
+        private PhotonAnimatorView _animView;
 
         [Header("Player Components")]
         private PlayerControllerScript _controller;
@@ -24,9 +25,10 @@ namespace Multiplayer
             _controller = GetComponent<PlayerControllerScript>();
             _rotator = GetComponent<RotatorScript>();
             _lifeSupport = GetComponent<PlayerLifeSupportScript>();
+            //_animView = GetComponentInChildren<PhotonAnimatorView>(true);
         }
 
-        /*
+        
         void Start()
         {
             bool isLocal = IsLocalPlayer;
@@ -43,13 +45,16 @@ namespace Multiplayer
 
             if (_lifeSupport != null)
                 _lifeSupport.Initialize(isLocal);
-
+            /*
+            if (_animView != null)
+                _animView.enabled = !isLocal;
+            */
             if (!isLocal)
             {
                 var rb = GetComponent<Rigidbody>();
                 if (rb != null) rb.isKinematic = true;
             }
         }
-        */
+        
     }
 }

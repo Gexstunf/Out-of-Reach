@@ -15,16 +15,17 @@ public class PlayerAnimationController : MonoBehaviourPun
 
     void Update()
     {
-        if (!photonView.IsMine) return; // Solo el local controla los parámetros
+        if (!photonView.IsMine) return;
 
         _animator.SetBool("Crouch", _input.CrouchPressed);
         _animator.SetBool("Jumping", _input.JumpPressed);
-        _animator.SetBool("Falling", false); // Lo podes calcular según velocidad Y del Rigidbody
+        _animator.SetBool("Falling", false);
 
-        // Emotes o triggers
-        // if (_input.Emote1Triggered) {
-        //     _animator.SetTrigger("Emote1");
-        //     _input.Emote1Triggered = false;
-        // }
+        /*
+        if (_input.Emote1Triggered) {
+            _animator.SetTrigger("Emote1");
+            _input.Emote1Triggered = false;
+        }
+        */
     }
 }

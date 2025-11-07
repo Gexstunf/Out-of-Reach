@@ -51,28 +51,20 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
                 _rb, _maxHealth, _maxStamina, _staminaUseRate,
                 _staminaRegenRate, _staminaRegenDelay, _uiManager, _playerInputScript
             );
-
-            //Debug.Log("[PlayerLifeSupportScript] Awake completed. UIManager null: " + (_uiManager == null));
         }
-        
-        private new void Start()
-        {
-            if (!_isLocalPlayer)
-            {
-                //_uiManager = GetComponentInChildren<PlayerUIManager>(true);
-                _uiManager = GetComponent<PlayerUIManager>();
 
+        public void Initialize(bool isLocalPlayer)
+        {
+            _isLocalPlayer = isLocalPlayer;
+
+            if (isLocalPlayer)
+            {
+                _uiManager = GetComponent<PlayerUIManager>();
                 if (_uiManager != null)
                 {
-                    Debug.Log("[PlayerLifeSupportScript] UIManager found in Start(): " + _uiManager.name);
                     Context.SetUIManager(_uiManager);
-                    //_uiManager.SetTarget(Context, Vitals);
-                    //if (_inventory != null)
-                    //    _uiManager.InitInventory(_inventory);
-                }
-                else
-                {
-                    Debug.LogWarning("[PlayerLifeSupportScript] UIManager no encontrado en Start()");
+                    _uiManager.DisplayHealth(_maxHealth);
+                    _uiManager.DisplayStamina(_maxStamina);
                 }
             }
             else
@@ -86,49 +78,6 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
             ValidateReferences();
         }
 
-        /*
-        private void Update()
-        {
-            if (!_isLocalPlayer) return;
-
-            foreach (var vital in Vitals.Values)
-                vital.UpdateModifiers();
-
-            foreach (var vital in Vitals.Values)
-                vital.UpdateVital();
-
-            if (_uiManager != null)
-            {
-                _uiManager.DisplayStamina(Context.Stamina);
-                _uiManager.DisplayHealth(Context.Health);
-            }
-        }
-        */
-        /*
-        public void Initialize(bool isLocalPlayer)
-        {
-            _isLocalPlayer = isLocalPlayer;
-
-            if (isLocalPlayer)
-            {
-                _uiManager = GetComponent<PlayerUIManager>();
-                if (_uiManager != null)
-                {
-                    Context.SetUIManager(_uiManager);
-                    _uiManager.SetTarget(Context, Vitals);
-                    _uiManager.InitInventory(_inventory);
-                }
-            }
-            else
-            {
-                var uiCanvas = GetComponentInChildren<Canvas>(true);
-                if (uiCanvas != null)
-                    uiCanvas.gameObject.SetActive(false);
-            }
-
-            ValidateReferences();
-        }
-        */
         private void InitializeVitals()
         {
             Vitals.Add(EVitals.Weight, new WeightVitalScript(Context, EVitals.Weight));

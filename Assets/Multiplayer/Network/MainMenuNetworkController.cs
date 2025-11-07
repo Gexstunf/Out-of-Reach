@@ -102,14 +102,14 @@ public class MainMenuNetworkController : MonoBehaviourPunCallbacks
     {
         Debug.Log("Jugador unido a la sala: " + PhotonNetwork.CurrentRoom.Name);
 
-        // Solo MasterClient dispara la carga sincronizada
+        OnRoomJoinedEvent?.Invoke();
+
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.LoadLevel("RoomLobby");
         }
-
-        OnRoomJoinedEvent?.Invoke();
     }
+
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {

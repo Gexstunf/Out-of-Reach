@@ -50,10 +50,12 @@ public class MainMenuManager : MonoBehaviour
 
     private void ShowPanel(GameObject panelToShow)
     {
-        mainPanel.SetActive(false);
-        hostPanel.SetActive(false);
-        joinPanel.SetActive(false);
-        settingsPanel.SetActive(false);
+        if (panelToShow == null) return;
+
+        if (mainPanel != null) mainPanel.SetActive(false);
+        if (hostPanel != null) hostPanel.SetActive(false);
+        if (joinPanel != null) joinPanel.SetActive(false);
+        if (settingsPanel != null) settingsPanel.SetActive(false);
         if (loadingPanel != null) loadingPanel.SetActive(false);
 
         panelToShow.SetActive(true);
