@@ -60,6 +60,8 @@ public class PlayerControllerScript : MonoBehaviourPun
 
     private bool _isLocalPlayer = false;
 
+    public CameraControllerScript CameraController => _cameraController;
+
 
     private void Awake()
     {
@@ -112,7 +114,7 @@ public class PlayerControllerScript : MonoBehaviourPun
 
     private void Update()
     {
-        //if (!_isLocalPlayer) return;
+        if (!_isLocalPlayer) return;
 
         HandleJumping(jumpForce);
         HandleGroundState();
@@ -120,7 +122,7 @@ public class PlayerControllerScript : MonoBehaviourPun
 
     private void FixedUpdate()
     {
-        //if (!_isLocalPlayer) return;
+        if (!_isLocalPlayer) return;
 
         if (useCustomGravity) {
             ApplyCustomGravity(gravityScale);
@@ -143,7 +145,7 @@ public class PlayerControllerScript : MonoBehaviourPun
 
     private void LateUpdate()
     {
-        //if (!_isLocalPlayer) return;
+        if (!_isLocalPlayer) return;
 
         visualGravity = Physics.gravity.y;
         if (useCustomGravity) visualGravity = Physics.gravity.y * gravityScale;
