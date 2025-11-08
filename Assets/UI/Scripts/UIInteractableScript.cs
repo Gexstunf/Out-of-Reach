@@ -5,8 +5,10 @@ namespace UI.Scripts {
     {
         [Header("Settings")]
         public bool interactable;
-        public string interactText;
+        [SerializeField] private string interactText;
         public Transform anchorTransform;
+
+        public string DisplayText => interactText;
         
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -17,10 +19,8 @@ namespace UI.Scripts {
             }
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-        
+        public void SetText(string text) {
+            interactText = text;
         }
     }
 }

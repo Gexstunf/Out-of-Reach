@@ -9,6 +9,7 @@ namespace Environment.Scripts {
         [Header("References")] 
         public Transform femaleDoor;
         public Transform maleDoor;
+        [SerializeField] private AudioSource _audioSource;
 
         [Header("Settings")] 
         [SerializeField] private MovementAxis movementAxis = MovementAxis.Z;
@@ -48,6 +49,7 @@ namespace Environment.Scripts {
             Z,
         }
 
+        private bool _previouslyClosed;
         private bool _isOpen;
         private Vector3 _closedPosOffset;
         
@@ -64,7 +66,11 @@ namespace Environment.Scripts {
         }
         
         public bool IsOpen => _isOpen;
-        
+
+        private void Awake() {
+            _audioSource = GetComponent<AudioSource>();
+        }
+
         void Start() {
             _initialFemalePosition = femaleDoor.localPosition;
             _initialMalePosition = maleDoor.localPosition;
@@ -177,6 +183,7 @@ namespace Environment.Scripts {
         private void HandleDoor(float speed) {
             if (_isOpen) {
                 // initial pos is  open pos
+                HandleDoorSound();
                 femaleDoor.localPosition = Vector3.Lerp(femaleDoor.localPosition, (_initialFemalePosition ), speed * Time.deltaTime);
                 maleDoor.localPosition = Vector3.Lerp(maleDoor.localPosition, (_initialMalePosition ), speed * Time.deltaTime);
             }
@@ -185,6 +192,16 @@ namespace Environment.Scripts {
   
                 femaleDoor.localPosition = Vector3.Lerp(femaleDoor.localPosition, Vector3.zero + _closedPosOffset, speed * Time.deltaTime);
                 maleDoor.localPosition = Vector3.Lerp(maleDoor.localPosition, Vector3.zero - _closedPosOffset, speed * Time.deltaTime);
+                _previouslyClosed = true;
+            }
+        }
+
+        private void HandleDoorSound() {
+            if (_previouslyClosed) {
+                if (_audioSource.isPlaying) _audioSource.Stop();
+                _audioSource.time = 0.5f;
+                _audioSource.Play();
+                _previouslyClosed = false;
             }
         }
 

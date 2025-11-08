@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Numerics;
+using Characters.PlayerController.Scripts;
 using UI.Scripts;
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
@@ -25,6 +26,9 @@ namespace Environment.Scripts.Interactable {
         private bool _movingToTarget;
         private bool _movingBack;
         private float _t;
+        
+        private InteractableControllerScript _interactableController;
+        
         void Awake()
         {
             mainCamera = Camera.main;
@@ -44,19 +48,27 @@ namespace Environment.Scripts.Interactable {
                     _startCamRotation);
         }
         
-        public override void StartInteraction() {
+        public override void StartInteraction(InteractableControllerScript controller) {
+            _interactableController = controller;
+            
             Debug.Log("Interacting with terminal!");
             if (!_camTransform) _camTransform = Camera.main.transform;
-
+            _interactableController.SetActivePlayerControls(false);
             _startCamPosition = _camTransform.position;
             _startCamRotation = _camTransform.rotation;
             _t = 0f;
-
+            
             terminalController.OpenTerminal();
             _movingToTarget = true;
         }
         
-        
+        /*
+        private void SetActivePlayerControls(bool active) {
+            playerInput.enabled = active;
+            playerController.enabled = active;
+            playerController.SetKinematic(!active);
+        }
+        */
         public override IEnumerator QuitInteraction() {
             _t = 0f;
             _movingToTarget = false;
@@ -64,6 +76,7 @@ namespace Environment.Scripts.Interactable {
             terminalController.CloseTerminal();
 
             yield return new WaitUntil(() => !_movingBack); // this should wait until _movingBack is false (means that camera finished coming back)
+            _interactableController.SetActivePlayerControls(true);
         }
         
         private void MoveCamera(Vector3 startPos, Vector3 targetPos, Quaternion startRot, Quaternion targetRot)

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using GlobalUtils;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -50,6 +51,8 @@ namespace UI.Scripts {
         
         private StyleText _defaultStyle;
         private StyleText _fastStyle;
+        
+        private LoggerSO _logger;
         
         
         #endregion
@@ -101,6 +104,7 @@ namespace UI.Scripts {
             audioSource = GetComponent<AudioSource>();
             _defaultStyle = GetStyleText(StyleText.EStyle.Normal);
             _fastStyle = GetStyleText(StyleText.EStyle.Fast);
+            _logger = LoggerSO.Instance;
         }
         
         private void Start() {
@@ -131,7 +135,7 @@ namespace UI.Scripts {
                         
             AppendOutput("Type 'HELP' for instructions", false);
             
-            UnityEngine.Debug.Log("Started TerminalControllerScript");
+            _logger.LogMinor("Started TerminalControllerScript");
             
             inputField.text = "";
             
@@ -143,8 +147,10 @@ namespace UI.Scripts {
         private void Update()
         {
             // Always ensure the input field is focused
-            if (!inputField.isFocused && _isOpen)
+            if (!inputField.isFocused && _isOpen) {
                 inputField.ActivateInputField();
+                //_logger.Log("Focusing InputField, isFocused now: " + inputField.isFocused);
+            }
 
             ProcessTypingList();
             HandleInput();
@@ -386,7 +392,7 @@ namespace UI.Scripts {
         
         private void CleanUpSpecialCommands() {
             foreach (var specialCmd in _specialCommands) {
-                Debug.Log("Clearing: " + specialCmd.Key + ": " + specialCmd.Value);
+                _logger.LogMinor("Clearing: " + specialCmd.Key + ": " + specialCmd.Value);
                 CommandSO cmd = specialCmd.Value;
                 cmd.commandItemsPrefabs.Clear(); // we clear the list of items for the special command
             }
@@ -432,7 +438,7 @@ namespace UI.Scripts {
                     }
                 }
             }
-            UnityEngine.Debug.Log("Returning default text style...");
+            _logger.LogMinor("Returning default text style...");
             return defaultStyle;
         }
 

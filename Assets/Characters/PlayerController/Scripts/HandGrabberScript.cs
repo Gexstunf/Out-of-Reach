@@ -251,10 +251,6 @@ namespace Characters.PlayerController.Scripts
                     }
                     return;
                 } 
-                else
-                {
-                    Debug.Log($"Couldnt even attempt to grab item, grabbable: {grabbable}, isItemGrabbable: {IsItemGrabbable(grabbable)}");
-                }
             }
 
             // 2) Try wall raycast (wallGrabDistance)
