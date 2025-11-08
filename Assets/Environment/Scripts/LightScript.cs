@@ -9,25 +9,36 @@ namespace Environment.Scripts {
         [Header("References")] 
         public GameObject lightObject;
         public GameObject vsfObject;
+        [SerializeField] private AudioSource _lightAudioSource;
+        [SerializeField] private AudioSource _failAudioSource;
 
-        [Header("Settings")] 
+        [Header("Settings")] public bool debug;
         public bool useSparkEffect = true;
+
+        [Range(0, 1)] public float intensityScaleFactor = 0f;
+        public float intensityOffsetMagnitude = 10f;
+        public float flickerTime = 0.25f;
         public float blinkTime = 2f;
         public float minTime = 0.2f;
         public float maxTime = 2.25f;
         public float minIntensity = 0.6f;
-        public float maxIntensity = 50f;
+        public float maxIntensity = 9f;
         [Range(0,1)] public float failureChance = 0.5f;
         [Range(0,1)] public float selfDestructChance = 0.15f;
 
         private ELightMode _lightMode;
         private bool _isOff;
+        private bool _previouslyOn;
+        private IEnumerator _flickeringRoutine;
         private IEnumerator _currentRoutine;
 
         private float _normalIntensity;
         
         private Light _lightComp;
         private ParticleSystem _particleSystem;
+
+
+        private bool _doorFailed;
         
         public enum ELightMode {
             On,       
@@ -46,6 +57,7 @@ namespace Environment.Scripts {
             if (UnityEngine.Random.value < failureChance) {
                 // pick a random failure mode, but not "On"
                 _lightMode = (ELightMode) UnityEngine.Random.Range(1, Enum.GetValues(typeof(ELightMode)).Length);
+                _doorFailed = true;
             } else {
                 _lightMode = ELightMode.On;
             }
@@ -78,15 +90,32 @@ namespace Environment.Scripts {
                     SetLightColor(Color.red);
                     break;
                 case ELightMode.Bright:
-                    SetLightIntensity(maxIntensity);
+                    maxIntensity += (intensityOffsetMagnitude * intensityScaleFactor);
                     break;
                 case ELightMode.Dim:
-                    SetLightIntensity(minIntensity);
+                    maxIntensity -= (intensityOffsetMagnitude * intensityScaleFactor);
                     break;
                 default:
                     break;
             }
-
+  
+            if (!_isOff ) {
+                if (_flickeringRoutine == null) {
+                    _flickeringRoutine = FlickerLight();
+                    StartCoroutine(FlickerLight());
+                }
+                
+                if (!_previouslyOn && _lightAudioSource) _lightAudioSource.Play();
+                _previouslyOn = true;
+            }
+            else {
+                if (_previouslyOn && _doorFailed && _failAudioSource) _failAudioSource.Play();
+                if (_previouslyOn && _lightAudioSource) _lightAudioSource.Stop();
+                TurnOff();
+                
+                _previouslyOn = false;
+            }
+            
             if (useSparkEffect && shouldTryEffect) HandleSparkEffect();
         }
 
@@ -97,44 +126,58 @@ namespace Environment.Scripts {
 
         private IEnumerator SwitchLightAfterTime(bool isOff) {
             float randomDelay = UnityEngine.Random.Range(minTime, maxTime);
-            yield return StartCoroutine(SetLightIntensityAndWait(isOff, randomDelay, _normalIntensity));
+            yield return new WaitForSeconds(randomDelay);
+            //yield return StartCoroutine(SetLightIntensityAndWait(isOff, randomDelay, _normalIntensity));
             _currentRoutine = null;
             _isOff = !isOff;
         }
-        
+                                                                                                                    
         private IEnumerator BlinkLight(bool isOff) {
-            yield return StartCoroutine(SetLightIntensityAndWait(isOff, blinkTime, _normalIntensity));
+            yield return new WaitForSeconds(blinkTime);
             _currentRoutine = null;
             _isOff = !isOff;
         }
 
-        private IEnumerator SetLightIntensityAndWait(bool isOff, float waitTime, float intensity) {
-            _lightComp.intensity = !isOff ? intensity : 0f;
-            yield return new WaitForSeconds(waitTime);
+        private IEnumerator FlickerLight() {
+            float targetIntensity = GetRandomIntensity(minIntensity, maxIntensity);
+            float startIntensity = _lightComp.intensity;
+            float elapsed = 0f;
+
+            while (elapsed < flickerTime) {
+                elapsed += Time.deltaTime;
+                float t = elapsed / flickerTime;
+                _lightComp.intensity = Mathf.Lerp(startIntensity, targetIntensity, t);
+                yield return null; 
+            }
+
+            _lightComp.intensity = targetIntensity;
+            _flickeringRoutine = null;
         }
 
-        private void SetLightIntensity(float intensity) {
-            _lightComp.intensity = intensity;
+        
+        private float GetRandomIntensity(float min, float max) {
+            return UnityEngine.Random.Range(min, max);
         }
         
         private void SetLightColor(Color color) {
             _lightComp.color = color;
         }
 
-        public void ChangeLightMode(ELightMode newMode) {
-            _lightMode = newMode;
-            _isOff = false;
-        }
-
         private void HandleSparkEffect() {
-            if (!_isOff && _particleSystem) return; 
+            if (!_isOff || !_particleSystem) return; 
             if (_particleSystem.isPlaying) {
                 _particleSystem.Stop();
             }
             
             _particleSystem.Play();
         }
-
+        
+        #region Public API
+        public void ChangeLightMode(ELightMode newMode) {
+            _lightMode = newMode;
+            _isOff = false;
+        }
+        
         public void TurnOff() {
             _lightComp.intensity = 0f;
             _isOff = true;
@@ -144,5 +187,6 @@ namespace Environment.Scripts {
             _lightComp.intensity = _normalIntensity;
             _isOff = false;
         }
+        #endregion
     }
 }

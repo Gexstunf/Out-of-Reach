@@ -25,7 +25,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
 
             _health = VitalUtil.BaseMaxVital;
             _currentHealthRegenDelay = VitalUtil.BaseRegenDelay;
-            Debug.Log("Health setup: " + _health);
+            //Debug.Log("Health setup: " + _health);
         }
 
         public override void UpdateModifiers()

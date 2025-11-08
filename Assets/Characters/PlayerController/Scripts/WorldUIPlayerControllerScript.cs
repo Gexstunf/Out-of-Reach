@@ -18,7 +18,9 @@ namespace Characters.PlayerController.Scripts {
         private bool _openedUi;
         private IGrabbableScript _grabbableCache;
         private UIInteractableScript _interactableCache;
-                   
+
+
+        private string _prevInteractableText;
         
         private void Start() {
             handGrabberScript = GetComponent<HandGrabberScript>();
@@ -31,8 +33,18 @@ namespace Characters.PlayerController.Scripts {
 
         public void Update() {
             if (Physics.Raycast(uiInteractionOrigin.position, uiInteractionOrigin.forward, out RaycastHit hit, uiInteractionDistance, uiInteractionLayer)) {
-                HandleGrabbable(hit);
-                HandleInteractable(hit);
+                
+                if (!_interactableCache) {
+                    var interactable = hit.collider.gameObject.GetComponent<UIInteractableScript>();
+                    _interactableCache = interactable;
+                    if (_interactableCache) HandleAInteractable();
+                }
+                
+                if (_grabbableCache == null) {
+                    var grabbable = hit.collider.gameObject.GetComponent<IGrabbableScript>();
+                    _grabbableCache = grabbable;
+                    if (_grabbableCache != null) HandleAGrabbable(hit);
+                }
             }
             else {
                 if (_openedUi) {
@@ -49,12 +61,7 @@ namespace Characters.PlayerController.Scripts {
             _interactableCache = null;
         }
         
-        private void HandleGrabbable(RaycastHit hit) {
-            if (_grabbableCache == null) {
-                var grabbable = hit.collider.gameObject.GetComponent<IGrabbableScript>();
-                _grabbableCache = grabbable;
-            }
-
+        private void HandleAGrabbable(RaycastHit hit) {
             if (_grabbableCache != null) {
                 if (handGrabberScript.IsItemGrabbable(_grabbableCache) && !_openedUi) {
                     var item = hit.collider.gameObject.GetComponent<ItemGrabbableScript>();
@@ -64,16 +71,14 @@ namespace Characters.PlayerController.Scripts {
             }
         }
         
-        private void HandleInteractable(RaycastHit hit) {
+        private void HandleAInteractable() {
+            
+            var currentTxt = _interactableCache.DisplayText;
 
-            if (!_interactableCache) {
-                var interactable = hit.collider.gameObject.GetComponent<UIInteractableScript>();
-                _interactableCache = interactable;
-            }
-
-            if (_interactableCache && !_openedUi) {
+            if ((_interactableCache && !_openedUi) || _prevInteractableText != currentTxt) {
                 _openedUi = true;
-                worldUIManagerScript.ShowInteractable(_interactableCache.anchorTransform, _interactableCache.interactText);
+                _prevInteractableText = currentTxt;
+                worldUIManagerScript.ShowInteractable(_interactableCache.anchorTransform, currentTxt);
             }
         }
     }
