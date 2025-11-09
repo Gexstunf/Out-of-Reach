@@ -15,7 +15,9 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
         [SerializeField] private PlayerUIManager _uiManager;
         [SerializeField] private Rigidbody _rb;
         [SerializeField] private PlayerInputScript _playerInputScript;
-        [SerializeField] private InventoryControllerScript _inventory;
+
+        [Header("General settings")]
+        [SerializeField] private bool _forceInit;
 
         [Header("Life support settings")]
         [SerializeField] private float _maxHealth = 100f;
@@ -44,13 +46,14 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
         {
             _rb =  GetComponent<Rigidbody>();
             _playerInputScript = GetComponent<PlayerInputScript>();
-            _inventory = GetComponent<InventoryControllerScript>();
             _uiManager = GetComponent<PlayerUIManager>();
 
             Context = new PlayerLifeSupportContextScript(
                 _rb, _maxHealth, _maxStamina, _staminaUseRate,
                 _staminaRegenRate, _staminaRegenDelay, _uiManager, _playerInputScript
             );
+            
+            if (_forceInit) InitializeVitals();
         }
 
         public void Initialize(bool isLocalPlayer)
