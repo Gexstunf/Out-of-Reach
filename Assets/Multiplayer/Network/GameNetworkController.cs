@@ -8,12 +8,20 @@ public class GameNetworkController : MonoBehaviourPunCallbacks
 {
     public static GameNetworkController Instance;
 
-    public event Action<Player> OnPlayerSpawned;
+    [Header("Prefabs")]
+    public GameObject playerPrefab;
+    public GameObject doorPrefab;
 
-    // Mapeo de jugadores (actorNumber -> PlayerStatusReporter)
+    [Header("Spawns")]
+    public Transform[] spawnPoints;
+
+    public event Action<Player, GameObject> OnPlayerSpawned;
+
     private Dictionary<int, PlayerStatusReporter> playerTrackers = new();
     private Dictionary<int, bool> playerAliveStates = new();
 
+
+    #region Awake-Start
     private void Awake()
     {
         if (Instance == null)
@@ -26,18 +34,36 @@ public class GameNetworkController : MonoBehaviourPunCallbacks
             Destroy(gameObject);
         }
     }
+    private void Start()
+    {
+        if (!PhotonNetwork.InRoom)
+        {
+            Debug.LogError("No estás en una sala, no se puede spawnear jugador.");
+            return;
+        }
 
+    SpawnLocalPlayer();
+    }
+    #endregion
+
+    #region Pl_handling
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Debug.Log($"Jugador entró: {newPlayer.NickName}");
-        OnPlayerSpawned?.Invoke(newPlayer);
     }
 
-    public void SpawnLocalPlayer(GameObject prefab, Transform spawnPoint)
+    public void SpawnLocalPlayer()
     {
-        GameObject player = PhotonNetwork.Instantiate(prefab.name, spawnPoint.position, spawnPoint.rotation);
-        OnPlayerSpawned?.Invoke(PhotonNetwork.LocalPlayer);
-        Debug.Log($"Jugador spawneado: {PhotonNetwork.LocalPlayer.NickName}");
+        int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
+        Transform spawnPoint = spawnPoints[playerIndex % spawnPoints.Length];
+
+        GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
+
+        RegisterPlayer(PhotonNetwork.LocalPlayer.ActorNumber, player.GetComponent<PlayerStatusReporter>());
+
+        OnPlayerSpawned?.Invoke(PhotonNetwork.LocalPlayer, player);
+
+        Debug.Log($"Jugador local spawneado en punto {playerIndex}: {spawnPoint.position}");
     }
 
     public void RegisterPlayer(int actorNumber, PlayerStatusReporter reporter)
@@ -83,4 +109,11 @@ public class GameNetworkController : MonoBehaviourPunCallbacks
                 dead.Add(kvp.Key);
         return dead;
     }
+    #endregion
+
+    #region Drs handling
+
+
+
+    #endregion
 }

@@ -12387,6 +12387,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c2387c818680343b420f5fd51aa132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 319387619057270314, guid: ca00ee75fa58b3a4fa00a54c39d8197a, type: 3}
+  spawnPoints:
+  - {fileID: 120445270}
+  - {fileID: 954773728}
+  - {fileID: 106443479}
+  - {fileID: 810390869}
 --- !u!4 &490904404
 Transform:
   m_ObjectHideFlags: 0
@@ -40007,12 +40013,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4703b7c18b2be243b8f119b13bcbbaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 319387619057270314, guid: ca00ee75fa58b3a4fa00a54c39d8197a, type: 3}
-  spawnPoints:
-  - {fileID: 120445270}
-  - {fileID: 954773728}
-  - {fileID: 106443479}
-  - {fileID: 810390869}
 --- !u!4 &1504777730
 Transform:
   m_ObjectHideFlags: 0
