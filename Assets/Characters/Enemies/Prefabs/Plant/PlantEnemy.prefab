@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 1260725397380848618}
   - component: {fileID: 5478443227735347549}
   - component: {fileID: 697985179614628486}
+  - component: {fileID: 7969197797809474272}
+  - component: {fileID: -6444713507706708403}
   m_Layer: 0
   m_Name: PlantEnemy
   m_TagString: Enemy
@@ -92,6 +94,7 @@ MonoBehaviour:
     angularDriveSpring: 10000
     isStabilizer: 1
     rb: {fileID: 5062127062142051932}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -100,6 +103,7 @@ MonoBehaviour:
     angularDriveSpring: 10000
     isStabilizer: 0
     rb: {fileID: 8128455329487064146}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -108,6 +112,7 @@ MonoBehaviour:
     angularDriveSpring: 10000
     isStabilizer: 0
     rb: {fileID: 7630141156040045062}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -116,6 +121,7 @@ MonoBehaviour:
     angularDriveSpring: 10000
     isStabilizer: 0
     rb: {fileID: 310642264241411891}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -124,6 +130,7 @@ MonoBehaviour:
     angularDriveSpring: 9700
     isStabilizer: 0
     rb: {fileID: 4645417951701744817}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -132,6 +139,7 @@ MonoBehaviour:
     angularDriveSpring: 9700
     isStabilizer: 0
     rb: {fileID: 2714692343431115901}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -140,6 +148,7 @@ MonoBehaviour:
     angularDriveSpring: 15000
     isStabilizer: 0
     rb: {fileID: 1997065620220728142}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -148,6 +157,7 @@ MonoBehaviour:
     angularDriveSpring: 15000
     isStabilizer: 0
     rb: {fileID: 8772385483649029828}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -156,6 +166,7 @@ MonoBehaviour:
     angularDriveSpring: 15000
     isStabilizer: 0
     rb: {fileID: 6056512618729813456}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -164,6 +175,7 @@ MonoBehaviour:
     angularDriveSpring: 17000
     isStabilizer: 0
     rb: {fileID: 984707575564461826}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -172,6 +184,7 @@ MonoBehaviour:
     angularDriveSpring: 14000
     isStabilizer: 0
     rb: {fileID: 1525221366795290256}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -180,6 +193,7 @@ MonoBehaviour:
     angularDriveSpring: 14000
     isStabilizer: 0
     rb: {fileID: 7273038568440808384}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -188,6 +202,7 @@ MonoBehaviour:
     angularDriveSpring: 15000
     isStabilizer: 0
     rb: {fileID: 5009081354902778048}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -196,6 +211,7 @@ MonoBehaviour:
     angularDriveSpring: 15000
     isStabilizer: 0
     rb: {fileID: 6982361730831678700}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -204,6 +220,7 @@ MonoBehaviour:
     angularDriveSpring: 600
     isStabilizer: 0
     rb: {fileID: 8567326257589953658}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -212,6 +229,7 @@ MonoBehaviour:
     angularDriveSpring: 400
     isStabilizer: 0
     rb: {fileID: 3812439406691374819}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -220,6 +238,7 @@ MonoBehaviour:
     angularDriveSpring: 400
     isStabilizer: 0
     rb: {fileID: 5769936885716522665}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
 --- !u!114 &2613203462799948720
@@ -234,12 +253,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad1b5a30fbe13a4cbebac74978087d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ar: {fileID: 0}
+  _arCoreScript: {fileID: 0}
   _smoothLockDuration: 6
   _lockSpring: 60
   _lockDamper: 30
   _initialClearance: 0
-  alive: 1
+  debug: 1
+  debugAlive: 1
 --- !u!114 &1260725397380848618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,7 +307,8 @@ MonoBehaviour:
   - {fileID: 447725144063694090}
   - {fileID: 5530369984699528609}
   - {fileID: 2154919922427266035}
-  attackCooldownTime: 5
+  randomizeBetweenValidAttacks: 0
+  attacks: []
 --- !u!114 &697985179614628486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,6 +323,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   plantAnimator: {fileID: 880052595752755823}
   attack: 0
+--- !u!114 &7969197797809474272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6113814242317541465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &-6444713507706708403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6113814242317541465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1001 &527130215282499857
 PrefabInstance:
   m_ObjectHideFlags: 0
