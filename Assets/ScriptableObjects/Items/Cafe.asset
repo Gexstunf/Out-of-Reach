@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd30862700d3ab04c8502dfb46c13249, type: 3}
   m_Name: Cafe
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 6544552166898053869, guid: f7f3d628dd9976a43b7b2f3c7e9f9e63, type: 3}
   itemId: 8
-  worldPrefabName: PhotonPrefabs/Items/World_Cafe
-  heldPrefabName: PhotonPrefabs/Items/Held_Cafe
+  worldPrefabName: PhotonPrefabs/Items/ItemCafe
+  heldPrefabName: PhotonPrefabs/Items/ItemCafe
   icon: {fileID: 21300000, guid: 65576bdbf9408384284b3b494ec65abf, type: 3}
   displayName: Cafe
   itemType: 1

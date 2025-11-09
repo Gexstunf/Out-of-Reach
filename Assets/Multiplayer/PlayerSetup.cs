@@ -1,4 +1,5 @@
 ﻿using Characters.LifeSupportSystem.PlayerLifeSupport;
+using Characters.PlayerController.Scripts;
 using Characters.Utils;
 using Photon.Pun;
 using UnityEngine;
@@ -15,8 +16,11 @@ namespace Multiplayer
         private PlayerControllerScript _controller;
         private RotatorScript _rotator;
         private PlayerLifeSupportScript _lifeSupport;
+        private ActiveRagdollControllerScript _ragdoll;
 
         public bool IsLocalPlayer => photonView.IsMine;
+
+        private bool _wasCrouching;
 
         void Awake()
         {
@@ -25,10 +29,11 @@ namespace Multiplayer
             _controller = GetComponent<PlayerControllerScript>();
             _rotator = GetComponent<RotatorScript>();
             _lifeSupport = GetComponent<PlayerLifeSupportScript>();
+            _ragdoll = GetComponent<ActiveRagdollControllerScript>();
             //_animView = GetComponentInChildren<PhotonAnimatorView>(true);
         }
 
-        
+
         void Start()
         {
             bool isLocal = IsLocalPlayer;
@@ -55,6 +60,30 @@ namespace Multiplayer
                 if (rb != null) rb.isKinematic = true;
             }
         }
-        
+        void Update()
+        {
+            if (!IsLocalPlayer) return;
+
+            // Use your own input system here — this is an example:
+            bool crouchPressed = Input.GetKey(KeyCode.LeftControl);
+
+            if (crouchPressed && !_wasCrouching)
+            {
+                photonView.RPC(nameof(RPC_SetCrouch), RpcTarget.All, true);
+                _wasCrouching = true;
+            }
+            else if (!crouchPressed && _wasCrouching)
+            {
+                photonView.RPC(nameof(RPC_SetCrouch), RpcTarget.All, false);
+                _wasCrouching = false;
+            }
+        }
+
+        [PunRPC]
+        private void RPC_SetCrouch(bool isCrouching)
+        {
+            if (_ragdoll != null)
+                _ragdoll.SetCrouch(isCrouching);
+        }
     }
 }

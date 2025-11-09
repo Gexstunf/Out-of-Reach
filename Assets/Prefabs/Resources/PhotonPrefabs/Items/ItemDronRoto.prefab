@@ -14,8 +14,9 @@ GameObject:
   - component: {fileID: 1191089246638974326}
   - component: {fileID: 4365286375610609256}
   - component: {fileID: 3725826892312465752}
-  m_Layer: 7
-  m_Name: World_DronRoto
+  - component: {fileID: 2263105900180714045}
+  m_Layer: 6
+  m_Name: ItemDronRoto
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -130,8 +131,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabHandle: {fileID: 0}
   data: {fileID: 11400000, guid: a65cf39056672ea4b9a53b8f5e926df4, type: 2}
+  interactionScript: {fileID: 0}
   massScale: 1
   connectedMassScale: 1
+--- !u!65 &2263105900180714045
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5443926683285994446}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.3490803, y: 0.31916904, z: 1.7513288}
+  m_Center: {x: 0.11667192, y: 0.09958449, z: 0.33519584}
 --- !u!1001 &5589198813277129292
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -194,7 +217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2221675674815643763, guid: c48d6f722952b0c49bc96c0cd800d5d9, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c48d6f722952b0c49bc96c0cd800d5d9, type: 3}
       propertyPath: m_Name
@@ -202,50 +225,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c48d6f722952b0c49bc96c0cd800d5d9, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6981081752426796855, guid: c48d6f722952b0c49bc96c0cd800d5d9, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7621130596392445631, guid: c48d6f722952b0c49bc96c0cd800d5d9, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c48d6f722952b0c49bc96c0cd800d5d9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5635954076425543838}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c48d6f722952b0c49bc96c0cd800d5d9, type: 3}
---- !u!1 &4706749127246362397 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c48d6f722952b0c49bc96c0cd800d5d9, type: 3}
-  m_PrefabInstance: {fileID: 5589198813277129292}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &5635954076425543838
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4706749127246362397}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 0.18, z: 0.8}
-  m_Center: {x: 0, y: 0.03, z: 0.1}
 --- !u!4 &5339698816194342311 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c48d6f722952b0c49bc96c0cd800d5d9, type: 3}

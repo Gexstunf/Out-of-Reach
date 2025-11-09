@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd30862700d3ab04c8502dfb46c13249, type: 3}
   m_Name: Cristal
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 1443502692529751441, guid: f97296e177727aa46aa4e293d0845e36, type: 3}
   itemId: 1
-  worldPrefabName: PhotonPrefabs/Items/World_Cristal
-  heldPrefabName: PhotonPrefabs/Items/Held_Cristal
+  worldPrefabName: PhotonPrefabs/Items/ItemCristal
+  heldPrefabName: PhotonPrefabs/Items/ItemCristal
   icon: {fileID: 21300000, guid: 047169ab8816bc64ba4fadbd89dc2ac1, type: 3}
   displayName: Cristal
   itemType: 3

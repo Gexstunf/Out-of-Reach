@@ -13,17 +13,13 @@ MonoBehaviour:
   m_Name: Farol
   m_EditorClassIdentifier: 
   prefab: {fileID: 4316078606925847965, guid: e98e3557d5adb44449486fd5a71a67ad, type: 3}
-  itemId: 
-  worldPrefabName: 
-  heldPrefabName: 
-  icon: {fileID: 0}
+  itemId: 15
+  worldPrefabName: PhotonPrefabs/Items/ItemFarol
+  heldPrefabName: PhotonPrefabs/Items/ItemFarol
+  icon: {fileID: 21300000, guid: 87d847d616682904e8b88be6ad249afc, type: 3}
   displayName: Farol
   itemType: 3
   itemSize: 1
   spawnChance: 0.3
   value: 40
-  internalSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  internalSlots: []

@@ -13,17 +13,13 @@ MonoBehaviour:
   m_Name: CraneoAlien
   m_EditorClassIdentifier: 
   prefab: {fileID: 123797244976396003, guid: febe4896a55be4a449f5b0b0f4612096, type: 3}
-  itemId: 
-  worldPrefabName: 
-  heldPrefabName: 
+  itemId: 10
+  worldPrefabName: PhotonPrefabs/Items/ItemCraneoAlien
+  heldPrefabName: PhotonPrefabs/Items/ItemCraneoAlien
   icon: {fileID: 21300000, guid: 358ab8b5730ead7429604953c11a9319, type: 3}
-  displayName: 
+  displayName: Craneo Alienigena
   itemType: 3
   itemSize: 1
   spawnChance: 0.4
   value: 130
-  internalSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  internalSlots: []

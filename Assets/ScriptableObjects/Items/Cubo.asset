@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd30862700d3ab04c8502dfb46c13249, type: 3}
   m_Name: Cubo
   m_EditorClassIdentifier: 
+  prefab: {fileID: 0}
   itemId: 0
-  worldPrefabName: PhotonPrefabs/Items/World_Cubo
-  heldPrefabName: PhotonPrefabs/Items/Held_Cubo
+  worldPrefabName: PhotonPrefabs/Items/ItemCubo
+  heldPrefabName: PhotonPrefabs/Items/ItemCubo
   icon: {fileID: 21300000, guid: 87d847d616682904e8b88be6ad249afc, type: 3}
   displayName: Cubo
   itemType: 3
+  itemSize: 0
+  spawnChance: 0.8
+  value: 0
   internalSlots:
   - {fileID: 0}
   - {fileID: 0}

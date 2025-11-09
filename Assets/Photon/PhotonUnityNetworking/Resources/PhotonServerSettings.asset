@@ -47,6 +47,7 @@ MonoBehaviour:
   - RPC_InitContents
   - RPC_DestroyForTarget
   - RPC_InstantiateForTarget
+  - RPC_SetCrouch
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

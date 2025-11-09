@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ArmaRota
   m_EditorClassIdentifier: 
   prefab: {fileID: 226995063728355445, guid: 60ff2ea7a686bfd4ca3e739d9c5fcd38, type: 3}
-  itemId: 
+  itemId: 11
   worldPrefabName: 
   heldPrefabName: 
   icon: {fileID: 0}

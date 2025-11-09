@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd30862700d3ab04c8502dfb46c13249, type: 3}
   m_Name: Pintura
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 7743152662665171142, guid: 83106ae75d64e0a4eb531508f3fc0832, type: 3}
   itemId: 7
-  worldPrefabName: PhotonPrefabs/Items/World_Pintura
-  heldPrefabName: PhotonPrefabs/Items/Held_Pintura
+  worldPrefabName: PhotonPrefabs/Items/ItemPintura
+  heldPrefabName: PhotonPrefabs/Items/ItemPintura
   icon: {fileID: 21300000, guid: 5d481c2e9200dd244a837c56ed665731, type: 3}
   displayName: Pintura
   itemType: 3

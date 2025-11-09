@@ -313,8 +313,31 @@ namespace Characters.PlayerController.Scripts {
                 joint.angularZMotion = ConfigurableJointMotion.Limited;
             }
         }
-        
-        
+
+        public void SetCrouch(bool isCrouching)
+        {
+            if (isCrouching)
+            {
+                _stabilizerMap.joint.yMotion = ConfigurableJointMotion.Limited;
+
+                var jointLim = new SoftJointLimit();
+                jointLim.limit = _playerController.crouchHeight;
+                _stabilizerMap.joint.linearLimit = jointLim;
+
+                _stabilizerMap.joint.targetPosition = new Vector3(0f, _playerController.crouchHeight, 0f);
+                _hasCrouched = true;
+            }
+            else
+            {
+                if (_stabilizerCoroutine != null)
+                    StopCoroutine(_stabilizerCoroutine);
+
+                _stabilizerCrouchCoroutine = StartCoroutine(CrouchStabilizer());
+                _hasCrouched = false;
+            }
+        }
+
+
 
 
         [ContextMenu("Kill active ragdoll")]
