@@ -1,291 +1,198 @@
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 using Characters.ActiveRagdollSystem;
 using Characters.Enemies.Scripts;
-using Characters.Enemies.Scripts.Plant;
 using Items.Scripts;
-using Characters.LifeSupportSystem.EnemyLifeSupport;
 
 namespace Characters.Enemies.Scripts.Plant
 {
     [RequireComponent(typeof(PhotonView))]
     [RequireComponent(typeof(ActiveRagdollCoreScript))]
-    [RequireComponent(typeof(EnemyLifeSupportScript))]
     [RequireComponent(typeof(NervousSystemScript))]
     [RequireComponent(typeof(AttackScript))]
-    [RequireComponent(typeof(TargetingScript))]
     [RequireComponent(typeof(PlantAnimController))]
     public class PlantNetworkController : MonoBehaviourPun, IPunObservable
     {
         [Header("References")]
-        [SerializeField] private ActiveRagdollCoreScript arCoreScript;
-        [SerializeField] private EnemyLifeSupportScript lifeSupport;
-        [SerializeField] private NervousSystemScript nervousSystem;
-        [SerializeField] private AttackScript attackScript;
-        [SerializeField] private TargetingScript targetingScript;
-        [SerializeField] private PlantAnimController animController;
+        [SerializeField] private ActiveRagdollCoreScript _ragdollCore;
+        [SerializeField] private NervousSystemScript _nervousSystem;
+        [SerializeField] private AttackScript _attackScript;
+        [SerializeField] private PlantAnimController _animController;
 
-        [Header("Settings")]
-        [SerializeField] private float attackCooldown = 2f;
-        [SerializeField] private bool debugLogs = false;
-
-        // estado local (maestro lo mantiene)
-        private float _attackTimer;
-        private bool _isDead;
+        [Header("Stats")]
+        [SerializeField] private float _maxHealth = 100f;
         private float _currentHealth;
+        private bool _isDead;
+        private bool _isAttacking;
 
-        // helper
-        private bool IsAuthoritative => PhotonNetwork.IsMasterClient;
+        private float _attackTimer;
+        private readonly float _attackCooldown = 3f;
 
-        void Awake()
+        private bool IsOwner => PhotonNetwork.IsMasterClient;
+
+        // Variables de red para interpolar
+        private bool _netIsDead;
+        private bool _netIsAttacking;
+        private float _netHealth;
+
+        private void Awake()
         {
-            arCoreScript = GetComponent<ActiveRagdollCoreScript>();
-            lifeSupport = GetComponent<EnemyLifeSupportScript>();
-            nervousSystem = GetComponent<NervousSystemScript>();
-            attackScript = GetComponent<AttackScript>();
-            targetingScript = GetComponent<TargetingScript>();
-            animController = GetComponent<PlantAnimController>();
+            _ragdollCore = GetComponent<ActiveRagdollCoreScript>();
+            _nervousSystem = GetComponent<NervousSystemScript>();
+            _attackScript = GetComponent<AttackScript>();
+            _animController = GetComponent<PlantAnimController>();
         }
 
-        void Start()
+        private void Start()
         {
-            _attackTimer = attackCooldown;
-            // tomar salud inicial desde el sistema de vida si existe
-            try
-            {
-                _currentHealth = lifeSupport.Context.HealthVital.CurrentHealth;
-            }
-            catch
-            {
-                _currentHealth = 100f;
-            }
+            _currentHealth = _maxHealth;
+            _attackTimer = _attackCooldown;
 
-            animController.TriggerByName(PlantAnimController.EPlantStates.Idle.ToString());
+            if (_animController != null)
+                _animController.TriggerByName(PlantAnimController.EPlantStates.Idle.ToString());
+        }
 
-            // Solo el MasterClient debe controlar ataques y daños físicamente
-            if (!IsAuthoritative)
+        private void Update()
+        {
+            if (IsOwner)
             {
-                // evitar que clientes remotos ejecuten lógica de daño/ataque local
-                if (attackScript) attackScript.enabled = false;
-                if (targetingScript) targetingScript.enabled = false;
+                HandleAI();
             }
             else
             {
-                // Si somos autoridad, asegurarnos que componentes estén activos
-                if (attackScript) attackScript.enabled = true;
-                if (targetingScript) targetingScript.enabled = true;
+                // Actualiza visualmente en los clientes
+                if (_isDead != _netIsDead)
+                {
+                    if (_netIsDead)
+                        OnRemoteDeath();
+                    else
+                        OnRemoteRevive();
+                }
+
+                if (_isAttacking != _netIsAttacking)
+                {
+                    if (_netIsAttacking)
+                        OnRemoteAttack();
+                }
+
+                _currentHealth = Mathf.Lerp(_currentHealth, _netHealth, Time.deltaTime * 10f);
             }
         }
 
-        void Update()
+        private void HandleAI()
         {
-            // Los clientes remotos no ejecutan IA; sólo reproducen estado vía RPCs.
-            if (!IsAuthoritative) return;
-
-            // Autoridad (MasterClient) ejecuta la IA
             if (_isDead) return;
 
-            // Si el sistema nervioso detectó daño localmente, el MASTER procesa;
-            // Si la detección ocurrió en otro cliente, éste debe enviar RPC al master (ver más abajo).
-            if (nervousSystem.NervesTriggered)
+            _attackTimer -= Time.deltaTime;
+
+            // Si las "nervios" detectan un golpe
+            if (_nervousSystem.NervesTriggered)
             {
-                var hurt = nervousSystem.HurtingScript;
-                if (hurt != null)
-                {
-                    // Aplicar daño localmente (porque somos master) y notificar a todos
-                    ApplyDamageAuthority(hurt.Damage, PhotonNetwork.LocalPlayer.ActorNumber);
-                }
-                nervousSystem.ResetNerves();
+                var hurting = _nervousSystem.HurtingScript;
+                if (hurting != null)
+                    TakeDamage(hurting.Damage);
+
+                _nervousSystem.ResetNerves();
             }
 
-            // IA: targeting y ataque (solo master)
-            if (targetingScript.CurrentTargetTransform)
-            {
-                HandleTargeting();
-            }
-
-            if (_attackTimer > 0f) _attackTimer -= Time.deltaTime;
-        }
-
-        private void HandleTargeting()
-        {
-            var target = targetingScript.CurrentTargetTransform;
-            if (target == null) return;
-
-            // rotamos localmente para que se vea bien en host; las rotaciones no se sincronizan aquí
-            Vector3 lookDir = target.position - transform.position;
-            lookDir.y = 0f;
-            if (lookDir != Vector3.zero)
-                transform.rotation = Quaternion.LookRotation(lookDir);
-
+            // Si puede atacar
             if (_attackTimer <= 0f)
             {
-                // Realizar ataque (solo en master)
-                PerformAttackAuthority();
-                _attackTimer = attackCooldown;
+                DoAttack();
+                _attackTimer = _attackCooldown;
             }
         }
 
-        // ---------- ATAQUE (autoridad) ----------
-        private void PerformAttackAuthority()
+        private void DoAttack()
         {
-            if (debugLogs) Debug.Log("[PlantNetwork] Master performing attack.");
+            if (_attackScript == null || _animController == null) return;
 
-            // Ejecuta la lógica de ataque local (daño via colliders, etc.)
-            if (attackScript)
-            {
-                // Si tu AttackScript expone algún nombre/índice de la animación elegida,
-                // sería ideal recuperarlo y enviarlo por RPC. En este ejemplo, disparo
-                // la animación MediumAttack en los clientes remotos para representar el ataque.
-                attackScript.PerformAttack(); // asumo que existe este método público
-            }
-
-            // Notificar a los demás clientes que reproduzcan la animación de ataque
-            // uso el enum de PlantAnimController: MediumAttack = 1 (según tu enum).
-            int attackStateIndex = (int)PlantAnimController.EPlantStates.MediumAttack;
-            photonView.RPC(nameof(RPC_PlayAttackAnim), RpcTarget.Others, attackStateIndex);
-            // también reproducir localmente la animación en el master
-            animController.TriggerByName(PlantAnimController.EPlantStates.MediumAttack.ToString());
-            animController.attack = true;
-            // reset anim después de 1s (ajustá a lo que necesites)
-            Invoke(nameof(ResetAttackAnimLocal), 1.0f);
+            _isAttacking = true;
+            photonView.RPC(nameof(RPC_DoAttack), RpcTarget.All);
+            Invoke(nameof(ResetAttack), 1f);
         }
 
         [PunRPC]
-        private void RPC_PlayAttackAnim(int stateIndex, PhotonMessageInfo info)
+        private void RPC_DoAttack()
         {
-            // Esto corre en clientes remotos: reproducir anim de ataque (sin generar daño)
-            var stateName = ((PlantAnimController.EPlantStates)stateIndex).ToString();
-            animController.TriggerByName(stateName);
-            animController.attack = true;
-            // reset anim
-            Invoke(nameof(ResetAttackAnimLocal), 1.0f);
-        }
-
-        private void ResetAttackAnimLocal()
-        {
-            animController.attack = false;
-            animController.TriggerByName(PlantAnimController.EPlantStates.Idle.ToString());
-        }
-
-        // ---------- DAÑO (solicitud / aplicación) ----------
-        // Cuando un cliente (no-master) detecta que golpeó la planta, debe llamar:
-        // photonView.RPC("RPC_RequestDamage", RpcTarget.MasterClient, damage, PhotonNetwork.LocalPlayer.ActorNumber);
-        // En este script también procesamos daño si el master lo detecta localmente.
-
-        [PunRPC]
-        private void RPC_RequestDamage(float damage, int attackerActorNumber, PhotonMessageInfo info)
-        {
-            // Solo el MasterClient debe aceptar solicitudes
-            if (!PhotonNetwork.IsMasterClient) return;
-
-            if (debugLogs) Debug.Log($"[PlantNetwork] Master received damage request {damage} from actor {attackerActorNumber}");
-
-            // Aplicar daño autoridad y notificar a todos el resultado
-            ApplyDamageAuthority(damage, attackerActorNumber);
-        }
-
-        // Aplica el daño en el master y notifica al resto (RPC a todos)
-        private void ApplyDamageAuthority(float damage, int attackerActorNumber)
-        {
-            if (!IsAuthoritative) return;
-
-            if (lifeSupport != null)
+            if (_animController)
             {
-                lifeSupport.Context.HealthVital.TakeDamage(damage);
-                _currentHealth = lifeSupport.Context.HealthVital.CurrentHealth;
-            }
-            else
-            {
-                _currentHealth -= damage;
+                _animController.TriggerByName(PlantAnimController.EPlantStates.MediumAttack.ToString());
+                _animController.attack = true;
             }
 
-            // Notificar a todos el nuevo valor de vida (y si muere)
-            photonView.RPC(nameof(RPC_ApplyDamageVisual), RpcTarget.All, _currentHealth);
+            if (_attackScript)
+                _attackScript.PerformAttack();
+        }
 
-            if (_currentHealth <= 0f && !_isDead)
+        private void ResetAttack()
+        {
+            _isAttacking = false;
+
+            if (_animController)
             {
-                // marca muerto en master y notifica a todos
-                _isDead = true;
-                photonView.RPC(nameof(RPC_SetAlive), RpcTarget.All, false);
+                _animController.attack = false;
+                _animController.TriggerByName(PlantAnimController.EPlantStates.Idle.ToString());
             }
+        }
+
+        private void TakeDamage(float dmg)
+        {
+            if (_isDead) return;
+
+            _currentHealth -= dmg;
+            _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
+
+            if (_currentHealth <= 0f)
+                Die();
+        }
+
+        private void Die()
+        {
+            _isDead = true;
+            photonView.RPC(nameof(RPC_OnDeath), RpcTarget.All);
         }
 
         [PunRPC]
-        private void RPC_ApplyDamageVisual(float newHealth, PhotonMessageInfo info)
+        private void RPC_OnDeath()
         {
-            // En todos los clientes actualizamos la visualizacion de vida local
-            _currentHealth = newHealth;
-            // Si necesitás mostrar HUD, barras, etc., hacelo aquí
+            _isDead = true;
+
+            if (_animController)
+                _animController.TriggerByName(PlantAnimController.EPlantStates.Dead.ToString());
+
+            if (_ragdollCore)
+                _ragdollCore.Kill();
         }
 
-        [PunRPC]
-        private void RPC_SetAlive(bool alive, PhotonMessageInfo info)
+        private void OnRemoteDeath() => RPC_OnDeath();
+        private void OnRemoteAttack() => RPC_DoAttack();
+
+        private void OnRemoteRevive()
         {
-            // Todos reciben la orden de cambiar el estado vivo/muerto
-            if (!alive)
-            {
-                // morir (todos reproducen anim y ragdoll simulate según tu sistema)
-                _isDead = true;
-                animController.TriggerByName(PlantAnimController.EPlantStates.Dead.ToString());
-                // activamos ragdoll en master y en clientes (si querés que clientes solo visualicen física,
-                // podés optar por replicar poses en vez de activar física en cada cliente)
-                arCoreScript.Kill(); // asume que Kill/Revive existen y funcionan en cualquier cliente
-                if (attackScript) attackScript.enabled = false;
-                if (targetingScript) targetingScript.enabled = false;
-            }
-            else
-            {
-                // revive
-                _isDead = false;
-                animController.TriggerByName(PlantAnimController.EPlantStates.Alive.ToString());
-                arCoreScript.Revive();
-                if (attackScript) attackScript.enabled = IsAuthoritative; // solo master vuelve a estar activo
-                if (targetingScript) targetingScript.enabled = IsAuthoritative;
-            }
+            _isDead = false;
+            _currentHealth = _maxHealth;
+
+            if (_animController)
+                _animController.TriggerByName(PlantAnimController.EPlantStates.Alive.ToString());
+
+            if (_ragdollCore)
+                _ragdollCore.Revive();
         }
 
-        // ---------- IPunObservable: sincronización adicional (opcional) ----------
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.IsWriting)
             {
-                // Escribimos el estado si somos autoridad
                 stream.SendNext(_currentHealth);
                 stream.SendNext(_isDead);
+                stream.SendNext(_isAttacking);
             }
             else
             {
-                // Lectura en clientes remotos
-                _currentHealth = (float)stream.ReceiveNext();
-                bool readDead = (bool)stream.ReceiveNext();
-
-                if (readDead != _isDead)
-                {
-                    // si cambió el estado, aplicarlo localmente (esto es redundante si usás RPC_SetAlive)
-                    RPC_SetAlive(!readDead ? true : false, info);
-                }
-            }
-        }
-
-        // ----------------- UTIL para clientes que detectan un golpe localmente -----------------
-        // Si tu NervousSystemScript dispara localmente en el cliente que ataca, llamá a este método
-        // para notificar al master:
-        //
-        //    plantNetworkController.RequestDamage(damage);
-        //
-        public void RequestDamage(float damage)
-        {
-            if (IsAuthoritative)
-            {
-                // si somos master, aplicamos directo
-                ApplyDamageAuthority(damage, PhotonNetwork.LocalPlayer.ActorNumber);
-            }
-            else
-            {
-                // enviamos solicitud al master
-                photonView.RPC(nameof(RPC_RequestDamage), RpcTarget.MasterClient, damage, PhotonNetwork.LocalPlayer.ActorNumber);
+                _netHealth = (float)stream.ReceiveNext();
+                _netIsDead = (bool)stream.ReceiveNext();
+                _netIsAttacking = (bool)stream.ReceiveNext();
             }
         }
     }
