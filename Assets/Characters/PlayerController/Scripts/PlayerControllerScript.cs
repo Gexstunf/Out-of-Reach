@@ -21,7 +21,7 @@ namespace Characters.PlayerController.Scripts {
         [SerializeField] private PlayerStateMachineScript _playerStateMachine;
         [SerializeField] private StateVitalsCoordinator _stateVitalsCoordinator;
         [SerializeField] private TraumaInducer _traumaInducer;
-        
+
         [Header("Effects")]
         [SerializeField] public GameObject _explosionEffect;
 
@@ -31,10 +31,10 @@ namespace Characters.PlayerController.Scripts {
         public float moveForce = 30f;
         public float runForce = 60f;
         public float playerDrag = 20f;
-    
+
         [Header("Crouch Settings")]
         public float crouchHeight = 1.5f;
-    
+
         [Header("Jump Settings")]
         public float jumpForce = 10f;
         public float forwardJumpForce = 5f;
@@ -56,7 +56,7 @@ namespace Characters.PlayerController.Scripts {
         public bool isGrounded = true;
         public Vector3 CurrentForce { get; private set; }
         public float visualGravity;
-    
+
         private float _groundCheckOffset;
 
         private bool _isLocalPlayer = false;
@@ -70,15 +70,24 @@ namespace Characters.PlayerController.Scripts {
             _playerCollider = GetComponent<CapsuleCollider>();
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
             _stateVitalsCoordinator = GetComponent<StateVitalsCoordinator>();
-            _explosionParticleSystem = _explosionEffect.GetComponent<ParticleSystem>();
+
+            if (_explosionEffect != null)
+            {
+                _explosionParticleSystem = _explosionEffect.GetComponent<ParticleSystem>();
+            }
+            else
+            {
+                Debug.LogWarning("_explosionEffect is not assigned in PlayerControllerScript on " + gameObject.name);
+            }
+     
             _rotator = gameObject.AddComponent<RotatorScript>();
         
             _cameraController = new CameraControllerScript();
             _cameraController.TieToTransform(_eyesTransform, eyesOffset);
         
             _rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-
-
+            
+            
             if (useCustomGravity)
             {
                 _rb.useGravity = false;

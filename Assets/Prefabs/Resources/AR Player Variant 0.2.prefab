@@ -892,6 +892,10 @@ PrefabInstance:
       propertyPath: grabbableMask.m_Bits
       value: 192
       objectReference: {fileID: 0}
+    - target: {fileID: 325761011322294894, guid: af6065566f6442d46a928f200c6e56e5, type: 3}
+      propertyPath: m_Constraints
+      value: 80
+      objectReference: {fileID: 0}
     - target: {fileID: 665303604605691149, guid: af6065566f6442d46a928f200c6e56e5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
