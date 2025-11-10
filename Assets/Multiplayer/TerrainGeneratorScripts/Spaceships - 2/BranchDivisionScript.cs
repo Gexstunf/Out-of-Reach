@@ -6,6 +6,8 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
     public class BranchDivisionScript : MonoBehaviour
     {
         public Dictionary<int, List<InfoScript>> Ramas = new();
+        public InfoScript primerEstructura;
+        public SpawnerScript spawner;
 
         private static int _nextRamaID = -1;
 
@@ -28,6 +30,12 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
             {
                 foreach (var estructura in Ramas[ramaID])
                 {
+                    if (estructura == Ramas[ramaID][0])
+                    {
+                        primerEstructura = estructura;
+                        spawner.needToAdd = true;
+                    }
+
                     if (estructura != null)
                         Destroy(estructura.gameObject);
                 }

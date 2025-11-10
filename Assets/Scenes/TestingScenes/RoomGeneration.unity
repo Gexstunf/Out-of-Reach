@@ -207,6 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxRooms: 0
+  branchDivision: {fileID: 1778501528}
   hallWay: {fileID: 3791255646465563467, guid: 77922a2cae706654f873abce6fe30345, type: 3}
   interSectionPossible:
   - {fileID: 6677434570533079222, guid: dc6486f5e381d6947bf62af3d849ec17, type: 3}
@@ -228,6 +229,7 @@ MonoBehaviour:
   - {fileID: 1377035139366547631, guid: e5796f6983b2c5f4ca80c6777fe0ce11, type: 3}
   - {fileID: 1377035139366547631, guid: e5796f6983b2c5f4ca80c6777fe0ce11, type: 3}
   primeraSalida: {fileID: 931339989}
+  needToAdd: 0
 --- !u!114 &331845162 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5646519857202889512, guid: 35ea85bdf7c93814cb9c15c826d29b01, type: 3}
@@ -1512,6 +1514,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2512645c85f7b2a4c9fb60c719d263c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  primerEstructura: {fileID: 0}
+  spawner: {fileID: 212712874}
 --- !u!1 &1971868341
 GameObject:
   m_ObjectHideFlags: 0

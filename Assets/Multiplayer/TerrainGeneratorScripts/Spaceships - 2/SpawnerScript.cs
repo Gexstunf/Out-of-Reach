@@ -8,13 +8,16 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
     {
         private int _rooms;
         public int maxRooms;
+        public BranchDivisionScript branchDivision;
         public GameObject hallWay;
         public GameObject[] interSectionPossible;
         public GameObject[] roomPossible;
         public Transform primeraSalida;
+        public bool needToAdd;
 
         private void Start()
         {
+            needToAdd = false;
             StartCoroutine(Generate());
         }
 
@@ -30,6 +33,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 
             while (currentRoots.Count > 0 && _rooms < maxRooms)
             {
+                Debug.Log(_rooms);
                 List<Transform> nextRoots = new List<Transform>();
 
                 foreach (var root in currentRoots)
@@ -39,7 +43,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 
                     while (!branchTerminated && _rooms < maxRooms)
                     {
-                        yield return null; // ← ***esta línea permite física y Start()***
+                        yield return null;
 
                         GameObject prefabToSpawn;
                         int t = Random.Range(1, 11);
@@ -49,16 +53,30 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                         else { prefabToSpawn = roomPossible[Random.Range(0, roomPossible.Length)]; _rooms++; }
 
                         GameObject spawned = FuncionInstanciar(prefabToSpawn, currentExit);
-                        if (spawned == null) break;
+                        if (spawned == null)
+                        {
+                            Debug.LogWarning("Spawned null object");
+                            break;
+                        }
 
                         List<Transform> foundExits = new List<Transform>();
+
+                        if (needToAdd)
+                        {
+                            foundExits.Add(branchDivision.primerEstructura.transform);
+                        }
+                        
                         foreach (Transform child in spawned.GetComponentsInChildren<Transform>())
                             if (child.name.StartsWith("Exit"))
                                 foundExits.Add(child);
 
                         if (spawned.CompareTag("Hallway"))
                         {
-                            if (foundExits.Count == 0) break;
+                            if (foundExits.Count == 0)
+                            {
+                                Debug.LogWarning("Breaked");
+                                break;
+                            }
                             currentExit = foundExits[0];
                         }
                         else
@@ -70,9 +88,9 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                         }
                     }
                 }
-
                 currentRoots = nextRoots;
             }
+            Debug.Log("Terminó");
         }
 
 
@@ -86,18 +104,14 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                 Destroy(spawned);
                 return null;
             }
-
-            // Alineo rotación y posición
+            
             spawned.transform.rotation = targetExit.rotation * Quaternion.Inverse(entry.localRotation);
             spawned.transform.position += targetExit.position - entry.position;
             
             Physics.SyncTransforms();
-
-            // Aquí podrías obtener InfoScript y setear RamaID actual si vas a usar BranchDivision
-                                                                                                               // var info = spawned.GetComponent<InfoScript>();
-                                                                                                               // if (info != null) info.RamaID = currentRama; // (si implementás el tracking de rama)
             
             return spawned;
         }
     }
 }
+//encontrar donde se esta parando;
