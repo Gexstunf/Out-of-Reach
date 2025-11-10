@@ -33,7 +33,8 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 
             while (currentRoots.Count > 0 && _rooms < maxRooms)
             {
-                Debug.Log(_rooms);
+                Debug.Log($"Roots actuales: {currentRoots.Count}, Rooms: {_rooms}/{maxRooms}");
+
                 List<Transform> nextRoots = new List<Transform>();
 
                 foreach (var root in currentRoots)
@@ -64,11 +65,15 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                         if (needToAdd)
                         {
                             foundExits.Add(branchDivision.primerEstructura.transform);
+                            needToAdd = false;
                         }
+                        
                         
                         foreach (Transform child in spawned.GetComponentsInChildren<Transform>())
                             if (child.name.StartsWith("Exit"))
                                 foundExits.Add(child);
+                        
+                        Debug.Log($"Prefab: {spawned.name} Exits encontrados: {foundExits.Count}");
 
                         if (spawned.CompareTag("Hallway"))
                         {
@@ -90,7 +95,6 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                 }
                 currentRoots = nextRoots;
             }
-            Debug.Log("Terminó");
         }
 
 
