@@ -3,10 +3,10 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Photon.Pun;
 
 namespace Environment.Scripts {
-    public class SlidingDoorScript : MonoBehaviourPun {
+    public class SlidingDoorScript : MonoBehaviourPun, IPunObservable
+    {
 
         [Header("References")] 
         public Transform femaleDoor;
