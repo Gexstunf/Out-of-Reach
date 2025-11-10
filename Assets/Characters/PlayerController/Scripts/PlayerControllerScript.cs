@@ -1,5 +1,6 @@
 ﻿using Characters.PlayerController.Scripts.Input;
 using Characters.StateMachine.PlayerStateMachine;
+using Characters.SystemAdaptations;
 using Characters.Utils;
 using Photon.Pun;
 using UnityEngine;
@@ -17,9 +18,12 @@ namespace Characters.PlayerController.Scripts {
         [SerializeField] private PlayerInputScript _inputScript;
         [SerializeField] private Rigidbody _rb;
         [SerializeField] public CapsuleCollider _playerCollider;
-
-        [Header("State machine")]
         [SerializeField] private PlayerStateMachineScript _playerStateMachine;
+        [SerializeField] private StateVitalsCoordinator _stateVitalsCoordinator;
+        [SerializeField] private TraumaInducer _traumaInducer;
+        
+        [Header("Effects")]
+        [SerializeField] public GameObject _explosionEffect;
 
         [Header("Movement Settings")]
         public bool useCustomGravity;
@@ -56,6 +60,7 @@ namespace Characters.PlayerController.Scripts {
         private float _groundCheckOffset;
 
         private bool _isLocalPlayer = false;
+        private ParticleSystem _explosionParticleSystem;
 
 
         private void Awake()
@@ -64,7 +69,8 @@ namespace Characters.PlayerController.Scripts {
             _inputScript = GetComponent<PlayerInputScript>();
             _playerCollider = GetComponent<CapsuleCollider>();
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
-        
+            _stateVitalsCoordinator = GetComponent<StateVitalsCoordinator>();
+            _explosionParticleSystem = _explosionEffect.GetComponent<ParticleSystem>();
             _rotator = gameObject.AddComponent<RotatorScript>();
         
             _cameraController = new CameraControllerScript();
@@ -90,7 +96,7 @@ namespace Characters.PlayerController.Scripts {
             _rotator.Init(_lookSenseH, _lookSenseV, _lookLimitV);
             _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
 
-
+            _stateVitalsCoordinator.OnUnconsciousChanged += HandleEffects;
             //_rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             _rb.linearDamping = playerDrag;
             _groundCheckOffset = _playerCollider.radius + 0.1f;
@@ -224,6 +230,13 @@ namespace Characters.PlayerController.Scripts {
             );
 
             return hit;
+        }
+
+        private void HandleEffects(bool unconscious) {
+            if (unconscious) {
+                _explosionEffect.SetActive(true);
+                StartCoroutine(_traumaInducer.Shake());
+            }
         }
 
         private void ApplyCustomGravity(float scale) {
