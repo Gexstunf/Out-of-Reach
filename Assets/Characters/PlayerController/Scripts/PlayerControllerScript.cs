@@ -98,6 +98,11 @@ namespace Characters.PlayerController.Scripts {
 
         #region IsLocal
 
+        [ContextMenu("Set player Local")]
+        private void SetPlayerToLocal() {
+            _isLocalPlayer = true;
+        }
+        
         public void SetAsLocalPlayer(bool value)
         {
             _isLocalPlayer = value;

@@ -10,6 +10,7 @@ namespace Characters.PlayerController.Scripts.Input
 {
     public class PlayerInputScript : MonoBehaviour, PlayerLocomotionScript.IPlayerActions
     {
+        
         private PlayerLocomotionScript _playerLocomotionScript;
         private readonly bool _toggleSprint = false;
         private LoggerSO _logger;

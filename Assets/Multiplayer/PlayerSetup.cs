@@ -17,9 +17,8 @@ namespace Multiplayer
         private RotatorScript _rotator;
         private PlayerLifeSupportScript _lifeSupport;
         private ActiveRagdollControllerScript _ragdoll;
-
+        
         public bool IsLocalPlayer => photonView.IsMine;
-
         private bool _wasCrouching;
 
         void Awake()
@@ -32,8 +31,8 @@ namespace Multiplayer
             _ragdoll = GetComponent<ActiveRagdollControllerScript>();
             //_animView = GetComponentInChildren<PhotonAnimatorView>(true);
         }
-
-
+        
+                
         void Start()
         {
             bool isLocal = IsLocalPlayer;
@@ -41,13 +40,13 @@ namespace Multiplayer
             if (_playerCamera != null) _playerCamera.enabled = isLocal;
             if (_audioListener != null) _audioListener.enabled = isLocal;
             if (_rotator != null) _rotator.enabled = isLocal;
-
+                
             if (_controller != null)
             {
                 _controller.SetAsLocalPlayer(isLocal);
                 _controller.enabled = true;
             }
-
+            
             if (_lifeSupport != null)
                 _lifeSupport.Initialize(isLocal);
             /*
