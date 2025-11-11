@@ -2917,6 +2917,7 @@ MonoBehaviour:
   TraumaExponent: 1
   MaximumAngularShake: {x: 5, y: 5, z: 5}
   MaximumTranslationShake: {x: 0.75, y: 0.75, z: 0.75}
+  NoiseFrequency: 25
 --- !u!1 &2055678190
 GameObject:
   m_ObjectHideFlags: 0
@@ -4556,6 +4557,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1868800187}
+  - {fileID: 528089243}
   - {fileID: 4465054376286839863}
   - {fileID: 1071672604093208414}
   - {fileID: 880435108}
@@ -4570,4 +4572,3 @@ SceneRoots:
   - {fileID: 537793288}
   - {fileID: 874626482}
   - {fileID: 1821763533}
-  - {fileID: 528089243}

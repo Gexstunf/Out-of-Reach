@@ -14,6 +14,9 @@ namespace Characters.Utils
         private Vector3 _camOffset;
 
 
+        #region Public API
+
+
         public void Init(float lookSenseH, float lookSenseV, float lookLimitV)
         {
             _lookSenseH = lookSenseH;
@@ -27,7 +30,7 @@ namespace Characters.Utils
             _camOffset = offset;
         }
         
-        public void UpdateCameraRotation(Vector2 lookInput, Camera camera, float characterYaw)
+        public void UpdateCameraRotation(Vector2 lookInput, Camera camera)
         {
             if (!_cameraTieTransform) return;
 
@@ -47,5 +50,11 @@ namespace Characters.Utils
 
             camera.transform.rotation = pitch * Quaternion.LookRotation(tieForward, Vector3.up);
         }
+
+        public void UntieCam() {
+            _cameraTieTransform = null;
+        }
+        
+        #endregion
     }
 }

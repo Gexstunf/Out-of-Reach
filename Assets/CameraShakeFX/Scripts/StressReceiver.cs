@@ -4,59 +4,74 @@ namespace CameraShakeFX.Scripts {
     public class StressReceiver : MonoBehaviour 
     {
         private float _trauma;
-        private Vector3 _lastPosition;
-        private Vector3 _lastRotation;
+        private Vector3 _lastPosOffset;
+        private Vector3 _lastRotOffset;
+
         [Tooltip("Exponent for calculating the shake factor. Useful for creating different effect fade outs")]
         public float TraumaExponent = 1;
-        [Tooltip("Maximum angle that the gameobject can shake. In euler angles.")]
+
+        [Tooltip("Maximum angular shake (Euler angles in degrees)")]
         public Vector3 MaximumAngularShake = Vector3.one * 5;
-        [Tooltip("Maximum translation that the gameobject can receive when applying the shake effect.")]
-        public Vector3 MaximumTranslationShake = Vector3.one * .75f;
 
-        private void Update()
+        [Tooltip("Maximum translation shake")]
+        public Vector3 MaximumTranslationShake = Vector3.one * 0.75f;
+
+        [Tooltip("Speed multiplier for Perlin noise evolution")]
+        public float NoiseFrequency = 25f;
+
+        private float _seed;
+
+        private void Awake()
         {
+            // Random seed ensures different shake patterns per object
+            _seed = Random.value * 100f;
+        }
+
+        private void LateUpdate()
+        {
+            // Undo previous offsets first — makes this additive and camera-movement-safe
+            transform.localPosition -= _lastPosOffset;
+            transform.localRotation = Quaternion.Euler(transform.localRotation.eulerAngles - _lastRotOffset);
+
             float shake = Mathf.Pow(_trauma, TraumaExponent);
-            /* Only apply this when there is active trauma */
-            if(shake > 0)
+
+            if (shake > 0)
             {
-                Debug.Log(shake);
-                var previousRotation = _lastRotation;
-                var previousPosition = _lastPosition;
-                /* In order to avoid affecting the transform current position and rotation each frame we substract the previous translation and rotation */
-                _lastPosition = new Vector3(
-                    MaximumTranslationShake.x * (Mathf.PerlinNoise(0, Time.time * 25) * 2 - 1),
-                    MaximumTranslationShake.y * (Mathf.PerlinNoise(1, Time.time * 25) * 2 - 1),
-                    MaximumTranslationShake.z * (Mathf.PerlinNoise(2, Time.time * 25) * 2 - 1)
+                // Compute new smooth offsets with Perlin noise
+                _lastPosOffset = new Vector3(
+                    (Mathf.PerlinNoise(_seed, Time.time * NoiseFrequency) * 2 - 1) * MaximumTranslationShake.x,
+                    (Mathf.PerlinNoise(_seed + 1, Time.time * NoiseFrequency) * 2 - 1) * MaximumTranslationShake.y,
+                    (Mathf.PerlinNoise(_seed + 2, Time.time * NoiseFrequency) * 2 - 1) * MaximumTranslationShake.z
                 ) * shake;
 
-                _lastRotation = new Vector3(
-                    MaximumAngularShake.x * (Mathf.PerlinNoise(3, Time.time * 25) * 2 - 1),
-                    MaximumAngularShake.y * (Mathf.PerlinNoise(4, Time.time * 25) * 2 - 1),
-                    MaximumAngularShake.z * (Mathf.PerlinNoise(5, Time.time * 25) * 2 - 1)
+                _lastRotOffset = new Vector3(
+                    (Mathf.PerlinNoise(_seed + 3, Time.time * NoiseFrequency) * 2 - 1) * MaximumAngularShake.x,
+                    (Mathf.PerlinNoise(_seed + 4, Time.time * NoiseFrequency) * 2 - 1) * MaximumAngularShake.y,
+                    (Mathf.PerlinNoise(_seed + 5, Time.time * NoiseFrequency) * 2 - 1) * MaximumAngularShake.z
                 ) * shake;
 
-                transform.localPosition += _lastPosition - previousPosition;
-                transform.localRotation = Quaternion.Euler(transform.localRotation.eulerAngles + _lastRotation - previousRotation);
+                // Apply the new offsets additively
+                transform.localPosition += _lastPosOffset;
+                transform.localRotation = Quaternion.Euler(transform.localRotation.eulerAngles + _lastRotOffset);
+
+                // Gradually reduce trauma
                 _trauma = Mathf.Clamp01(_trauma - Time.deltaTime);
             }
             else
             {
-                if (_lastPosition == Vector3.zero && _lastRotation == Vector3.zero) return;
-                /* Clear the transform of any left over translation and rotations */
-                transform.localPosition -= _lastPosition;
-                transform.localRotation = Quaternion.Euler(transform.localRotation.eulerAngles - _lastRotation);
-                _lastPosition = Vector3.zero;
-                _lastRotation = Vector3.zero;
+                // No shake — reset offsets to zero
+                _lastPosOffset = Vector3.zero;
+                _lastRotOffset = Vector3.zero;
             }
         }
 
         /// <summary>
-        ///  Applies a stress value to the current object.
+        /// Adds stress (trauma) to the object, triggering a shake.
         /// </summary>
-        /// <param name="Stress">[0,1] Amount of stress to apply to the object</param>
-        public void InduceStress(float Stress)
+        /// <param name="stress">[0,1] intensity of the shake</param>
+        public void InduceStress(float stress)
         {
-            _trauma = Mathf.Clamp01(_trauma + Stress);
+            _trauma = Mathf.Clamp01(_trauma + stress);
         }
     }
 }

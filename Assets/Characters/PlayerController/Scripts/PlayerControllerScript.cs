@@ -106,7 +106,7 @@ namespace Characters.PlayerController.Scripts {
             _rotator.Init(_lookSenseH, _lookSenseV, _lookLimitV);
             _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
 
-            _stateVitalsCoordinator.OnUnconsciousChanged += HandleEffects;
+            _stateVitalsCoordinator.OnUnconsciousChanged += HandleUnconscious;
             //_rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             _rb.linearDamping = playerDrag;
             _groundCheckOffset = _playerCollider.radius + 0.1f;
@@ -165,13 +165,13 @@ namespace Characters.PlayerController.Scripts {
 
             visualGravity = Physics.gravity.y;
             if (useCustomGravity) visualGravity = Physics.gravity.y * gravityScale;
-
-
+            
+            
             Vector2 lookInput = _inputScript.LookInput;
             _rotator.RotateTransform(lookInput);
             
             float characterYaw = _rotator.GetYaw();
-            _cameraController.UpdateCameraRotation(lookInput, _playerCamera, characterYaw);
+            _cameraController.UpdateCameraRotation(lookInput, _playerCamera);
         }
 
         #endregion
@@ -242,8 +242,9 @@ namespace Characters.PlayerController.Scripts {
             return hit;
         }
 
-        private void HandleEffects(bool unconscious) {
+        private void HandleUnconscious(bool unconscious) {
             if (unconscious) {
+                _cameraController.UntieCam();
                 _explosionEffect.SetActive(true);
                 StartCoroutine(_traumaInducer.Shake());
             }
