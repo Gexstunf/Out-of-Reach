@@ -97,8 +97,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5750995032441679566}
   - {fileID: 7892235006740093466}
+  - {fileID: 5750995032441679566}
   - {fileID: 8358550040392331180}
   - {fileID: 3257426644789683159}
   - {fileID: 3407089762364247797}
@@ -188,6 +188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
+  spawner: {fileID: 0}
 --- !u!1 &4095967443404682065
 GameObject:
   m_ObjectHideFlags: 0
