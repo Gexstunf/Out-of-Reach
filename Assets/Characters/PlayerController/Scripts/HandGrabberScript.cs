@@ -1,9 +1,13 @@
+﻿using Characters.PlayerController.Scripts.Input;
+using Items.Scripts;
 using System;
 using System.Collections;
-using Characters.PlayerController.Scripts.Input;
+using Unity.VisualScripting;
 using UI.Scripts;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.Serialization;
+using UnityEngine.XR;
 
 namespace Characters.PlayerController.Scripts
 {
@@ -16,45 +20,56 @@ namespace Characters.PlayerController.Scripts
     /// </summary>
     public class HandGrabberScript : MonoBehaviour
     {
+        
+        #region Variables
         [Header("Settings")]
-        [SerializeField] private Transform leftGrabOrigin;
-        [SerializeField] private Transform rightGrabOrigin;
+        public Transform leftGrabOrigin;
+        public Transform rightGrabOrigin;
         [SerializeField] private Transform camTransform;
         [SerializeField] private bool useIndependentOrigins = false;
         public LayerMask grabbableMask;
         public float itemGrabDistance = 2f;
         [SerializeField] private float wallGrabDistance = 2f;
         [SerializeField] private float grabSpeed = 3f;
-        [SerializeField] private float pushForce = 5f;                   
+        [SerializeField] private float pushForce = 5f;
+        [SerializeField] private bool shouldInteractWithGrabbable;
         [SerializeField] private bool debug;
 
         [Header("References")]
         [SerializeField] private PlayerInputScript input;
         [SerializeField] private Rig grabRig; // optional, to blend weights
+        [SerializeField] private Rig holdRig; // optional, to blend weights
         [SerializeField] private Rigidbody rb;
+        [SerializeField] private PlayerInventoryPhoton inventory;
 
-        [Header("Left Hand")]
+        [Header("Left Hand Hold Rig")]
+        [SerializeField] private Transform leftHandIKTargetHold;
+        [SerializeField] private TwoBoneIKConstraint leftIKConstraintHold;
+
+        [Header("Left Hand Grab Rig")]
         [SerializeField] private Transform leftHandIKTarget;
         [SerializeField] private Rigidbody leftHandRb;
         [SerializeField] private TwoBoneIKConstraint leftIKConstraint;
 
-        [Header("Right Hand")]
+        [Header("Right Hand Grab Rig")]
         [SerializeField] private Transform rightHandIKTarget;
         [SerializeField] private Rigidbody rightHandRb;
         [SerializeField] private TwoBoneIKConstraint rightIKConstraint;
 
         // --- internal state ---
-        private IGrabbableScript _currentItem = null;     // only one item in the world can be held at once
-        private HandData _itemHoldingHand = null;         // which hand holds the item
+        public ItemGrabbableScript currentItem = null;     // only one item in the world can be held at once
+        public HandData itemHoldingHand = null;         // which hand holds the item
 
         private HandData _leftHand;
         private HandData _rightHand;
 
         // --- HandData encapsulates per-hand state ---
-        private class HandData
+        public class HandData
         {
+            public Transform IKHoldTarget;
             public Transform IKTarget;
             public Rigidbody Rb;
+            public TwoBoneIKConstraint IKHoldConstraint;
             public TwoBoneIKConstraint IKConstraint;
             public Vector3 LocalHomePosition; // local to IKTarget.parent
             public IGrabbableScript CurrentGrabbable; // wall grabbable when holding a wall
@@ -65,16 +80,22 @@ namespace Characters.PlayerController.Scripts
             public bool IsBusy => ActiveCoroutine != null;
             public bool HoldingItem; // true if this hand currently holds the global item
 
-            public HandData(Transform ikTarget, Rigidbody rb, TwoBoneIKConstraint constraint, Vector3 homeLocal)
+            public HandData(Transform ikTarget, Rigidbody rb, TwoBoneIKConstraint constraint, Vector3 homeLocal, 
+                Transform iKHoldTarget, TwoBoneIKConstraint iKHoldConstraint)
             {
                 IKTarget = ikTarget;
                 Rb = rb;
                 IKConstraint = constraint;
                 LocalHomePosition = homeLocal;
                 CurrentTargetPos = ikTarget != null ? ikTarget.position : Vector3.zero;
+                IKHoldTarget = iKHoldTarget;
+                IKHoldConstraint = iKHoldConstraint;
             }
         }
+        
+        #endregion
 
+        #region Unity Methods
         // -------------------------
         // Unity lifecycle
         // -------------------------
@@ -85,8 +106,8 @@ namespace Characters.PlayerController.Scripts
             var leftHome = leftHandIKTarget.localPosition;
             var rightHome = rightHandIKTarget.localPosition;
 
-            _leftHand = new HandData(leftHandIKTarget, leftHandRb, leftIKConstraint, leftHome);
-            _rightHand = new HandData(rightHandIKTarget, rightHandRb, rightIKConstraint, rightHome);
+            _leftHand = new HandData(leftHandIKTarget, leftHandRb, leftIKConstraint, leftHome, leftHandIKTargetHold, leftIKConstraintHold);
+            _rightHand = new HandData(rightHandIKTarget, rightHandRb, rightIKConstraint, rightHome, leftHandIKTargetHold, leftIKConstraintHold);
 
             // initialize current target positions so we don't snap to Vector3.zero
             _leftHand.CurrentTargetPos = _leftHand.IKTarget.position;
@@ -96,6 +117,9 @@ namespace Characters.PlayerController.Scripts
             if (grabRig != null) grabRig.weight = 1f;
             if (leftIKConstraint != null) leftIKConstraint.weight = 0f;
             if (rightIKConstraint != null) rightIKConstraint.weight = 0f;
+
+            if (inventory == null)
+                inventory = GetComponent<PlayerInventoryPhoton>();
         }
 
         private void OnDisable()
@@ -104,16 +128,16 @@ namespace Characters.PlayerController.Scripts
             StopAndClearHand(_leftHand);
             StopAndClearHand(_rightHand);
 
-            if (_currentItem != null)
+            if (currentItem != null)
             {
                 // find which hand held it and release cleanly
-                if (_itemHoldingHand != null)
+                if (itemHoldingHand != null)
                 {
-                    _currentItem.Release();
-                    _itemHoldingHand.HoldingItem = false;
+                    currentItem.Release();
+                    itemHoldingHand.HoldingItem = false;
                 }
-                _currentItem = null;
-                _itemHoldingHand = null;
+                currentItem = null;
+                itemHoldingHand = null;
             }
         }
 
@@ -124,7 +148,7 @@ namespace Characters.PlayerController.Scripts
             ProcessHandInput(_rightHand, input.RightClickPressed);
 
             // global release: if no buttons pressed and an item is held, release item
-            if (!input.LeftClickPressed && !input.RightClickPressed && _currentItem != null)
+            if (!input.LeftClickPressed && !input.RightClickPressed && currentItem && !shouldInteractWithGrabbable)
             {
                 OnItemReleased();
             }
@@ -143,7 +167,11 @@ namespace Characters.PlayerController.Scripts
                 rb.AddForce(pushDir * pushForce, ForceMode.Acceleration);
             }
         }
+        
+        #endregion
 
+        #region Main Logic
+        
         // -------------------------
         // Core input / per-hand logic
         // -------------------------
@@ -152,42 +180,41 @@ namespace Characters.PlayerController.Scripts
             // capture previous pressed inside HandData to avoid external flags
             bool wasPressed = hand.PrevPressed;
 
-            // handle press-down edge
-            if (isPressed && !wasPressed)
-            {
-                // only allow grab presses if the hand is not busy
-                if (!hand.IsBusy)
-                {
-                    TryGrab(hand);
+            if (shouldInteractWithGrabbable) {
+                InteractWithCurrentGrabbable(hand, isPressed);
+            } else {
+                
+                // handle press-down edge
+                if (isPressed && !wasPressed) {
+                    // only allow grab presses if the hand is not busy
+                    if (!hand.IsBusy) {
+                        TryGrab(hand);
+                    }
+                }
+                
+                // handle release edge
+                if (!isPressed && wasPressed) {
+                    // If this hand holds the global item -> release the item
+                    if (hand.HoldingItem && currentItem) {
+                        OnItemReleased();
+                    }
+                    // Otherwise, if this hand currently has a wall grabbable -> release it
+                    else if (hand.CurrentGrabbable != null) {
+                        ReleaseWall(hand);
+                    }
+                    // else, if the hand was moving back to home (coroutine), we may want to stop it and start return
+                    else {
+                        // if nothing, ensure IK returns home
+                        StartHandCoroutine(hand, ReachToHomeRoutine(hand));
+                    }
                 }
             }
-
-            // handle release edge
-            if (!isPressed && wasPressed)
-            {
-                // If this hand holds the global item -> release the item
-                if (hand.HoldingItem && _currentItem != null)
-                {
-                    OnItemReleased();
-                }
-                // Otherwise, if this hand currently has a wall grabbable -> release it
-                else if (hand.CurrentGrabbable != null)
-                {
-                    ReleaseWall(hand);
-                }
-                // else, if the hand was moving back to home (coroutine), we may want to stop it and start return
-                else
-                {
-                    // if nothing, ensure IK returns home
-                    StartHandCoroutine(hand, ReachToHomeRoutine(hand));
-                }
-            }
-
+            
             // update prev state
             hand.PrevPressed = isPressed;
 
             // always ensure visual IK target is set
-            if (hand.IKTarget != null)
+            if (hand.IKTarget)
                 hand.IKTarget.position = hand.CurrentTargetPos;
         }
 
@@ -199,45 +226,66 @@ namespace Characters.PlayerController.Scripts
             Transform origin = useIndependentOrigins ? (hand == _leftHand ? leftGrabOrigin : rightGrabOrigin) : camTransform;
             if (origin == null)
             {
-                Debug.LogWarning("HandGrabber: origin is null.");
+                //Debug.LogWarning("HandGrabber: origin is null.");
                 return;
             }
 
             // 1) Try item raycast (priority to items) using itemGrabDistance
             if (Physics.Raycast(origin.position, origin.forward, out var hitItem, itemGrabDistance, grabbableMask))
             {
+                Debug.Log("Detected item");
                 var grabbable = hitItem.collider.GetComponent<IGrabbableScript>();
-                if (grabbable != null && IsItemGrabbable(grabbable))
-                {
+                if (grabbable != null && IsItemGrabbable(grabbable)) {
+                    Debug.Log("Trying to grab the item...");
                     // only one item allowed
-                    if (_currentItem == null)
-                    {
+                    if (!currentItem) {
+                        Debug.Log("Grabbing item since we have free hands");
                         // stop any running hand coroutine and start grab flow
                         StopAndClearHand(hand);
 
                         hand.CurrentGrabbable = null; // clear wall slot for now
                         StartHandCoroutine(hand, ItemGrabFlow(grabbable, hitItem.point, hand));
                         // ItemGrabFlow will set _currentItem and hand.HoldingItem when grabbed
+                    } else {
+                        Debug.Log("Cant grab...");
                     }
                     return;
-                }
+                } 
             }
 
             // 2) Try wall raycast (wallGrabDistance)
             if (Physics.Raycast(origin.position, origin.forward, out var hitWall, wallGrabDistance, grabbableMask))
             {
                 var grabbable = hitWall.collider.GetComponent<IGrabbableScript>();
-                if (grabbable != null && IsWallGrabbable(grabbable))
-                {
+                if (grabbable != null && IsWallGrabbable(grabbable)) {
                     // per-hand only if free
-                    if (hand.CurrentGrabbable == null)
-                    {
+                    if (hand.CurrentGrabbable == null) {
                         StopAndClearHand(hand);
                         StartHandCoroutine(hand, WallGrabFlow(grabbable, hitWall.point, hand));
                     }
                 }
             }
         }
+
+        private void InteractWithCurrentGrabbable(HandData hand, bool isPressed) {
+            if (isPressed && !hand.PrevPressed) {
+                currentItem.Interact();
+            }
+        }
+        
+        #endregion
+        
+        private void StopAndClearHand(HandData hand)
+        {
+            if (hand.ActiveCoroutine != null)
+            {
+                StopCoroutine(hand.ActiveCoroutine);
+                hand.ActiveCoroutine = null;
+            }
+        }
+
+        #region Flows / Coroutines
+        
 
         // -------------------------
         // Grab flows / coroutines
@@ -262,14 +310,6 @@ namespace Characters.PlayerController.Scripts
             return hand.ActiveCoroutine;
         }
 
-        private void StopAndClearHand(HandData hand)
-        {
-            if (hand.ActiveCoroutine != null)
-            {
-                StopCoroutine(hand.ActiveCoroutine);
-                hand.ActiveCoroutine = null;
-            }
-        }
 
         // Item flow: reach -> attach object to hand (object side joint) -> return hand to home and release visual weight
         private IEnumerator ItemGrabFlow(IGrabbableScript item, Vector3 hitPoint, HandData hand)
@@ -278,20 +318,19 @@ namespace Characters.PlayerController.Scripts
             Vector3 grabPoint = item.GrabHandle != null ? item.GrabHandle.position : hitPoint;
             yield return ReachToPointRoutine(grabPoint, hand, targetWeight: 1f);
 
-            // call grabbable API - connect object to hand
             item.Grab(hand.Rb, grabPoint);
 
-            // register global item owner
-            _currentItem = item;
-            _itemHoldingHand = hand;
-            hand.HoldingItem = true;
+            // register global item owner             
+            // call grabbable API - connect object to hand
+            RegisterAndGrabItem(item as ItemGrabbableScript, hand, grabPoint);
 
             // return hand to its home and reduce IK weight
             yield return ReachToHomeRoutine(hand);
 
             // Leave hand.HoldingItem true until OnItemReleased is called externally
         }
-
+        
+        
         // Wall flow: reach -> call grabbable grab (likely creates joint on hand/world) -> keep IK weight
         private IEnumerator WallGrabFlow(IGrabbableScript wall, Vector3 hitPoint, HandData hand)
         {
@@ -305,27 +344,30 @@ namespace Characters.PlayerController.Scripts
 
             // keep hand IK weight at 1 while held; coroutine ends here (hand.ActiveCoroutine cleared by StartHandCoroutine manager)
         }
-
+        
         // Reach helper (smoothly move IK target and IK weight)
-        private IEnumerator ReachToPointRoutine(Vector3 targetPoint, HandData hand, float targetWeight)
+        private IEnumerator ReachToPointRoutine(Vector3 targetPoint, HandData hand, float targetWeight, bool isHoldRig = false)
         {
-            Vector3 startPos = hand.IKTarget.position;
-            float startWeight = hand.IKConstraint != null ? hand.IKConstraint.weight : 0f;
+            Transform ikTar = isHoldRig ? hand.IKHoldTarget : hand.IKTarget;
+            TwoBoneIKConstraint ikCon = isHoldRig ? hand.IKHoldConstraint : hand.IKConstraint;
+
+            Vector3 startPos = ikTar.position;
+            float startWeight = ikCon != null ? ikCon.weight : 0f;
             float elapsed = 0f;
             while (elapsed < 1f)
             {
                 elapsed += Time.deltaTime * grabSpeed;
                 float t = Mathf.Clamp01(elapsed);
-                hand.IKTarget.position = Vector3.Lerp(startPos, targetPoint, t);
-                if (hand.IKConstraint != null)
-                    hand.IKConstraint.weight = Mathf.Lerp(startWeight, targetWeight, t);
-                hand.CurrentTargetPos = hand.IKTarget.position;
+                ikTar.position = Vector3.Lerp(startPos, targetPoint, t);
+                if (ikCon != null)
+                    ikCon.weight = Mathf.Lerp(startWeight, targetWeight, t);
+                hand.CurrentTargetPos = ikTar.position;
                 yield return null;
             }
 
             // ensure final values
-            hand.IKTarget.position = targetPoint;
-            if (hand.IKConstraint != null) hand.IKConstraint.weight = targetWeight;
+            ikTar.position = targetPoint;
+            if (ikCon != null) ikCon.weight = targetWeight;
             hand.CurrentTargetPos = targetPoint;
         }
 
@@ -334,6 +376,34 @@ namespace Characters.PlayerController.Scripts
             Vector3 homeWorld = hand.IKTarget.parent.TransformPoint(hand.LocalHomePosition);
             yield return ReachToPointRoutine(homeWorld, hand, targetWeight: 0f);
         }
+        
+        #endregion
+
+        private void RegisterAndGrabItem(ItemGrabbableScript item, HandData hand, Vector3 grabPoint)
+        {
+            item.Grab(hand.Rb, grabPoint);
+            Debug.Log("Grabbed item");
+            RegisterItemGrab(item, hand);
+        }
+        
+        public void RegisterAndGrabItemLeftHand(ItemGrabbableScript item, Vector3 grabPoint)
+        {
+            //StartCoroutine(ReachToPointRoutine(grabPoint, _leftHand, 1f));
+            RegisterAndGrabItem(item, _leftHand, grabPoint);
+        }
+        
+        public void RegisterAndGrabItemRightHand(ItemGrabbableScript item, Vector3 grabPoint)
+        {
+            RegisterAndGrabItem(item, _rightHand, grabPoint);
+        }
+
+        private void RegisterItemGrab(ItemGrabbableScript item, HandData hand)
+        {
+            currentItem = item;
+            itemHoldingHand = hand;
+            hand.HoldingItem = true;
+        }
+        
 
         // -------------------------
         // Release helpers
@@ -355,20 +425,27 @@ namespace Characters.PlayerController.Scripts
 
         public void OnItemReleased()
         {
-            if (_currentItem == null) return;
-
-            // find the hand that holds it
-            if (_itemHoldingHand != null)
+            if (!currentItem)
             {
-                // let grabbable handle release
-                _currentItem.Release();
-
-                // clear hand state
-                _itemHoldingHand.HoldingItem = false;
-                _itemHoldingHand = null;
+                //Debug.Log("[HandGrabber] OnItemReleased: currentItem ya es null");
+                return;
             }
 
-            _currentItem = null;
+            //Debug.Log($"[HandGrabber] OnItemReleased: liberando {currentItem.name}");
+
+            if (itemHoldingHand != null)
+            {
+                Debug.Log($"Releasing item");
+                currentItem.Release();
+                itemHoldingHand.HoldingItem = false;
+                itemHoldingHand.PrevPressed = false; // reset click simulado
+                itemHoldingHand = null;
+            } else {
+                Debug.LogWarning("[HandGrabber] OnItemReleased: itemHoldingHand ya era null!");
+            }
+
+            currentItem = null;
+            //Debug.Log("[HandGrabber] currentItem ahora es null");
         }
 
         // -------------------------
@@ -404,6 +481,11 @@ namespace Characters.PlayerController.Scripts
             return g is Environment.Scripts.WallGrabbableScript || !IsItemGrabbable(g);
         }
 
+        public void SetInteractWithGrabbable(bool interact) {
+            shouldInteractWithGrabbable = interact; // so that the script enters "interact" mode (maintaining click to hold grabbable is no longer required)
+        }
+
+        #region Gizmos
         // OnDrawGizmos for debugging
         private void OnDrawGizmos()
         {
@@ -425,5 +507,6 @@ namespace Characters.PlayerController.Scripts
                 Debug.DrawRay(rightGrabOrigin.position, rightGrabOrigin.forward * itemGrabDistance, Color.cyan);
             }
         }
+        #endregion
     }
 }

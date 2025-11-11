@@ -1,28 +1,21 @@
 ﻿using Photon.Pun;
 using UnityEngine;
 
-public class GameManager : MonoBehaviourPunCallbacks
+public class GameManager : MonoBehaviour
 {
-    [Header("Prefab del jugador")]
-    public GameObject playerPrefab;
 
-    [Header("Puntos de spawn")]
-    public Transform[] spawnPoints;
-
-    void Start()
+    private void Start()
     {
-        if (PhotonNetwork.InRoom)
+        // El GameManager ya no spawnea al jugador directamente.
+        // Se asegura de que exista GameNetworkController.
+        if (GameNetworkController.Instance == null)
         {
-            Debug.Log(" Ya estoy en una sala, spawneo jugador...");
-
-            int playerIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1;
-            Transform spawnPoint = spawnPoints[playerIndex % spawnPoints.Length];
-
-            PhotonNetwork.Instantiate(playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
+            Debug.LogError("No existe GameNetworkController en la escena.");
+            return;
         }
-        else
-        {
-            Debug.LogError(" No estás en ninguna sala, no se puede spawnear jugador.");
-        }
+
+        // Aquí podrías iniciar la lógica del juego,
+        // por ejemplo: temporizador, enemigos, objetivos, etc.
+        Debug.Log("GameManager iniciado. Esperando jugadores...");
     }
 }

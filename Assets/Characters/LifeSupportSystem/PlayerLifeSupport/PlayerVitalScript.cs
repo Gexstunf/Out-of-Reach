@@ -12,6 +12,6 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
             Context = context;
         }
         
-        public void ClampVital(ref float value, float max) => value = Mathf.Clamp(value, 0, max);
+        //public void ClampVital(ref float value, float max) => value = Mathf.Clamp(value, 0, max);
     }
 }

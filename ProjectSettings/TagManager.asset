@@ -10,9 +10,6 @@ TagManager:
   - Surface
   - Enemy
   - Limb
-  - Hallway
-  - Intersection
-  - Room
   layers:
   - Default
   - TransparentFX
@@ -25,7 +22,7 @@ TagManager:
   - Environment
   - Character
   - PostProcessing
-  - Structure
+  - Effects
   - 
   - 
   - 

@@ -1,21 +1,16 @@
-﻿using System;
+﻿using CameraShakeFX.Scripts;
 using Characters.PlayerController.Scripts.Input;
-using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
 using Characters.StateMachine.PlayerStateMachine;
+using Characters.SystemAdaptations;
 using Characters.Utils;
-using UnityEngine;
 using Photon.Pun;
-using UnityEngine.Serialization;
+using UnityEngine;
 
-namespace Characters.PlayerController.Scripts
-{
-    //[RequireComponent(typeof(Rigidbody))]
-    //[RequireComponent(typeof(CapsuleCollider))]
+namespace Characters.PlayerController.Scripts {
     [RequireComponent(typeof(PlayerInputScript))]
     [RequireComponent(typeof(PlayerStateMachineScript))]
     public class PlayerControllerScript : MonoBehaviourPun
     {
-        #region Variables
 
         [Header("References")]
         [SerializeField] private Camera _playerCamera;
@@ -24,9 +19,12 @@ namespace Characters.PlayerController.Scripts
         [SerializeField] private PlayerInputScript _inputScript;
         [SerializeField] private Rigidbody _rb;
         [SerializeField] public CapsuleCollider _playerCollider;
-
-        [Header("State machine")]
         [SerializeField] private PlayerStateMachineScript _playerStateMachine;
+        [SerializeField] private StateVitalsCoordinator _stateVitalsCoordinator;
+        [SerializeField] private TraumaInducer _traumaInducer;
+
+        [Header("Effects")]
+        [SerializeField] public GameObject _explosionEffect;
 
         [Header("Movement Settings")]
         public bool useCustomGravity;
@@ -34,10 +32,10 @@ namespace Characters.PlayerController.Scripts
         public float moveForce = 30f;
         public float runForce = 60f;
         public float playerDrag = 20f;
-        
+
         [Header("Crouch Settings")]
         public float crouchHeight = 1.5f;
-        
+
         [Header("Jump Settings")]
         public float jumpForce = 10f;
         public float forwardJumpForce = 5f;
@@ -45,8 +43,8 @@ namespace Characters.PlayerController.Scripts
         [Header("General settings")]
         public LayerMask groundLayer;
         public Vector3 groundCheckBoxSize = new Vector3(0.5f, 0.15f, 0.5f);
-        public bool useOtherRb = true;
         public bool inZeroG = false;
+
 
         [Header("Look Settings")]
         [SerializeField] private float _lookSenseH = 10f;
@@ -59,55 +57,71 @@ namespace Characters.PlayerController.Scripts
         public bool isGrounded = true;
         public Vector3 CurrentForce { get; private set; }
         public float visualGravity;
-        
+
         private float _groundCheckOffset;
 
-        #endregion
+        private bool _isLocalPlayer = false;
+        private ParticleSystem _explosionParticleSystem;
 
-        #region Startup logic
 
         private void Awake()
-        {   
-            if (!useOtherRb) _rb = GetComponent<Rigidbody>();
+        {
+            _rb = GetComponent<Rigidbody>();
             _inputScript = GetComponent<PlayerInputScript>();
             _playerCollider = GetComponent<CapsuleCollider>();
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
-            
+            _stateVitalsCoordinator = GetComponent<StateVitalsCoordinator>();
+
+            if (_explosionEffect != null)
+            {
+                _explosionParticleSystem = _explosionEffect.GetComponent<ParticleSystem>();
+            }
+            else
+            {
+                Debug.LogWarning("_explosionEffect is not assigned in PlayerControllerScript on " + gameObject.name);
+            }
+     
             _rotator = gameObject.AddComponent<RotatorScript>();
+        
             _cameraController = new CameraControllerScript();
             _cameraController.TieToTransform(_eyesTransform, eyesOffset);
-
-            if (useCustomGravity) {
+        
+            _rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            
+            
+            if (useCustomGravity)
+            {
                 _rb.useGravity = false;
-            }   
-            else {
+            }
+            else
+            {
                 _rb.useGravity = true;
             }
-
+        
             Validate();
         }
 
         private void Start()
         {
-            // if (!photonView.IsMine)
-            // {
-            //     if (_playerCamera != null) _playerCamera.enabled = false;
-            //
-            //     AudioListener listener = GetComponentInChildren<AudioListener>();
-            //     if (listener != null) listener.enabled = false;
-            //
-            //     _rb.isKinematic = true;
-            // }
-            //else
-            //{
-                _rotator.Init(_lookSenseH, _lookSenseV, _lookLimitV);
-                _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
+            _rotator.Init(_lookSenseH, _lookSenseV, _lookLimitV);
+            _cameraController.Init(_lookSenseH, _lookSenseV, _lookLimitV);
 
-                _rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            //}
-
+            _stateVitalsCoordinator.OnUnconsciousChanged += HandleUnconscious;
+            //_rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             _rb.linearDamping = playerDrag;
             _groundCheckOffset = _playerCollider.radius + 0.1f;
+        }
+
+        #region IsLocal
+
+        [ContextMenu("Set player Local")]
+        private void SetPlayerToLocal() {
+            _isLocalPlayer = true;
+        }
+        
+        public void SetAsLocalPlayer(bool value)
+        {
+            _isLocalPlayer = value;
         }
 
         #endregion
@@ -116,7 +130,7 @@ namespace Characters.PlayerController.Scripts
 
         private void Update()
         {
-            //if (!photonView.IsMine) return;
+            if (!_isLocalPlayer) return;
 
             HandleJumping(jumpForce);
             HandleGroundState();
@@ -124,7 +138,7 @@ namespace Characters.PlayerController.Scripts
 
         private void FixedUpdate()
         {
-            //if (!photonView.IsMine) return;
+            if (!_isLocalPlayer) return;
 
             if (useCustomGravity) {
                 ApplyCustomGravity(gravityScale);
@@ -147,17 +161,17 @@ namespace Characters.PlayerController.Scripts
 
         private void LateUpdate()
         {
-            //if (!photonView.IsMine) return;
-            
+            if (!_isLocalPlayer) return;
+
             visualGravity = Physics.gravity.y;
             if (useCustomGravity) visualGravity = Physics.gravity.y * gravityScale;
-
+            
+            
             Vector2 lookInput = _inputScript.LookInput;
             _rotator.RotateTransform(lookInput);
-              
+            
             float characterYaw = _rotator.GetYaw();
-
-            _cameraController.UpdateCameraRotation(lookInput, _playerCamera, characterYaw);
+            _cameraController.UpdateCameraRotation(lookInput, _playerCamera);
         }
 
         #endregion
@@ -205,19 +219,19 @@ namespace Characters.PlayerController.Scripts
         #endregion
 
         #region Helper funcs
-        
+    
         public void ResetDrag()
         {
             _rb.linearDamping = playerDrag;
         }
 
-        public void SetKinematic(bool kinematic) {
-            _rb.isKinematic = kinematic;
+        public void SetKinematic(bool isKinematic) {
+            _rb.isKinematic = isKinematic;
         }
-
+    
         private bool IsGroundedWhileGrounded() {
             Vector3 pos = transform.TransformPoint(_playerCollider.center) - new Vector3(0f, _playerCollider.radius, 0f);
-            
+        
             bool hit = Physics.CheckBox(
                 pos,
                 groundCheckBoxSize,
@@ -226,6 +240,14 @@ namespace Characters.PlayerController.Scripts
             );
 
             return hit;
+        }
+
+        private void HandleUnconscious(bool unconscious) {
+            if (unconscious) {
+                _cameraController.UntieCam();
+                _explosionEffect.SetActive(true);
+                StartCoroutine(_traumaInducer.Shake());
+            }
         }
 
         private void ApplyCustomGravity(float scale) {
@@ -247,7 +269,7 @@ namespace Characters.PlayerController.Scripts
         private void OnDrawGizmosSelected()
         {
             if (_playerCollider == null) return;
-            
+        
             Vector3 pos = transform.TransformPoint(_playerCollider.center) - new Vector3(0f, _playerCollider.radius, 0f);
             bool grounded = IsGroundedWhileGrounded();
 

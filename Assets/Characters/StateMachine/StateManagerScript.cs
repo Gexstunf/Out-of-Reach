@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Characters.StateMachine.EnvironmentStateMachine;
 using Characters.StateMachine.EnvironmentStateMachine.ConcreteStates;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace Characters.PlayerController.Scripts.StateMachine
 {
     public abstract class StateManagerScript<EState> : MonoBehaviour where EState : Enum
     {
+        public bool debug = false;
         protected Dictionary<EState, BaseStateScript<EState>> States = new Dictionary<EState, BaseStateScript<EState>>();
         protected BaseStateScript<EState> CurrentState;
         
@@ -25,7 +27,7 @@ namespace Characters.PlayerController.Scripts.StateMachine
                 CurrentState.UpdateState();
             }
             else {
-                Debug.Log("Transitioning, current state was: " + CurrentState.StateKey + " new state: " + nexStateKey);
+                Log("Transitioning, current state was: " + CurrentState.StateKey + " new state: " + nexStateKey);
                 TransitionToState(nexStateKey);
             }
         }
@@ -51,6 +53,11 @@ namespace Characters.PlayerController.Scripts.StateMachine
         private void OnTriggerStay(Collider other)
         {
             CurrentState.OnTriggerStay(other);
+        }
+
+        private void Log(string msg)
+        {
+            if (debug) UnityEngine.Debug.Log(msg);
         }
     }
 }

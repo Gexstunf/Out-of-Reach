@@ -15,6 +15,11 @@ GameObject:
   - component: {fileID: 1260725397380848618}
   - component: {fileID: 5478443227735347549}
   - component: {fileID: 697985179614628486}
+  - component: {fileID: 6891931984135901129}
+  - component: {fileID: 4174420667616830787}
+  - component: {fileID: 2078814230138411321}
+  - component: {fileID: -3352798143469745451}
+  - component: {fileID: 1582514890812175538}
   m_Layer: 0
   m_Name: PlantEnemy
   m_TagString: Enemy
@@ -92,6 +97,7 @@ MonoBehaviour:
     angularDriveSpring: 10000
     isStabilizer: 1
     rb: {fileID: 5062127062142051932}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -100,6 +106,7 @@ MonoBehaviour:
     angularDriveSpring: 10000
     isStabilizer: 0
     rb: {fileID: 8128455329487064146}
+    collider: {fileID: 3656630024062654270}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -108,6 +115,7 @@ MonoBehaviour:
     angularDriveSpring: 10000
     isStabilizer: 0
     rb: {fileID: 7630141156040045062}
+    collider: {fileID: 2544989451941215820}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -116,6 +124,7 @@ MonoBehaviour:
     angularDriveSpring: 10000
     isStabilizer: 0
     rb: {fileID: 310642264241411891}
+    collider: {fileID: 8486063770071516712}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -124,6 +133,7 @@ MonoBehaviour:
     angularDriveSpring: 9700
     isStabilizer: 0
     rb: {fileID: 4645417951701744817}
+    collider: {fileID: 279662118807167257}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -132,6 +142,7 @@ MonoBehaviour:
     angularDriveSpring: 9700
     isStabilizer: 0
     rb: {fileID: 2714692343431115901}
+    collider: {fileID: 8198547769637524052}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -140,6 +151,7 @@ MonoBehaviour:
     angularDriveSpring: 15000
     isStabilizer: 0
     rb: {fileID: 1997065620220728142}
+    collider: {fileID: 3767114022304771846}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -148,6 +160,7 @@ MonoBehaviour:
     angularDriveSpring: 15000
     isStabilizer: 0
     rb: {fileID: 8772385483649029828}
+    collider: {fileID: 5651455926504372435}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -156,6 +169,7 @@ MonoBehaviour:
     angularDriveSpring: 15000
     isStabilizer: 0
     rb: {fileID: 6056512618729813456}
+    collider: {fileID: 8937597991302876381}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -164,6 +178,7 @@ MonoBehaviour:
     angularDriveSpring: 17000
     isStabilizer: 0
     rb: {fileID: 984707575564461826}
+    collider: {fileID: 3928241957023390236}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -172,6 +187,7 @@ MonoBehaviour:
     angularDriveSpring: 14000
     isStabilizer: 0
     rb: {fileID: 1525221366795290256}
+    collider: {fileID: 8199746015858610126}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -180,6 +196,7 @@ MonoBehaviour:
     angularDriveSpring: 14000
     isStabilizer: 0
     rb: {fileID: 7273038568440808384}
+    collider: {fileID: 170736115232047930}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -188,6 +205,7 @@ MonoBehaviour:
     angularDriveSpring: 15000
     isStabilizer: 0
     rb: {fileID: 5009081354902778048}
+    collider: {fileID: 3571564281185059849}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -196,6 +214,7 @@ MonoBehaviour:
     angularDriveSpring: 15000
     isStabilizer: 0
     rb: {fileID: 6982361730831678700}
+    collider: {fileID: 447725144063694090}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -204,6 +223,7 @@ MonoBehaviour:
     angularDriveSpring: 600
     isStabilizer: 0
     rb: {fileID: 8567326257589953658}
+    collider: {fileID: 5530369984699528609}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -212,6 +232,7 @@ MonoBehaviour:
     angularDriveSpring: 400
     isStabilizer: 0
     rb: {fileID: 3812439406691374819}
+    collider: {fileID: 2154919922427266035}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -220,6 +241,7 @@ MonoBehaviour:
     angularDriveSpring: 400
     isStabilizer: 0
     rb: {fileID: 5769936885716522665}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
 --- !u!114 &2613203462799948720
@@ -234,12 +256,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad1b5a30fbe13a4cbebac74978087d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ar: {fileID: 0}
+  _arCoreScript: {fileID: 0}
   _smoothLockDuration: 6
   _lockSpring: 60
   _lockDamper: 30
   _initialClearance: 0
-  alive: 1
+  debug: 1
+  debugAlive: 1
 --- !u!114 &1260725397380848618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,6 +300,8 @@ MonoBehaviour:
   allAttacksSO:
   - {fileID: 11400000, guid: 6cf3761a424d34547b233cdc7f798cd7, type: 2}
   limbColliders:
+  - {fileID: 279662118807167257}
+  - {fileID: 8198547769637524052}
   - {fileID: 3767114022304771846}
   - {fileID: 5651455926504372435}
   - {fileID: 8937597991302876381}
@@ -287,7 +312,13 @@ MonoBehaviour:
   - {fileID: 447725144063694090}
   - {fileID: 5530369984699528609}
   - {fileID: 2154919922427266035}
-  attackCooldownTime: 5
+  randomizeBetweenValidAttacks: 0
+  attacks:
+  - animationStateName: SweepAttack
+    damageSO: {fileID: 11400000, guid: 6cf3761a424d34547b233cdc7f798cd7, type: 2}
+    range: 100
+    cooldown: 3
+    selectionWeight: 1
 --- !u!114 &697985179614628486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,6 +333,93 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   plantAnimator: {fileID: 880052595752755823}
   attack: 0
+--- !u!114 &6891931984135901129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6113814242317541465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 899b1fa400749ca41a4f6ba04ab06a26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 100
+  _arCoreScript: {fileID: 4251532900631925512}
+  _nervousSystemScript: {fileID: 0}
+  _attackScript: {fileID: 0}
+  _targetingScript: {fileID: 0}
+--- !u!114 &4174420667616830787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6113814242317541465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da1d141d4b3dc2e40a4353752a72cfff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arCoreScript: {fileID: 0}
+--- !u!114 &2078814230138411321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6113814242317541465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: -3352798143469745451}
+  - {fileID: 3678013661868308591}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &-3352798143469745451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6113814242317541465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &1582514890812175538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6113814242317541465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b39efeea968a7b41bc4583ccf0b9ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ragdollCore: {fileID: 0}
+  _nervousSystem: {fileID: 0}
+  _attackScript: {fileID: 0}
+  _animController: {fileID: 0}
+  _maxHealth: 100
 --- !u!1001 &527130215282499857
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -362,7 +480,10 @@ PrefabInstance:
     - {fileID: 3484586263909498008, guid: 5f131f6b8d431f149b8f2902e2a45bed, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1488899494014126671, guid: 5f131f6b8d431f149b8f2902e2a45bed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3678013661868308591}
   m_SourcePrefab: {fileID: 100100000, guid: 5f131f6b8d431f149b8f2902e2a45bed, type: 3}
 --- !u!4 &332947999621245337 stripped
 Transform:
@@ -379,6 +500,27 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 821393524519404414, guid: 5f131f6b8d431f149b8f2902e2a45bed, type: 3}
   m_PrefabInstance: {fileID: 527130215282499857}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1439212414568590174 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1488899494014126671, guid: 5f131f6b8d431f149b8f2902e2a45bed, type: 3}
+  m_PrefabInstance: {fileID: 527130215282499857}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3678013661868308591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439212414568590174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters: []
+  m_SynchronizeLayers: []
 --- !u!4 &2217475699725307579 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1843854908465999786, guid: 5f131f6b8d431f149b8f2902e2a45bed, type: 3}

@@ -1,7 +1,8 @@
 ﻿using Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals;
 using Characters.PlayerController.Scripts.Input;
+using Characters.PlayerController.Scripts.Inventory;
+using Multiplayer.UI;
 using UI;
-using UI.Scripts.TestingUI;
 using UnityEngine;
 
 namespace Characters.LifeSupportSystem.PlayerLifeSupport
@@ -10,22 +11,27 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerLifeSupportScript : LifeSupportManagerScript<PlayerLifeSupportScript.EVitals>
     {
-
         [Header("References")]
-        [SerializeField] private UIManagerScript _uiManager;
+        [SerializeField] private PlayerUIManager _uiManager;
         [SerializeField] private Rigidbody _rb;
         [SerializeField] private PlayerInputScript _playerInputScript;
-        //[SerializeField] private PlayerInventoryPhoton _inventory;
+
+        [Header("General settings")]
+        [SerializeField] private bool _forceInit;
 
         [Header("Life support settings")]
         [SerializeField] private float _maxHealth = 100f;
         [SerializeField] private float _maxStamina = 100f;
         
+        public float MaxHealth => _maxHealth;
+        public float MaxStamina => _maxStamina;
+
         [Header("Stamina settings")]
         [SerializeField] private float _staminaUseRate = 5f;
         [SerializeField] private float _staminaRegenRate = 2f;
         [SerializeField] private float _staminaRegenDelay = 5f;
 
+        private bool _isLocalPlayer;
         public PlayerLifeSupportContextScript Context { get; private set; }
 
         public enum EVitals
@@ -35,85 +41,65 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
             Stamina,
             Hunger
         }
-        
-        private void Awake() {
-            _rb = GetComponent<Rigidbody>();
-            Context = new PlayerLifeSupportContextScript(_rb, _maxHealth, _maxStamina, _staminaUseRate, 
-                _staminaRegenRate, _staminaRegenDelay, _uiManager, _playerInputScript);
+
+        private void Awake()
+        {
+            _rb =  GetComponent<Rigidbody>();
+            _playerInputScript = GetComponent<PlayerInputScript>();
+            _uiManager = GetComponent<PlayerUIManager>();
+
+            Context = new PlayerLifeSupportContextScript(
+                _rb, _maxHealth, _maxStamina, _staminaUseRate,
+                _staminaRegenRate, _staminaRegenDelay, _uiManager, _playerInputScript
+            );
             
-            ValidateReferences();
-            InitializeVitals();
+            if (_forceInit) InitializeVitals();
         }
 
-        /*private new void Start()
+        public void Initialize(bool isLocalPlayer)
         {
-            if (photonView.IsMine) {
-                //Busca la UI del jugador dentro del prefab
-                _uiManager = GetComponentInChildren<UIManagerScript>(true);
+            _isLocalPlayer = isLocalPlayer;
 
-                if (_uiManager != null) {
-                    _uiManager.SetTarget(Context, Vitals);
-                    if (_inventory != null) _uiManager.InitInventory(_inventory);
+            if (isLocalPlayer)
+            {
+                _uiManager = GetComponent<PlayerUIManager>();
+                if (_uiManager != null)
+                {
+                    Context.SetUIManager(_uiManager);
+                    _uiManager.DisplayHealth(_maxHealth);
+                    _uiManager.DisplayStamina(_maxStamina);
                 }
-            } else {
-                //Si no es nuestro player, apagamos su canvas de HUD
+            }
+            else
+            {
                 var uiCanvas = GetComponentInChildren<Canvas>(true);
                 if (uiCanvas != null)
                     uiCanvas.gameObject.SetActive(false);
-                }
-
-                //Setup de vitales siempre, para locales y remotos
-                foreach (var vital in Vitals.Values)
-                    vital.SetupVital();
             }
 
-        private void Update() {
-            if (!photonView.IsMine) return;
-
-            //Primero modificadores
-            foreach (var vital in Vitals.Values)
-                vital.UpdateModifiers();
-
-            //Luego valores reales
-            foreach (var vital in Vitals.Values)
-                vital.UpdateVital();
-
-            //Actualizamos UI
-            if (_uiManager != null) {
-                _uiManager.DisplayStamina(Context.Stamina);
-                _uiManager.DisplayHealth(Context.Health);
-            }
+            InitializeVitals();
+            ValidateReferences();
         }
-        */
 
         private void InitializeVitals()
         {
-            // El orden importa: algunos dependen de otros
             Vitals.Add(EVitals.Weight, new WeightVitalScript(Context, EVitals.Weight));
             Vitals.Add(EVitals.Stamina, new StaminaVitalScript(Context, EVitals.Stamina));
             Vitals.Add(EVitals.Hunger, new HungerVitalScript(Context, EVitals.Hunger));
             Vitals.Add(EVitals.Health, new HealthVitalScript(Context, EVitals.Health));
+
+            // Setup inmediatamente
+            foreach (var vital in Vitals.Values)
+                vital.SetupVital();
+
+            Debug.Log("[PlayerLifeSupportScript] Vitals initialized and setup: " + Vitals.Count);
         }
 
         private void ValidateReferences()
         {
-            Debug.Assert(_rb != null, "Rigidbody is not assigned.");
-            Debug.Assert(_uiManager != null, "UI Manager is not assigned.");
-            Debug.Assert(_playerInputScript != null, "PlayerInputScript is not assigned.");
-
-            if (_uiManager == null)
-            {
-                Debug.LogError("❌ No se encontró PlayerUIManager/UIManagerScript en " + gameObject.name);
-            }
-            else
-            {
-                Debug.Log("✅ PlayerUIManager/UIManagerScript encontrado en " + gameObject.name);
-            }
-
-            if (_uiManager == null)
-            {
-                Debug.LogWarning("⚠ PlayerUIManager/UIManagerScript no asignado, la UI no se actualizará.");
-            }
+            Debug.Assert(_rb != null, "Rigidbody is not assigned. " + gameObject.name);
+            Debug.Assert(_uiManager != null, "UI Manager is not assigned. " + gameObject.name);
+            Debug.Assert(_playerInputScript != null, "PlayerInputScript is not assigned. " + gameObject.name);
         }
     }
 }

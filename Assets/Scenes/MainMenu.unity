@@ -4834,13 +4834,11 @@ MonoBehaviour:
   joinPanel: {fileID: 1474336687}
   settingsPanel: {fileID: 1975632235}
   loadingPanel: {fileID: 1611658712}
-  progressBar: {fileID: 816087663}
-  progressText: {fileID: 1595959765}
+  playerNameInput: {fileID: 2072149208}
   roomNameInput_Host: {fileID: 1910175183}
   passwordInput_Host: {fileID: 498384702}
   roomNameInput_Join: {fileID: 1868087164}
   passwordInput_Join: {fileID: 1386488565}
-  playerNameInput: {fileID: 2072149208}
 --- !u!4 &1487784296
 Transform:
   m_ObjectHideFlags: 0
@@ -5603,6 +5601,50 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1744334619
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1744334621}
+  - component: {fileID: 1744334620}
+  m_Layer: 0
+  m_Name: MainMenuNetworkController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1744334620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1744334619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9e9420e559fd3d4dbb868248f925cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1744334621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1744334619}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 497.48032, y: 0, z: -647.4706}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1778740604
 GameObject:
   m_ObjectHideFlags: 0
@@ -6899,3 +6941,4 @@ SceneRoots:
   - {fileID: 661372293}
   - {fileID: 1205978323}
   - {fileID: 1487784296}
+  - {fileID: 1744334621}

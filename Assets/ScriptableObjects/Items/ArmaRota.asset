@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd30862700d3ab04c8502dfb46c13249, type: 3}
+  m_Name: ArmaRota
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 226995063728355445, guid: 60ff2ea7a686bfd4ca3e739d9c5fcd38, type: 3}
+  itemId: 11
+  worldPrefabName: 
+  heldPrefabName: 
+  icon: {fileID: 0}
+  displayName: 
+  itemType: 0
+  itemSize: 0
+  spawnChance: 0.3
+  value: 200
+  internalSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

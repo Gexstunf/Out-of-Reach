@@ -119,6 +119,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7296253498256617226}
   - component: {fileID: 5600183137429699905}
+  - component: {fileID: 4181928509965164927}
+  - component: {fileID: -4046739310500696167}
   m_Layer: 0
   m_Name: Sliding-BigDoors
   m_TagString: Untagged
@@ -157,6 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   femaleDoor: {fileID: 7190776367934322447}
   maleDoor: {fileID: 5247678330376597794}
+  _audioSource: {fileID: 0}
   movementAxis: 0
   useDetection: 0
   detectionRadius: 4
@@ -164,9 +167,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   doorSpeed: 0.2
+  doorCrackOffset: 0.07
+  shouldOpenForEnemies: 1
   open: 0
   debug: 0
-  doorCrackOffset: 0.07
   doorFailureChance: 0.1
   doorMode: 0
   slamDistanceOpen: -3
@@ -175,6 +179,45 @@ MonoBehaviour:
   slamSpeed: 5
   minDelay: 0.3
   maxDelay: 1.5
+  doorIsNowOpen: 0
+--- !u!114 &4181928509965164927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2252369882159667411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &-4046739310500696167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2252369882159667411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &4964703715027359938
 GameObject:
   m_ObjectHideFlags: 0

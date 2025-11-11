@@ -1,43 +1,88 @@
-﻿using Characters.PlayerController.Scripts;
+﻿using Characters.LifeSupportSystem.PlayerLifeSupport;
+using Characters.PlayerController.Scripts;
 using Characters.Utils;
 using Photon.Pun;
 using UnityEngine;
 
-namespace Multiplayer {
+namespace Multiplayer
+{
     public class PlayerSetup : MonoBehaviourPun
     {
         private Camera _playerCamera;
         private AudioListener _audioListener;
+        private PhotonAnimatorView _animView;
+
+        [Header("Player Components")]
         private PlayerControllerScript _controller;
-        private CameraControllerScript _cameraController;
         private RotatorScript _rotator;
+        private PlayerLifeSupportScript _lifeSupport;
+        private ActiveRagdollControllerScript _ragdoll;
+        
+        public bool IsLocalPlayer => photonView.IsMine;
+        private bool _wasCrouching;
 
         void Awake()
         {
-            // Buscar componentes
-            _playerCamera = GetComponentInChildren<Camera>();
-            _audioListener = GetComponentInChildren<AudioListener>();
+            _playerCamera = GetComponentInChildren<Camera>(true);
+            _audioListener = GetComponentInChildren<AudioListener>(true);
             _controller = GetComponent<PlayerControllerScript>();
             _rotator = GetComponent<RotatorScript>();
-        
-            _cameraController = new CameraControllerScript();
+            _lifeSupport = GetComponent<PlayerLifeSupportScript>();
+            _ragdoll = GetComponent<ActiveRagdollControllerScript>();
+            //_animView = GetComponentInChildren<PhotonAnimatorView>(true);
         }
-
+        
+                
         void Start()
         {
-            if (!photonView.IsMine) {
-                // Desactivar cosas en jugadores remotos
-                if (_playerCamera != null) _playerCamera.enabled = false;
-                if (_audioListener != null) _audioListener.enabled = false;
-                if (_controller != null) _controller.enabled = false;
-                if (_rotator != null) _rotator.enabled = false;
-            } else {
-                // Inicializar cámara para el jugador local
-                if (_cameraController != null && _playerCamera != null)
-                {
-                    _cameraController.Init(2.0f, 2.0f, 80f);
-                }
+            bool isLocal = IsLocalPlayer;
+
+            if (_playerCamera != null) _playerCamera.enabled = isLocal;
+            if (_audioListener != null) _audioListener.enabled = isLocal;
+            if (_rotator != null) _rotator.enabled = isLocal;
+                
+            if (_controller != null)
+            {
+                _controller.SetAsLocalPlayer(isLocal);
+                _controller.enabled = true;
             }
+            
+            if (_lifeSupport != null)
+                _lifeSupport.Initialize(isLocal);
+            /*
+            if (_animView != null)
+                _animView.enabled = !isLocal;
+            */
+            if (!isLocal)
+            {
+                var rb = GetComponent<Rigidbody>();
+                if (rb != null) rb.isKinematic = true;
+            }
+        }
+        void Update()
+        {
+            if (!IsLocalPlayer) return;
+
+            // Use your own input system here — this is an example:
+            bool crouchPressed = Input.GetKey(KeyCode.LeftControl);
+
+            if (crouchPressed && !_wasCrouching)
+            {
+                photonView.RPC(nameof(RPC_SetCrouch), RpcTarget.All, true);
+                _wasCrouching = true;
+            }
+            else if (!crouchPressed && _wasCrouching)
+            {
+                photonView.RPC(nameof(RPC_SetCrouch), RpcTarget.All, false);
+                _wasCrouching = false;
+            }
+        }
+
+        [PunRPC]
+        private void RPC_SetCrouch(bool isCrouching)
+        {
+            if (_ragdoll != null)
+                _ragdoll.SetCrouch(isCrouching);
         }
     }
 }

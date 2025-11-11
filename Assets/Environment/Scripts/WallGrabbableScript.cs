@@ -47,6 +47,10 @@ namespace Environment.Scripts {
             }
         }
 
+        public void Interact() {
+            throw new System.NotImplementedException();
+        }
+
         public bool IsItem { get; } = false;
     }
 }

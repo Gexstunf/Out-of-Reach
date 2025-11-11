@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4028333727485751329}
   - component: {fileID: 3976289655221324525}
   - component: {fileID: 2875844170856325107}
+  - component: {fileID: -2053702075955841528}
   m_Layer: 6
   m_Name: ItemArmaRota
   m_TagString: Item
@@ -119,8 +120,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabHandle: {fileID: 3059866500622073252}
+  data: {fileID: 11400000, guid: e6225e38efcd5014e929130136991fc2, type: 2}
+  interactionScript: {fileID: 0}
   massScale: 1
   connectedMassScale: 1
+--- !u!114 &-2053702075955841528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226995063728355445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e53514096a731c14a89de63f51644c15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2453875535040223409
 GameObject:
   m_ObjectHideFlags: 0

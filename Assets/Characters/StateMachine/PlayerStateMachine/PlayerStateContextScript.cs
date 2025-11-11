@@ -19,7 +19,8 @@ namespace Characters.StateMachine.PlayerStateMachine {
         [SerializeField] RagdollControllerScript _ragdollControllerScript;
         [SerializeField] ColliderUtilsScript _colliderUtils;
 
-        [Header("Vitals States")] public bool IsUnconscious { get; private set; }
+        [Header("Vitals States")] 
+        public bool IsUnconscious { get; private set; } 
         public bool IsTired { get; private set; }
         public bool IsHeavy { get; private set; }
         public bool IsStarved { get; private set; }

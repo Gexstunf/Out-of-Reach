@@ -1,258 +1,179 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Characters.LifeSupportSystem.PlayerLifeSupport;
+using Characters.PlayerController.Scripts.Input;
+using Characters.PlayerController.Scripts.Inventory;
+using GlobalUtils;
+using Multiplayer.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
-using Characters.LifeSupportSystem.PlayerLifeSupport;
-using static Characters.LifeSupportSystem.PlayerLifeSupport.PlayerLifeSupportScript;
-using Characters.LifeSupportSystem;
-using Multiplayer.Inventory;
 
-namespace UI
-{
+namespace Multiplayer.UI {
     public class PlayerUIManager : MonoBehaviour
     {
-        [Header("Barra de Stamina")]
-        public Image staminaBar;
-        public float maxStamina = 100f;
-
-        [Header("Vida en Ticks")]
-        public Transform healthContainer;
+        #region Variables
+    
+        [Header("References")]
+        [SerializeField] private InventoryControllerScript _inventoryController;
+        [SerializeField] private PlayerLifeSupportScript _playerLifeSupportScript;
+        [SerializeField] private PlayerInputScript _playerInputScript;
+    
+        [Header("Vida")]
         public Sprite tickOn;
         public Sprite tickYellow;
         public Sprite tickRed;
-        public float maxHealth = 100f;
         public float healthPerTick = 10f;
-        private List<Image> healthTicks = new List<Image>();
+        private List<Image> _healthTicks = new List<Image>();
 
-        [Header("Inventario UI")]
-        public GameObject[] slotUI;
-        public Image[] slotIcons;
+        [Header("UI Settings")] 
+        public Transform healthContainer;
+        public Image staminaBar;
+        public UiSlot[] slots;
 
-        private PlayerInventoryPhoton inventory;
-        private bool _initialized = false;
+        [System.Serializable]
+        public class UiSlot {
+            public GameObject Obj;
+            public Image BgImg;
+            public Image Icon;
+        
+            public UiSlot(GameObject obj, Image bgImg, Image icon) {
+                Obj = obj;
+                BgImg = bgImg;
+                Icon = icon;
+            }
+        }
 
-        [Header("Inventario Mochila")]
-        public GameObject backpackPanel;
-        public GameObject[] backpackSlotUI;
-        public Image[] backpackSlotIcons;
+        private float _maxStamina = 100f;
+        private float _maxHealth = 100f;
+        private LoggerSO _logger;
+        #endregion
 
-
-        // NUEVO: jugador objetivo
-        private PlayerLifeSupportContextScript _context;
-        private Dictionary<PlayerLifeSupportScript.EVitals, BaseVitalScript<PlayerLifeSupportScript.EVitals>> _vitals;
-        private PlayerInventoryPhoton _inventory;
-
-        public void Start()
-        {
+        #region Unity Methods
+        private void Awake() {
+            _inventoryController = GetComponent<InventoryControllerScript>();
+            _playerLifeSupportScript = GetComponent<PlayerLifeSupportScript>();
+            _playerInputScript = GetComponent<PlayerInputScript>();
+        
+            ValidateReferences();
+        
+            _maxHealth = _playerLifeSupportScript.MaxHealth;
+            _maxStamina = _playerLifeSupportScript.MaxStamina;
+        }
+        private void Start() {
+            _logger = LoggerSO.Instance;
+            _logger.LogMinor($"[UIManager] Start en {gameObject.name}");
             InitUI();
         }
-
-        private void Update()
+    
+        #endregion
+    
+        #region Main Logic 
+        private void InitUI()
         {
-            if (!_initialized) return;
-
-            UpdateUI();
+            _healthTicks.Clear();
+            foreach (Transform child in healthContainer)
+            {
+                Image img = child.GetComponent<Image>();
+                if (img != null) _healthTicks.Add(img);
+            }
+        
+            DisplayHealth(_maxHealth);
+            DisplayStamina(_maxStamina);
         }
 
-        public void InitUI()
-        {
-            if (_initialized) return;
-
-            if (staminaBar == null)
-                staminaBar = GameObject.Find("Canvas/StaminaBar")?.GetComponent<Image>();
+        private void ValidateReferences() {
+            if (_playerLifeSupportScript == null)
+                _logger.LogWarning("[PlayerUIManager] Player life script is null.] ");
+            if (_inventoryController == null)
+                _logger.LogWarning("[PlayerUIManager] Player inventory script is null.] ");
             if (healthContainer == null)
-                healthContainer = GameObject.Find("Canvas/HealthContainer")?.transform;
-
-            if (healthContainer != null)
+                _logger.LogWarning("[PlayerUIManager] Health container is null.] ");
+            if (staminaBar == null)
+                _logger.LogWarning("[PlayerUIManager] Stamina bar is null.] ");
+        }
+        private void UpdateAllSlots(InventoryControllerScript.InventorySlot[] inv, PlayerInputScript input) {
+            for (int i = 0; i < slots.Length; i++)
             {
-                healthTicks.Clear();
-                foreach (Transform child in healthContainer)
-                {
-                    Image img = child.GetComponent<Image>();
-                    if (img != null) healthTicks.Add(img);
-                }
-            }
-
-            DisplayHealth(maxHealth);
-            DisplayStamina(maxStamina);
-
-            for (int i = 0; i < slotUI.Length; i++)
-            {
-                int index = i;
-                Button btn = slotUI[i].GetComponent<Button>();
-                if (btn != null)
-                {
-                    btn.onClick.AddListener(() => OnSlotClicked(index));
-                }
-            }
-
-            _initialized = true;
-        }
-
-        public void InitInventory(PlayerInventoryPhoton inv)
-        {
-            inventory = inv;
-            UpdateInventoryUI();
-        }
-
-        public void SetTarget(PlayerLifeSupportContextScript context,
-                      Dictionary<PlayerLifeSupportScript.EVitals, BaseVitalScript<PlayerLifeSupportScript.EVitals>> vitals)
-        {
-            // Guardamos referencia al contexto y vitals para actualizar UI
-            _context = context;
-            _vitals = vitals;
-        }
-
-        private void UpdateUI()
-        {
-            if (_context == null) return;
-
-            DisplayHealth(_context.Health);
-            DisplayStamina(_context.Stamina);
-            UpdateInventoryUI();
-        }
-
-        public void UpdateInventoryUI()
-        {
-            if (inventory == null) return;
-
-            for (int i = 0; i < slotUI.Length; i++)
-            {
-                bool hasItem = (i < inventory.slots.Length && inventory.slots[i] != null);
+                bool hasItem = (i < inv.Length && inv[i] != null);
 
                 if (hasItem)
                 {
-                    slotIcons[i].sprite = inventory.slots[i].icon;
-                    slotIcons[i].enabled = true;
+                    ItemSO itemData = inv[i].itemData;
+                    UpdateSlot(itemData, i);
                 }
                 else
                 {
-                    slotIcons[i].sprite = null;
-                    slotIcons[i].enabled = false;
+                    UpdateSlot(null, i);
                 }
 
-                Image slotBg = slotUI[i].GetComponent<Image>();
+                Image slotBg = slots[i].BgImg;
+            
                 if (slotBg != null)
-                {
-                    slotBg.color = (i == inventory.activeSlot) ? Color.yellow : Color.white;
-                }
+                    slotBg.color = (i == input.InventoryIndex) ? Color.yellow : Color.white;
             }
         }
-
-        public void OnSlotClicked(int slotIndex)
-        {
-            if (inventory == null) return;
-            inventory.EquipFromSlot(slotIndex);
-            UpdateInventoryUI();
-        }
-
-        public void ShowBackpackInventory(BackpackData bd, PlayerInventoryPhoton inv)
-        {
-            backpackPanel.SetActive(true);
-
-            for (int i = 0; i < backpackSlotUI.Length; i++)
+        private void UpdateSlot(ItemSO itemData, int slot) {
+            if (itemData != null)
             {
-                if (i >= bd.internalSlots.Length) continue;
-
-                ItemSO item = bd.internalSlots[i];
-
-                // Mostrar icono
-                backpackSlotIcons[i].sprite = item != null ? item.icon : null;
-                backpackSlotIcons[i].enabled = item != null;
-
-                int slotIndex = i;
-                Button btn = backpackSlotUI[i].GetComponent<Button>();
-                if (btn != null)
-                {
-                    btn.onClick.RemoveAllListeners();
-
-                    if (item != null)
-                    {
-                        // Si hay item → botón lo saca al mundo
-                        btn.onClick.AddListener(() =>
-                        {
-                            //inv.DropFromBackpack(bd, slotIndex);
-                            UpdateBackpackUI(bd.internalSlots);
-                        });
-                    }
-                    else
-                    {
-                        // Si no hay item → botón guarda el tempHeld
-                        btn.onClick.AddListener(() =>
-                        {
-                            if (inv.tempItemData != null)
-                            {
-                                //inv.StoreInBackpack(bd, inv.tempItemData, slotIndex);
-                                //inv.ClearTempHeld();
-                                UpdateBackpackUI(bd.internalSlots);
-                            }
-                        });
-                    }
-                }
+                slots[slot].Icon.sprite = itemData.icon;
+                slots[slot].Icon.enabled = true;
             }
-        }
-
-        public void UpdateBackpackUI(ItemSO[] internalSlots)
-        {
-            for (int i = 0; i < backpackSlotUI.Length; i++)
+            else
             {
-                if (i >= internalSlots.Length) continue;
-
-                ItemSO item = internalSlots[i];
-                backpackSlotIcons[i].sprite = item != null ? item.icon : null;
-                backpackSlotIcons[i].enabled = item != null;
+                slots[slot].Icon.sprite = null;
+                slots[slot].Icon.enabled = false;
             }
         }
-
-        public void CloseBackpack()
+        #endregion
+    
+        #region Public API
+    
+        public void UpdateHotbarUI()
         {
-            backpackPanel.SetActive(false);
+            var inventory = _inventoryController.inventory;
+            //var itemSOs = _inventoryController.itemSOs;
+            UpdateAllSlots(inventory, _playerInputScript);
         }
 
         public void DisplayStamina(float amount)
         {
-            if (staminaBar == null)
-            {
-                Debug.LogWarning("StaminaBar es NULL en " + gameObject.name);
-                return;
-            }
-
-            float fill = Mathf.Clamp01(amount / maxStamina);
+            float fill = Mathf.Clamp01(amount / _maxStamina);
             staminaBar.fillAmount = fill;
         }
 
         public void DisplayHealth(float amount)
         {
-            if (healthTicks.Count == 0)
+            if (_healthTicks.Count == 0)
             {
-                Debug.LogWarning("No hay healthTicks en " + gameObject.name);
                 return;
             }
 
             int ticksOn = Mathf.CeilToInt(amount / healthPerTick);
 
-            for (int i = 0; i < healthTicks.Count; i++)
+            for (int i = 0; i < _healthTicks.Count; i++)
             {
                 if (i < ticksOn)
                 {
                     if (ticksOn <= 3)
-                        healthTicks[i].sprite = tickRed;
+                        _healthTicks[i].sprite = tickRed;
                     else if (ticksOn <= 7)
-                        healthTicks[i].sprite = tickYellow;
+                        _healthTicks[i].sprite = tickYellow;
                     else
-                        healthTicks[i].sprite = tickOn;
+                        _healthTicks[i].sprite = tickOn;
 
-                    var c = healthTicks[i].color;
+                    var c = _healthTicks[i].color;
                     c.a = 1f;
-                    healthTicks[i].color = c;
+                    _healthTicks[i].color = c;
                 }
                 else
                 {
-                    var c = healthTicks[i].color;
+                    var c = _healthTicks[i].color;
                     c.a = 0f;
-                    healthTicks[i].color = c;
+                    _healthTicks[i].color = c;
                 }
             }
         }
+    
+        #endregion
     }
 }
+

@@ -25,7 +25,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
 
             _health = VitalUtil.BaseMaxVital;
             _currentHealthRegenDelay = VitalUtil.BaseRegenDelay;
-            Debug.Log("Health setup: " + _health);
+            //Debug.Log("Health setup: " + _health);
         }
 
         public override void UpdateModifiers()
@@ -46,7 +46,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
         public override void OnCollisionEnter(Collision other) {
             if (other.gameObject.CompareTag("Enemy")) {
                 ILimbDamageScript limbScript = other.gameObject.GetComponent<ILimbDamageScript>();
-                if (limbScript != null && limbScript.HostAttackScript != null) {
+                if (limbScript != null && limbScript.HostAttackScript && limbScript.HostAttackScript.enabled) {
                     AttackDamageSO damageSO = limbScript.HostAttackScript.currentAttackSO;
                     Debug.Log("WAS HIT!");
                     DamageLife(damageSO.damage);

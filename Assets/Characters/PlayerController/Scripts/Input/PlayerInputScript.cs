@@ -1,4 +1,7 @@
 using System;
+using GlobalUtils;
+using Multiplayer.Inventory;
+using Multiplayer.UI;
 using UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,8 +10,10 @@ namespace Characters.PlayerController.Scripts.Input
 {
     public class PlayerInputScript : MonoBehaviour, PlayerLocomotionScript.IPlayerActions
     {
+        
         private PlayerLocomotionScript _playerLocomotionScript;
         private readonly bool _toggleSprint = false;
+        private LoggerSO _logger;
         
         #region Exposed Variables
         public Vector2 MoveInput { get; private set; }
@@ -24,11 +29,15 @@ namespace Characters.PlayerController.Scripts.Input
         public bool LeftClickPressed { get; private set; }
         public bool RightClickPressed { get; private set; }
 
+        public bool InventoryInteraction {  get; private set; }
+        public int InventoryIndex { get; private set; }
+
         #endregion
         
         #region Awake logic
         private void Awake()
         {
+            _logger = LoggerSO.Instance;
             _playerLocomotionScript = new PlayerLocomotionScript();
             _playerLocomotionScript.Enable();
 
@@ -51,6 +60,7 @@ namespace Characters.PlayerController.Scripts.Input
         void LateUpdate()
         {
             JumpPressed = false;
+            InventoryInteraction = false;
         }
 
         #endregion
@@ -81,7 +91,7 @@ namespace Characters.PlayerController.Scripts.Input
         {
             if (context.performed)
             {
-                Debug.Log("Jump press");
+                _logger.LogMinor("Jump press");
                 JumpPressed = true;
             }
         }
@@ -113,34 +123,42 @@ namespace Characters.PlayerController.Scripts.Input
         public void OnInteract(InputAction.CallbackContext context) {
             if (!context.performed) return;
 
-            /*var inv = GetComponent<PlayerInventoryPhoton>();
+            var inv = GetComponent<PlayerInventoryPhoton>();
             if (inv == null) return;
 
-            // Abrir mochila en mano
+            var ui = FindFirstObjectByType<PlayerUIManager>();
+            if (ui == null) return;
+
+            // Si mochila est� equipada en slot 4 y seleccionada
             if (inv.backpackObj != null && inv.slots[3] != null && inv.activeSlot == 3)
             {
-                inv.OpenBackpack();
+                //ui.ToggleBackpackInventory(inv.backpackObj.GetComponent<BackpackData>(), inv);
                 return;
             }
 
-            // Buscar mochila tirada cerca
+            // Buscar mochila en el suelo cerca
             Collider[] hits = Physics.OverlapSphere(transform.position, 2f, inv.itemLayer);
             foreach (var hit in hits)
             {
                 var netItem = hit.GetComponentInParent<NetworkedItem>();
                 if (netItem != null && netItem.itemData != null && netItem.itemData.itemType == ItemType.Backpack)
                 {
-                    inv.OpenBackpackWorld(netItem);
+                    var bd = netItem.GetComponent<BackpackData>();
+                    if (bd != null)
+                    {
+                        //ui.ToggleBackpackInventory(bd, inv);
+                    }
                     break;
                 }
-            }*/
+            }
         }
+
 
         public void OnCrouch(InputAction.CallbackContext context)
         {
             if (context.performed) {
                 CrouchPressed = true;
-                Debug.Log("Crouch press");
+                _logger.LogMinor("Crouch press");
             } else if (context.canceled) {
                 CrouchPressed = false;
             }
@@ -151,7 +169,7 @@ namespace Characters.PlayerController.Scripts.Input
             if (context.performed)
             {
                 ItemSlot = Mathf.Max(0, ItemSlot - 1);
-                Debug.Log("Slot anterior: " + ItemSlot);
+                //Debug.Log("Slot anterior: " + ItemSlot);
             }
         }
 
@@ -160,58 +178,54 @@ namespace Characters.PlayerController.Scripts.Input
             if (context.performed)
             {
                 ItemSlot++;
-                Debug.Log("Slot siguiente: " + ItemSlot);
+                //Debug.Log("Slot siguiente: " + ItemSlot);
             }
         }
 
         public void OnSprint(InputAction.CallbackContext context) {
             if (context.performed) {
                 RunningPressed = true;
-                Debug.Log("Sprint press!");
+                _logger.LogMinor("Sprint press!");
             } else if (context.canceled) {
                 RunningPressed = false;
             }
         }
 
-        public void OnInventory(InputAction.CallbackContext context) {
-            if (!context.performed) return;
-            /*var inv = GetComponent<PlayerInventoryPhoton>();
-            if (inv == null) return;
+        public void OnInventory(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
 
-            if (Keyboard.current.digit1Key.wasPressedThisFrame)
-            {
-                if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(0);
-                else inv.EquipFromSlot(0);
-            }
-            else if (Keyboard.current.digit2Key.wasPressedThisFrame)
-            {
-                if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(1);
-                else inv.EquipFromSlot(1);
-            }
-            else if (Keyboard.current.digit3Key.wasPressedThisFrame)
-            {
-                if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(2);
-                else inv.EquipFromSlot(2);
-            }
-            else if (Keyboard.current.digit4Key.wasPressedThisFrame)
-            {
-                if (inv.tempHeldObj != null) inv.PlaceTempHeldInSlot(3);
-                else inv.EquipFromSlot(3);
-            }*/
+            // Detecta cuál número se presionó
+            if (Keyboard.current.digit1Key.wasPressedThisFrame) InventoryIndex = 0;
+            else if (Keyboard.current.digit2Key.wasPressedThisFrame) InventoryIndex = 1;
+            else if (Keyboard.current.digit3Key.wasPressedThisFrame) InventoryIndex = 2;
+            else if (Keyboard.current.digit4Key.wasPressedThisFrame) InventoryIndex = 3;
+            else InventoryIndex = -1;
+
+            if (InventoryIndex != -1)
+                InventoryInteraction = true;
+        }
+
+        // Método llamado por el InventoryController después de procesar el input
+        public void ConsumeInventoryInput()
+        {
+            InventoryInteraction = false;
+            InventoryIndex = -1;
         }
 
         public void OnDrop(InputAction.CallbackContext context)
         {
             if(!context.performed) return;
 
-            // var inv = GetComponent<PlayerInventoryPhoton>();
-            // if (inv != null)
-            // {
-            //     inv.DropCurrent(inv.activeSlot);
-            //
-            //     var ui = FindFirstObjectByType<PlayerUIManager>();
-            //     if (ui != null) ui.UpdateInventoryUI();
-            // }
+            var inv = GetComponent<PlayerInventoryPhoton>();
+            if (inv != null)
+            {
+                 inv.DropCurrent(inv.activeSlot);
+            
+                 var ui = FindFirstObjectByType<PlayerUIManager>();
+                 if (ui != null) ui.UpdateHotbarUI();
+            }
         }
 
         public void OnPropel(InputAction.CallbackContext context) {

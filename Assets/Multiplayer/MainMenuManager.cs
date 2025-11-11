@@ -1,13 +1,8 @@
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using Photon.Pun;
-using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
+using UnityEngine.UI;
 
-public class MainMenuManager : MonoBehaviourPunCallbacks
+public class MainMenuManager : MonoBehaviour
 {
     [Header("Panels")]
     public GameObject mainPanel;
@@ -16,176 +11,103 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     public GameObject settingsPanel;
     public GameObject loadingPanel;
 
-    [Header("Loading UI")]
-    public Slider progressBar;
-    public TextMeshProUGUI progressText;
-
     [Header("Input Fields")]
+    public TMP_InputField playerNameInput;
     public TMP_InputField roomNameInput_Host;
     public TMP_InputField passwordInput_Host;
     public TMP_InputField roomNameInput_Join;
     public TMP_InputField passwordInput_Join;
-    public TMP_InputField playerNameInput;
-
-    private Dictionary<string, string> roomPasswords = new Dictionary<string, string>();
 
     private void Start()
     {
-        Debug.Log("Iniciando conexion con Photon...");
-        PhotonNetwork.AutomaticallySyncScene = true;
-        PhotonNetwork.ConnectUsingSettings();
-        ShowPanel(mainPanel);
+        MainMenuNetworkController.Instance.Connect();
+
+        MainMenuNetworkController.Instance.OnConnectedEvent += () =>
+        {
+            Debug.Log("Conectado a Photon Master Server.");
+        };
+
+        MainMenuNetworkController.Instance.OnRoomJoinedEvent += () =>
+        {
+            Debug.Log("Sala unida correctamente");
+            ShowLoadingPanel();
+        };
+
+        MainMenuNetworkController.Instance.OnErrorEvent += (msg) =>
+        {
+            Debug.LogWarning(msg);
+        };
 
         if (PlayerPrefs.HasKey("PlayerName"))
         {
-            PhotonNetwork.NickName = PlayerPrefs.GetString("PlayerName");
-            playerNameInput.text = PhotonNetwork.NickName;
-            Debug.Log("Nombre cargado: " + PhotonNetwork.NickName);
+            string savedName = PlayerPrefs.GetString("PlayerName");
+            MainMenuNetworkController.Instance.SetPlayerName(savedName);
+            playerNameInput.text = savedName;
         }
-    }
-
-    private void ShowPanel(GameObject panelToShow)
-    {
-        mainPanel.SetActive(false);
-        hostPanel.SetActive(false);
-        joinPanel.SetActive(false);
-        settingsPanel.SetActive(false);
-        if (loadingPanel != null) loadingPanel.SetActive(false);
-
-        panelToShow.SetActive(true);
-        Debug.Log("Mostrando panel: " + panelToShow.name);
-    }
-
-    public void ShowHostPanel() => ShowPanel(hostPanel);
-    public void ShowJoinPanel() => ShowPanel(joinPanel);
-    public void ShowSettingsPanel() => ShowPanel(settingsPanel);
-    public void ShowMainPanel() => ShowPanel(mainPanel);
-
-    // ===== Crear sala =====
-    public void OnClickCreateRoom()
-    {
-        string roomName = roomNameInput_Host.text;
-        string password = passwordInput_Host.text;
-
-        Debug.Log($"Intentando crear sala: {roomName}");
-
-        if (string.IsNullOrEmpty(roomName))
-        {
-            Debug.LogWarning("Nombre de sala vacio.");
-            return;
-        }
-
-        RoomOptions options = new RoomOptions { MaxPlayers = 4 };
-        roomPasswords[roomName] = password;
-
-        PhotonNetwork.CreateRoom(roomName, options);
-    }
-
-    // ===== Unirse a sala =====
-    public void OnClickJoinRoom()
-    {
-        string roomName = roomNameInput_Join.text;
-        string password = passwordInput_Join.text;
-
-        Debug.Log($"Intentando unirse a la sala: {roomName}");
-
-        if (string.IsNullOrEmpty(roomName))
-        {
-            Debug.LogWarning("Nombre de sala vacío.");
-            return;
-        }
-
-        if (roomPasswords.ContainsKey(roomName) && roomPasswords[roomName] != password)
-        {
-            Debug.LogWarning("Contraseña incorrecta.");
-            return;
-        }
-
-        PhotonNetwork.JoinRoom(roomName);
-    }
-
-    // ===== Guardar nombre =====
-    public void OnClickChangeName()
-    {
-        string playerName = playerNameInput.text;
-
-        if (string.IsNullOrEmpty(playerName))
-        {
-            Debug.LogWarning("Nombre de jugador vacio.");
-            return;
-        }
-
-        PhotonNetwork.NickName = playerName;
-        PlayerPrefs.SetString("PlayerName", playerName);
-        Debug.Log("Nombre cambiado a: " + playerName);
 
         ShowMainPanel();
     }
 
-    // ===== Salir del juego =====
+    private void ShowPanel(GameObject panelToShow)
+    {
+        if (panelToShow == null) return;
+
+        if (mainPanel != null) mainPanel.SetActive(false);
+        if (hostPanel != null) hostPanel.SetActive(false);
+        if (joinPanel != null) joinPanel.SetActive(false);
+        if (settingsPanel != null) settingsPanel.SetActive(false);
+        if (loadingPanel != null) loadingPanel.SetActive(false);
+
+        panelToShow.SetActive(true);
+    }
+
+    public void ShowMainPanel() => ShowPanel(mainPanel);
+    public void ShowHostPanel() => ShowPanel(hostPanel);
+    public void ShowJoinPanel() => ShowPanel(joinPanel);
+    public void ShowSettingsPanel() => ShowPanel(settingsPanel);
+    public void ShowLoadingPanel() => ShowPanel(loadingPanel);
+
+    public void OnClickChangeName()
+    {
+        string name = playerNameInput.text;
+        if (string.IsNullOrEmpty(name))
+        {
+            Debug.LogWarning("Nombre vacío.");
+            return;
+        }
+
+        MainMenuNetworkController.Instance.SetPlayerName(name);
+        PlayerPrefs.SetString("PlayerName", name);
+        Debug.Log("Nombre cambiado a: " + name);
+        ShowMainPanel();
+    }
+
+    public void OnClickCreateRoom()
+    {
+        string roomName = roomNameInput_Host.text;
+        string password = passwordInput_Host.text;
+        MainMenuNetworkController.Instance.CreateRoom(roomName, password);
+    }
+
+    public void OnClickJoinRoom()
+    {
+        string roomName = roomNameInput_Join.text;
+        string password = passwordInput_Join.text;
+        MainMenuNetworkController.Instance.JoinRoom(roomName, password);
+    }
+
+    public void OnClickStartGame()
+    {
+        MainMenuNetworkController.Instance.StartGame("RoomLobby");
+    }
+
     public void OnClickQuitGame()
     {
         Debug.Log("Saliendo del juego...");
         Application.Quit();
     }
 
-    // ===== CALLBACKS DE PHOTON =====
-    public override void OnJoinedRoom()
-    {
-        Debug.Log("Jugador unido a la sala correctamente.");
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            Debug.Log("Es el Master Client. Cargando RoomLobby...");
-            StartCoroutine(LoadSceneAsync("RoomLobby"));
-        }
-        else
-        {
-            Debug.Log("No es el Master Client.");
-        }
-    }
-
-    private IEnumerator LoadSceneAsync(string sceneName)
-    {
-        ShowPanel(loadingPanel);
-
-        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
-        operation.allowSceneActivation = false;
-
-        while (!operation.isDone)
-        {
-            float progress = Mathf.Clamp01(operation.progress / 0.9f);
-
-            if (progressBar != null) progressBar.value = progress;
-            if (progressText != null) progressText.text = Mathf.RoundToInt(progress * 100f) + "%";
-
-            if (operation.progress >= 0.9f)
-            {
-                // Activamos automáticamente al terminar
-                operation.allowSceneActivation = true;
-            }
-
-            yield return null;
-        }
-    }
-
-    public override void OnCreateRoomFailed(short returnCode, string message)
-    {
-        Debug.LogError($"Fallo al crear la sala: {message} (Código: {returnCode})");
-    }
-
-    public override void OnJoinRoomFailed(short returnCode, string message)
-    {
-        Debug.LogError($"Fallo al unirse a la sala: {message} (Código: {returnCode})");
-    }
-
-    public override void OnConnectedToMaster()
-    {
-        Debug.Log("Conectado a Photon Master Server.");
-    }
-
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        Debug.LogWarning("Desconectado de Photon: " + cause);
-    }
+    public void OnClickBackFromHost() => ShowMainPanel();
+    public void OnClickBackFromJoin() => ShowMainPanel();
+    public void OnClickBackFromSettings() => ShowMainPanel();
 }
