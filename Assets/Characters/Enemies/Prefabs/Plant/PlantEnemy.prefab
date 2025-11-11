@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 4174420667616830787}
   - component: {fileID: 2078814230138411321}
   - component: {fileID: -3352798143469745451}
+  - component: {fileID: 1582514890812175538}
   m_Layer: 0
   m_Name: PlantEnemy
   m_TagString: Enemy
@@ -382,6 +383,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: -3352798143469745451}
+  - {fileID: 3678013661868308591}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -401,6 +403,23 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &1582514890812175538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6113814242317541465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b39efeea968a7b41bc4583ccf0b9ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ragdollCore: {fileID: 0}
+  _nervousSystem: {fileID: 0}
+  _attackScript: {fileID: 0}
+  _animController: {fileID: 0}
+  _maxHealth: 100
 --- !u!1001 &527130215282499857
 PrefabInstance:
   m_ObjectHideFlags: 0

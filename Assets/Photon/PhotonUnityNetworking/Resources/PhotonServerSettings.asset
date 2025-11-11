@@ -50,6 +50,9 @@ MonoBehaviour:
   - RPC_SetCrouch
   - RPC_DoAttack
   - RPC_OnDeath
+  - RPC_PlayAttack
+  - RPC_PlayDeath
+  - RPC_UpdateHealth
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
