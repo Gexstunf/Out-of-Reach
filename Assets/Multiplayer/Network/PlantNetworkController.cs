@@ -1,183 +1,91 @@
 using Photon.Pun;
 using UnityEngine;
-using Characters.ActiveRagdollSystem;
-using Characters.Enemies.Scripts;
-using Items.Scripts;
+using Characters.Enemies.Scripts.Plant;
+using Characters.LifeSupportSystem.EnemyLifeSupport;
 
-namespace Characters.Enemies.Scripts.Plant
+namespace Characters.Enemies.Scripts.Network
 {
     [RequireComponent(typeof(PhotonView))]
-    [RequireComponent(typeof(ActiveRagdollCoreScript))]
-    [RequireComponent(typeof(NervousSystemScript))]
-    [RequireComponent(typeof(AttackScript))]
-    [RequireComponent(typeof(PlantAnimController))]
     public class PlantNetworkController : MonoBehaviourPun, IPunObservable
     {
         [Header("References")]
-        [SerializeField] private ActiveRagdollCoreScript _ragdollCore;
-        [SerializeField] private NervousSystemScript _nervousSystem;
-        [SerializeField] private AttackScript _attackScript;
         [SerializeField] private PlantAnimController _animController;
+        [SerializeField] private EnemyLifeSupportScript _lifeSupport;
+        [SerializeField] private Animator _animator;
 
-        [Header("Stats")]
-        [SerializeField] private float _maxHealth = 100f;
         private float _currentHealth;
         private bool _isDead;
-        private bool _isAttacking;
-
-        private float _attackTimer;
-        private readonly float _attackCooldown = 3f;
-
-        private bool IsOwner => PhotonNetwork.IsMasterClient;
-
-        // Variables de red para interpolar
-        private bool _netIsDead;
-        private bool _netIsAttacking;
-        private float _netHealth;
 
         private void Awake()
         {
-            _ragdollCore = GetComponent<ActiveRagdollCoreScript>();
-            _nervousSystem = GetComponent<NervousSystemScript>();
-            _attackScript = GetComponent<AttackScript>();
-            _animController = GetComponent<PlantAnimController>();
+            if (!_animController) _animController = GetComponent<PlantAnimController>();
+            if (!_lifeSupport) _lifeSupport = GetComponent<EnemyLifeSupportScript>();
+            if (!_animator) _animator = GetComponent<Animator>();
         }
 
         private void Start()
         {
-            _currentHealth = _maxHealth;
-            _attackTimer = _attackCooldown;
-
-            if (_animController != null)
-                _animController.TriggerByName(PlantAnimController.EPlantStates.Idle.ToString());
+            _currentHealth = GetHealthValue();
         }
 
         private void Update()
         {
-            if (IsOwner)
+            if (PhotonNetwork.IsMasterClient)
             {
-                HandleAI();
-            }
-            else
-            {
-                // Actualiza visualmente en los clientes
-                if (_isDead != _netIsDead)
+                float newHealth = GetHealthValue();
+
+                if (Mathf.Abs(newHealth - _currentHealth) > 0.01f)
                 {
-                    if (_netIsDead)
-                        OnRemoteDeath();
-                    else
-                        OnRemoteRevive();
+                    _currentHealth = newHealth;
+                    photonView.RPC(nameof(RPC_UpdateHealth), RpcTarget.Others, _currentHealth);
                 }
 
-                if (_isAttacking != _netIsAttacking)
+                if (!_isDead && _currentHealth <= 0f)
                 {
-                    if (_netIsAttacking)
-                        OnRemoteAttack();
+                    _isDead = true;
+                    photonView.RPC(nameof(RPC_PlayDeath), RpcTarget.All);
                 }
-
-                _currentHealth = Mathf.Lerp(_currentHealth, _netHealth, Time.deltaTime * 10f);
             }
         }
 
-        private void HandleAI()
+        // --- Método auxiliar ---
+        private float GetHealthValue()
         {
-            if (_isDead) return;
+            var healthVital = _lifeSupport.Vitals[EnemyLifeSupportScript.EVitals.Health];
 
-            _attackTimer -= Time.deltaTime;
+            // Intentamos obtener el valor real según la estructura
+            var property = healthVital.GetType().GetProperty("CurrentValue") ??
+                           healthVital.GetType().GetProperty("Current") ??
+                           healthVital.GetType().GetProperty("Value");
 
-            // Si las "nervios" detectan un golpe
-            if (_nervousSystem.NervesTriggered)
+            if (property != null)
             {
-                var hurting = _nervousSystem.HurtingScript;
-                if (hurting != null)
-                    TakeDamage(hurting.Damage);
-
-                _nervousSystem.ResetNerves();
+                object result = property.GetValue(healthVital);
+                if (result is float f) return f;
             }
 
-            // Si puede atacar
-            if (_attackTimer <= 0f)
-            {
-                DoAttack();
-                _attackTimer = _attackCooldown;
-            }
-        }
-
-        private void DoAttack()
-        {
-            if (_attackScript == null || _animController == null) return;
-
-            _isAttacking = true;
-            photonView.RPC(nameof(RPC_DoAttack), RpcTarget.All);
-            Invoke(nameof(ResetAttack), 1f);
+            // Si no hay propiedad conocida, devolvemos 0 para no romper
+            Debug.LogWarning("[PlantNetworkController] No se pudo obtener el valor de salud real del vital.");
+            return 0f;
         }
 
         [PunRPC]
-        private void RPC_DoAttack()
+        private void RPC_UpdateHealth(float newHealth)
         {
-            if (_animController)
-            {
-                _animController.TriggerByName(PlantAnimController.EPlantStates.MediumAttack.ToString());
-                _animController.attack = true;
-            }
-
-            if (_attackScript)
-                _attackScript.PerformAttack();
-        }
-
-        private void ResetAttack()
-        {
-            _isAttacking = false;
-
-            if (_animController)
-            {
-                _animController.attack = false;
-                _animController.TriggerByName(PlantAnimController.EPlantStates.Idle.ToString());
-            }
-        }
-
-        private void TakeDamage(float dmg)
-        {
-            if (_isDead) return;
-
-            _currentHealth -= dmg;
-            _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
-
-            if (_currentHealth <= 0f)
-                Die();
-        }
-
-        private void Die()
-        {
-            _isDead = true;
-            photonView.RPC(nameof(RPC_OnDeath), RpcTarget.All);
+            _currentHealth = newHealth;
         }
 
         [PunRPC]
-        private void RPC_OnDeath()
+        private void RPC_PlayDeath()
         {
             _isDead = true;
-
-            if (_animController)
-                _animController.TriggerByName(PlantAnimController.EPlantStates.Dead.ToString());
-
-            if (_ragdollCore)
-                _ragdollCore.Kill();
+            _animController.TriggerByName(PlantAnimController.EPlantStates.Dead.ToString());
         }
 
-        private void OnRemoteDeath() => RPC_OnDeath();
-        private void OnRemoteAttack() => RPC_DoAttack();
-
-        private void OnRemoteRevive()
+        [PunRPC]
+        public void RPC_PlayAttack(string attackType)
         {
-            _isDead = false;
-            _currentHealth = _maxHealth;
-
-            if (_animController)
-                _animController.TriggerByName(PlantAnimController.EPlantStates.Alive.ToString());
-
-            if (_ragdollCore)
-                _ragdollCore.Revive();
+            _animController.TriggerByName(attackType);
         }
 
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -186,13 +94,19 @@ namespace Characters.Enemies.Scripts.Plant
             {
                 stream.SendNext(_currentHealth);
                 stream.SendNext(_isDead);
-                stream.SendNext(_isAttacking);
             }
             else
             {
-                _netHealth = (float)stream.ReceiveNext();
-                _netIsDead = (bool)stream.ReceiveNext();
-                _netIsAttacking = (bool)stream.ReceiveNext();
+                _currentHealth = (float)stream.ReceiveNext();
+                _isDead = (bool)stream.ReceiveNext();
+            }
+        }
+
+        public void RequestAttack(PlantAnimController.EPlantStates attackType)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                photonView.RPC(nameof(RPC_PlayAttack), RpcTarget.All, attackType.ToString());
             }
         }
     }
