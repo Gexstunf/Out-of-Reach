@@ -82,19 +82,19 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                         if (_roomHallwayIntersection is >= 1 and <= 12) // Hallway
                         {
                             InstantiateFunction(entrance, exit.transform);
-                            exit.DeactivateExit();
+                            exit.DeactivateExit(); //esto cambiarlo por remover la exit en la lista
                             spawnedThisIteration = true;
                         }
                         else if (_roomHallwayIntersection is >= 13 and <= 14) // Intersection
                         {
                             InstantiateFunction(intersectionsPossibles[Random.Range(0,intersectionsPossibles.Length)], exit.transform);
-                            exit.DeactivateExit();
+                            exit.DeactivateExit(); //esto cambiarlo por remover la exit en la lista
                             spawnedThisIteration = true;
                         }
                         else if (_roomHallwayIntersection == 15) // Room
                         {
                             InstantiateFunction(roomsPossibles[Random.Range(0,roomsPossibles.Length)], exit.transform);
-                            exit.DeactivateExit();
+                            exit.DeactivateExit(); //esto cambiarlo por remover la exit en la lista
                             rooms++;
                             spawnedThisIteration = true;
                         }
@@ -137,10 +137,10 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
             {
                 GameObject spawnedObject = Instantiate(prefab);
                 
-                Transform entryPoint = spawnedObject.transform.Find("EntryPoint");
+                Transform entryPoint /*Cambiar por entry*/ = spawnedObject.transform.Find("EntryPoint"); //Aca tambien
                 if (entryPoint == null)
                 {
-                    Debug.LogError(prefab.name + " no tiene un EntryPoint definido.");
+                    Debug.LogError(prefab.name + " no tiene un Entry definido.");
                     Destroy(spawnedObject);
                     return;
                 }
@@ -151,7 +151,7 @@ namespace Multiplayer.TerrainGeneratorScripts.SpaceShips
                 Vector3 positionOffset = targetExit.position - entryPoint.position;
                 spawnedObject.transform.position += positionOffset;
                 
-                ExitScript[] newExits = spawnedObject.GetComponentsInChildren<ExitScript>();
+                /*Desde aca no copiar mas o borrar despues de copiar*/ ExitScript[] newExits = spawnedObject.GetComponentsInChildren<ExitScript>();
                 foreach (ExitScript newExit in newExits)
                 {
                     if (newExit != null)

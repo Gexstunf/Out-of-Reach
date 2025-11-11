@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 660229316177519590}
   - component: {fileID: 7517315252119097582}
   - component: {fileID: 4872486469045536934}
-  - component: {fileID: 6942788872171179226}
   m_Layer: 0
   m_Name: SalidaPrefab
   m_TagString: Untagged
@@ -131,18 +130,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &6942788872171179226
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6596308107174760454}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07e7128d98dda90449d444956c921198, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7224340279367377741
 GameObject:
   m_ObjectHideFlags: 0
