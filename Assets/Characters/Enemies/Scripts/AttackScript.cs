@@ -24,7 +24,7 @@ namespace Characters.Enemies.Scripts {
 
 
         [Header("Attacks available")] [SerializeField]
-        private AttackDefinitionScript[] attacks;
+        public AttackDefinitionScript[] attacks;
 
         private float _cooldownTimer;
 
@@ -77,7 +77,7 @@ namespace Characters.Enemies.Scripts {
         }
 
 
-        private AttackDefinitionScript PickByHighestRange(AttackDefinitionScript[] valid, float distance) {
+        public AttackDefinitionScript PickByHighestRange(AttackDefinitionScript[] valid, float distance) {
             // prefer attack with smallest range >= distance (closest fit) or largest? this uses highest range as tie-breaker
             return valid.OrderBy(a => a.range).FirstOrDefault();
         }
@@ -96,7 +96,7 @@ namespace Characters.Enemies.Scripts {
             return valid[valid.Length - 1];
         }
 
-        private void DoAttack(AttackDefinitionScript atk) {
+        public void DoAttack(AttackDefinitionScript atk) {
             if (atk == null) return;
             _cooldownTimer = atk.cooldown;
             currentAttackSO = atk.damageSO;

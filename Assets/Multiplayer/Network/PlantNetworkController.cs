@@ -90,7 +90,7 @@ namespace Characters.Enemies.Scripts.Plant
             {
                 var hurting = _nervousSystem.HurtingScript;
                 if (hurting != null)
-                    TakeDamage(hurting.Damage);
+                    TakeDamage(hurting.damage);
 
                 _nervousSystem.ResetNerves();
             }
@@ -121,8 +121,10 @@ namespace Characters.Enemies.Scripts.Plant
                 _animController.attack = true;
             }
 
-            if (_attackScript)
-                _attackScript.PerformAttack();
+            // if (_attackScript) {
+            //     var atk = _attackScript.PickByHighestRange(_attackScript.attacks);
+            //     _attackScript.DoAttack();
+            // }
         }
 
         private void ResetAttack()

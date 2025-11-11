@@ -281,8 +281,10 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 6781558227153761533}
   - {fileID: 6130108121566576777}
+  - {fileID: 3461532945708425686}
   slidingDoorPrefab: {fileID: 9100137002563764354, guid: 94e2d33e98ded0d4189a712f0d30643d, type: 3}
-  slidingDoorInstance: {fileID: 0}
+  slidingDoorInstance:
+  - {fileID: 0}
 --- !u!1 &8844549289866379324
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,7 +334,8 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 8919694775969955210}
   slidingDoorPrefab: {fileID: 2252369882159667411, guid: c7591899a5e81554f95916cda53d3acc, type: 3}
-  slidingDoorInstance: {fileID: 0}
+  slidingDoorInstance:
+  - {fileID: 0}
 --- !u!114 &8184305907919524861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,7 +348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84828c29d068a814abbebcddea4da677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorSpawnScript: {fileID: 0}
+  doorSpawnScript: {fileID: 6055415206871171180}
   doorScript: {fileID: 0}
   suctionPosition: {fileID: 3347927881511850736}
   suctionForce: 12
@@ -888,6 +891,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+--- !u!4 &3461532945708425686 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5658854922216569293, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+  m_PrefabInstance: {fileID: 9115742278759176219}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8470232773061841535 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 796522070405696100, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
