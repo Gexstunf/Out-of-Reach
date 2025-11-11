@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7355270006613947274}
   m_Layer: 3
-  m_Name: EntryPoint
+  m_Name: Entry
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
