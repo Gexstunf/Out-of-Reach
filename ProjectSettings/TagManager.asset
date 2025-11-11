@@ -4,12 +4,22 @@
 TagManager:
   serializedVersion: 3
   tags:
+  - Untagged
+  - Respawn
+  - Finish
+  - EditorOnly
+  - MainCamera
+  - Player
+  - GameController
   - Indestructible
   - Item
   - MovingPlatform
   - Surface
   - Enemy
   - Limb
+  - Room
+  - Hallway
+  - Intersection
   layers:
   - Default
   - TransparentFX
