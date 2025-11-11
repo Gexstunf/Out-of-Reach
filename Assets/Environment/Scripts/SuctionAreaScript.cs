@@ -44,7 +44,7 @@ namespace Environment.Scripts {
         private SlidingDoorScript DoorScript {
             get {
                 if (doorSpawnScript && useDoorScript && useThisDoorScript && !doorScript) {
-                    doorScript = doorSpawnScript.slidingDoorInstance.GetComponent<SlidingDoorScript>();
+                    doorScript = doorSpawnScript.slidingDoorInstances[0].GetComponent<SlidingDoorScript>();
                     _doorScript = doorScript;
                     Debug.Log("Suction script cached Door script");
                 }

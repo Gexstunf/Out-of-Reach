@@ -1,4 +1,5 @@
-﻿using Characters.PlayerController.Scripts.Input;
+﻿using CameraShakeFX.Scripts;
+using Characters.PlayerController.Scripts.Input;
 using Characters.StateMachine.PlayerStateMachine;
 using Characters.SystemAdaptations;
 using Characters.Utils;
