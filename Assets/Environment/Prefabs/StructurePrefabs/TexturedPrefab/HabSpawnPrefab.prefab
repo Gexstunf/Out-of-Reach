@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &791281868803151358
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5635753942896322611}
+  m_Layer: 3
+  m_Name: Exit_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5635753942896322611
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791281868803151358}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 8.4, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6552041856830867853}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &8981073472407013214
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,8 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6552041856830867853}
   - component: {fileID: 8615905863462294620}
-  - component: {fileID: 1071677426192708015}
   - component: {fileID: 5217964488932075207}
+  - component: {fileID: 7814151249982898094}
   m_Layer: 3
   m_Name: HabSpawnPrefab
   m_TagString: Indestructible
@@ -36,6 +67,7 @@ Transform:
   - {fileID: 6789873678248961868}
   - {fileID: 3939011395992226935}
   - {fileID: 1203288706643915481}
+  - {fileID: 5635753942896322611}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &8615905863462294620
@@ -60,18 +92,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5214898026848578464, guid: a3c9a3b757375ec4992d3941a3eb80f4, type: 3}
---- !u!114 &1071677426192708015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8981073472407013214}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03b8744d405dffb42a9ecd231fc43294, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5217964488932075207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,7 +107,22 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 8300054901232189406}
   slidingDoorPrefab: {fileID: 9100137002563764354, guid: 94e2d33e98ded0d4189a712f0d30643d, type: 3}
-  slidingDoorInstance: {fileID: 0}
+  slidingDoorInstances: []
+--- !u!114 &7814151249982898094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8981073472407013214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  branchDivision: {fileID: 0}
+  spawner: {fileID: 0}
+  RamaID: -1
 --- !u!1 &9217811916771912890
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,14 +132,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6789873678248961868}
-  - component: {fileID: 5460366174689514341}
   m_Layer: 3
   m_Name: Door1
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6789873678248961868
 Transform:
   m_ObjectHideFlags: 0
@@ -120,22 +154,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6552041856830867853}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5460366174689514341
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9217811916771912890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f265bae7109ca5043a503ed5b4382940, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  doorID: 
-  isActive: 1
-  activationChance: 1
-  spawn: {fileID: 0}
 --- !u!1001 &1999352142723659965
 PrefabInstance:
   m_ObjectHideFlags: 0

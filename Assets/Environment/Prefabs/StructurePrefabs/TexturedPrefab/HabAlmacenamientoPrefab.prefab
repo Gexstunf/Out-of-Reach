@@ -155,8 +155,8 @@ GameObject:
   - component: {fileID: 1671658862404587783}
   - component: {fileID: 8870479802968787408}
   - component: {fileID: 3425888450882013640}
-  - component: {fileID: -7074156836604390784}
   - component: {fileID: 8628541400894540109}
+  - component: {fileID: 5819710853435426588}
   m_Layer: 3
   m_Name: HabAlmacenamientoPrefab
   m_TagString: Indestructible
@@ -237,18 +237,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -7533881204647682336, guid: 216fffbb3b7f5fa4686abc4ece2d8c0d, type: 3}
---- !u!114 &-7074156836604390784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377035139366547631}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03b8744d405dffb42a9ecd231fc43294, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8628541400894540109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,7 +253,22 @@ MonoBehaviour:
   - {fileID: 4811572932665537373}
   - {fileID: 2186125956944304919}
   slidingDoorPrefab: {fileID: 9100137002563764354, guid: 94e2d33e98ded0d4189a712f0d30643d, type: 3}
-  slidingDoorInstance: {fileID: 0}
+  slidingDoorInstances: []
+--- !u!114 &5819710853435426588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377035139366547631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  branchDivision: {fileID: 0}
+  spawner: {fileID: 0}
+  RamaID: -1
 --- !u!1 &3127763163247139138
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,7 +518,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2728040775686607521}
-  - component: {fileID: 4684944355774433031}
   m_Layer: 3
   m_Name: Exit
   m_TagString: Indestructible
@@ -538,23 +540,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1671658862404587783}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4684944355774433031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5536971390730342422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc89bc7c3d8d606409e4bc2e00cf67ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  exitID: 
-  isActive: 1
-  activationChance: 1
-  activeVisual: {fileID: 0}
-  inactiveVisual: {fileID: 0}
 --- !u!1 &5850052933347474393
 GameObject:
   m_ObjectHideFlags: 0

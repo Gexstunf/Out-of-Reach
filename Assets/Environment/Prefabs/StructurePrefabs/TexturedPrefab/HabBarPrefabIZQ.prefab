@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 7980172502530557368}
   - component: {fileID: 7613376731416345821}
   - component: {fileID: 3465315258962499388}
-  - component: {fileID: 6298220975046327126}
+  - component: {fileID: -4303328641264218651}
   m_Layer: 11
   m_Name: HabBarPrefabIZQ
   m_TagString: Room
@@ -554,8 +554,8 @@ MonoBehaviour:
   - {fileID: 5959681148050329226}
   - {fileID: 222803029127462028}
   slidingDoorPrefab: {fileID: 9100137002563764354, guid: 94e2d33e98ded0d4189a712f0d30643d, type: 3}
-  slidingDoorInstance: {fileID: 0}
---- !u!114 &6298220975046327126
+  slidingDoorInstances: []
+--- !u!114 &-4303328641264218651
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -569,6 +569,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
   spawner: {fileID: 0}
+  RamaID: -1
 --- !u!1 &8929473024236706053
 GameObject:
   m_ObjectHideFlags: 0

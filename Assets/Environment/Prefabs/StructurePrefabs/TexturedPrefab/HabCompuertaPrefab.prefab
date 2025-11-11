@@ -120,7 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1850052252973421343}
   m_Layer: 3
-  m_Name: Entry
+  m_Name: EntryPoint
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -274,7 +274,7 @@ MonoBehaviour:
   - {fileID: 6781558227153761533}
   - {fileID: 6130108121566576777}
   slidingDoorPrefab: {fileID: 9100137002563764354, guid: 94e2d33e98ded0d4189a712f0d30643d, type: 3}
-  slidingDoorInstance: {fileID: 0}
+  slidingDoorInstances: []
 --- !u!114 &7040308841712336759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,6 +289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
   spawner: {fileID: 0}
+  RamaID: -1
 --- !u!1 &8844549289866379324
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,7 +339,7 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 8919694775969955210}
   slidingDoorPrefab: {fileID: 2252369882159667411, guid: c7591899a5e81554f95916cda53d3acc, type: 3}
-  slidingDoorInstance: {fileID: 0}
+  slidingDoorInstances: []
 --- !u!114 &8184305907919524861
 MonoBehaviour:
   m_ObjectHideFlags: 0
