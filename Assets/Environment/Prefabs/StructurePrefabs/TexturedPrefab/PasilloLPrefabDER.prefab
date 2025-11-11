@@ -95,9 +95,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3866076571888049586}
   - {fileID: 1474997286500611468}
   - {fileID: 8814643982898980735}
-  - {fileID: 3866076571888049586}
   - {fileID: 2631309808472987338}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
@@ -185,6 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
+  spawner: {fileID: 0}
 --- !u!1001 &128176478399566488
 PrefabInstance:
   m_ObjectHideFlags: 0

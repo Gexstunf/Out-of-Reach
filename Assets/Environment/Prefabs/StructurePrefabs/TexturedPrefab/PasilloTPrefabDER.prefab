@@ -126,9 +126,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3194640615125917102}
   - {fileID: 7519969877332821702}
   - {fileID: 6217418732768802288}
-  - {fileID: 3194640615125917102}
   - {fileID: 4532167967662183160}
   - {fileID: 3532748225251245500}
   - {fileID: 2119979010549896631}
@@ -218,6 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   branchDivision: {fileID: 0}
+  spawner: {fileID: 0}
 --- !u!1001 &1460787288197069294
 PrefabInstance:
   m_ObjectHideFlags: 0
