@@ -13,17 +13,13 @@ MonoBehaviour:
   m_Name: SableLaser
   m_EditorClassIdentifier: 
   prefab: {fileID: 1423597036341179202, guid: 141d6879663bd6d4985a023388396644, type: 3}
-  itemId: 
+  itemId: 15
   worldPrefabName: 
   heldPrefabName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 2a4cf8b318d99dc48a5fcaa62d1969a2, type: 3}
   displayName: Light_saber
   itemType: 0
   itemSize: 2
   spawnChance: 0.2
   value: 1000
-  internalSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  internalSlots: []
