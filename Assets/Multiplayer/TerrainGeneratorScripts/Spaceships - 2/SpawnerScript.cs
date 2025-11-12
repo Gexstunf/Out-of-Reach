@@ -20,14 +20,17 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
             rooms = 0;
             needToAdd = false;
 
-            StartCoroutine(Generate());
+            //StartCoroutine(Generate());
+            Generate();
         }
 
-        private IEnumerator Generate()
+        private void Generate()
         {
             GameObject start = GameObject.Find("Exit_1");
-            if (start == null)
-                yield break;
+            if (start == null) {
+                //yield break;
+                return;
+            }
             
             int nuev = branchDivision.CrearRama();
             foreach (var info in start.GetComponentsInChildren<InfoScript>())
@@ -50,7 +53,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 
                     while (!branchTerminated && rooms < maxRooms)
                     {
-                        yield return null;
+                        //yield return null;
 
                         GameObject prefabToSpawn;
                         int t = Random.Range(1, 11);
@@ -60,7 +63,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                         else prefabToSpawn = roomPossible[Random.Range(0, roomPossible.Length)];
 
                         GameObject spawned = FuncionInstanciar(prefabToSpawn, currentExit);
-                        yield return new WaitForSecondsRealtime(0.1f);
+                        //yield return new WaitForSecondsRealtime(0.1f);
                         if (spawned == null) break;
 
                         List<Transform> foundExits = new List<Transform>();

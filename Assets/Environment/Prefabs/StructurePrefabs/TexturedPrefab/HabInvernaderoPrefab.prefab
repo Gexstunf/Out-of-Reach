@@ -102,7 +102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5170823984737146726}
   m_Layer: 3
-  m_Name: EntryPoint
+  m_Name: Entry
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -622,7 +622,7 @@ GameObject:
   - component: {fileID: -1535381544953167134}
   m_Layer: 3
   m_Name: HabInvernaderoPrefab
-  m_TagString: Indestructible
+  m_TagString: Room
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

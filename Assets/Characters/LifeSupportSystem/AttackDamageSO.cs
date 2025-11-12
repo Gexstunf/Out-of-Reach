@@ -17,3 +17,4 @@ namespace Characters.LifeSupportSystem {
         public float minimumSpeed;
     }
 }
+ 

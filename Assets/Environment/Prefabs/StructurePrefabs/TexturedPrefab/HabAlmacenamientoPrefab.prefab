@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 4397292786193472230}
   m_Layer: 3
   m_Name: mesh
-  m_TagString: Indestructible
+  m_TagString: Room
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -159,7 +159,7 @@ GameObject:
   - component: {fileID: 5819710853435426588}
   m_Layer: 3
   m_Name: HabAlmacenamientoPrefab
-  m_TagString: Indestructible
+  m_TagString: Room
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -598,7 +598,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1044016540060917746}
   m_Layer: 3
-  m_Name: EntryPoint
+  m_Name: Entry
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

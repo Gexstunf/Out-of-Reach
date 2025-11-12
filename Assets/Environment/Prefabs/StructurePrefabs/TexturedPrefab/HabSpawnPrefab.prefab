@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 7814151249982898094}
   m_Layer: 3
   m_Name: HabSpawnPrefab
-  m_TagString: Indestructible
+  m_TagString: Room
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
