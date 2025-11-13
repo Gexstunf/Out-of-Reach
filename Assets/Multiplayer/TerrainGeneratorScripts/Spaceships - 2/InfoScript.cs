@@ -37,11 +37,6 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
             //     return;
             // }
             
-            if (gameObject.CompareTag("Room"))
-            {
-                _spawner.AddToRoomCount(1);
-            }
-            _branchDivision.AddObjToBranch(RamaID, this);
         }
 
         public void SetId(int id) {
@@ -49,38 +44,33 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
             visualizeId = RamaID;
         }
 
-        public bool IsOverlapping()
-        {
+        public bool IsOverlapping() {
+            var wastrigger = overlapCheckCollider.isTrigger;
+            overlapCheckCollider.isTrigger = false; // temporarily make it solid
             Physics.SyncTransforms();
 
             if (!overlapCheckCollider) return false;
-            
-            Collider[] hits = Physics.OverlapBox(
-                overlapCheckCollider.bounds.center,
-                overlapCheckCollider.bounds.extents,
-                transform.rotation
-            );
+            Vector3 worldCenter = overlapCheckCollider.transform.position;
+            Quaternion worldRotation = overlapCheckCollider.transform.rotation;
+            Collider[] hits = Physics.OverlapBox(worldCenter, overlapCheckCollider.bounds.size, worldRotation);
 
             foreach (var other in hits)
             {
                 if (other == overlapCheckCollider) continue;
                 if (other.transform.root == transform.root) continue;
-                
-                bool isShip = (other.CompareTag("Room") || other.CompareTag("Hallway") || other.CompareTag("Intersection"));
-                
-                if (Physics.ComputePenetration(
-                        overlapCheckCollider, transform.position, transform.rotation,
-                        other, other.transform.position, other.transform.rotation,
-                        out Vector3 direction, out float distance))
+
+                bool isShip = other.CompareTag("Room") ||
+                              other.CompareTag("Hallway") ||
+                              other.CompareTag("Intersection");
+
+                if (isShip)
                 {
-                    if (distance > 0.05f && isShip) {
-                        Debug.Log(other.name + " is overlapping.");
-                        return true;
-                    } 
-                    _draw = true;
+                    Debug.Log($"{other.name} is overlapping.");
+                    return true;
                 }
             }
-
+            Debug.Log($"{hits.Length} overlapped objects.");
+            overlapCheckCollider.isTrigger = wastrigger; // reset
             return false;
         }
 
@@ -90,9 +80,11 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 
         private void OnDrawGizmos() {
             if (drawSeconds < 0 && _draw) return;
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(overlapCheckCollider.bounds.center, overlapCheckCollider.bounds.extents);
+            
+            Vector3 worldCenter = overlapCheckCollider.transform.position;
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireCube(worldCenter, overlapCheckCollider.bounds.size);
             drawSeconds -= Time.deltaTime;
-        }
+        }   
     }
 }

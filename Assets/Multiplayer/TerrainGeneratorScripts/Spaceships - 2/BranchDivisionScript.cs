@@ -13,7 +13,6 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
         public bool DidKilledBranch { get; private set; } = false;
 
         #region Public API
-        
 
         public int CreateBranch(int id = -1)
         {
@@ -49,7 +48,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
         public void ResetKilledState() {
             DidKilledBranch = false;
         }
-
+        
         #endregion
 
         private void ClearObjectsInBranch(List<InfoScript> objs) {
@@ -82,11 +81,11 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
                 Gizmos.color = c;
                 colorIndex++;
 
-                var piezas = rama.Value;
-                for (int i = 0; i < piezas.Count - 1; i++)
+                var objects = rama.Value;
+                for (int i = 0; i < objects.Count - 1; i++)
                 {
-                    if (piezas[i] != null && piezas[i + 1] != null)
-                        Gizmos.DrawLine(piezas[i].transform.position, piezas[i + 1].transform.position);
+                    if (objects[i] != null && objects[i + 1] != null)
+                        Gizmos.DrawLine(objects[i].transform.position, objects[i + 1].transform.position);
                 }
             }
         }
