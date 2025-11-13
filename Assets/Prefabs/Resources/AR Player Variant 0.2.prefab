@@ -438,6 +438,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 523521259100318916, guid: 18ec7b4fa7a48454cbbd40e4abf2fbb5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2136908749397922398, guid: 18ec7b4fa7a48454cbbd40e4abf2fbb5, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -645,6 +649,10 @@ PrefabInstance:
     - target: {fileID: 3992184099151254204, guid: 18ec7b4fa7a48454cbbd40e4abf2fbb5, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235647686310098498, guid: 18ec7b4fa7a48454cbbd40e4abf2fbb5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4262003439986682865, guid: 18ec7b4fa7a48454cbbd40e4abf2fbb5, type: 3}
       propertyPath: m_Name
@@ -1081,7 +1089,6 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 5828154420408033495}
-  - {fileID: 0}
   - {fileID: 6764695849958915601}
   sceneViewId: 0
   InstantiationId: 0
