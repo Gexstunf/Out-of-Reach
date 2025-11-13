@@ -35,7 +35,7 @@ namespace Environment.Scripts {
                 if (!doorSpawnScript && useDoorScript && useThisDoorScript) {
                     doorSpawnScript = GetComponent<SlidingDoorSpawnScript>();
                     _doorSpawnScript = doorSpawnScript;
-                    Debug.Log("Suction script cached Door SPAWN script");
+                    //Debug.Log("Suction script cached Door SPAWN script");
                 }
                 return doorSpawnScript;
             }
@@ -46,7 +46,7 @@ namespace Environment.Scripts {
                 if (doorSpawnScript && useDoorScript && useThisDoorScript && !doorScript) {
                     doorScript = doorSpawnScript.slidingDoorInstances[0].GetComponent<SlidingDoorScript>();
                     _doorScript = doorScript;
-                    Debug.Log("Suction script cached Door script");
+                    //Debug.Log("Suction script cached Door script");
                 }
                 return doorScript;
             }

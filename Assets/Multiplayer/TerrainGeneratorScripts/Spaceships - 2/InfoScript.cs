@@ -1,69 +1,98 @@
+using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 {
     public class InfoScript : MonoBehaviour
     {
-        [SerializeField] BranchDivisionScript branchDivision;
-        [SerializeField] SpawnerScript spawner;
-        public int RamaID = -1;
+        private BranchDivisionScript _branchDivision;
+        private SpawnerScript _spawner;
+        
+        public int RamaID { set; get;}
+        public int visualizeId;
+        public Collider overlapCheckCollider;
+
+        public float drawSeconds = 10f;
+        private bool _draw = false;
+        
+        private bool _overlapped = false;
+        
+        public bool IsOverlappingWithShip => _overlapped;
 
         private void Awake()
         {
-            branchDivision = FindAnyObjectByType<BranchDivisionScript>();
-            spawner = FindAnyObjectByType<SpawnerScript>();
+            _branchDivision = FindAnyObjectByType<BranchDivisionScript>();
+            _spawner = FindAnyObjectByType<SpawnerScript>();
         }
 
         private void Start()
         {
-            bool overlap = IsOverlapping();
-            
-            if (overlap)
-            {
-                branchDivision.CerrarRama(RamaID, true);
-                Destroy(gameObject);
-                return;
-            }
+            // bool overlap = IsOverlapping();
+            //
+            // if (overlap)
+            // {
+            //     branchDivision.KillBranch(RamaID);
+            //     //Destroy(gameObject);
+            //     return;
+            // }
             
             if (gameObject.CompareTag("Room"))
             {
-                spawner.rooms++;
+                _spawner.AddToRoomCount(1);
             }
-            branchDivision.AgregarAHilo(RamaID, this);
+            _branchDivision.AddObjToBranch(RamaID, this);
         }
 
-        private bool IsOverlapping()
+        public void SetId(int id) {
+            RamaID = id;
+            visualizeId = RamaID;
+        }
+
+        public bool IsOverlapping()
         {
             Physics.SyncTransforms();
 
-            Collider myCol = GetComponent<Collider>();
-            if (myCol == null) return false;
+            if (!overlapCheckCollider) return false;
             
             Collider[] hits = Physics.OverlapBox(
-                myCol.bounds.center,
-                myCol.bounds.extents,
+                overlapCheckCollider.bounds.center,
+                overlapCheckCollider.bounds.extents,
                 transform.rotation
             );
 
             foreach (var other in hits)
             {
-                if (other == myCol) continue;
+                if (other == overlapCheckCollider) continue;
                 if (other.transform.root == transform.root) continue;
                 
+                bool isShip = (other.CompareTag("Room") || other.CompareTag("Hallway") || other.CompareTag("Intersection"));
+                
                 if (Physics.ComputePenetration(
-                        myCol, transform.position, transform.rotation,
+                        overlapCheckCollider, transform.position, transform.rotation,
                         other, other.transform.position, other.transform.rotation,
                         out Vector3 direction, out float distance))
                 {
-                    if (distance < 0.05f) // contacto leve → OK
-                        continue;
-                    if (other.CompareTag("Room") || other.CompareTag("Hallway") || other.CompareTag("Intersection"))
+                    if (distance > 0.05f && isShip) {
+                        Debug.Log(other.name + " is overlapping.");
                         return true;
+                    } 
+                    _draw = true;
                 }
             }
 
             return false;
         }
 
+        private void OnTriggerStay(Collider other) {
+            _overlapped = true;
+        }
+
+        private void OnDrawGizmos() {
+            if (drawSeconds < 0 && _draw) return;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(overlapCheckCollider.bounds.center, overlapCheckCollider.bounds.extents);
+            drawSeconds -= Time.deltaTime;
+        }
     }
 }

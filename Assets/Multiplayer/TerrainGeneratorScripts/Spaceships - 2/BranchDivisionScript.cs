@@ -1,53 +1,73 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 {
     public class BranchDivisionScript : MonoBehaviour
     {
         public Dictionary<int, List<InfoScript>> Ramas = new();
-        public Transform primerExit;
+        public Transform currentExit;
         public SpawnerScript spawner;
         private static int _nextRamaID = -1;
+        public bool DidKilledBranch { get; private set; } = false;
 
-        public int CrearRama()
+        #region Public API
+        
+
+        public int CreateBranch(int id = -1)
         {
-            _nextRamaID++; 
-            Ramas.Add(_nextRamaID, new List<InfoScript>());
-            return _nextRamaID;
+            if (id == -1) {
+                _nextRamaID++; 
+                Ramas.Add(_nextRamaID, new List<InfoScript>());
+                return _nextRamaID;
+            }
+            
+            Ramas.Add(id, new List<InfoScript>());
+            return id;
         }
 
-        public void AgregarAHilo(int ramaID, InfoScript estructura)
+        public void AddObjToBranch(int ramaID, InfoScript obj)
         {
-            Ramas[ramaID].Add(estructura);
+            Ramas[ramaID].Add(obj);
         }
 
-        public void CerrarRama(int ramaID, bool choco)
+        public void KillBranch(int ramaID)
         {
             if (!Ramas.ContainsKey(ramaID)) return;
-
-            if (choco)
-            {
-                var first = Ramas[ramaID][0];
-                var exit = first.transform.Find("Exit_1");
-
-                if (exit != null)
-                {
-                    GameObject dummy = new GameObject("RecoveredExit");
-                    dummy.transform.position = exit.position;
-                    dummy.transform.rotation = exit.rotation;
-                    primerExit = dummy.transform;
-                    spawner.needToAdd = true;
-                }
-
-                foreach (var estructura in Ramas[ramaID])
-                {
-                    if (estructura != null)
-                        Destroy(estructura.gameObject);
-                }
-            }
-
+            
+            List<InfoScript> branch = Ramas[ramaID];
+            
+            var firstObj = branch[0];
+            var exit = firstObj.transform.Find("Exit_1");
+            
+            ResetStartPoint(exit); // set the start point back to the original one starting one, so a new branch can be formed.
+            ClearObjectsInBranch(branch);
             Ramas.Remove(ramaID);
+        }
+        
+        public void ResetKilledState() {
+            DidKilledBranch = false;
+        }
+
+        #endregion
+
+        private void ClearObjectsInBranch(List<InfoScript> objs) {
+            foreach (var obj in objs) {
+                if (obj != null)
+                    Destroy(obj.gameObject);
+            }
+        }
+
+        private void ResetStartPoint(Transform exit) {
+            if (exit != null)
+            {
+                GameObject dummy = new GameObject("RecoveredExit");
+                dummy.transform.position = exit.position;
+                dummy.transform.rotation = exit.rotation;
+                currentExit = dummy.transform;
+                DidKilledBranch = true;
+            }
         }
         
         private void OnDrawGizmos()

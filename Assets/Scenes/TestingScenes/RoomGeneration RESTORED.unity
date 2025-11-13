@@ -747,6 +747,52 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1040075313
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1040075316}
+  - component: {fileID: 1040075315}
+  m_Layer: 0
+  m_Name: DungeonManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1040075315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1040075313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2512645c85f7b2a4c9fb60c719d263c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  primerExit: {fileID: 1911940782}
+  spawner: {fileID: 0}
+--- !u!4 &1040075316
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1040075313}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.9664, y: 16.10664, z: 12.57465}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1111002443 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3524389350849481084, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
@@ -1785,6 +1831,11 @@ CapsuleCollider:
   m_CorrespondingSourceObject: {fileID: 3767114022304771846, guid: 18498b340c7c305428ac2643a21ced2e, type: 3}
   m_PrefabInstance: {fileID: 6434387650211492236}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1911940782 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1958383271876774085, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
+  m_PrefabInstance: {fileID: 3582708719201602933}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1915030885
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2291,6 +2342,10 @@ PrefabInstance:
     - target: {fileID: 6741130949320761362, guid: 5189e25f7de4361479666087ee7d323c, type: 3}
       propertyPath: m_Name
       value: BatEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6741130949320761362, guid: 5189e25f7de4361479666087ee7d323c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6758209355419968959, guid: 5189e25f7de4361479666087ee7d323c, type: 3}
       propertyPath: debug
@@ -3163,3 +3218,4 @@ SceneRoots:
   - {fileID: 3582708719201602933}
   - {fileID: 1214084841}
   - {fileID: 537793288}
+  - {fileID: 1040075316}

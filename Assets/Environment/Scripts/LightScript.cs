@@ -15,8 +15,11 @@ namespace Environment.Scripts
         [SerializeField] private AudioSource _lightAudioSource;
         [SerializeField] private AudioSource _failAudioSource;
 
-        [Header("Settings")] public bool debug;
+        [Header("Settings")] 
+        public bool debug;
         public bool useSparkEffect = true;
+        public bool useSound = true;
+        public static bool UsePhoton;
 
         [Range(0, 1)] public float intensityScaleFactor = 0f;
         public float intensityOffsetMagnitude = 10f;
@@ -60,8 +63,8 @@ namespace Environment.Scripts
             if (vsfObject) _particleSystem = vsfObject.GetComponent<ParticleSystem>();
             _normalIntensity = _lightComp.intensity;
 
-            // Solo el dueño (host o instancia principal) decide el modo inicial
-            if (photonView.IsMine)
+            // Solo el dueï¿½o (host o instancia principal) decide el modo inicial
+            if (photonView.IsMine && UsePhoton)
             {
                 if (UnityEngine.Random.value < failureChance)
                 {
@@ -82,8 +85,8 @@ namespace Environment.Scripts
 
         private void Update()
         {
-            // Solo el dueño ejecuta la lógica interna
-            if (!photonView.IsMine) return;
+            // Solo el dueï¿½o ejecuta la lï¿½gica interna
+            if (!photonView.IsMine && UsePhoton) return;
 
             if (_currentRoutine != null) return;
             bool shouldTryEffect = false;
@@ -127,8 +130,8 @@ namespace Environment.Scripts
             }
             else
             {
-                if (_previouslyOn && _doorFailed && _failAudioSource) _failAudioSource.Play();
-                if (_previouslyOn && _lightAudioSource) _lightAudioSource.Stop();
+                if (_previouslyOn && _doorFailed && _failAudioSource && useSound) _failAudioSource.Play();
+                if (_previouslyOn && _lightAudioSource && useSound) _lightAudioSource.Stop();
                 TurnOff();
                 _previouslyOn = false;
             }
@@ -206,7 +209,7 @@ namespace Environment.Scripts
         #endregion
 
         #region Photon
-        // Photon sincronización de estado
+        // Photon sincronizaciï¿½n de estado
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.IsWriting)

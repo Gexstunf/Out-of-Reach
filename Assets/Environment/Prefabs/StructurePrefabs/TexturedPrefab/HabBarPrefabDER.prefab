@@ -156,6 +156,7 @@ GameObject:
   - component: {fileID: 3853621254941215863}
   - component: {fileID: 2804354778205169133}
   - component: {fileID: 7810926052199963167}
+  - component: {fileID: 5169293708393789211}
   m_Layer: 0
   m_Name: Light
   m_TagString: Untagged
@@ -194,11 +195,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightObject: {fileID: 7598371360977124550}
-  vsfObject: {fileID: 0}
+  vsfObject: {fileID: 4503612902121041701, guid: 5a936c83b1746f14f9100db745e94f04, type: 3}
   _lightAudioSource: {fileID: 0}
   _failAudioSource: {fileID: 0}
   debug: 0
   useSparkEffect: 1
+  useSound: 0
   intensityScaleFactor: 0
   intensityOffsetMagnitude: 10
   flickerTime: 0.25
@@ -222,11 +224,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightObject: {fileID: 4969106891448078738}
-  vsfObject: {fileID: 0}
+  vsfObject: {fileID: 4503612902121041701, guid: 5a936c83b1746f14f9100db745e94f04, type: 3}
   _lightAudioSource: {fileID: 0}
   _failAudioSource: {fileID: 0}
   debug: 0
   useSparkEffect: 1
+  useSound: 0
   intensityScaleFactor: 0
   intensityOffsetMagnitude: 10
   flickerTime: 0.25
@@ -250,11 +253,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightObject: {fileID: 3194278322621441903}
-  vsfObject: {fileID: 0}
+  vsfObject: {fileID: 4503612902121041701, guid: 5a936c83b1746f14f9100db745e94f04, type: 3}
   _lightAudioSource: {fileID: 0}
   _failAudioSource: {fileID: 0}
   debug: 0
   useSparkEffect: 1
+  useSound: 0
   intensityScaleFactor: 0
   intensityOffsetMagnitude: 10
   flickerTime: 0.25
@@ -265,6 +269,31 @@ MonoBehaviour:
   maxIntensity: 50
   failureChance: 0.5
   selfDestructChance: 0.15
+--- !u!114 &5169293708393789211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699814733154182216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 3853621254941215863}
+  - {fileID: 2804354778205169133}
+  - {fileID: 7810926052199963167}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &2968069520842910262
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,9 +589,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  branchDivision: {fileID: 0}
-  spawner: {fileID: 0}
-  RamaID: -1
+  visualizeId: 0
+  overlapCheckCollider: {fileID: 1001520691591169270}
+  drawSeconds: 10
 --- !u!1 &8929473024236706053
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,6 +1101,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4f1ea87c0f700794e9574bdc1729e2ab, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7387052330736976889}
+    - targetCorrespondingSourceObject: {fileID: -8839357785889411204, guid: 4f1ea87c0f700794e9574bdc1729e2ab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1001520691591169270}
     - targetCorrespondingSourceObject: {fileID: 924813498428372733, guid: 4f1ea87c0f700794e9574bdc1729e2ab, type: 3}
       insertIndex: -1
       addedObject: {fileID: 272294323491196098}
@@ -1152,6 +1184,32 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2129278713788614704, guid: 4f1ea87c0f700794e9574bdc1729e2ab, type: 3}
+--- !u!1 &6422730877656944212 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8839357785889411204, guid: 4f1ea87c0f700794e9574bdc1729e2ab, type: 3}
+  m_PrefabInstance: {fileID: 6662606541559341352}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1001520691591169270
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6422730877656944212}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 33.68161, y: 32.010002, z: 33.67121}
+  m_Center: {x: -0.6120796, y: 0, z: 0.6068888}
 --- !u!4 &6628432391036454595 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4f1ea87c0f700794e9574bdc1729e2ab, type: 3}
