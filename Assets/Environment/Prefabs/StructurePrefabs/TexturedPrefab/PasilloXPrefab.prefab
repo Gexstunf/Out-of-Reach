@@ -137,6 +137,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7215062720394804466}
+  - component: {fileID: 4246873745942694959}
   m_Layer: 3
   m_Name: Exit_2
   m_TagString: Untagged
@@ -159,6 +160,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8168138714091177585}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4246873745942694959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903405454431397235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8297e9029f97be0498c4453c2e6c28f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _socketType: 1
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
+  debugLength: 5
+  sphereRad: 1
 --- !u!1 &2050587617130012397
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,6 +186,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3391182903765223047}
+  - component: {fileID: 3815417003505181291}
   m_Layer: 3
   m_Name: Entry
   m_TagString: Untagged
@@ -183,13 +202,30 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2050587617130012397}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -8.001, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8168138714091177585}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &3815417003505181291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2050587617130012397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8297e9029f97be0498c4453c2e6c28f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _socketType: 0
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
+  debugLength: 5
+  sphereRad: 1
 --- !u!1 &4976239729801518046
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,6 +235,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6998924951915096655}
+  - component: {fileID: 7234598887085790592}
   m_Layer: 3
   m_Name: Exit_3
   m_TagString: Untagged
@@ -221,6 +258,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8168138714091177585}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &7234598887085790592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4976239729801518046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8297e9029f97be0498c4453c2e6c28f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _socketType: 1
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
+  debugLength: 5
+  sphereRad: 1
 --- !u!1 &8664171058096211621
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,6 +284,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 129714111495985068}
+  - component: {fileID: 1062215086947532308}
   m_Layer: 3
   m_Name: Exit_1
   m_TagString: Untagged
@@ -252,6 +307,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8168138714091177585}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &1062215086947532308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8664171058096211621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8297e9029f97be0498c4453c2e6c28f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _socketType: 1
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
+  debugLength: 5
+  sphereRad: 1
 --- !u!1001 &444049405725392683
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -84,7 +84,7 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
             Vector3 worldCenter = overlapCheckCollider.transform.position;
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireCube(worldCenter, overlapCheckCollider.bounds.size);
-            drawSeconds -= Time.deltaTime;
+            //drawSeconds -= Time.deltaTime;
         }   
     }
 }

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683c2b49bba709f47bc787fba15898a2, type: 3}
+  m_Name: StructurePrefabDatabase
+  m_EditorClassIdentifier: 
+  hallways:
+  - {fileID: 11400000, guid: ce5b15b6f72bb2647960761535b7f229, type: 2}
+  - {fileID: 11400000, guid: 5af78e5d0b3277a47bd1235156db6e39, type: 2}
+  - {fileID: 11400000, guid: c6887e2d4176dd34c8c46e6dfdf7cbe8, type: 2}
+  rooms:
+  - {fileID: 11400000, guid: 36e551e52c9704449b7130cc485da97a, type: 2}
+  - {fileID: 11400000, guid: 4afb7278baff45849b1bfa0ae1e6272c, type: 2}
+  - {fileID: 11400000, guid: 031fbbbf1cb7f2a4a958c5a2b3ff4d01, type: 2}
+  - {fileID: 11400000, guid: b2e3d7adc64304c43a05f88b554a2a97, type: 2}
+  - {fileID: 11400000, guid: 3c0d36991e5f9d547b314bc84c562990, type: 2}
+  - {fileID: 11400000, guid: 363f33dcf8d080a479059ad399c544bb, type: 2}
+  - {fileID: 11400000, guid: 36e551e52c9704449b7130cc485da97a, type: 2}
+  intersections:
+  - {fileID: 11400000, guid: 383d48ca8cc012344adf1f4b04e661f3, type: 2}
+  - {fileID: 11400000, guid: acf55667cc6777f459a4d76bfa70dddf, type: 2}

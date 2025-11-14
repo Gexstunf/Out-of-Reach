@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7355270006613947274}
+  - component: {fileID: 4177416137835564847}
   m_Layer: 3
   m_Name: Entry
   m_TagString: Indestructible
@@ -24,13 +25,29 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 597701587146037677}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -12, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5956655198905727707}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &4177416137835564847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 597701587146037677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8297e9029f97be0498c4453c2e6c28f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _socketType: 0
+  debugColor: {r: 1, g: 0, b: 0, a: 1}
+  debugLength: 5
+  sphereRad: 1
 --- !u!1 &2330243591253254418
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,6 +89,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4726735426606251165}
+  - component: {fileID: 3590143855052182337}
   m_Layer: 3
   m_Name: Exit_3
   m_TagString: Indestructible
@@ -94,6 +112,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5956655198905727707}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &3590143855052182337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2455720784261499328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8297e9029f97be0498c4453c2e6c28f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _socketType: 1
+  debugColor: {r: 1, g: 0, b: 0, a: 1}
+  debugLength: 5
+  sphereRad: 1
 --- !u!1 &3142576280816723091
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,6 +185,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9188844429047616700}
+  - component: {fileID: 6737781967328897652}
   m_Layer: 3
   m_Name: Exit_2
   m_TagString: Indestructible
@@ -173,6 +208,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5956655198905727707}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6737781967328897652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4521770302298686743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8297e9029f97be0498c4453c2e6c28f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _socketType: 1
+  debugColor: {r: 1, g: 0, b: 0, a: 1}
+  debugLength: 5
+  sphereRad: 1
 --- !u!1 &5089975720083485264
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,6 +233,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2369223012086087184}
+  - component: {fileID: 5165108099513214807}
   m_Layer: 3
   m_Name: Exit_1
   m_TagString: Indestructible
@@ -204,6 +256,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5956655198905727707}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &5165108099513214807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5089975720083485264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8297e9029f97be0498c4453c2e6c28f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _socketType: 1
+  debugColor: {r: 1, g: 0, b: 0, a: 1}
+  debugLength: 5
+  sphereRad: 1
 --- !u!1 &6182710203842667853
 GameObject:
   m_ObjectHideFlags: 0
@@ -468,8 +536,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
+  visualizeId: 0
   overlapCheckCollider: {fileID: 9152524567138657357}
+  drawSeconds: 10
 --- !u!1 &7025475700133002197
 GameObject:
   m_ObjectHideFlags: 0

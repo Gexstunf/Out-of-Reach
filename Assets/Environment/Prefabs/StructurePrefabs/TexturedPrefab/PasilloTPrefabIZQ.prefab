@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3194640615125917102}
+  - component: {fileID: 6580277421958258838}
   m_Layer: 3
   m_Name: Entry
   m_TagString: Untagged
@@ -24,13 +25,30 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 428411355778090016}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9097331583328845711}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6580277421958258838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428411355778090016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8297e9029f97be0498c4453c2e6c28f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _socketType: 0
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
+  debugLength: 5
+  sphereRad: 1
 --- !u!1 &515180662369539457
 GameObject:
   m_ObjectHideFlags: 0
@@ -40,6 +58,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6217418732768802288}
+  - component: {fileID: 2325721627529140}
   m_Layer: 3
   m_Name: Exit_2
   m_TagString: Untagged
@@ -62,6 +81,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9097331583328845711}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &2325721627529140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515180662369539457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8297e9029f97be0498c4453c2e6c28f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _socketType: 1
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
+  debugLength: 5
+  sphereRad: 1
 --- !u!1 &2941368604328143080
 GameObject:
   m_ObjectHideFlags: 0
@@ -71,6 +107,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7519969877332821702}
+  - component: {fileID: 1441557599201945578}
   m_Layer: 3
   m_Name: Exit_1
   m_TagString: Untagged
@@ -93,6 +130,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9097331583328845711}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &1441557599201945578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2941368604328143080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8297e9029f97be0498c4453c2e6c28f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _socketType: 1
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
+  debugLength: 5
+  sphereRad: 1
 --- !u!1 &4950417639267779701
 GameObject:
   m_ObjectHideFlags: 0

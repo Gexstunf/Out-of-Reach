@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9d4870d5e6643098ef485bca95248db, type: 3}
+  m_Name: RightBarStructure
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 8525219668423997740, guid: 53e2ed81dbeeaf34198bf991ab375ca2, type: 3}
+  structureType: 0
+  weight: 1
