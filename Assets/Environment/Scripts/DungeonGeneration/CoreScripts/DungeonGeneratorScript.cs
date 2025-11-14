@@ -13,8 +13,13 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
         [SerializeField] private PrefabDatabaseScript prefabDb;
         [SerializeField] private PrefabPlacerScript prefabPlacer;
         [SerializeField] private Transform generationStartPoint;
-        [SerializeField] private StructurePrefabScript generationStartStructure;
+        [SerializeField] private Transform motherPlacePoint;
         [SerializeField] private LoggerSO _logger;
+
+        [Header("Relevant Structures")]
+        [SerializeField] private StructurePrefabScript generationStartStructure;
+        [SerializeField] private StructurePrefabScript motherStartStructure;
+        [SerializeField] private StructurePrefabScript sealStructure;
         
         [Header("Settings")]
         [SerializeField] private int minRoomCount =  10;
@@ -32,16 +37,22 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
         public void Start() {
             _logger.Log("Starting Generation");
             Generate(generationStartStructure, generationStartPoint);
+            SealExits();
         }
 
         public void Generate(StructurePrefabScript startPrefab, Transform startPoint) {
-            var startInstance = prefabPlacer.PlaceInitial(startPrefab, startPoint.position);
+            var motherInstance = prefabPlacer.PlaceInitial(motherStartStructure, motherPlacePoint.position);
+            var startInstance = prefabPlacer.PlaceInitial(startPrefab, startPoint.position);    
+            _placed.Add(motherInstance);
             _placed.Add(startInstance);
             _openSockets.AddRange(startInstance.GetExits());
             
+            motherInstance.UpdateBounds();
             startInstance.UpdateBounds();
-            var drawer = startInstance.instance.AddComponent<BoundsDrawerScript>();
-            drawer.SetBounds(startInstance.Bounds, 0);
+            var motherDrawer = motherInstance.instance.AddComponent<BoundsDrawerScript>();
+            var startDrawer = startInstance.instance.AddComponent<BoundsDrawerScript>();
+            motherDrawer.SetBounds(motherInstance.Bounds, -1);
+            startDrawer.SetBounds(startInstance.Bounds, 0);
             
             _logger.Log($"After placing the initial prefab, we have: {_openSockets.Count} open sockets.");
 
@@ -49,7 +60,7 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
                 StructureSocketScript socket = RandomPickFromList(_openSockets);
                 bool success = TryExpandFrom(socket);
                 if (!success) {
-                    _openSockets.Remove(socket);
+                    //_openSockets.Remove(socket);
                     _logger.LogMinor($"FAILED placing in this socket: {socket}. \n Remaining open sockets: {_openSockets.Count}");
                 }
 
@@ -61,10 +72,10 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
             }
         }
 
-        public bool TryExpandFrom(StructureSocketScript socket) {
+        public bool TryExpandFrom(StructureSocketScript socket, StructurePrefabScript p = null, bool ignoreOverlap = false) {
             for (int i = 0; i < maxAttemptsPerSocket; i++) {
-                StructurePrefabScript prefab = prefabDb.GetWeightedRandom();
-                var result = prefabPlacer.TryPlacePrefab(prefab, socket, _placed); // result is casted to a tuple (just in case you forget lil nigga)
+                StructurePrefabScript prefab = p != null? p : prefabDb.GetWeightedRandom();
+                var result = prefabPlacer.TryPlacePrefab(prefab, socket, _placed, ignoreOverlap); // result is casted to a tuple (just in case you forget lil nigga)
 
                 if (result.success) {
                     _logger.LogMinor($"SUCCEEDED placing the prefab: {prefab.name}.");
@@ -78,11 +89,31 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
             }
             return false;
         }
+        
+        private void SealExits() {
+            var socketsCopy = new List<StructureSocketScript>(_openSockets);
+
+            foreach (var socket in socketsCopy) {
+                bool success = TryExpandFrom(socket, sealStructure, true);
+                if (!success) {
+                    _openSockets.Remove(socket);
+                    _logger.LogMinor($"FAILED placing SEAL in socket: {socket}");
+                }
+            }
+        }
+
 
         private T RandomPickFromList<T>(List<T> list) {
             if (list == null || list.Count == 0) return default;
             int index = Random.Range(0, list.Count);
             return list[index];
+        }
+
+        private void OnDrawGizmos() {
+            Gizmos.color = Color.red;
+            foreach (var socket in _openSockets) {
+                Gizmos.DrawSphere(socket.transform.position, 1);
+            }
         }
     }
 }

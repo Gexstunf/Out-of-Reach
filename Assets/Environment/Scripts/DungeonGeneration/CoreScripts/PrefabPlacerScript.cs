@@ -17,7 +17,7 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
         }
 
         public (bool success, StructureInstanceScript instance) TryPlacePrefab(
-            StructurePrefabScript structurePrefab, StructureSocketScript attachSocket, List<StructureInstanceScript> existing
+            StructurePrefabScript structurePrefab, StructureSocketScript attachSocket, List<StructureInstanceScript> existing, bool ignoreOverlap = false
             ) {
             GameObject candidate = Instantiate(structurePrefab.prefab);
             StructureInstanceScript newInstance = new StructureInstanceScript(candidate, structurePrefab);
@@ -29,7 +29,7 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
                 newInstance.UpdateBounds(shrinkBoundsFactor);
                 drawer.SetBounds(newInstance.ShrunkBounds, boundsDrawerAmount);
                 
-                if (!validator.Overlaps(newInstance, existing)) {
+                if (!validator.Overlaps(newInstance, existing) || ignoreOverlap) {
                     attachSocket.SetConnected(true);
                     entry.SetConnected(true);
                     return (true, newInstance);
@@ -37,7 +37,7 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
             }
             
             Debug.Log("Destroying instance, overlapped");
-            //Destroy(candidate);
+            Destroy(candidate);
             return (false, null);
         }
 
