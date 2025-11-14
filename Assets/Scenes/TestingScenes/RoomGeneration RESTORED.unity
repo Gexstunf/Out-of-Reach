@@ -1619,6 +1619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   validator: {fileID: 1590489040}
+  offsetScale: 1.01
 --- !u!114 &1590489042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1635,6 +1636,7 @@ MonoBehaviour:
   prefabPlacer: {fileID: 1590489041}
   generationStartPoint: {fileID: 560049721}
   generationStartStructure: {fileID: 11400000, guid: 73a1abde48c4c7a4aa9a45ae746920f8, type: 2}
+  _logger: {fileID: 0}
   minRoomCount: 10
   stopChanceCurve:
     serializedVersion: 2
@@ -1669,7 +1671,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxAttemptsPerSocket: 50
+  maxAttemptsPerSocket: 1
 --- !u!4 &1590489043
 Transform:
   m_ObjectHideFlags: 0
@@ -2921,6 +2923,10 @@ PrefabInstance:
     - target: {fileID: 2688251065227579537, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006299883983267752, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3006299883983267752, guid: 80c7f01729ec8a74995260fe38055a61, type: 3}
       propertyPath: m_StaticEditorFlags

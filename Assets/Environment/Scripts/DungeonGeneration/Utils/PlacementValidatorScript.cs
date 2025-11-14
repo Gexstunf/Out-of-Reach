@@ -7,7 +7,7 @@ namespace Environment.Scripts.DungeonGeneration.Utils {
     {
         public bool Overlaps(StructureInstanceScript candidate, List<StructureInstanceScript> existing) {
             foreach (var inst in existing) {
-                if (inst.Bounds.Intersects(candidate.Bounds))
+                if (inst.ShrunkBounds.Intersects(candidate.Bounds)) // we compare a shrunk bound by a normal bound
                     return true;
             }
             return false;

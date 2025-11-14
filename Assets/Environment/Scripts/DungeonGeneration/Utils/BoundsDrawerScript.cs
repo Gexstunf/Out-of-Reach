@@ -27,7 +27,7 @@ namespace Environment.Scripts.DungeonGeneration.Utils {
             if (_id % 2 == 0) 
                 Gizmos.DrawCube(_bounds.center, Vector3.one);
             else 
-                Gizmos.DrawSphere(_bounds.center, 1);
+                Gizmos.DrawSphere(_bounds.center, 0.5f);
         }
     }
 }

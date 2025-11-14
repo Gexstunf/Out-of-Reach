@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 namespace Environment.Scripts.DungeonGeneration.CoreScripts {
     public class PrefabPlacerScript : MonoBehaviour {
         [SerializeField] private PlacementValidatorScript validator;
+        [SerializeField, Range(0, 1f)] private float shrinkBoundsFactor = 0.05f;
 
         private int boundsDrawerAmount = 0;
         
@@ -20,13 +21,14 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
             ) {
             GameObject candidate = Instantiate(structurePrefab.prefab);
             StructureInstanceScript newInstance = new StructureInstanceScript(candidate, structurePrefab);
-            newInstance.UpdateBounds();
             var drawer = newInstance.instance.AddComponent<BoundsDrawerScript>();
             boundsDrawerAmount++;
-            drawer.SetBounds(newInstance.Bounds, boundsDrawerAmount);
 
             foreach (var entry in newInstance.GetEntries()) {
                 Align(entry.transform, attachSocket.transform, newInstance, attachSocket);
+                newInstance.UpdateBounds(shrinkBoundsFactor);
+                drawer.SetBounds(newInstance.ShrunkBounds, boundsDrawerAmount);
+                
                 if (!validator.Overlaps(newInstance, existing)) {
                     attachSocket.SetConnected(true);
                     entry.SetConnected(true);
@@ -67,7 +69,7 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
             Transform root = newInstance.instance.transform;
 
             // Recalculate entry position AFTER rotation
-            Vector3 delta = targetExit.position - entry.position;
+            Vector3 delta = (targetExit.position - entry.position);
 
             // Move the entire instance so entry → target
             root.position += delta;
