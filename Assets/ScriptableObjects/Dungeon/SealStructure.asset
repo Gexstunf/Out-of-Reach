@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9d4870d5e6643098ef485bca95248db, type: 3}
   m_Name: SealStructure
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
-  structureType: 0
+  prefab: {fileID: 6596308107174760454, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
+  structureType: 1
   weight: 1

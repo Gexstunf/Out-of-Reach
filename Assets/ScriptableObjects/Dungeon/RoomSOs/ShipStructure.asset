@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9d4870d5e6643098ef485bca95248db, type: 3}
   m_Name: ShipStructure
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 4221742366924044153, guid: 47f4f1e85eeba444d93804dd46f60e47, type: 3}
   structureType: 0
   weight: 1

@@ -156,7 +156,6 @@ GameObject:
   - component: {fileID: 8870479802968787408}
   - component: {fileID: 3425888450882013640}
   - component: {fileID: 8628541400894540109}
-  - component: {fileID: 5819710853435426588}
   m_Layer: 3
   m_Name: HabAlmacenamientoPrefab
   m_TagString: Room
@@ -254,21 +253,6 @@ MonoBehaviour:
   - {fileID: 2186125956944304919}
   slidingDoorPrefab: {fileID: 9100137002563764354, guid: 94e2d33e98ded0d4189a712f0d30643d, type: 3}
   slidingDoorInstances: []
---- !u!114 &5819710853435426588
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377035139366547631}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visualizeId: 0
-  overlapCheckCollider: {fileID: 4759036755853301054}
-  drawSeconds: 0
 --- !u!1 &3127763163247139138
 GameObject:
   m_ObjectHideFlags: 0
@@ -1234,7 +1218,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 35.336098, y: 25.400002, z: 25.4}
   m_Center: {x: 0.106975555, y: 0, z: -0.0000009536743}

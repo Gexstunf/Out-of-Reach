@@ -159,7 +159,6 @@ GameObject:
   - component: {fileID: 8177507669460515503}
   - component: {fileID: 5412644870440305246}
   - component: {fileID: 3030224802911856952}
-  - component: {fileID: 212463631106685412}
   m_Layer: 3
   m_Name: PasilloTPrefabIZQ
   m_TagString: Intersection
@@ -259,21 +258,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &212463631106685412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4950417639267779701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visualizeId: 0
-  overlapCheckCollider: {fileID: 4524346051527493121}
-  drawSeconds: 10
 --- !u!1001 &2191037069620253105
 PrefabInstance:
   m_ObjectHideFlags: 0

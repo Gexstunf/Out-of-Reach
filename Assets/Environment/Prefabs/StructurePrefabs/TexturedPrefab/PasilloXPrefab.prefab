@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3855240060041078099}
   - component: {fileID: 2822828108495595399}
   - component: {fileID: 5632322999912508804}
-  - component: {fileID: 3687531656629165841}
   m_Layer: 3
   m_Name: PasilloXPrefab
   m_TagString: Intersection
@@ -113,21 +112,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 15.9, y: 13, z: 15.9}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3687531656629165841
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 193496881068272272}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visualizeId: 0
-  overlapCheckCollider: {fileID: 8472412749577954342}
-  drawSeconds: 10
 --- !u!1 &903405454431397235
 GameObject:
   m_ObjectHideFlags: 0

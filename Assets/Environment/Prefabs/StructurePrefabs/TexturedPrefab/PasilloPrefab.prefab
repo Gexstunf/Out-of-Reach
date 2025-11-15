@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _socketType: 1
-  debugColor: {r: 1, g: 0, b: 0, a: 1}
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
   debugLength: 5
   sphereRad: 1
 --- !u!1 &3096484470341604994
@@ -93,7 +94,6 @@ GameObject:
   - component: {fileID: 5122596054250648761}
   - component: {fileID: 3581379840074180337}
   - component: {fileID: 3359857872652158453}
-  - component: {fileID: 6036489624563685488}
   m_Layer: 3
   m_Name: PasilloPrefab
   m_TagString: Hallway
@@ -193,21 +193,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 3065087254759496983, guid: a153d04609567be4aa5b453d55c48732, type: 3}
---- !u!114 &6036489624563685488
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3791255646465563467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visualizeId: 0
-  overlapCheckCollider: {fileID: 4067369023318874479}
-  drawSeconds: 10
 --- !u!1 &4095967443404682065
 GameObject:
   m_ObjectHideFlags: 0
@@ -253,7 +238,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _socketType: 0
-  debugColor: {r: 1, g: 0, b: 0, a: 1}
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
   debugLength: 5
   sphereRad: 1
 --- !u!1 &4269249788214349474

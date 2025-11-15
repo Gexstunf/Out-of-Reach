@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _socketType: 1
-  debugColor: {r: 1, g: 0, b: 0, a: 1}
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
   debugLength: 5
   sphereRad: 1
 --- !u!1 &2362897153453241785
@@ -93,7 +94,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _socketType: 0
-  debugColor: {r: 1, g: 0, b: 0, a: 1}
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
   debugLength: 5
   sphereRad: 1
 --- !u!1 &6677434570533079222
@@ -108,7 +110,6 @@ GameObject:
   - component: {fileID: 2159092596608871846}
   - component: {fileID: 2029476769308291265}
   - component: {fileID: 8448889730241548898}
-  - component: {fileID: 9071562450328711305}
   m_Layer: 3
   m_Name: PasilloLPrefabIZQ
   m_TagString: Intersection
@@ -206,21 +207,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &9071562450328711305
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6677434570533079222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visualizeId: 0
-  overlapCheckCollider: {fileID: 2176824019271327486}
-  drawSeconds: 10
 --- !u!1001 &1274044498807441851
 PrefabInstance:
   m_ObjectHideFlags: 0

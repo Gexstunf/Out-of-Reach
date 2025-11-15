@@ -472,7 +472,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _socketType: 1
-  debugColor: {r: 1, g: 0, b: 0, a: 1}
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
   debugLength: 5
   sphereRad: 1
 --- !u!1 &7549306424818159059
@@ -539,7 +540,6 @@ GameObject:
   - component: {fileID: 7980172502530557368}
   - component: {fileID: 7613376731416345821}
   - component: {fileID: 3465315258962499388}
-  - component: {fileID: -4303328641264218651}
   m_Layer: 3
   m_Name: HabBarPrefabIZQ
   m_TagString: Room
@@ -723,21 +723,6 @@ MonoBehaviour:
   - {fileID: 222803029127462028}
   slidingDoorPrefab: {fileID: 9100137002563764354, guid: 94e2d33e98ded0d4189a712f0d30643d, type: 3}
   slidingDoorInstances: []
---- !u!114 &-4303328641264218651
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8525219668423997740}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 982f575d7e1dbb944ab54459abd1cd36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visualizeId: 0
-  overlapCheckCollider: {fileID: 6111442721367274113}
-  drawSeconds: 10
 --- !u!1 &8929473024236706053
 GameObject:
   m_ObjectHideFlags: 0
@@ -783,7 +768,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _socketType: 0
-  debugColor: {r: 1, g: 0, b: 0, a: 1}
+  debugColorEntry: {r: 0, g: 1, b: 0, a: 1}
+  debugColorExit: {r: 1, g: 0, b: 0, a: 1}
   debugLength: 5
   sphereRad: 1
 --- !u!1001 &19657746501015785
