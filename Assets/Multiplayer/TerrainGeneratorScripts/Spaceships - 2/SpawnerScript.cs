@@ -20,16 +20,15 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
             rooms = 0;
             needToAdd = false;
 
-            //StartCoroutine(Generate());
-            Generate();
+            StartCoroutine(Generate());
         }
 
-        private void Generate()
+        private IEnumerator Generate()
         {
             GameObject start = GameObject.Find("Exit_1");
             if (start == null) {
-                //yield break;
-                return;
+                yield break;
+                //return;
             }
             
             int nuev = branchDivision.CrearRama();
@@ -53,17 +52,17 @@ namespace Multiplayer.TerrainGeneratorScripts.Spaceships___2
 
                     while (!branchTerminated && rooms < maxRooms)
                     {
-                        //yield return null;
+                        yield return null;
 
                         GameObject prefabToSpawn;
-                        int t = Random.Range(1, 11);
+                        int t = Random.Range(1, 10);
 
-                        if (t <= 8) prefabToSpawn = hallWay;
-                        else if (t <= 9) prefabToSpawn = interSectionPossible[Random.Range(0, interSectionPossible.Length)];
+                        if (t <= 6) prefabToSpawn = hallWay;
+                        else if (t <= 8) prefabToSpawn = interSectionPossible[Random.Range(0, interSectionPossible.Length)];
                         else prefabToSpawn = roomPossible[Random.Range(0, roomPossible.Length)];
 
                         GameObject spawned = FuncionInstanciar(prefabToSpawn, currentExit);
-                        //yield return new WaitForSecondsRealtime(0.1f);
+                        yield return new WaitForSecondsRealtime(0.1f);
                         if (spawned == null) break;
 
                         List<Transform> foundExits = new List<Transform>();

@@ -64,7 +64,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7393400423368527378}
-  - {fileID: 6789873678248961868}
   - {fileID: 3939011395992226935}
   - {fileID: 1203288706643915481}
   - {fileID: 5635753942896322611}
@@ -123,37 +122,6 @@ MonoBehaviour:
   branchDivision: {fileID: 0}
   spawner: {fileID: 0}
   RamaID: -1
---- !u!1 &9217811916771912890
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6789873678248961868}
-  m_Layer: 3
-  m_Name: Door1
-  m_TagString: Indestructible
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &6789873678248961868
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9217811916771912890}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.451, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6552041856830867853}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1999352142723659965
 PrefabInstance:
   m_ObjectHideFlags: 0
