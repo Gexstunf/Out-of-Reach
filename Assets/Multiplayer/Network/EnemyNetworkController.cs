@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 using Photon.Pun;
@@ -11,6 +12,7 @@ namespace Characters.Enemies.Scripts
         [Header("References")]
         [SerializeField] private TargetingScript _targetingScript;
         [SerializeField] private NavMeshAgent _agent;
+        [SerializeField] private EnemiesManagerScript _manager;
 
         public NavMeshAgent Agent => _agent;
         public bool IsChasing => _chasing;
@@ -30,10 +32,14 @@ namespace Characters.Enemies.Scripts
             if (_targetingScript == null) Debug.LogWarning("No TargetingScript attached to " + gameObject.name);
         }
 
+        private void Start() {
+            _manager = EnemiesManagerScript.Instance;
+        }
+
         void Update()
         {
-            // SOLO el dueño controla el movimiento
-            if (photonView.IsMine)
+            // SOLO el dueï¿½o controla el movimiento
+            if (photonView.IsMine && _manager.AgentsCanInteract)
             {
                 if (_targetingScript.CurrentTargetTransform && _agent.isActiveAndEnabled)
                 {
@@ -47,24 +53,24 @@ namespace Characters.Enemies.Scripts
             }
             else
             {
-                // Para clientes remotos, interpolamos hacia la posición sincronizada
+                // Para clientes remotos, interpolamos hacia la posiciï¿½n sincronizada
                 transform.position = Vector3.Lerp(transform.position, _networkPosition, Time.deltaTime * 10f);
                 transform.rotation = Quaternion.Lerp(transform.rotation, _networkRotation, Time.deltaTime * 10f);
             }
         }
 
-        // Método obligatorio para sincronizar datos con Photon
+        // Mï¿½todo obligatorio para sincronizar datos con Photon
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.IsWriting)
             {
-                // Enviar posición y rotación actuales (solo el dueño lo hace)
+                // Enviar posiciï¿½n y rotaciï¿½n actuales (solo el dueï¿½o lo hace)
                 stream.SendNext(transform.position);
                 stream.SendNext(transform.rotation);
             }
             else
             {
-                // Recibir posición y rotación desde la red
+                // Recibir posiciï¿½n y rotaciï¿½n desde la red
                 _networkPosition = (Vector3)stream.ReceiveNext();
                 _networkRotation = (Quaternion)stream.ReceiveNext();
             }
