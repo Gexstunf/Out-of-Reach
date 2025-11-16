@@ -13,11 +13,11 @@ namespace Characters.Enemies.Scripts {
         public bool IsChasing => _chasing;
 
         private bool _chasing;
-        
+        private bool _active;
         //[Header("AI Settings")]
 
         
-        void Awake() {
+        private void Awake() {
             _targetingScript = GetComponent<TargetingScript>();
             _agent = GetComponent<NavMeshAgent>();
 
@@ -25,8 +25,10 @@ namespace Characters.Enemies.Scripts {
             if (_targetingScript == null) Debug.LogWarning("No TargetingScript component attached to: " + gameObject.name);
         }
 
-        void Update()
+        private void Update()
         {
+            if (!_active) return;
+            
             if (_targetingScript.CurrentTargetTransform && _agent.isActiveAndEnabled) {
                 _agent.destination = _targetingScript.CurrentTargetTransform.position;
                 _chasing = true;
@@ -34,6 +36,10 @@ namespace Characters.Enemies.Scripts {
             else {
                 _chasing = false;
             }
+        }
+
+        public void SetAIActive(bool active) {
+            _active = active;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Numerics;
 using Characters.PlayerController.Scripts;
@@ -29,11 +30,9 @@ namespace Environment.Scripts.Interactable {
         
         private InteractableControllerScript _interactableController;
         
-        void Awake()
-        {
+        void Awake() {
             mainCamera = Camera.main;
             if (mainCamera) _camTransform = mainCamera.transform;
-
         }
 
         // Update is called once per frame
@@ -49,6 +48,7 @@ namespace Environment.Scripts.Interactable {
         }
         
         public override void StartInteraction(InteractableControllerScript controller) {
+            terminalController = FindFirstObjectByType<TerminalControllerScript>();
             _interactableController = controller;
             
             Debug.Log("Interacting with terminal!");

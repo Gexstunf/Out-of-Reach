@@ -1,38 +1,40 @@
 using Photon.Pun;
 using System;
 using System.Collections;
+using Environment.Scripts.Doors;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Environment.Scripts {
     public class SlidingDoorScript : MonoBehaviourPun, IPunObservable
     {
-
+        
+        #region Variables
         [Header("References")] 
         public Transform femaleDoor;
         public Transform maleDoor;
-        [SerializeField] private AudioSource _audioSource;
+        [SerializeField] private AudioSource _doorAudio;
+        [SerializeField] private SlidingDoorsManagerScript _doorsManager;
 
         [Header("Settings")] 
         [SerializeField] private MovementAxis movementAxis = MovementAxis.Z;
         public bool useDetection = true;
         public float detectionRadius = 4f;
         public LayerMask detectionLayerMask;
-        public float doorSpeed = 0.2f;
+        public float doorSpeed = 6f;
         public float doorCrackOffset = 0.05f;
         public bool shouldOpenForEnemies = true;
         
-        [Header("Debug")]
-        [SerializeField] private bool open;
-        public bool debug;
+        [Header("Audio")]
+        public float timeSkip = 0.5f;
         
         [Header("Settings Failure")] 
         public float doorFailureChance = 0.4f;
-        public DoorFailureMode doorMode;
+        public DoorFailureMode doorMode = DoorFailureMode.None;
         
         [SerializeField] private float slamDistanceOpen = 2f; 
         [SerializeField] private float slamDistanceClosed = -1f;
-        [SerializeField] private float slowDoorSpeed = 2f;
+        [SerializeField] private float doorSpeedModifier = -2f;
 
         [SerializeField] private float slamSpeed = 5f;       
         [SerializeField] private float minDelay = 0.3f;           // shortest pause
@@ -67,14 +69,26 @@ namespace Environment.Scripts {
             JammedOpen,
         }
         
+        #endregion
+        
+        #region Public API
         public bool IsOpen => _isOpen;
+        
+        public void SwitchDoorState()
+        {
+            _isOpen = !_isOpen;
+        }
+        
+        #endregion
 
+        #region Unity Methods
         private void Awake() {
-            _audioSource = GetComponent<AudioSource>();
+            _doorAudio = GetComponent<AudioSource>();
         }
 
-        void Start()
+        private void Start()
         {
+            _doorsManager = SlidingDoorsManagerScript.Instance;
             _initialFemalePosition = femaleDoor.localPosition;
             _initialMalePosition = maleDoor.localPosition;
 
@@ -86,43 +100,27 @@ namespace Environment.Scripts {
 
         private void Update()
         {
-            // Solo el Master actualiza la lógica
-            if (photonView.IsMine || !PhotonNetwork.IsConnected)
-            {
-                if (!debug && useDetection && doorMode == DoorFailureMode.None)
-                {
-                    Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius, detectionLayerMask);
-                    bool detected = false;
-
-                    foreach (Collider c in hits)
-                    {
-                        if (c.CompareTag("Player") || (c.CompareTag("Enemy") && shouldOpenForEnemies))
-                        {
-                            detected = true;
-                            break;
-                        }
-                    }
-                    _isOpen = detected;
-                }
-                else
-                    _isOpen = open;
-
-                doorIsNowOpen = _isOpen;
-
-                if (doorMode != DoorFailureMode.None)
-                {
-                    HandleDoorFailure();
-                    return;
-                }
-
+            if (doorMode == DoorFailureMode.None) {
                 HandleDoor(doorSpeed);
             }
-            else
-            {
-                // Los otros clientes simplemente interpolan lo que reciben
-                HandleDoor(doorSpeed);
+            
+            doorIsNowOpen = _isOpen;
+
+            if ((!photonView.IsMine || !PhotonNetwork.IsConnected) && _doorsManager.usePhoton) return; // Solo el Master actualiza la logica
+            
+            if (useDetection && doorMode == DoorFailureMode.None) {
+                Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius, detectionLayerMask);
+                bool detected = HandleDetection(hits);
+                _isOpen = detected;
+            }
+            
+            if (doorMode != DoorFailureMode.None) {
+                HandleDoorFailure();
             }
         }
+        #endregion
+        
+        #region Door Logic
 
         private void HandleDoorFailure()
         {
@@ -139,36 +137,43 @@ namespace Environment.Scripts {
                     SlamDoor(_initialFemalePosition, _initialMalePosition, false);
                     break;
                 case DoorFailureMode.Slowed:
-                    HandleDoor(slowDoorSpeed);
+                    HandleDoor(doorSpeed - Math.Abs(doorSpeedModifier));
                     break;
-            }
-        }
-
-        private void SetClosedOffsetPositionAlongAxis(ref Vector3 position, float offset)
-        {
-            switch (movementAxis)
-            {
-                case MovementAxis.X: position = new Vector3(offset, 0f, 0f); break;
-                case MovementAxis.Y: position = new Vector3(0f, offset, 0f); break;
-                case MovementAxis.Z: position = new Vector3(0f, 0f, offset); break;
             }
         }
 
         private void HandleDoor(float speed)
         {
-            if (_isOpen)
-            {
+            if (_isOpen) {
+                if (_previouslyClosed) PlaySound();
+                _previouslyClosed = false;
                 femaleDoor.localPosition = Vector3.Lerp(femaleDoor.localPosition, _initialFemalePosition, speed * Time.deltaTime);
                 maleDoor.localPosition = Vector3.Lerp(maleDoor.localPosition, _initialMalePosition, speed * Time.deltaTime);
             }
-            else
-            {
+            else {
+                if (!_previouslyClosed) PlaySound();
+                
+                _previouslyClosed = true;
                 SetClosedOffsetPositionAlongAxis(ref _closedPosOffset, doorCrackOffset);
                 femaleDoor.localPosition = Vector3.Lerp(femaleDoor.localPosition, Vector3.zero + _closedPosOffset, speed * Time.deltaTime);
                 maleDoor.localPosition = Vector3.Lerp(maleDoor.localPosition, Vector3.zero - _closedPosOffset, speed * Time.deltaTime);
             }
         }
 
+        private bool HandleDetection(Collider[] hits) {
+            foreach (Collider c in hits)
+            {
+                if (c.CompareTag("Player") || (c.CompareTag("Enemy") && shouldOpenForEnemies))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        #endregion
+
+        #region Slam door logic
         private void SlamDoor(Vector3 femaleTarget, Vector3 maleTarget, bool openSlam)
         {
             if (_isSlamming) return;
@@ -204,7 +209,10 @@ namespace Environment.Scripts {
             yield return new WaitForSeconds(UnityEngine.Random.Range(minDelay, maxDelay));
             _isSlamming = false;
         }
-
+        #endregion
+        
+        #region  Utils
+        
         private Vector3 AddOffsetPositionAlongAxis(Vector3 position, float offset, bool positive = true)
         {
             float offsetWithSign = positive ? offset : -offset;
@@ -216,6 +224,23 @@ namespace Environment.Scripts {
                 default: return position;
             }
         }
+        
+        private void SetClosedOffsetPositionAlongAxis(ref Vector3 position, float offset)
+        {
+            switch (movementAxis)
+            {
+                case MovementAxis.X: position = new Vector3(offset, 0f, 0f); break;
+                case MovementAxis.Y: position = new Vector3(0f, offset, 0f); break;
+                case MovementAxis.Z: position = new Vector3(0f, 0f, offset); break;
+            }
+        }
+
+        private void PlaySound() {
+            _doorAudio.time = timeSkip;
+            _doorAudio.Play();
+        }
+        
+        #endregion
 
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
@@ -227,11 +252,6 @@ namespace Environment.Scripts {
             {
                 _isOpen = (bool)stream.ReceiveNext();
             }
-        }
-
-        public void SwitchDoorState()
-        {
-            _isOpen = !_isOpen;
         }
     }
 }

@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Hallway
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5750995032441679566
 Transform:
@@ -63,7 +63,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3407089762364247797
 Transform:
@@ -99,7 +99,7 @@ GameObject:
   m_TagString: Hallway
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &232215804705230934
 Transform:
@@ -208,7 +208,7 @@ GameObject:
   m_TagString: Hallway
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7892235006740093466
 Transform:
@@ -257,7 +257,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3837981993583899478
 Transform:
@@ -286,10 +286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemDatabase: {fileID: 0}
   maxItemSize: 0
   allowedTypes: 0100000003000000
-  isOccupied: 0
 --- !u!1 &8244177333731070640
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,7 +303,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4243618869168379837
 Transform:
@@ -334,10 +332,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemDatabase: {fileID: 0}
   maxItemSize: 0
   allowedTypes: 0100000003000000
-  isOccupied: 0
 --- !u!1001 &610134128977602437
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -350,9 +346,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2053927745447130100, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 2436264089706010640, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2436264089706010640, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 2685013475286680658, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -398,6 +402,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5456721953119529168, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 6596308107174760454, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
       propertyPath: m_Name
       value: SalidaPrefab
@@ -414,13 +422,25 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Hallway
       objectReference: {fileID: 0}
+    - target: {fileID: 6596308107174760454, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7224340279367377741, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7224340279367377741, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7968375195961548725, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7968375195961548725, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -440,9 +460,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 232215804705230934}
     m_Modifications:
+    - target: {fileID: 546608553169215406, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1262001049602346511, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
       propertyPath: m_Name
       value: CeilingLamp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262001049602346511, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 1530835492888926977, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
       propertyPath: m_LocalPosition.x
@@ -483,6 +511,14 @@ PrefabInstance:
     - target: {fileID: 1530835492888926977, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1760184014595189641, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2104614268021320945, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -553,6 +589,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a153d04609567be4aa5b453d55c48732, type: 3}
       propertyPath: m_TagString
       value: Hallway
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a153d04609567be4aa5b453d55c48732, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1530835492888926977}
-  - component: {fileID: 1458508829885579468}
   - component: {fileID: -7046519811439969062}
   - component: {fileID: -2868071719106621306}
+  - component: {fileID: 1458508829885579468}
   - component: {fileID: 2047041707059669169}
   m_Layer: 3
   m_Name: CeilingLamp
@@ -38,34 +38,6 @@ Transform:
   - {fileID: 215472899468007900}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1458508829885579468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1262001049602346511}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ea4b407b53f40acb4e20a57932b5d94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lightObject: {fileID: 1760184014595189641}
-  vsfObject: {fileID: 546608553169215406}
-  _lightAudioSource: {fileID: -7046519811439969062}
-  _failAudioSource: {fileID: -2868071719106621306}
-  debug: 0
-  useSparkEffect: 1
-  intensityScaleFactor: 0
-  intensityOffsetMagnitude: 10
-  flickerTime: 0.25
-  blinkTime: 2
-  minTime: 0.2
-  maxTime: 2.25
-  minIntensity: 0.6
-  maxIntensity: 2
-  failureChance: 0.85
-  selfDestructChance: 0.6
 --- !u!82 &-7046519811439969062
 AudioSource:
   m_ObjectHideFlags: 0
@@ -260,6 +232,35 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1458508829885579468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1262001049602346511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ea4b407b53f40acb4e20a57932b5d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightObject: {fileID: 1760184014595189641}
+  vsfObject: {fileID: 546608553169215406}
+  _lightAudioSource: {fileID: -7046519811439969062}
+  _failAudioSource: {fileID: -2868071719106621306}
+  debug: 0
+  useSparkEffect: 1
+  useSound: 1
+  intensityScaleFactor: 0
+  intensityOffsetMagnitude: 10
+  flickerTime: 0.25
+  blinkTime: 2
+  minTime: 0.2
+  maxTime: 2.25
+  minIntensity: 0.6
+  maxIntensity: 2
+  failureChance: 0.85
+  selfDestructChance: 0.6
 --- !u!114 &2047041707059669169
 MonoBehaviour:
   m_ObjectHideFlags: 0

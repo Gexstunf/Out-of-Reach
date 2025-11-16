@@ -4,11 +4,13 @@ using Environment.Scripts.DungeonGeneration.Data;
 using Environment.Scripts.DungeonGeneration.Utils;
 using GlobalUtils;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Environment.Scripts.DungeonGeneration.CoreScripts {
     public class DungeonGeneratorScript : MonoBehaviour
     {
+        #region Variables
         [Header("References")]
         [SerializeField] private PrefabDatabaseScript prefabDb;
         [SerializeField] private PrefabPlacerScript prefabPlacer;
@@ -25,72 +27,142 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
         [SerializeField] private int minRoomCount =  10;
         [SerializeField] private AnimationCurve stopChanceCurve;
         [SerializeField] private int maxAttemptsPerSocket = 100;
+        [SerializeField] private int maxAmountOfStructures = 200;
+        [SerializeField] private float maxGenerationTime = 15f;
+        [SerializeField] private string parentName = "STRUCTURES";
+
+        [Header("Visualize")]
+        [SerializeField] private int currentPlacedCount;
+        [SerializeField] private int currentStructureSum;
+        [SerializeField] private int currentRoomAmount;
+        [SerializeField] private int currentIntersectionAmount;
+        [SerializeField] private int currentHallwayAmount;
+        
+        public static DungeonGeneratorScript Instance;
 
         private List<StructureInstanceScript> _placed = new();
         private List<StructureSocketScript> _openSockets = new();
+        private List<StructureSocketScript> _failedSockets = new();
+        
+        private bool _previouslyPlacedRoom = false;
         private int _roomCount = 0;
+        private int _hallwayCount = 0;
+        private int _intersectionCount = 0;
+        private float _currentGenerationTime = 0f;
+        #endregion
 
+        #region Public API
+
+        public bool FinishedGeneration { get; private set; } = false;
+
+        #endregion
+        
         private void Awake() {
-            _logger = LoggerSO.Instance;
+            if (Instance != null) {
+                Destroy(gameObject);
+            }
+            
+            Instance = this;
         }
 
-        public void Start() {
+
+        private void Start() {
+            _logger = LoggerSO.Instance;
             _logger.Log("Starting Generation");
             Generate(generationStartStructure, generationStartPoint);
             SealExits();
+            currentPlacedCount = _placed.Count;
+            currentStructureSum = _hallwayCount + _intersectionCount + _roomCount; 
+            FinishedGeneration = true;
+            PlaceUnderParent(_placed);
         }
 
-        public void Generate(StructurePrefabScript startPrefab, Transform startPoint) {
+        private void Generate(StructurePrefabScript startPrefab, Transform startPoint) {
             var motherInstance = prefabPlacer.PlaceInitial(motherStartStructure, motherPlacePoint.position);
-            var startInstance = prefabPlacer.PlaceInitial(startPrefab, startPoint.position);    
+            //var startInstance = prefabPlacer.PlaceInitial(startPrefab, startPoint.position);    
             _placed.Add(motherInstance);
-            _placed.Add(startInstance);
-            _openSockets.AddRange(startInstance.GetExits());
-            
-            motherInstance.UpdateBounds();
-            startInstance.UpdateBounds();
-            var motherDrawer = motherInstance.instance.AddComponent<BoundsDrawerScript>();
-            var startDrawer = startInstance.instance.AddComponent<BoundsDrawerScript>();
-            motherDrawer.SetBounds(motherInstance.Bounds, -1);
-            startDrawer.SetBounds(startInstance.Bounds, 0);
-            
-            _logger.Log($"After placing the initial prefab, we have: {_openSockets.Count} open sockets.");
+            _openSockets.AddRange(motherInstance.GetExits());
+            SetupShip(_openSockets, startPrefab);
+            //_placed.Add(startInstance);
+            //_openSockets.AddRange(startInstance.GetExits());
 
+            //_logger.Log($"After placing the initial prefab, we have: {_openSockets.Count} open sockets.");
+            float generationStartTime = Time.realtimeSinceStartup; // this is real time, Time.DeltaTime doesnt work because this is a single frame.
+            
             while (_openSockets.Count > 0) {
                 StructureSocketScript socket = RandomPickFromList(_openSockets);
                 bool success = TryExpandFrom(socket);
                 if (!success) {
-                    //_openSockets.Remove(socket);
+                    _openSockets.Remove(socket); // remove, but add keep track of it so we can restore _openSocks and seal them later.
+                    _failedSockets.Add(socket);
                     _logger.LogMinor($"FAILED placing in this socket: {socket}. \n Remaining open sockets: {_openSockets.Count}");
                 }
-
-                if (_roomCount >= minRoomCount) {
-                    float t = Mathf.InverseLerp(minRoomCount, minRoomCount * 2, _roomCount);
-                    float stopChance = stopChanceCurve.Evaluate(t);
-                    if (!(Random.value < stopChance)) break;
-                }
+            
+                _currentGenerationTime = Time.realtimeSinceStartup - generationStartTime;
+                if (ShouldTerminateGeneration()) break;
             }
         }
 
-        public bool TryExpandFrom(StructureSocketScript socket, StructurePrefabScript p = null, bool ignoreOverlap = false) {
+        private bool TryExpandFrom(StructureSocketScript socket, StructurePrefabScript p = null, bool ignoreOverlap = false) {
             for (int i = 0; i < maxAttemptsPerSocket; i++) {
                 StructurePrefabScript prefab = p != null? p : prefabDb.GetWeightedRandom();
+
+                if (_previouslyPlacedRoom && p == null) prefab = prefabDb.GetWeightedRandom(includeRooms: false);
                 var result = prefabPlacer.TryPlacePrefab(prefab, socket, _placed, ignoreOverlap); // result is casted to a tuple (just in case you forget lil nigga)
 
                 if (result.success) {
-                    _logger.LogMinor($"SUCCEEDED placing the prefab: {prefab.name}.");
+                    //_logger.LogMinor($"SUCCEEDED placing the prefab: {prefab.name}.");
                     _placed.Add(result.instance);
                     _openSockets.Remove(socket);
                     _openSockets.AddRange(result.instance.GetUnconnectedExits());
-                    if (prefab.structureType == StructureType.Room)
-                        _roomCount++;
+                    HandleStructure(prefab); // this just adds to some variables and checks some conditions e.g _prevPlacedRoom
+                    
                     return true;
                 }
             }
             return false;
         }
+
+        private bool ShouldTerminateGeneration() {
+            if (_roomCount >= minRoomCount) {
+                float t = Mathf.InverseLerp(minRoomCount, minRoomCount * 2, _roomCount);
+                float stopChance = stopChanceCurve.Evaluate(t);
+                float random = Random.value;
+                if (random < stopChance) {
+                    Debug.Log("= = = = TERMINATING GENERATION due to STOP CHANCE = = = =");
+                    Debug.Log($"The termination chance curve is currently at: {stopChance}.  T: {t} / Random: {random} ");
+                    return true;
+                }
+            }
+
+            if (_placed.Count >= maxAmountOfStructures) {
+                Debug.Log("= = = = TERMINATING GENERATION due to HARD LIMIT = = = =");
+                return true;
+            }
+            
+            if (_currentGenerationTime > maxGenerationTime) {
+                Debug.Log("= = = = TERMINATING GENERATION due to TIME LIMIT = = = =");
+                Debug.Log($"The generation time is currently at: {_currentGenerationTime}.");
+                return true;
+            }
+
+            return false;
+        }
         
+        private void SetupShip(List<StructureSocketScript> sockets, StructurePrefabScript setupPrefab) {
+            var socketsCopy = new List<StructureSocketScript>(sockets);
+            foreach (var socket in socketsCopy) {
+                bool success = TryExpandFrom(socket, setupPrefab, ignoreOverlap: true);
+                if (!success) {
+                    _openSockets.Remove(socket); // remove, but add keep track of it so we can restore _openSocks and seal them later.
+                    _failedSockets.Add(socket);
+                    _logger.LogMinor($"FAILED SETUP placing in this socket: {socket}. \n Remaining open sockets: {_openSockets.Count}");
+                }
+            }
+        }
+            
         private void SealExits() {
+            _openSockets.AddRange(_failedSockets); // restore the failed sockets to the open ones for sealing
             var socketsCopy = new List<StructureSocketScript>(_openSockets);
 
             foreach (var socket in socketsCopy) {
@@ -101,7 +173,33 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
                 }
             }
         }
+  
+        private void HandleStructure(StructurePrefabScript prefab) {
+            switch (prefab.structureType) {
+                case StructureType.Room:
+                    _roomCount++;
+                    currentRoomAmount = _roomCount;
+                    _previouslyPlacedRoom = true;
+                    break;
+                case StructureType.Hallway:
+                    _hallwayCount++;
+                    currentHallwayAmount = _hallwayCount;
+                    _previouslyPlacedRoom = false;
+                    break;
+                case StructureType.Intersection:
+                    _intersectionCount++;
+                    currentIntersectionAmount = _intersectionCount;
+                    _previouslyPlacedRoom = false;
+                    break;
+            }
+        }
 
+        private void PlaceUnderParent(List<StructureInstanceScript> list) {
+            var parent = new GameObject(parentName);
+            foreach (var struInst in list) {
+                struInst.instance.transform.SetParent(parent.transform);
+            }
+        }
 
         private T RandomPickFromList<T>(List<T> list) {
             if (list == null || list.Count == 0) return default;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Environment.Scripts.Lights;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Serialization;
@@ -10,6 +11,7 @@ namespace Environment.Scripts
     public class LightScript : MonoBehaviourPun, IPunObservable
     {
         [Header("References")]
+        [SerializeField] private LightsManagerScript _lightsManagerScript;
         public GameObject lightObject;
         public GameObject vsfObject;
         [SerializeField] private AudioSource _lightAudioSource;
@@ -19,7 +21,6 @@ namespace Environment.Scripts
         public bool debug;
         public bool useSparkEffect = true;
         public bool useSound = true;
-        public static bool UsePhoton;
 
         [Range(0, 1)] public float intensityScaleFactor = 0f;
         public float intensityOffsetMagnitude = 10f;
@@ -42,8 +43,6 @@ namespace Environment.Scripts
 
         private Light _lightComp;
         private ParticleSystem _particleSystem;
-
-
         private bool _doorFailed;
 
         public enum ELightMode
@@ -59,34 +58,35 @@ namespace Environment.Scripts
 
         private void Start()
         {
+            _lightsManagerScript = LightsManagerScript.Instance;
             _lightComp = lightObject.GetComponent<Light>();
             if (vsfObject) _particleSystem = vsfObject.GetComponent<ParticleSystem>();
             _normalIntensity = _lightComp.intensity;
 
             // Solo el due�o (host o instancia principal) decide el modo inicial
-            if (photonView.IsMine && UsePhoton)
+            if (!photonView.IsMine && _lightsManagerScript.usePhoton) return;
+            
+            if (UnityEngine.Random.value < failureChance)
             {
-                if (UnityEngine.Random.value < failureChance)
-                {
-                    _lightMode = (ELightMode)UnityEngine.Random.Range(1, Enum.GetValues(typeof(ELightMode)).Length);
-                    _doorFailed = true;
-                }
-                else
-                {
-                    _lightMode = ELightMode.On;
-                }
-
-                if (UnityEngine.Random.value < selfDestructChance)
-                {
-                    Destroy(gameObject);
-                }
+                _lightMode = (ELightMode)UnityEngine.Random.Range(1, Enum.GetValues(typeof(ELightMode)).Length);
+                _doorFailed = true;
             }
+            else
+            {
+                _lightMode = ELightMode.On;
+            }
+
+            if (UnityEngine.Random.value < selfDestructChance)
+            {
+                Destroy(gameObject);
+            }
+            
         }
 
         private void Update()
         {
             // Solo el due�o ejecuta la l�gica interna
-            if (!photonView.IsMine && UsePhoton) return;
+            if (!photonView.IsMine && _lightsManagerScript.usePhoton) return;
 
             if (_currentRoutine != null) return;
             bool shouldTryEffect = false;

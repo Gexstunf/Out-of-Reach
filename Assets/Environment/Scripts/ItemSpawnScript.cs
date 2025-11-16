@@ -1,58 +1,49 @@
 using System;
 using Items.Scripts;
 using Multiplayer.Inventory;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Environment.Scripts {
     public class ItemSpawnScript : MonoBehaviour
     {
-        [Header("Settings")] 
-        public ItemDatabaseSO itemDatabase;
-        
-        [Header("Spawn Properties")]
+        [Header("Settings")]
         public ItemSize maxItemSize = ItemSize.Medium;
         public ItemType[] allowedTypes;
 
-        [HideInInspector] public bool isOccupied = false;
-
         private ItemSpawnManagerScript _itemManager;
         private ItemSO _itemData;
-        
-        private bool _hasData = true;
         private bool _failedSpawn;
         
-        public void Awake() {
-            itemDatabase = Resources.Load<ItemDatabaseSO>("Databases/ItemDatabase");
-            _itemManager = new ItemSpawnManagerScript(itemDatabase);
-        }
-
-
-        public void Start() {
+        public GameObject ItemInstance { get; private set; }
+        
+        public bool TrySpawnObject() {
+            _itemManager = ItemSpawnManagerScript.Instance;
             _itemData = _itemManager.ChooseItem(maxItemSize, allowedTypes);
-
-            if (_itemData == null) {
-                _hasData = false;
-                return;
+            if (_itemData == null) return false;
+            
+            float spawnRandomNum = UnityEngine.Random.Range(0, 1);
+            if (spawnRandomNum < _itemData.spawnChance) {
+                
+                if (_itemManager.usePhoton) 
+                    ItemInstance = PhotonNetwork.Instantiate(_itemData.prefab.name, transform.position, transform.rotation);
+                else 
+                    ItemInstance = Instantiate(_itemData.prefab, transform.position, transform.rotation);
+                
+                return true;
             }
             
-            float spawnRandomNum = UnityEngine.Random.Range(0f, 1f);
-
-            if (spawnRandomNum < _itemData.spawnChance) {
-                Instantiate(_itemData.prefab, transform.position, transform.rotation);
-            }
-            else {
-                //Debug.Log("Failed spawn chance");
-                _failedSpawn = true;
-            }
+            _failedSpawn = true;
+            return false;
         }
         
         private void Reset() {
-            allowedTypes = new ItemType[] { ItemType.Weapon, ItemType.Consumable };
+            allowedTypes = new[] { ItemType.Weapon, ItemType.Consumable };
         }
 
         private void OnDrawGizmos() {
-            if (_hasData && !_failedSpawn) return;
+            if (_itemData != null && !_failedSpawn) return;
             
             Gizmos.color = _failedSpawn ? Color.yellow : Color.red;
             Gizmos.DrawWireSphere(transform.position, 0.4f);

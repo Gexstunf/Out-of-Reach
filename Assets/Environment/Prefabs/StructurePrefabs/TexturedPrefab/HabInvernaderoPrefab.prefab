@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6926712898450755089
 Transform:
@@ -59,7 +59,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3785284827577249093
 Transform:
@@ -107,7 +107,7 @@ GameObject:
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5170823984737146726
 Transform:
@@ -156,7 +156,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5142433709564338315
 Transform:
@@ -185,10 +185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemDatabase: {fileID: 0}
   maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
-  isOccupied: 0
 --- !u!1 &2731816563582697202
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,7 +201,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6041233137491584421
 Transform:
@@ -251,7 +249,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7127980754043581465
 Transform:
@@ -280,10 +278,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemDatabase: {fileID: 0}
   maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
-  isOccupied: 0
 --- !u!1 &6437936929108771199
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +295,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6366212103581118981
 Transform:
@@ -328,10 +324,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemDatabase: {fileID: 0}
   maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
-  isOccupied: 0
 --- !u!1 &6589599371118072917
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,7 +340,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6536220700406945338
 Transform:
@@ -382,7 +376,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &850729793576434266
 Transform:
@@ -442,7 +436,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &135891687310231759
 Transform:
@@ -490,7 +484,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8504290375562560726
 Transform:
@@ -519,10 +513,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemDatabase: {fileID: 0}
   maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
-  isOccupied: 0
 --- !u!1 &7466108815168087139
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,7 +530,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2570165517581048200
 Transform:
@@ -567,10 +559,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cc60b52f5b90e44810c040d28877bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemDatabase: {fileID: 0}
   maxItemSize: 2
   allowedTypes: 00000000010000000200000003000000
-  isOccupied: 0
 --- !u!1 &8047717168448314802
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,7 +576,7 @@ GameObject:
   m_TagString: Indestructible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &662699387104270479
 Transform:
@@ -642,7 +632,7 @@ GameObject:
   m_TagString: Room
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7500236061927494659
 Transform:
@@ -786,6 +776,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RockSmallE
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 14722e6a1384b624b813e9e987a85a1b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -847,6 +841,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
       propertyPath: m_Name
       value: FernDClusterVariantB (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -910,6 +908,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FernBClusterVariantA
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b29b8793c35c50e409e9e07f26606bd8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -971,6 +973,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 074938465f1a8964c8618ddbe32d2b5f, type: 3}
       propertyPath: m_Name
       value: RockSmallA
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 074938465f1a8964c8618ddbe32d2b5f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1034,6 +1040,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RockBlueD
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd5f7376db7add847ada07b4f6c88070, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1095,6 +1105,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b29b8793c35c50e409e9e07f26606bd8, type: 3}
       propertyPath: m_Name
       value: FernBClusterVariantA
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b29b8793c35c50e409e9e07f26606bd8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1158,6 +1172,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlyAgaricBAdultVariantB
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e4544f525334a3b418bb6533d326395b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1219,6 +1237,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 3a620d9a6e2e0a045a3bb0f5bf5e086b, type: 3}
       propertyPath: m_Name
       value: WildGarlicBLeaves
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3a620d9a6e2e0a045a3bb0f5bf5e086b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1282,6 +1304,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlyAgaricBAdultVariantB (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e4544f525334a3b418bb6533d326395b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1343,6 +1369,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8b9d8e31a0d734e468385073d5d78601, type: 3}
       propertyPath: m_Name
       value: PorcinigBAdultVariantD
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8b9d8e31a0d734e468385073d5d78601, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1406,6 +1436,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FoxgloveBVariantB
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e9f55347a90e40143a3b0826c38a9bfa, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1467,6 +1501,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9759414ad155bbc4c994ebca5f6b96a0, type: 3}
       propertyPath: m_Name
       value: GrassLumpLargeFTall
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9759414ad155bbc4c994ebca5f6b96a0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1530,6 +1568,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RockNormD
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2689ea4dcfeb8da439bad16666daa3ce, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1591,6 +1633,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f94a905e68f55974495d9e831bbc1a9e, type: 3}
       propertyPath: m_Name
       value: GrassLumpD (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f94a905e68f55974495d9e831bbc1a9e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1654,6 +1700,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RockSmallE
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 14722e6a1384b624b813e9e987a85a1b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1715,6 +1765,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e9f55347a90e40143a3b0826c38a9bfa, type: 3}
       propertyPath: m_Name
       value: FoxgloveBVariantB
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e9f55347a90e40143a3b0826c38a9bfa, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1778,6 +1832,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FernDClusterVariantB
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1839,6 +1897,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b29b8793c35c50e409e9e07f26606bd8, type: 3}
       propertyPath: m_Name
       value: FernBClusterVariantA
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b29b8793c35c50e409e9e07f26606bd8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1902,6 +1964,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FernDClusterVariantB (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1963,6 +2029,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: bc087fdd2488e0f459d2a0c9a0dd2820, type: 3}
       propertyPath: m_Name
       value: BluebellBLeaves
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bc087fdd2488e0f459d2a0c9a0dd2820, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2026,6 +2096,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GirolleAVariantA
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 42bc5f970a0316c4c94102c4f153df33, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2087,6 +2161,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2689ea4dcfeb8da439bad16666daa3ce, type: 3}
       propertyPath: m_Name
       value: RockNormD
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2689ea4dcfeb8da439bad16666daa3ce, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2150,6 +2228,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DandelionBLeaves
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 48a27d581801efe49935a2dfdc2ffb5a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2211,6 +2293,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 3a620d9a6e2e0a045a3bb0f5bf5e086b, type: 3}
       propertyPath: m_Name
       value: WildGarlicBLeaves
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3a620d9a6e2e0a045a3bb0f5bf5e086b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2286,6 +2372,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Indestructible
       objectReference: {fileID: 0}
+    - target: {fileID: 2314895324653618117, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 2603972251886297338, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_LocalPosition.z
       value: -1.84
@@ -2294,13 +2384,25 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2767361834824982362, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 3255104455938868704, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4002201527761178239, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5616762866652952180, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616762866652952180, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6432246925732745725, guid: 706e0acd8f46bb94ead0a075c916aac8, type: 3}
       propertyPath: m_Layer
@@ -2379,6 +2481,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DaisyB
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0c0afd19a7ef905458e8b33482081ce3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2440,6 +2546,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f94a905e68f55974495d9e831bbc1a9e, type: 3}
       propertyPath: m_Name
       value: GrassLumpD
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f94a905e68f55974495d9e831bbc1a9e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2503,6 +2613,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GrassLumpLargeFTall (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9759414ad155bbc4c994ebca5f6b96a0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2521,9 +2635,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7500236061927494659}
     m_Modifications:
+    - target: {fileID: 546608553169215406, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1262001049602346511, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
       propertyPath: m_Name
       value: CeilingLamp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262001049602346511, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 1458508829885579468, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
       propertyPath: failureChance
@@ -2580,6 +2702,14 @@ PrefabInstance:
     - target: {fileID: 1560962329439858754, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
       propertyPath: m_BounceIntensity
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1760184014595189641, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2104614268021320945, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 2951084905180954293, guid: ddb804909614edd49a4e73fecbb4f994, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2647,6 +2777,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DandelionsClusterB
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c567b56ad0e41fc45a1ffbb643eb7302, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2708,6 +2842,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 48a27d581801efe49935a2dfdc2ffb5a, type: 3}
       propertyPath: m_Name
       value: DandelionBLeaves
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 48a27d581801efe49935a2dfdc2ffb5a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2771,6 +2909,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PorcinigBAdultVariantD
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8b9d8e31a0d734e468385073d5d78601, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2832,6 +2974,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 49391071842577c4b890d0bdb964dc31, type: 3}
       propertyPath: m_Name
       value: FlyAgaricBYoungVariantB
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 49391071842577c4b890d0bdb964dc31, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2895,6 +3041,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BluebellBLeaves (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bc087fdd2488e0f459d2a0c9a0dd2820, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2956,6 +3106,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 14722e6a1384b624b813e9e987a85a1b, type: 3}
       propertyPath: m_Name
       value: RockSmallE
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 14722e6a1384b624b813e9e987a85a1b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3019,6 +3173,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FoxgloveBVariantB
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e9f55347a90e40143a3b0826c38a9bfa, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3080,6 +3238,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9759414ad155bbc4c994ebca5f6b96a0, type: 3}
       propertyPath: m_Name
       value: GrassLumpLargeFTall
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9759414ad155bbc4c994ebca5f6b96a0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3143,6 +3305,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WildGarlicBLeaves
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3a620d9a6e2e0a045a3bb0f5bf5e086b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3204,6 +3370,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: bc087fdd2488e0f459d2a0c9a0dd2820, type: 3}
       propertyPath: m_Name
       value: BluebellBLeaves (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bc087fdd2488e0f459d2a0c9a0dd2820, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3267,6 +3437,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FernDClusterVariantB (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3328,6 +3502,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 14722e6a1384b624b813e9e987a85a1b, type: 3}
       propertyPath: m_Name
       value: RockSmallE (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 14722e6a1384b624b813e9e987a85a1b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3391,6 +3569,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DandelionBLeaves
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 48a27d581801efe49935a2dfdc2ffb5a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3452,6 +3634,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
       propertyPath: m_Name
       value: FernDClusterVariantB
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3515,6 +3701,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlyAgaricBAdultVariantB (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e4544f525334a3b418bb6533d326395b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3576,6 +3766,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 074938465f1a8964c8618ddbe32d2b5f, type: 3}
       propertyPath: m_Name
       value: RockSmallA
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 074938465f1a8964c8618ddbe32d2b5f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3639,6 +3833,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FernDClusterVariantB
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3700,6 +3898,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b13e2fdb17e7be346a15d53e5286eb6a, type: 3}
       propertyPath: m_Name
       value: NettleDMixedVariantB
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b13e2fdb17e7be346a15d53e5286eb6a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3763,6 +3965,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BluebellBLeaves
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bc087fdd2488e0f459d2a0c9a0dd2820, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3824,6 +4030,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 48a27d581801efe49935a2dfdc2ffb5a, type: 3}
       propertyPath: m_Name
       value: DandelionBLeaves
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 48a27d581801efe49935a2dfdc2ffb5a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3887,6 +4097,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FernBClusterVariantA (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b29b8793c35c50e409e9e07f26606bd8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3948,6 +4162,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e4544f525334a3b418bb6533d326395b, type: 3}
       propertyPath: m_Name
       value: FlyAgaricBAdultVariantB (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e4544f525334a3b418bb6533d326395b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4011,6 +4229,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlyAgaricBAdultVariantB (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e4544f525334a3b418bb6533d326395b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4072,6 +4294,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: bc087fdd2488e0f459d2a0c9a0dd2820, type: 3}
       propertyPath: m_Name
       value: BluebellBLeaves
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bc087fdd2488e0f459d2a0c9a0dd2820, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4142,6 +4368,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 65aff32bfa92c324da1ed8c12f3ec0d5, type: 3}
       propertyPath: m_TagString
       value: Indestructible
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 65aff32bfa92c324da1ed8c12f3ec0d5, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4234,6 +4464,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DaisyB
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0c0afd19a7ef905458e8b33482081ce3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4295,6 +4529,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b29b8793c35c50e409e9e07f26606bd8, type: 3}
       propertyPath: m_Name
       value: FernBClusterVariantA (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b29b8793c35c50e409e9e07f26606bd8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4358,6 +4596,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RockSmallA (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 074938465f1a8964c8618ddbe32d2b5f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4419,6 +4661,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f94a905e68f55974495d9e831bbc1a9e, type: 3}
       propertyPath: m_Name
       value: GrassLumpD
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f94a905e68f55974495d9e831bbc1a9e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4482,6 +4728,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GirolleAVariantA
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 42bc5f970a0316c4c94102c4f153df33, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4543,6 +4793,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
       propertyPath: m_Name
       value: FernDClusterVariantB
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4606,6 +4860,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GrassLumpD (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f94a905e68f55974495d9e831bbc1a9e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4667,6 +4925,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 14722e6a1384b624b813e9e987a85a1b, type: 3}
       propertyPath: m_Name
       value: RockSmallE (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 14722e6a1384b624b813e9e987a85a1b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4730,6 +4992,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlantSaplingG
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9a7e7ab6928a0444783532b7ae179a91, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4791,6 +5057,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9759414ad155bbc4c994ebca5f6b96a0, type: 3}
       propertyPath: m_Name
       value: GrassLumpLargeFTall (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9759414ad155bbc4c994ebca5f6b96a0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4854,6 +5124,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GirolleAVariantA
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 42bc5f970a0316c4c94102c4f153df33, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4915,6 +5189,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
       propertyPath: m_Name
       value: FernDClusterVariantB
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4978,6 +5256,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DandelionsClusterB
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c567b56ad0e41fc45a1ffbb643eb7302, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5039,6 +5321,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9759414ad155bbc4c994ebca5f6b96a0, type: 3}
       propertyPath: m_Name
       value: GrassLumpLargeFTall
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9759414ad155bbc4c994ebca5f6b96a0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5102,6 +5388,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RockSmallE
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 14722e6a1384b624b813e9e987a85a1b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5163,6 +5453,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b29b8793c35c50e409e9e07f26606bd8, type: 3}
       propertyPath: m_Name
       value: FernBClusterVariantA
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b29b8793c35c50e409e9e07f26606bd8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5226,6 +5520,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FoxgloveBVariantB
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e9f55347a90e40143a3b0826c38a9bfa, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5287,6 +5585,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c4ab5595597d9484cb6aed01a5847656, type: 3}
       propertyPath: m_Name
       value: DeathCapBAdultVariantC
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c4ab5595597d9484cb6aed01a5847656, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5350,6 +5652,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RockSmallA (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 074938465f1a8964c8618ddbe32d2b5f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5411,6 +5717,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f94a905e68f55974495d9e831bbc1a9e, type: 3}
       propertyPath: m_Name
       value: GrassLumpD (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f94a905e68f55974495d9e831bbc1a9e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5474,6 +5784,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PorcinigBAdultVariantD
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8b9d8e31a0d734e468385073d5d78601, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5535,6 +5849,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 42bc5f970a0316c4c94102c4f153df33, type: 3}
       propertyPath: m_Name
       value: GirolleAVariantA
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 42bc5f970a0316c4c94102c4f153df33, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5598,6 +5916,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlantSaplingG
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9a7e7ab6928a0444783532b7ae179a91, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5660,6 +5982,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FernDClusterVariantB
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f54993003649dbd4fb02645229bf8fb8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5721,6 +6047,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f94a905e68f55974495d9e831bbc1a9e, type: 3}
       propertyPath: m_Name
       value: GrassLumpD
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f94a905e68f55974495d9e831bbc1a9e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

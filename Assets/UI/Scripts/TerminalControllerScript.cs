@@ -24,8 +24,6 @@ namespace UI.Scripts {
         private bool _cursorVisible = true;
         private float _cursorTimer = 0f;
         
-
-        
         [Header("Settings")] 
         public string userName = "subject_5";
         public string dir = "Z:/project_61/exp_4";
@@ -53,7 +51,6 @@ namespace UI.Scripts {
         private StyleText _fastStyle;
         
         private LoggerSO _logger;
-        
         
         #endregion
         
@@ -104,10 +101,10 @@ namespace UI.Scripts {
             audioSource = GetComponent<AudioSource>();
             _defaultStyle = GetStyleText(StyleText.EStyle.Normal);
             _fastStyle = GetStyleText(StyleText.EStyle.Fast);
-            _logger = LoggerSO.Instance;
         }
         
         private void Start() {
+            _logger = LoggerSO.Instance;
 
             if (allCommandSOs != null) {
                 foreach (var cmd in allCommandSOs) {
@@ -128,15 +125,12 @@ namespace UI.Scripts {
             AppendOutput("  ");
             AppendOutput("Finished.", style: fastTextStyle);
             AppendOutput("                       "); // a sort of "waiting"
-
-
+            
             AddMethodToIEnumeratorList(ClearOutputIEnumerator());
-
-                        
+            
             AppendOutput("Type 'HELP' for instructions", false);
             
             _logger.LogMinor("Started TerminalControllerScript");
-            
             inputField.text = "";
             
             if (keyBeep && audioSource) audioSource.PlayOneShot(typingSoundClip);

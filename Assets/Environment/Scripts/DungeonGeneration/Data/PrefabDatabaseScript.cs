@@ -11,12 +11,21 @@ namespace Environment.Scripts.DungeonGeneration.Data {
         [SerializeField] private List<StructurePrefabScript> rooms;
         [SerializeField] private List<StructurePrefabScript> intersections;
 
-        public StructurePrefabScript GetWeightedRandom() {
+        #region Public API
+
+        public StructurePrefabScript GetWeightedRandom(bool includeHallways = true, bool includeRooms = true, bool includeIntersections = true) {
             List<StructurePrefabScript> all = new();
-            all.AddRange(hallways);
-            all.AddRange(rooms);
-            all.AddRange(intersections);
+            if (includeHallways) all.AddRange(hallways);
+            if (includeRooms) all.AddRange(rooms);
+            if (includeIntersections) all.AddRange(intersections);
             
+            var prefab = ChoosePrefabByWeight(all);
+            return prefab;
+        }
+        
+        #endregion
+
+        private StructurePrefabScript ChoosePrefabByWeight(List<StructurePrefabScript> all) {
             int total = all.Sum(p => p.Weight);
             int pick = Random.Range(0, total);
             int current = 0;

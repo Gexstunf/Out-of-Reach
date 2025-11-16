@@ -13,5 +13,6 @@ namespace Environment.Scripts.DungeonGeneration.Data {
         Room,
         Hallway,
         Intersection,
+        Seal,
     }
 }

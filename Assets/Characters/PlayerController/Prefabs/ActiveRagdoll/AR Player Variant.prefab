@@ -260,6 +260,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1081855665796605543, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
+      propertyPath: _explosionEffect
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1081855665796605543, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: useCustomGravity
       value: 1
       objectReference: {fileID: 0}
@@ -365,7 +369,7 @@ PrefabInstance:
       objectReference: {fileID: 3545317880970891049}
     - target: {fileID: 1948149831696240166, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: itemGrabDistance
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1948149831696240166, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       propertyPath: wallGrabDistance
@@ -802,6 +806,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1178103718604873752, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1051405862748720495}
+    - targetCorrespondingSourceObject: {fileID: 1178103718604873752, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8882829817117836659}
     - targetCorrespondingSourceObject: {fileID: 7761752434098136009, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9016598895375935452}
@@ -918,6 +925,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 0
     rb: {fileID: 8065018531393186298}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -926,6 +934,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 0
     rb: {fileID: 4697200875140590888}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -934,6 +943,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 0
     rb: {fileID: 2849867638528878228}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -942,6 +952,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 0
     rb: {fileID: 2329192286673374533}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -950,6 +961,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 0
     rb: {fileID: 6743075897433123564}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -958,6 +970,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 0
     rb: {fileID: 2081889330274069208}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -966,6 +979,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 0
     rb: {fileID: 1047525753886722621}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -974,6 +988,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 0
     rb: {fileID: 3540788667971089967}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -982,6 +997,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 0
     rb: {fileID: 228708341577389821}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -990,6 +1006,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 0
     rb: {fileID: 2817449403658750029}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -998,6 +1015,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 0
     rb: {fileID: 7811348321918213479}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -1006,6 +1024,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 0
     rb: {fileID: 6798741815517459599}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
   - initialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -1014,6 +1033,7 @@ MonoBehaviour:
     angularDriveSpring: 0
     isStabilizer: 1
     rb: {fileID: 1366906602178784650}
+    collider: {fileID: 0}
     startSpring: 0
     targetSpring: 0
 --- !u!114 &5782875799495246834
@@ -1225,4 +1245,70 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 7285647615381667031, guid: 80442b8e31bcba0478563fed3414e922, type: 3}
   m_PrefabInstance: {fileID: 1829258652159935765}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6410500572211951629
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 665303604605691149}
+    m_Modifications:
+    - target: {fileID: 2571708123088633214, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571708123088633214, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.84
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571708123088633214, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10.19
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571708123088633214, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571708123088633214, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571708123088633214, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571708123088633214, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571708123088633214, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571708123088633214, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571708123088633214, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2665276434356126649, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+      propertyPath: m_Name
+      value: CoolExplosion
+      objectReference: {fileID: 0}
+    - target: {fileID: 2665276434356126649, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+--- !u!4 &8882829817117836659 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2571708123088633214, guid: 0dc0cfe5c694c88488ade2543a33446a, type: 3}
+  m_PrefabInstance: {fileID: 6410500572211951629}
   m_PrefabAsset: {fileID: 0}

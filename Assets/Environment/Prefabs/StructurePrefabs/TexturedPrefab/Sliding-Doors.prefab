@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6683607774946734122}
-  - component: {fileID: 8587864260074440972}
   - component: {fileID: -2186719096103060162}
+  - component: {fileID: 8587864260074440972}
   - component: {fileID: 9103140480498404427}
   - component: {fileID: 5100292781071984215}
   m_Layer: 8
@@ -37,41 +37,6 @@ Transform:
   - {fileID: 3254266269733609133}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8587864260074440972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9100137002563764354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58bc64d60c47d9040aff0f9b3f0ab102, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  femaleDoor: {fileID: 3254266269733609133}
-  maleDoor: {fileID: 4974988958439523561}
-  _audioSource: {fileID: 0}
-  movementAxis: 2
-  useDetection: 1
-  detectionRadius: 5.5
-  detectionLayerMask:
-    serializedVersion: 2
-    m_Bits: 512
-  doorSpeed: 6
-  doorCrackOffset: 0.05
-  shouldOpenForEnemies: 1
-  open: 0
-  debug: 0
-  doorFailureChance: 0.2
-  doorMode: 0
-  slamDistanceOpen: 2
-  slamDistanceClosed: -1
-  slowDoorSpeed: 2
-  slamSpeed: 5
-  minDelay: 0.3
-  maxDelay: 1.5
-  doorIsNowOpen: 0
 --- !u!82 &-2186719096103060162
 AudioSource:
   m_ObjectHideFlags: 0
@@ -85,7 +50,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 8137f262baec6604c80d880baf9cdee8, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.7
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -169,6 +134,41 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8587864260074440972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9100137002563764354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58bc64d60c47d9040aff0f9b3f0ab102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  femaleDoor: {fileID: 3254266269733609133}
+  maleDoor: {fileID: 4974988958439523561}
+  _doorAudio: {fileID: 0}
+  _doorsManager: {fileID: 0}
+  movementAxis: 2
+  useDetection: 1
+  detectionRadius: 5.5
+  detectionLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
+  doorSpeed: 6
+  doorCrackOffset: 0.05
+  shouldOpenForEnemies: 1
+  timeSkip: 0
+  doorFailureChance: 0.2
+  doorMode: 0
+  slamDistanceOpen: 2
+  slamDistanceClosed: -1
+  doorSpeedModifier: 3
+  slamSpeed: 5
+  minDelay: 0.3
+  maxDelay: 1.5
+  doorIsNowOpen: 0
 --- !u!114 &9103140480498404427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,6 +188,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 8587864260074440972}
   - {fileID: 5100292781071984215}
   sceneViewId: 0
   InstantiationId: 0

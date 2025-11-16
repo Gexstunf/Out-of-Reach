@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Environment.Scripts.Doors;
 using Multiplayer.TerrainGeneratorScripts.SpaceShips;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -44,7 +45,7 @@ namespace Environment.Scripts {
         private SlidingDoorScript DoorScript {
             get {
                 if (doorSpawnScript && useDoorScript && useThisDoorScript && !doorScript) {
-                    doorScript = doorSpawnScript.slidingDoorInstances[0].GetComponent<SlidingDoorScript>();
+                    doorScript = doorSpawnScript.slidingDoorInstances[0]?.GetComponent<SlidingDoorScript>();
                     _doorScript = doorScript;
                     //Debug.Log("Suction script cached Door script");
                 }
@@ -56,8 +57,8 @@ namespace Environment.Scripts {
             if (useThisTransform)
                 suctionPosition = transform;
             
-            var doorSpawn = DoorSpawnScript;
-            var door = DoorScript;
+            // var doorSpawn = DoorSpawnScript;
+            // var door = DoorScript;
         }
 
         private void Update() {

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: SealStructure
   m_EditorClassIdentifier: 
   prefab: {fileID: 6596308107174760454, guid: 294d7ebe175fd2841a9633b630274aaf, type: 3}
-  structureType: 1
+  structureType: 3
   weight: 1
