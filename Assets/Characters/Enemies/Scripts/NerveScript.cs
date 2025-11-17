@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Characters.Enemies.Scripts {
     public class NerveScript : NervousSystemScript {
-        public TagHandle[] tags;
         public NervousSystemScript nervousSystemHostScript;
         
         // Update is called once per frame
@@ -18,7 +17,7 @@ namespace Characters.Enemies.Scripts {
         }
 
         private bool CollidedWithTags(Collision other) {
-            foreach (var t in tags) {
+            foreach (var t in TagHandles) {
                 if (other.gameObject.CompareTag(t)) {
                     return true;
                 }
