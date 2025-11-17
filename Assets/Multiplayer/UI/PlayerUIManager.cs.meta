@@ -1,2 +1,19 @@
 fileFormatVersion: 2
 guid: 8c6ab3b2e2bfd3e4e824c861873de7a2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _inventoryController: {instanceID: 0}
+  - _playerLifeSupportScript: {instanceID: 0}
+  - _playerInputScript: {instanceID: 0}
+  - tickOn: {fileID: 21300000, guid: 6c355c3c3edbc5145a1506a069401fba, type: 3}
+  - tickYellow: {fileID: 21300000, guid: e7f0bb9f50eb0db4fb06213b28705a37, type: 3}
+  - tickRed: {fileID: 21300000, guid: 7accd593e70c64c4abbbb1c4a9013db6, type: 3}
+  - healthContainer: {instanceID: 0}
+  - staminaBar: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

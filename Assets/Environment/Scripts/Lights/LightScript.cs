@@ -43,7 +43,8 @@ namespace Environment.Scripts
 
         private Light _lightComp;
         private ParticleSystem _particleSystem;
-        private bool _doorFailed;
+        private bool _lightFailed;
+        private bool _initalized;
 
         public enum ELightMode
         {
@@ -56,7 +57,7 @@ namespace Environment.Scripts
             Dim,
         }
 
-        private void Start()
+        public void StartLight()
         {
             _lightsManagerScript = LightsManagerScript.Instance;
             _lightComp = lightObject.GetComponent<Light>();
@@ -69,7 +70,7 @@ namespace Environment.Scripts
             if (UnityEngine.Random.value < failureChance)
             {
                 _lightMode = (ELightMode)UnityEngine.Random.Range(1, Enum.GetValues(typeof(ELightMode)).Length);
-                _doorFailed = true;
+                _lightFailed = true;
             }
             else
             {
@@ -81,14 +82,16 @@ namespace Environment.Scripts
                 Destroy(gameObject);
             }
             
+            _initalized = true;
         }
 
         private void Update()
         {
             // Solo el due�o ejecuta la l�gica interna
+            if (!_initalized) return;
             if (!photonView.IsMine && _lightsManagerScript.usePhoton) return;
-
             if (_currentRoutine != null) return;
+            
             bool shouldTryEffect = false;
 
             switch (_lightMode)
@@ -130,7 +133,7 @@ namespace Environment.Scripts
             }
             else
             {
-                if (_previouslyOn && _doorFailed && _failAudioSource && useSound) _failAudioSource.Play();
+                if (_previouslyOn && _lightFailed && _failAudioSource && useSound) _failAudioSource.Play();
                 if (_previouslyOn && _lightAudioSource && useSound) _lightAudioSource.Stop();
                 TurnOff();
                 _previouslyOn = false;
