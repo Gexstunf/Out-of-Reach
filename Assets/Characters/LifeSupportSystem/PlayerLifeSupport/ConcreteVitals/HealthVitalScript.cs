@@ -43,15 +43,10 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
             Context.SetUnconscious(IsUnconscious);
         }
 
+        #region Unused methods
+
         public override void OnCollisionEnter(Collision other) {
-            if (other.gameObject.CompareTag("Enemy")) {
-                ILimbDamageScript limbScript = other.gameObject.GetComponent<ILimbDamageScript>();
-                if (limbScript != null && limbScript.HostAttackScript && limbScript.HostAttackScript.enabled) {
-                    AttackDamageSO damageSO = limbScript.HostAttackScript.currentAttackSO;
-                    Debug.Log("WAS HIT!");
-                    DamageLife(damageSO.damage);
-                }
-            }
+            
         }
 
         public override void OnTriggerEnter(Collider other) {
@@ -65,6 +60,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
         public override void OnTriggerStay(Collider other) {
             //throw new System.NotImplementedException();
         }
+        #endregion
 
         public override void UpdateVital() {
             
@@ -78,6 +74,15 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
                 VitalUtil.SetTimer(0f);
                 VitalUtil.SetRegenTimer(_currentHealthRegenDelay);
                 Debug.Log("Applied damage!");
+            }
+
+            if (Context.NervousSystemScript.NervesTriggered) {
+                var attack = Context.NervousSystemScript.AttackDamageSO;
+                if (attack) {
+                    Debug.Log("(player) I WAS HIT!");
+                    DamageLife(attack.damage);
+                    Context.NervousSystemScript.ResetNerves();
+                }
             }
 
             VitalUtil.DecreaseRegenTimer();

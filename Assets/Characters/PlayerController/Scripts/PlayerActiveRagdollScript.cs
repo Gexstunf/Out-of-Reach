@@ -11,6 +11,7 @@ namespace Characters.PlayerController.Scripts {
     {
     
         [Header("References")] 
+        [SerializeField] private RagdollControllerScript _ragdollController;
         [SerializeField] private PlayerInputScript _playerInputScript;
         [SerializeField] private PlayerControllerScript _playerController;
         [SerializeField] private StateVitalsCoordinator _stateVitalsCoordinator;
@@ -34,11 +35,12 @@ namespace Characters.PlayerController.Scripts {
         private bool _hasJumped = false;
         private bool _hasCrouched = false;
 
-        private void Start() {
+        private void Awake() {
             _playerInputScript = GetComponent<PlayerInputScript>();
             _playerController = GetComponent<PlayerControllerScript>();
             _ar = GetComponent<ActiveRagdollCoreScript>();
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
+            _ragdollController = GetComponent<RagdollControllerScript>();
         }
 
         private void OnEnable() {
@@ -83,6 +85,7 @@ namespace Characters.PlayerController.Scripts {
         }
 
         void HandleTiredChange(bool tired) {
+            _ragdollController.IgnoreInternalCollisions(!tired);
             RevivalParams revive = new RevivalParams {
                 StartClearance = _initialClearance,
                 EndClearance = 0f,

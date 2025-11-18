@@ -34,7 +34,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals
             _stamina = Context.MaxStamina;
             _currentStaminaUseRate = VitalUtil.BaseUseRate;
             _currentStaminaRegenRate = VitalUtil.BaseRegenRate;
-            Debug.Log("Stamina setup: " + _stamina);
+            //Debug.Log("Stamina setup: " + _stamina);
         }
 
         public override void UpdateModifiers()

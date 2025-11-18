@@ -1,55 +1,67 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Characters.ActiveRagdollSystem;
+using Characters.LifeSupportSystem;
 using Items.Scripts;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Characters.Enemies.Scripts {
     public class NervousSystemScript : MonoBehaviour {
-        public TagHandle[] TagHandles;
-        [SerializeField] private TagClass[] _tags;
-        [SerializeField] private ActiveRagdollCoreScript arCoreScript;
-        
-        public bool NervesTriggered => _triggered;
-        public HurtingObjectScript HurtingScript => _hurtingObjectScript;
-        
+        protected List<TagHandle> TagHandles { get; } = new ();
+        [Header("References")]
+        [SerializeField] protected ActiveRagdollCoreScript arCoreScript;
+        [Header("Settings")]
+        [SerializeField] protected List<TagClass> tags = new ();
+        public bool debug;
+
         private bool _triggered = false;
         private HurtingObjectScript _hurtingObjectScript;
-        
+        private AttackDamageSO _attackDamageSo;
+
         [System.Serializable]
         public class TagClass {
-            public string TagString = "Item";
+            public string TagString;
         }
             
         private void Awake() {
             arCoreScript = GetComponent<ActiveRagdollCoreScript>();
+            if (tags == null || tags.Count == 0) return;
+
+            foreach (var tag in tags) {
+                TagHandle handle = TagHandle.GetExistingTag(tag.TagString);
+                TagHandles.Add(handle);
+            }
         }
 
         private void Start() {
-            
-            TagHandles = new TagHandle[_tags.Length];
-            for (int i = 0; i < _tags.Length; i++) {
-                TagHandles[i] = TagHandle.GetExistingTag(_tags[i].TagString);
-                Debug.Log( "Nervous system tag: " + TagHandles[i]);
-            }
-
             if (!arCoreScript) return;
             foreach (var bone in arCoreScript.boneMaps) {
-                if (!bone.collider && bone.collider.gameObject) continue;
+                if (!bone.collider) continue;
                 NerveScript script = bone.collider.gameObject.AddComponent<NerveScript>();
-                script.nervousSystemHostScript = this;
+                script.SetTags(TagHandles);
+                script.SetHost(this);
             }
         }
 
-        public void TriggerNerves(HurtingObjectScript hurtScript) {
+        #region  Public API
+        public bool NervesTriggered => _triggered;
+        public HurtingObjectScript HurtingScript => _hurtingObjectScript;
+        public AttackDamageSO AttackDamageSO => _attackDamageSo;
+        
+        public void TriggerNerves(HurtingObjectScript hurtScript, AttackDamageSO attack) {
             _triggered = true;
             _hurtingObjectScript = hurtScript;
+            _attackDamageSo = attack;
         }
         
         public void ResetNerves() {
             _triggered = false;
             _hurtingObjectScript = null;
+            _attackDamageSo = null;
         }
+        #endregion
     }
 }

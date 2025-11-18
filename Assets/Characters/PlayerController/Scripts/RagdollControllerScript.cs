@@ -1,42 +1,67 @@
 using System;
+using System.Collections.Generic;
+using Characters.ActiveRagdollSystem;
 using Characters.Utils;
 using UnityEngine;
 
 namespace Characters.PlayerController.Scripts {
     public class RagdollControllerScript : MonoBehaviour {
+        [Header("References")] 
+        public ActiveRagdollCoreScript activeRagdoll;
+        
         [Header("Flags Settings")] 
+        public bool modifyRbs = true;
+        public bool modifyCols = true;
         public bool ignoreEachOtherColliders = true;
         public bool detectCollisionsRigidbodies = true;
         public bool useGravityRigidbodies = true;
         public bool rigidbodiesKinematic = false;
         public bool collidersAreTriggers = false;
+        public LayerMask ignoreLayer = 0;
 
         [Header("Utils")]
         public RigidbodyUtilsScript RbUtils;
         public ColliderUtilsScript ColUtils;
         
         [Header("Colliders to control")]
-        public Collider[] colliders;
+        public List<Collider> colliders;
         
         [Header("Rigidbodies to control")]
-        public Rigidbody[] rigidbodies;
+        public List<Rigidbody> rigidbodies;
         public Rigidbody mainRb;
 
-        public void Awake() {
-            RbUtils = new RigidbodyUtilsScript(rigidbodies, mainRb);
-            ColUtils = new ColliderUtilsScript(colliders);
+        private void Awake() {
+            activeRagdoll = GetComponent<ActiveRagdollCoreScript>();
         }
 
         private void Start() {
-            ApplyRagdollSettings(ignoreEachOtherColliders, collidersAreTriggers, detectCollisionsRigidbodies, useGravityRigidbodies, rigidbodiesKinematic);
+            foreach (var bone in activeRagdoll.boneMaps) {
+                if (bone.collider) colliders.Add(bone.collider);
+                if (bone.rb) rigidbodies.Add(bone.rb);
+            }
+            
+            RbUtils = new RigidbodyUtilsScript(rigidbodies.ToArray(), mainRb);
+            ColUtils = new ColliderUtilsScript(colliders.ToArray());
+            ApplyRagdollSettings(ignoreEachOtherColliders, collidersAreTriggers, detectCollisionsRigidbodies, useGravityRigidbodies, rigidbodiesKinematic, ignoreLayer);
         }
 
-        public void ApplyRagdollSettings(bool ignoreColBetweenCol, bool colAreTriggers, bool rbDetectCollisions, bool useGravityRb, bool rbsKinematic) {
-            RbUtils.SetDetectCollisions(rbDetectCollisions);
-            RbUtils.SetUseGravity(useGravityRb);
-            RbUtils.SetKinematicRigidbodies(rbsKinematic);
-            ColUtils.SetIgnoreCollidersBetweenEachOther(ignoreColBetweenCol);
-            ColUtils.SetCollidersToTriggers(colAreTriggers);
+        private void ApplyRagdollSettings(bool ignoreColBetweenCol, bool colAreTriggers, bool rbDetectCollisions, bool useGravityRb, bool rbsKinematic, LayerMask ignoreLayers) {
+            if (modifyRbs) {
+                RbUtils.SetDetectCollisions(rbDetectCollisions);
+                RbUtils.SetUseGravity(useGravityRb);
+                RbUtils.SetKinematicRigidbodies(rbsKinematic);
+            }
+
+            if (modifyCols) {
+                ColUtils.SetIgnoreCollidersBetweenEachOther(ignoreColBetweenCol);
+                ColUtils.SetCollidersToTriggers(colAreTriggers);
+                ColUtils.SetExcludeLayer(ignoreLayers);
+            }
+        }
+
+        public void IgnoreInternalCollisions(bool ignore) {
+            ColUtils.SetIgnoreCollidersBetweenEachOther(ignore);
+            ignoreEachOtherColliders = ignore;
         }
     }
 }

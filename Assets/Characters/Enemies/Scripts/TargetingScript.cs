@@ -50,7 +50,7 @@ namespace Characters.Enemies.Scripts {
         void HandleDetection() {
             Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius, detectionLayerMask);
             foreach (Collider c in hits) {
-                if (c.CompareTag("Player")) {
+                if (c.CompareTag("Player") && !c.gameObject.transform.parent) { // only detect the root player, not his whole ragdoll
                     
                     if (!_currentTargetTransform) {
                         _currentTargetTransform = c.transform;

@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd7516dfcb32cdf40ab14fe3dd212f30, type: 3}
   m_Name: SweepAttack
   m_EditorClassIdentifier: 
-  damageStrength: 0
-  damage: 10
+  damageStrength: 1
+  damage: 2
+  minimumSpeed: 0

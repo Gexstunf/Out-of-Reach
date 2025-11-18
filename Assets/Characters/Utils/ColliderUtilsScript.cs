@@ -25,5 +25,11 @@ namespace Characters.Utils {
                 }
             }
         }
+
+        public void SetExcludeLayer(LayerMask ignoreLayer) {
+            foreach (var currentCol in Colliders) {
+                currentCol.excludeLayers = ignoreLayer;
+            }
+        }
     }
 }

@@ -1,3 +1,4 @@
+using Characters.Enemies.Scripts;
 using Characters.PlayerController.Scripts;
 using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.StateMachine.PlayerStateMachine;
@@ -13,6 +14,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         [SerializeField] private readonly Rigidbody _rb;
         [SerializeField] private PlayerUIManager _uiManager;
         [SerializeField] private PlayerInputScript _playerInputScript;
+        [SerializeField] private NervousSystemScript _nervousSystemScript;
         [SerializeField] private readonly float _maxHealth;
         [SerializeField] private readonly float _maxStamina;
         
@@ -33,11 +35,10 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         public bool IsFalling { get; private set;}
         public bool IsClimbing { get; private set; }
         public bool IsIdle { get; private set; }
-        
         public bool IsMoving { get; private set; }
         
         public PlayerLifeSupportContextScript(Rigidbody rb, float maxHealth, float maxStamina, float stamUseRate, float stamRegenRate, float stamRegenDelay, 
-            PlayerUIManager uiManager, PlayerInputScript playerInputScript) 
+            PlayerUIManager uiManager, PlayerInputScript playerInputScript, NervousSystemScript nervousSystemScript) 
         {
             _rb = rb;
             _maxHealth = maxHealth;
@@ -47,6 +48,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
             _staminaUseRate = stamUseRate;
             _staminaRegenRate = stamRegenRate;
             _staminaRegenDelay = stamRegenDelay;
+            _nervousSystemScript = nervousSystemScript;
         }
         
         public void SetMovementStates(MovementStatesStructScript states) {
@@ -74,6 +76,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport {
         public Rigidbody Rb => _rb;
         public PlayerUIManager UIManager => _uiManager;
         public PlayerInputScript PlayerInputScript => _playerInputScript;
+        public NervousSystemScript NervousSystemScript => _nervousSystemScript;
         
         public float MaxHealth => _maxHealth;
         public float MaxStamina => _maxStamina;

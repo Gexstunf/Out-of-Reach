@@ -260,6 +260,7 @@ namespace Characters.PlayerController.Scripts {
             if (_inputScript == null) Debug.LogWarning("Missing _inputScript: " + _inputScript);
             if (_playerCamera == null) Debug.LogWarning("Missing _camera: " + _cameraController);
             if (_playerCollider == null) Debug.LogWarning("Missing _playerCollider: " + _playerCollider);
+            if (_traumaInducer == null) Debug.LogWarning("Missing _traumaInducer");
         }
 
         #endregion

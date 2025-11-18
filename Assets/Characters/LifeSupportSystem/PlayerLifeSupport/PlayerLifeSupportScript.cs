@@ -1,4 +1,5 @@
-﻿using Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals;
+﻿using Characters.Enemies.Scripts;
+using Characters.LifeSupportSystem.PlayerLifeSupport.ConcreteVitals;
 using Characters.PlayerController.Scripts.Input;
 using Characters.PlayerController.Scripts.Inventory;
 using Multiplayer.UI;
@@ -15,6 +16,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
         [SerializeField] private PlayerUIManager _uiManager;
         [SerializeField] private Rigidbody _rb;
         [SerializeField] private PlayerInputScript _playerInputScript;
+        [SerializeField] private NervousSystemScript _nervousSystemScript;
 
         [Header("General settings")]
         [SerializeField] private bool _forceInit;
@@ -47,10 +49,12 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
             _rb =  GetComponent<Rigidbody>();
             _playerInputScript = GetComponent<PlayerInputScript>();
             _uiManager = GetComponent<PlayerUIManager>();
+            _nervousSystemScript = GetComponent<NervousSystemScript>();
 
             Context = new PlayerLifeSupportContextScript(
                 _rb, _maxHealth, _maxStamina, _staminaUseRate,
-                _staminaRegenRate, _staminaRegenDelay, _uiManager, _playerInputScript
+                _staminaRegenRate, _staminaRegenDelay, _uiManager, 
+                _playerInputScript, _nervousSystemScript
             );
             
             if (_forceInit) InitializeVitals();
@@ -92,7 +96,7 @@ namespace Characters.LifeSupportSystem.PlayerLifeSupport
             foreach (var vital in Vitals.Values)
                 vital.SetupVital();
 
-            Debug.Log("[PlayerLifeSupportScript] Vitals initialized and setup: " + Vitals.Count);
+            //Debug.Log("[PlayerLifeSupportScript] Vitals initialized and setup: " + Vitals.Count);
         }
 
         private void ValidateReferences()
