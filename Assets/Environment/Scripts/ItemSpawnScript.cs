@@ -11,6 +11,7 @@ namespace Environment.Scripts {
         [Header("Settings")]
         public ItemSize maxItemSize = ItemSize.Medium;
         public ItemType[] allowedTypes;
+        public ItemSO[] specialItems;
 
         private ItemSpawnManagerScript _itemManager;
         private ItemSO _itemData;
@@ -21,9 +22,13 @@ namespace Environment.Scripts {
         public bool TrySpawnObject() {
             _itemManager = ItemSpawnManagerScript.Instance;
             _itemData = _itemManager.ChooseItem(maxItemSize, allowedTypes);
+            if (specialItems.Length != 0) {
+                int random = UnityEngine.Random.Range(0, specialItems.Length);
+                _itemData = specialItems[random];
+            };
             if (_itemData == null) return false;
-            
-            float spawnRandomNum = UnityEngine.Random.Range(0, 1);
+
+            float spawnRandomNum = UnityEngine.Random.Range(0F, 1F);
             if (spawnRandomNum < _itemData.spawnChance) {
                 
                 if (_itemManager.usePhoton) 

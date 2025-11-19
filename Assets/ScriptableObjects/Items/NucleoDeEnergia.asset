@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd30862700d3ab04c8502dfb46c13249, type: 3}
   m_Name: NucleoDeEnergia
   m_EditorClassIdentifier: 
-  prefab: {fileID: 407669885128104223, guid: b794d1c7cc95f8f49aa7dffee3aa0fd0, type: 3}
+  prefab: {fileID: 8644534652220900237, guid: f73b9315a01fab240ac54966469e988c, type: 3}
   itemId: 6
   worldPrefabName: PhotonPrefabs/Items/ItemNucleoDeEnergiagia
   heldPrefabName: PhotonPrefabs/Items/ItemNucleoDeEnergiagia
   icon: {fileID: 21300000, guid: 03dc9cfcce865e44d8cd9ab23424ed27, type: 3}
   displayName: Nucleo de Energia
   itemType: 3
-  itemSize: 0
+  itemSize: 1
   spawnChance: 0.8
-  value: 0
+  value: 4000
   internalSlots: []

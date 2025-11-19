@@ -352,6 +352,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxItemSize: 1
   allowedTypes: 0100000003000000
+  specialItems:
+  - {fileID: 11400000, guid: 47a1233da12f5be4a9665603c2cc29a8, type: 2}
 --- !u!1 &4263354815327800624
 GameObject:
   m_ObjectHideFlags: 0

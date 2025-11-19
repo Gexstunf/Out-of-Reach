@@ -61,6 +61,7 @@ namespace Characters.PlayerController.Scripts {
         private float _groundCheckOffset;
 
         private bool _isLocalPlayer = false;
+        private Coroutine _shakeCoroutine = null;
         private ParticleSystem _explosionParticleSystem;
 
 
@@ -71,6 +72,7 @@ namespace Characters.PlayerController.Scripts {
             _playerCollider = GetComponent<CapsuleCollider>();
             _playerStateMachine = GetComponent<PlayerStateMachineScript>();
             _stateVitalsCoordinator = GetComponent<StateVitalsCoordinator>();
+            _traumaInducer = GetComponent<TraumaInducer>();
 
             if (_explosionEffect != null)
             {
@@ -246,7 +248,7 @@ namespace Characters.PlayerController.Scripts {
             if (unconscious) {
                 _cameraController.UntieCam();
                 _explosionEffect.SetActive(true);
-                StartCoroutine(_traumaInducer.Shake());
+                if (_shakeCoroutine == null) _shakeCoroutine = StartCoroutine(_traumaInducer.Shake()); ;
             }
         }
 
