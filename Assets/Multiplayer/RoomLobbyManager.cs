@@ -27,7 +27,7 @@ public class RoomLobbyManager : MonoBehaviour
     {
         if (PhotonNetwork.CurrentRoom == null)
         {
-            Debug.LogError("No estás en ninguna sala");
+            Debug.LogError("No estï¿½s en ninguna sala");
             return;
         }
 
@@ -93,7 +93,6 @@ public class RoomLobbyManager : MonoBehaviour
     {
         lobbyUI.SetActive(false);
         loadingPanel.SetActive(true);
-
         loadingText.text = "Preparando datos...";
         yield return new WaitForSeconds(1f);
 
@@ -102,7 +101,7 @@ public class RoomLobbyManager : MonoBehaviour
         // Solo MasterClient inicia la carga
         if (PhotonNetwork.IsMasterClient)
         {
-            RoomLobbyNetworkController.Instance.StartGame("GameScene");
+            RoomLobbyNetworkController.Instance.StartGame("Gameplay-Testing");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using Multiplayer.Network;
+using Photon.Pun;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour

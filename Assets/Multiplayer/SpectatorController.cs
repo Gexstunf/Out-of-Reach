@@ -2,11 +2,12 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using Characters.StateMachine.PlayerStateMachine;
+using Multiplayer.Network;
 using Unity.Cinemachine;
 
 public class SpectatorController : MonoBehaviour
 {
-    [Header("Cámara de espectador")]
+    [Header("Cï¿½mara de espectador")]
     [SerializeField] private CinemachineCamera spectatorCam;
 
     [Header("Delay antes de espectear (killcam)")]
