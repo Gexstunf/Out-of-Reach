@@ -88,6 +88,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxItemSize: 0
   allowedTypes: 000000000100000003000000
+  specialItems: []
 --- !u!1 &1310279876495627604
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,6 +155,8 @@ GameObject:
   - component: {fileID: 8870479802968787408}
   - component: {fileID: 3425888450882013640}
   - component: {fileID: 8628541400894540109}
+  - component: {fileID: 4941837676802705422}
+  - component: {fileID: 6143711135620890331}
   m_Layer: 3
   m_Name: HabAlmacenamientoPrefab
   m_TagString: Room
@@ -251,6 +254,44 @@ MonoBehaviour:
   - {fileID: 2186125956944304919}
   slidingDoorPrefab: {fileID: 9100137002563764354, guid: 94e2d33e98ded0d4189a712f0d30643d, type: 3}
   slidingDoorInstances: []
+--- !u!114 &4941837676802705422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377035139366547631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &6143711135620890331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377035139366547631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &3127763163247139138
 GameObject:
   m_ObjectHideFlags: 0
@@ -297,6 +338,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxItemSize: 0
   allowedTypes: 000000000100000003000000
+  specialItems: []
 --- !u!1 &3236944606908551189
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,6 +385,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxItemSize: 0
   allowedTypes: 000000000100000003000000
+  specialItems: []
 --- !u!1 &3436750590081964048
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,6 +432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxItemSize: 0
   allowedTypes: 000000000100000003000000
+  specialItems: []
 --- !u!1 &5395130721606300843
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,6 +479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxItemSize: 0
   allowedTypes: 000000000100000003000000
+  specialItems: []
 --- !u!1 &5494730723352982029
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,6 +526,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxItemSize: 0
   allowedTypes: 000000000100000003000000
+  specialItems: []
 --- !u!1 &5536971390730342422
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,6 +622,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxItemSize: 0
   allowedTypes: 000000000100000003000000
+  specialItems: []
 --- !u!1 &6438136454154907913
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,6 +718,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxItemSize: 0
   allowedTypes: 000000000100000003000000
+  specialItems: []
 --- !u!1 &7648384391142379490
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,6 +765,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxItemSize: 0
   allowedTypes: 000000000100000003000000
+  specialItems: []
 --- !u!1 &8401641740632703687
 GameObject:
   m_ObjectHideFlags: 0
@@ -763,6 +812,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxItemSize: 0
   allowedTypes: 000000000100000003000000
+  specialItems: []
 --- !u!1 &8769555837926730994
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,6 +859,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxItemSize: 0
   allowedTypes: 000000000100000003000000
+  specialItems: []
 --- !u!1001 &662491165693067965
 PrefabInstance:
   m_ObjectHideFlags: 0

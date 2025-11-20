@@ -18,7 +18,7 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
         private int _boundsDrawerAmount = 0;
         
         public StructureInstanceScript PlaceInitial(StructurePrefabScript structurePrefab, Vector3 startPosition, int drawerId = 0) {
-            GameObject obj = usePhoton ? PhotonNetwork.Instantiate(structurePrefab.prefab.name, startPosition, Quaternion.identity) : Instantiate(structurePrefab.prefab, startPosition, Quaternion.identity);
+            GameObject obj = Instantiate(structurePrefab.prefab, startPosition, Quaternion.identity);
             StructureInstanceScript instance = new StructureInstanceScript(obj, structurePrefab);
             instance.UpdateBounds(shrinkBoundsFactor);
             GiveBoundsDrawer(instance, drawerId);
@@ -32,7 +32,7 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
             List<StructureInstanceScript> existing, 
             bool ignoreOverlap = false
         ) {
-            GameObject candidate = usePhoton ? PhotonNetwork.Instantiate(structurePrefab.prefab.name, Vector3.zero, Quaternion.identity) : Instantiate(structurePrefab.prefab);
+            GameObject candidate = Instantiate(structurePrefab.prefab);
             StructureInstanceScript newInstance = new StructureInstanceScript(candidate, structurePrefab);
 
             foreach (var entry in newInstance.GetEntries()) {

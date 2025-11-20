@@ -48,25 +48,13 @@ namespace Characters.Enemies.Scripts.Network
             }
         }
 
-        // --- Método auxiliar ---
+        // --- Mï¿½todo auxiliar ---
         private float GetHealthValue()
         {
-            var healthVital = _lifeSupport.Vitals[EnemyLifeSupportScript.EVitals.Health];
-
-            // Intentamos obtener el valor real según la estructura
-            var property = healthVital.GetType().GetProperty("CurrentValue") ??
-                           healthVital.GetType().GetProperty("Current") ??
-                           healthVital.GetType().GetProperty("Value");
-
-            if (property != null)
-            {
-                object result = property.GetValue(healthVital);
-                if (result is float f) return f;
+            if (_lifeSupport) {
+                return _lifeSupport.Context.Health;
             }
-
-            // Si no hay propiedad conocida, devolvemos 0 para no romper
-            Debug.LogWarning("[PlantNetworkController] No se pudo obtener el valor de salud real del vital.");
-            return 0f;
+            return 1f;
         }
 
         [PunRPC]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Environment.Scripts.DungeonGeneration.Data;
 using Environment.Scripts.DungeonGeneration.Utils;
 using GlobalUtils;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -24,6 +25,7 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
         [SerializeField] private StructurePrefabScript sealStructure;
         
         [Header("Settings")]
+        public bool usePhoton;
         [SerializeField] private int minRoomCount =  10;
         [SerializeField] private AnimationCurve stopChanceCurve;
         [SerializeField] private int maxAttemptsPerSocket = 100;
@@ -69,12 +71,15 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
         private void Start() {
             _logger = LoggerSO.Instance;
             _logger.Log("Starting Generation");
+            
+            if (usePhoton && !PhotonNetwork.IsMasterClient) return;
             Generate(generationStartStructure, generationStartPoint);
             SealExits();
             currentPlacedCount = _placed.Count;
             currentStructureSum = _hallwayCount + _intersectionCount + _roomCount; 
             FinishedGeneration = true;
             PlaceUnderParent(_placed);
+            if (usePhoton) SyncStructuresToClients();
         }
 
         private void Generate(StructurePrefabScript startPrefab, Transform startPoint) {
@@ -193,6 +198,17 @@ namespace Environment.Scripts.DungeonGeneration.CoreScripts {
                     break;
             }
         }
+        
+        public void SyncStructuresToClients() {
+            foreach (StructureInstanceScript structure in _placed) {
+                PhotonNetwork.Instantiate(
+                    structure.definition.prefab.name,
+                    structure.instance.transform.position,
+                    structure.instance.transform.rotation
+                );
+            }
+        }
+
 
         private void PlaceUnderParent(List<StructureInstanceScript> list) {
             var parent = new GameObject(parentName);

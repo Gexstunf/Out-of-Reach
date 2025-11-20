@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9d4870d5e6643098ef485bca95248db, type: 3}
   m_Name: GreenhouseStructure
   m_EditorClassIdentifier: 
-  prefab: {fileID: 919132149155446097, guid: 65aff32bfa92c324da1ed8c12f3ec0d5, type: 3}
+  prefab: {fileID: 8846650929021130192, guid: 361adf9c31be7914c9ed3ac21a5129f8, type: 3}
   structureType: 0
-  weight: 2
+  weight: 3
