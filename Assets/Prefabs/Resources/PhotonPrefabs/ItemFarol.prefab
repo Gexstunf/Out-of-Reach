@@ -12,9 +12,6 @@ GameObject:
   - component: {fileID: 7618054910300453515}
   - component: {fileID: 1646903148555695054}
   - component: {fileID: 155558000295006445}
-  - component: {fileID: 7708541413925821582}
-  - component: {fileID: 6584055270565844321}
-  - component: {fileID: 8232303190636431020}
   m_Layer: 6
   m_Name: ItemFarol
   m_TagString: Item
@@ -100,62 +97,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabHandle: {fileID: 5874828001378974869}
-  data: {fileID: 11400000, guid: 31046f305d4f10e44ba278211d0fb3ec, type: 2}
-  interactionScript: {fileID: 0}
   massScale: 1
   connectedMassScale: 1
---- !u!114 &7708541413925821582
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4316078606925847965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 6584055270565844321}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &6584055270565844321
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4316078606925847965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!114 &8232303190636431020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4316078606925847965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ff35347b63e7544a869d791f52694c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemData: {fileID: 11400000, guid: 31046f305d4f10e44ba278211d0fb3ec, type: 2}
 --- !u!1 &6315172768989141192
 GameObject:
   m_ObjectHideFlags: 0

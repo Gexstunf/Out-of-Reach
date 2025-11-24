@@ -98,8 +98,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabHandle: {fileID: 6659126903296789743}
-  data: {fileID: 11400000, guid: a48c1b8596ee2bb4b937ee7a28b2b6f5, type: 2}
-  interactionScript: {fileID: 0}
   massScale: 1
   connectedMassScale: 1
 --- !u!1 &409031901334683895

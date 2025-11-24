@@ -1,12 +1,17 @@
 using UnityEngine;
+using Photon.Pun;
 
-namespace Characters.Enemies.Scripts {
-    public class EnemySpawnPointScript : MonoBehaviour {
+public class EnemySpawnPointScript : MonoBehaviourPun
+{
+    public string plantEnemyName = "PlantEnemy";
+    public string batEnemy = "BatEnemy";
 
-        public GameObject enemyPrefab;
-        void Start()
+    void Start()
+    {
+        if (PhotonNetwork.IsMasterClient)
         {
-            Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+            PhotonNetwork.Instantiate(plantEnemyName, transform.position, Quaternion.identity);
+            PhotonNetwork.Instantiate(batEnemy, transform.position + Vector3.right * 1.5f, Quaternion.identity);
         }
     }
 }

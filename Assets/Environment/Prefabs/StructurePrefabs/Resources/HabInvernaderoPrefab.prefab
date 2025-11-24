@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 712808e223ec33f49b559212a3fc617b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 6113814242317541465, guid: 18498b340c7c305428ac2643a21ced2e, type: 3}
+  plantEnemyName: PlantEnemy
+  batEnemy: BatEnemy
 --- !u!1 &2027043406103028473
 GameObject:
   m_ObjectHideFlags: 0

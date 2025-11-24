@@ -363,6 +363,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arCoreScript: {fileID: 0}
+  tags: []
+  debug: 0
 --- !u!114 &2078814230138411321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -383,6 +385,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: -3352798143469745451}
+  - {fileID: 1582514890812175538}
   - {fileID: 3678013661868308591}
   sceneViewId: 0
   InstantiationId: 0
@@ -415,11 +418,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b39efeea968a7b41bc4583ccf0b9ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ragdollCore: {fileID: 0}
-  _nervousSystem: {fileID: 0}
-  _attackScript: {fileID: 0}
   _animController: {fileID: 0}
-  _maxHealth: 100
+  _lifeSupport: {fileID: 0}
+  _animator: {fileID: 0}
 --- !u!1001 &527130215282499857
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -519,8 +520,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
-  m_SynchronizeLayers: []
+  m_SynchronizeParameters:
+  - Type: 9
+    SynchronizeType: 0
+    Name: SweepAttack
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!4 &2217475699725307579 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1843854908465999786, guid: 5f131f6b8d431f149b8f2902e2a45bed, type: 3}

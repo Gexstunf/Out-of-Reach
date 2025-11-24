@@ -219,17 +219,14 @@ namespace Environment.Scripts
             {
                 stream.SendNext((int)_lightMode);
                 stream.SendNext(_isOff);
-                stream.SendNext(_lightComp.intensity);
-                stream.SendNext(_lightComp.color);
             }
             else
             {
                 _lightMode = (ELightMode)(int)stream.ReceiveNext();
                 _isOff = (bool)stream.ReceiveNext();
-                _lightComp.intensity = (float)stream.ReceiveNext();
-                _lightComp.color = (Color)stream.ReceiveNext();
             }
         }
+
         #endregion
     }
 }

@@ -100,8 +100,6 @@ public class MainMenuNetworkController : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("Jugador unido a la sala: " + PhotonNetwork.CurrentRoom.Name);
-
         OnRoomJoinedEvent?.Invoke();
 
         if (PhotonNetwork.IsMasterClient)

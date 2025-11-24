@@ -64,7 +64,6 @@ namespace Multiplayer.Network {
 
             OnPlayerSpawned?.Invoke(PhotonNetwork.LocalPlayer, player);
 
-            Debug.Log($"Jugador local spawneado en punto {playerIndex}: {spawnPoint.position}");
         }
 
         public void RegisterPlayer(int actorNumber, PlayerStatusReporter reporter)

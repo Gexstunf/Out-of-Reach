@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 5937442511092786752}
   - component: {fileID: 9149611159058038153}
   - component: {fileID: 7475097826121145162}
+  - component: {fileID: -5058356563548673153}
+  - component: {fileID: 1360910699873830981}
   m_Layer: 6
   m_Name: ItemCraneoAlien
   m_TagString: Item
@@ -98,8 +100,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabHandle: {fileID: 6659126903296789743}
+  data: {fileID: 11400000, guid: a48c1b8596ee2bb4b937ee7a28b2b6f5, type: 2}
+  interactionScript: {fileID: 0}
   massScale: 1
   connectedMassScale: 1
+--- !u!114 &-5058356563548673153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123797244976396003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 1
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 1360910699873830981}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &1360910699873830981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123797244976396003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &409031901334683895
 GameObject:
   m_ObjectHideFlags: 0

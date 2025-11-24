@@ -330,6 +330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetingScript: {fileID: 0}
   _agent: {fileID: 0}
+  _manager: {fileID: 0}
 --- !u!1001 &4881495691363327478
 PrefabInstance:
   m_ObjectHideFlags: 0
